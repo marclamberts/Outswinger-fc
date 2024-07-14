@@ -76,12 +76,12 @@ def generate_radar_chart(df, player_name, squad_name):
         kwargs_slices=dict(edgecolor="white", zorder=2, linewidth=1),
         kwargs_params=dict(color="white", fontsize=12, va="center", alpha=.5),
         kwargs_values=dict(color="white", fontsize=12, zorder=3,
-                           bbox=dict(edgecolor="white", facecolor="#242424", boxstyle="round,pad=0.2", lw=1))
+                           bbox=dict(edgecolor="white", facecolor="#e5e5e5", boxstyle="round,pad=0.2", lw=1))
     )
-    fig.text(0.515, 0.97, f"{player_name} - {squad_name}\n\n", size=25, ha="center", color="white")
-    fig.text(0.515, 0.932, "Per 90 Percentile Rank T5 EU\n\n", size=15, ha="center", color="white")
-    fig.text(0.09, 0.005, f"Minimal 450 minutes", color="white")
-    fig.text(0.75, 0.005, f"Marc Lamberts - Outswinger FC" , color="white")
+    fig.text(0.515, 0.97, f"{player_name} - {squad_name}\n\n", size=25, ha="center", color="black")
+    fig.text(0.515, 0.932, "Per 90 Percentile Rank T5 EU\n\n", size=15, ha="center", color="black")
+    fig.text(0.09, 0.005, f"Minimal 450 minutes", color="black")
+    fig.text(0.75, 0.005, f"Marc Lamberts - Outswinger FC" , color="black")
     return fig
 
 # Streamlit App
@@ -105,6 +105,6 @@ if st.sidebar.button("Generate Radar Chart"):
 
     # Option to download the image
     file_name = f'{player_selected} - {squad_name}.png'
-    plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#242424')
+    plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
     with open(file_name, "rb") as img_file:
         st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
