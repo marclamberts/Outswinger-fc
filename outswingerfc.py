@@ -1,5 +1,3 @@
-
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -47,20 +45,20 @@ def load_data():
              'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90'], axis=1)
     return df
 
-# Define a function to calculate percentile ranks
+# Define a function to calculate percentile ranks (without decimals)
 def percentile_rank(data, score):
     count = len(data)
     below = np.sum(data < score)
     equal = np.sum(data == score)
     percentile = (below + 0.5 * equal) / count * 100
-    return percentile
+    return int(round(percentile))  # Convert to integer
 
 # Define a function to generate the radar chart
 def generate_radar_chart(df, player_name, squad_name):
     params = list(df.columns[2:])
     player = df.loc[df['Player'] == player_name].reset_index().loc[0, params].tolist()
     values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(params, player)]
-    values = [99 if val == 100 else val for val in values]
+    values = [99 if val == 100 else val for val in values]  # Cap at 99
 
     baker = PyPizza(
         params=params,
@@ -68,7 +66,8 @@ def generate_radar_chart(df, player_name, squad_name):
         straight_line_lw=1,
         last_circle_lw=1,
         other_circle_lw=1,
-        other_circle_ls="-.")
+        other_circle_ls="-."
+    )
     slice_colors = ["#008000"] * 7 + ["#FF9300"] * 7 + ["#D70232"] * 5
 
     fig, ax = baker.make_pizza(
@@ -77,7 +76,8 @@ def generate_radar_chart(df, player_name, squad_name):
         kwargs_slices=dict(edgecolor="white", zorder=2, linewidth=1),
         kwargs_params=dict(color="white", fontsize=12, va="center", alpha=.5),
         kwargs_values=dict(color="white", fontsize=12, zorder=3,
-                           bbox=dict(edgecolor="white", facecolor="#242424", boxstyle="round,pad=0.2", lw=1)))
+                           bbox=dict(edgecolor="white", facecolor="#242424", boxstyle="round,pad=0.2", lw=1))
+    )
     fig.text(0.515, 0.97, f"{player_name} - {squad_name}\n\n", size=25, ha="center", color="white")
     fig.text(0.515, 0.932, "Per 90 Percentile Rank T5 EU\n\n", size=15, ha="center", color="white")
     fig.text(0.09, 0.005, f"Minimal 450 minutes \ midfielders", color="white")
