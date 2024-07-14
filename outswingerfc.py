@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 from mplsoccer import PyPizza
 import matplotlib.pyplot as plt
-from PIL import Image
 
 # Load your data
 @st.cache
@@ -76,13 +75,6 @@ def generate_radar_chart(df, player_name, squad_name):
         kwargs_values=dict(color="black", fontsize=12, zorder=3,
                            bbox=dict(edgecolor="black", facecolor="#e5e5e5", boxstyle="round,pad=0.2", lw=1))
     )
-
-    # Load and resize the logo image
-    logo = Image.open("logo.png")  # Replace with your logo file path
-    logo = logo.resize((60, 60))  # Resize the logo to make it smaller
-
-    # Add the logo to the center of the radar chart
-    fig.figimage(logo, fig.bbox.xmax / 2 - logo.size[0] / 2, fig.bbox.ymax / 2 - logo.size[1] / 2, zorder=4)
 
     fig.text(0.515, 0.97, f"{player_name} - {squad_name}\n\n", size=25, ha="center", color="black")
     fig.text(0.515, 0.932, "Per 90 Percentile Rank T5 EU\n\n", size=15, ha="center", color="black")
