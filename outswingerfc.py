@@ -65,7 +65,7 @@ df = load_data()
 # Position selection
 position_selected = st.sidebar.selectbox("Select Position", sorted(df['Pos'].unique()))
 # Minimum minutes selection
-min_minutes_options = [450, 600, 750, 900]
+min_minutes_options = [300, 450, 600, 750, 900]
 min_minutes = st.sidebar.selectbox("Select Minimum Minutes", min_minutes_options)
 
 # Filter players based on selected position and minutes
