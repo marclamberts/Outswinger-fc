@@ -10,7 +10,7 @@ def load_data():
     df = pd.read_excel("T5 Women.xlsx")
     df['NpxG+xAG per 90'] = df['npxGPer90'] + df['xAGPer90']
     df["completion%"] = (df["PassesCompletedPer90"] / df["PassesAttemptedPer90"]) * 100
-    df = df[['Player', 'Squad', 'Pos', 'Min', 'G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 
+    df = df[['Player', 'Squad', 'Comp', 'Pos', 'Min', 'G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 
              'NpxG+xAG per 90', 'SCAPer90', 'PassesAttemptedPer90', 'completion%',
              'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90',
              'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90']]
@@ -51,7 +51,7 @@ def percentile_rank(data, score):
 
 # Define a function to generate the radar chart
 def generate_radar_chart(df, player_name, squad_name):
-    params = list(df.columns[4:])  # Adjust index if 'Pos' is included
+    params = list(df.columns[5:])  # Adjust index if 'Comp' and 'Pos' are included
     player = df.loc[df['Player'] == player_name].reset_index().loc[0, params].tolist()
     values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(params, player)]
     values = [99 if val == 100 else val for val in values]  # Cap at 99
@@ -87,6 +87,9 @@ st.sidebar.header("Select Options")
 # Load data
 df = load_data()
 
+# League selection
+league_selected = st.sidebar.selectbox("Select League", sorted(df['Comp'].unique()))
+
 # Position selection
 position_options = ['FW', 'MF', 'DF', 'GK']
 position_selected = st.sidebar.selectbox("Select Position", position_options)
@@ -95,8 +98,8 @@ position_selected = st.sidebar.selectbox("Select Position", position_options)
 min_minutes_options = [450, 600, 750, 900]
 min_minutes = st.sidebar.selectbox("Select Minimum Minutes", min_minutes_options)
 
-# Filter players based on selected position and minutes
-filtered_players = df[df['Pos'].str.contains(position_selected) & (df['Min'] > min_minutes)]
+# Filter players based on selected league, position, and minutes
+filtered_players = df[(df['Comp'] == league_selected) & (df['Pos'].str.contains(position_selected)) & (df['Min'] > min_minutes)]
 
 # Team selection
 team_selected = st.sidebar.selectbox("Select Team", sorted(filtered_players['Squad'].unique()))
