@@ -9,16 +9,16 @@ import matplotlib.pyplot as plt
 @st.cache
 def load_data():
     df = pd.read_excel("T5 Women.xlsx")
-    df = df[df['Pos'].str.contains('MF')]
-    df = df[df['Min'] > 450]
+    df = df[df['Min'] > 450]  # Filter based on minutes
     df['NpxG+xAG per 90'] = df['npxGPer90'] + df['xAGPer90']
     df["completion%"] = (df["PassesCompletedPer90"] / df["PassesAttemptedPer90"]) * 100
-    df = df[['Player', 'Squad', 'G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90',  'NpxG+xAG per 90', 'SCAPer90',
+    df = df[['Player', 'Squad', 'Pos', 'G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 'NpxG+xAG per 90', 'SCAPer90',
              'PassesAttemptedPer90', 'completion%',
              'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90',
              'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90'
               ]]
 
+    # Rename columns for easier access
     df['Goals'] = df['GoalsPer90']
     df['Non-penalty xG'] = df['npxGPer90']
     df['Shots'] = df['Sh/90']
@@ -39,10 +39,10 @@ def load_data():
     df['Cleared'] = df['ClrPer90']
     df['Aerial%'] = df['AerialWinsPer90']
 
-    df = df.drop(['G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90',  'NpxG+xAG per 90', 'SCAPer90',
-             'PassesAttemptedPer90', 'completion%',
-             'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90',
-             'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90'], axis=1)
+    df = df.drop(['G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 'NpxG+xAG per 90', 'SCAPer90',
+                  'PassesAttemptedPer90', 'completion%',
+                  'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90',
+                  'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90'], axis=1)
     return df
 
 # Define a function to calculate percentile ranks (without decimals)
@@ -55,7 +55,7 @@ def percentile_rank(data, score):
 
 # Define a function to generate the radar chart
 def generate_radar_chart(df, player_name, squad_name):
-    params = list(df.columns[2:])
+    params = list(df.columns[3:])  # Adjust index if 'Pos' is included
     player = df.loc[df['Player'] == player_name].reset_index().loc[0, params].tolist()
     values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(params, player)]
     values = [99 if val == 100 else val for val in values]  # Cap at 99
@@ -81,7 +81,7 @@ def generate_radar_chart(df, player_name, squad_name):
     fig.text(0.515, 0.97, f"{player_name} - {squad_name}\n\n", size=25, ha="center", color="black")
     fig.text(0.515, 0.932, "Per 90 Percentile Rank T5 EU\n\n", size=15, ha="center", color="black")
     fig.text(0.09, 0.005, f"Minimal 450 minutes", color="black")
-    fig.text(0.75, 0.005, f"Marc Lamberts - Outswinger FC" , color="black")
+    fig.text(0.70, 0.005, f"Marc Lamberts - Outswinger FC", color="black")
     return fig
 
 # Streamlit App
@@ -91,14 +91,19 @@ st.sidebar.header("Select Options")
 # Load data
 df = load_data()
 
+# Position selection
+position_selected = st.sidebar.selectbox("Select Position", sorted(df['Pos'].unique()))
+# Filter players based on selected position
+filtered_players = df[df['Pos'] == position_selected]
+
 # Team selection
-team_selected = st.sidebar.selectbox("Select Team", sorted(df['Squad'].unique()))
+team_selected = st.sidebar.selectbox("Select Team", sorted(filtered_players['Squad'].unique()))
 # Player selection
-player_selected = st.sidebar.selectbox("Select Player", sorted(df[df['Squad'] == team_selected]['Player'].unique()))
+player_selected = st.sidebar.selectbox("Select Player", sorted(filtered_players[filtered_players['Squad'] == team_selected]['Player'].unique()))
 
 if st.sidebar.button("Generate Radar Chart"):
-    squad_name = df.loc[df['Player'] == player_selected, 'Squad'].iloc[0]
-    fig = generate_radar_chart(df, player_selected, squad_name)
+    squad_name = filtered_players.loc[filtered_players['Player'] == player_selected, 'Squad'].iloc[0]
+    fig = generate_radar_chart(filtered_players, player_selected, squad_name)
     
     # Display radar chart
     st.pyplot(fig)
