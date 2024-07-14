@@ -63,7 +63,8 @@ def generate_radar_chart(df, player_name, squad_name):
         straight_line_lw=1,
         last_circle_lw=1,
         other_circle_lw=1,
-        other_circle_ls="-."
+        other_circle_ls="-.",
+        inner_circle_size=20  # Increase the size of the center circle
     )
     slice_colors = ["#008000"] * 7 + ["#FF9300"] * 7 + ["#D70232"] * 5
 
@@ -76,8 +77,9 @@ def generate_radar_chart(df, player_name, squad_name):
                            bbox=dict(edgecolor="black", facecolor="#e5e5e5", boxstyle="round,pad=0.2", lw=1))
     )
 
-    # Load logo image
-    logo = Image.open("Outswinger FC (3).png")  # Replace with your logo file path
+    # Load and resize the logo image
+    logo = Image.open("logo.png")  # Replace with your logo file path
+    logo = logo.resize((60, 60))  # Resize the logo to make it smaller
 
     # Add the logo to the center of the radar chart
     fig.figimage(logo, fig.bbox.xmax / 2 - logo.size[0] / 2, fig.bbox.ymax / 2 - logo.size[1] / 2, zorder=4)
