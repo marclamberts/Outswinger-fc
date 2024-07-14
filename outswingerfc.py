@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import math
 from mplsoccer import PyPizza
 import matplotlib.pyplot as plt
 
@@ -9,40 +8,12 @@ import matplotlib.pyplot as plt
 @st.cache
 def load_data():
     df = pd.read_excel("T5 Women.xlsx")
-    df = df[df['Min'] > 450]  # Filter based on minutes
     df['NpxG+xAG per 90'] = df['npxGPer90'] + df['xAGPer90']
     df["completion%"] = (df["PassesCompletedPer90"] / df["PassesAttemptedPer90"]) * 100
-    df = df[['Player', 'Squad', 'Pos', 'G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 'NpxG+xAG per 90', 'SCAPer90',
-             'PassesAttemptedPer90', 'completion%',
+    df = df[['Player', 'Squad', 'Pos', 'Min', 'G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 
+             'NpxG+xAG per 90', 'SCAPer90', 'PassesAttemptedPer90', 'completion%',
              'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90',
-             'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90'
-              ]]
-
-    # Rename columns for easier access
-    df['Goals'] = df['GoalsPer90']
-    df['Non-penalty xG'] = df['npxGPer90']
-    df['Shots'] = df['Sh/90']
-    df['Assists'] = df['AssistsPer90']
-    df['xG assisted'] = df['xAGPer90']
-    df['NpxG+xAG '] = df['NpxG+xAG per 90']
-    df['SCA'] = df['SCAPer90']
-    df['Passes'] = df['PassesAttemptedPer90']
-    df['Pass%'] = df['completion%']
-    df['Prog Pass'] = df['ProgPassesPer90']
-    df['Prog Carries'] = df['ProgCarriesPer90']
-    df['Dribble%'] = df['SuccDrbPer90']
-    df['Final 3rd touch'] = df['Att3rdTouchPer90']
-    df['Prog pass rec'] = df['ProgPassesRecPer90']
-    df['Tackles'] = df['TklPer90']
-    df['Interceptions'] = df['IntPer90']
-    df['Blocks'] = df['BlocksPer90']
-    df['Cleared'] = df['ClrPer90']
-    df['Aerial%'] = df['AerialWinsPer90']
-
-    df = df.drop(['G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 'NpxG+xAG per 90', 'SCAPer90',
-                  'PassesAttemptedPer90', 'completion%',
-                  'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90',
-                  'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90'], axis=1)
+             'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90']]
     return df
 
 # Define a function to calculate percentile ranks (without decimals)
@@ -51,11 +22,11 @@ def percentile_rank(data, score):
     below = np.sum(data < score)
     equal = np.sum(data == score)
     percentile = (below + 0.5 * equal) / count * 100
-    return int(round(percentile))  # Convert to integer
+    return int(round(percentile))
 
 # Define a function to generate the radar chart
 def generate_radar_chart(df, player_name, squad_name):
-    params = list(df.columns[3:])  # Adjust index if 'Pos' is included
+    params = list(df.columns[4:])  # Adjust index if 'Pos' is included
     player = df.loc[df['Player'] == player_name].reset_index().loc[0, params].tolist()
     values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(params, player)]
     values = [99 if val == 100 else val for val in values]  # Cap at 99
@@ -80,7 +51,7 @@ def generate_radar_chart(df, player_name, squad_name):
     )
     fig.text(0.515, 0.97, f"{player_name} - {squad_name}\n\n", size=25, ha="center", color="black")
     fig.text(0.515, 0.932, "Per 90 Percentile Rank T5 EU\n\n", size=15, ha="center", color="black")
-    fig.text(0.09, 0.005, f"Minimal 450 minutes", color="black")
+    fig.text(0.09, 0.005, f"Minimal {min_minutes} minutes", color="black")
     fig.text(0.70, 0.005, f"Marc Lamberts - Outswinger FC", color="black")
     return fig
 
@@ -93,8 +64,12 @@ df = load_data()
 
 # Position selection
 position_selected = st.sidebar.selectbox("Select Position", sorted(df['Pos'].unique()))
-# Filter players based on selected position
-filtered_players = df[df['Pos'] == position_selected]
+# Minimum minutes selection
+min_minutes_options = [450, 600, 750, 900]
+min_minutes = st.sidebar.selectbox("Select Minimum Minutes", min_minutes_options)
+
+# Filter players based on selected position and minutes
+filtered_players = df[(df['Pos'] == position_selected) & (df['Min'] > min_minutes)]
 
 # Team selection
 team_selected = st.sidebar.selectbox("Select Team", sorted(filtered_players['Squad'].unique()))
