@@ -14,6 +14,31 @@ def load_data():
              'NpxG+xAG per 90', 'SCAPer90', 'PassesAttemptedPer90', 'completion%',
              'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90',
              'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90']]
+
+    df['Goals'] = df['GoalsPer90']
+    df['Non-penalty xG'] = df['npxGPer90']
+    df['Shots'] = df['Sh/90']
+    df['Assists'] = df['AssistsPer90']
+    df['xG assisted'] = df['xAGPer90']
+    df['NpxG+xAG '] = df['NpxG+xAG per 90']
+    df['SCA'] = df['SCAPer90']
+    df['Passes'] = df['PassesAttemptedPer90']
+    df['Pass%'] = df['completion%']
+    df['Prog Pass'] = df['ProgPassesPer90']
+    df['Prog Carries'] = df['ProgCarriesPer90']
+    df['Dribble%'] = df['SuccDrbPer90']
+    df['Final 3rd touch'] = df['Att3rdTouchPer90']
+    df['Prog pass rec'] = df['ProgPassesRecPer90']
+    df['Tackles'] = df['TklPer90']
+    df['Interceptions'] = df['IntPer90']
+    df['Blocks'] = df['BlocksPer90']
+    df['Cleared'] = df['ClrPer90']
+    df['Aerial%'] = df['AerialWinsPer90']
+
+    df = df.drop(['G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 'NpxG+xAG per 90', 'SCAPer90',
+                  'PassesAttemptedPer90', 'completion%', 'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90',
+                  'Att3rdTouchPer90', 'ProgPassesRecPer90', 'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90',
+                  'AerialWinsPer90'], axis=1)
     return df
 
 # Define a function to calculate percentile ranks (without decimals)
@@ -63,13 +88,15 @@ st.sidebar.header("Select Options")
 df = load_data()
 
 # Position selection
-position_selected = st.sidebar.selectbox("Select Position", sorted(df['Pos'].unique()))
+position_options = ['FW', 'MF', 'DF', 'GK']
+position_selected = st.sidebar.selectbox("Select Position", position_options)
+
 # Minimum minutes selection
-min_minutes_options = [300, 450, 600, 750, 900]
+min_minutes_options = [450, 600, 750, 900]
 min_minutes = st.sidebar.selectbox("Select Minimum Minutes", min_minutes_options)
 
 # Filter players based on selected position and minutes
-filtered_players = df[(df['Pos'] == position_selected) & (df['Min'] > min_minutes)]
+filtered_players = df[df['Pos'].str.contains(position_selected) & (df['Min'] > min_minutes)]
 
 # Team selection
 team_selected = st.sidebar.selectbox("Select Team", sorted(filtered_players['Squad'].unique()))
