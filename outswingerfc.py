@@ -74,7 +74,7 @@ def generate_radar_chart(df, player_name, squad_name):
         values, figsize=(8, 8.5), param_location=110, color_blank_space="same",
         slice_colors=slice_colors,
         kwargs_slices=dict(edgecolor="black", zorder=2, linewidth=1),
-        kwargs_params=dict(color="white", fontsize=12, va="center", alpha=.5),
+        kwargs_params=dict(color="black", fontsize=12, va="center", alpha=.5),
         kwargs_values=dict(color="white", fontsize=12, zorder=3,
                            bbox=dict(edgecolor="white", facecolor="#e5e5e5", boxstyle="round,pad=0.2", lw=1))
     )
