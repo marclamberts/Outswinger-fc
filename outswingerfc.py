@@ -76,7 +76,7 @@ def generate_radar_chart(df, player_name, squad_name):
         kwargs_slices=dict(edgecolor="black", zorder=2, linewidth=1),
         kwargs_params=dict(color="black", fontsize=12, va="center", alpha=.5),
         kwargs_values=dict(color="black", fontsize=12, zorder=3,
-                           bbox=dict(edgecolor="white", facecolor="#e5e5e5", boxstyle="round,pad=0.2", lw=1))
+                           bbox=dict(edgecolor="black", facecolor="#e5e5e5", boxstyle="round,pad=0.2", lw=1))
     )
     fig.text(0.515, 0.97, f"{player_name} - {squad_name}\n\n", size=25, ha="center", color="black")
     fig.text(0.515, 0.932, "Per 90 Percentile Rank T5 EU\n\n", size=15, ha="center", color="black")
