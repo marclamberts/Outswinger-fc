@@ -1,26 +1,25 @@
+
+
 import streamlit as st
 import pandas as pd
 import numpy as np
-from scipy import stats
 import math
-from mplsoccer import PyPizza, add_image, FontManager
+from mplsoccer import PyPizza
 import matplotlib.pyplot as plt
 
-st.set_page_config(layout="wide")
-
-@st.cache_data
-def load_data(file_path):
-    return pd.read_excel(file_path)
-
-def preprocess_data(df):
+# Load your data
+@st.cache
+def load_data():
+    df = pd.read_excel("T5 Women.xlsx")
     df = df[df['Pos'].str.contains('MF')]
     df = df[df['Min'] > 450]
     df['NpxG+xAG per 90'] = df['npxGPer90'] + df['xAGPer90']
     df["completion%"] = (df["PassesCompletedPer90"] / df["PassesAttemptedPer90"]) * 100
-    df = df[['Player', 'Squad', 'G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 'NpxG+xAG per 90', 'SCAPer90',
+    df = df[['Player', 'Squad', 'G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90',  'NpxG+xAG per 90', 'SCAPer90',
              'PassesAttemptedPer90', 'completion%',
              'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90',
-             'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90']]
+             'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90'
+              ]]
 
     df['Goals'] = df['GoalsPer90']
     df['Non-penalty xG'] = df['npxGPer90']
@@ -42,16 +41,25 @@ def preprocess_data(df):
     df['Cleared'] = df['ClrPer90']
     df['Aerial%'] = df['AerialWinsPer90']
 
-    df = df.drop(['G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 'NpxG+xAG per 90', 'SCAPer90',
-                  'PassesAttemptedPer90', 'completion%', 'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90',
-                  'Att3rdTouchPer90', 'ProgPassesRecPer90', 'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90',
-                  'AerialWinsPer90'], axis=1)
+    df = df.drop(['G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90',  'NpxG+xAG per 90', 'SCAPer90',
+             'PassesAttemptedPer90', 'completion%',
+             'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90',
+             'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90'], axis=1)
     return df
 
+# Define a function to calculate percentile ranks
+def percentile_rank(data, score):
+    count = len(data)
+    below = np.sum(data < score)
+    equal = np.sum(data == score)
+    percentile = (below + 0.5 * equal) / count * 100
+    return percentile
+
+# Define a function to generate the radar chart
 def generate_radar_chart(df, player_name, squad_name):
     params = list(df.columns[2:])
     player = df.loc[df['Player'] == player_name].reset_index().loc[0, params].tolist()
-    values = [math.floor(stats.percentileofscore(df[param].fillna(0), val)) for param, val in zip(params, player)]
+    values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(params, player)]
     values = [99 if val == 100 else val for val in values]
 
     baker = PyPizza(
@@ -62,7 +70,6 @@ def generate_radar_chart(df, player_name, squad_name):
         other_circle_lw=1,
         other_circle_ls="-.")
     slice_colors = ["#008000"] * 7 + ["#FF9300"] * 7 + ["#D70232"] * 5
-    text_colors = ["#000000"] * 8 + ["white"] * 5
 
     fig, ax = baker.make_pizza(
         values, figsize=(8, 8.5), param_location=110, color_blank_space="same",
@@ -75,28 +82,14 @@ def generate_radar_chart(df, player_name, squad_name):
     fig.text(0.515, 0.932, "Per 90 Percentile Rank T5 EU\n\n", size=15, ha="center", color="white")
     fig.text(0.09, 0.005, f"Minimal 450 minutes \ midfielders", color="white")
 
-    notes = '@Lambertsmarc'
-    CREDIT_1 = "by Marc Lamberts | @ShePlotsFC \ndata: Opta\nAll units per 90"
-    CREDIT_2 = '@lambertsmarc'
-    CREDIT_2 = "inspired by: @Worville, @FootballSlices, @somazerofc & @Soumyaj15209314"
-    CREDIT_3 = "by Alina Ruprecht | @alina_rxp"
-    fig.text(0.99, 0.005, f"{CREDIT_1}\n{CREDIT_2}", size=9, color="white", ha="right")
-    fig.text(0.34, 0.935, "Attacking      Progression     Defending                ", size=14, color="white")
-
-    fig.patches.extend([
-        plt.Rectangle((0.31, 0.9325), 0.025, 0.021, fill=True, color="#008000", transform=fig.transFigure, figure=fig),
-        plt.Rectangle((0.475, 0.9325), 0.025, 0.021, fill=True, color="#ff9300", transform=fig.transFigure, figure=fig),
-        plt.Rectangle((0.652, 0.9325), 0.025, 0.021, fill=True, color="#d70232", transform=fig.transFigure, figure=fig),
-    ])
-
     return fig
 
-# Load data
-df = load_data("/Users/marclambertes/T5 Women.xlsx")
-df = preprocess_data(df)
-
+# Streamlit App
 st.title("Player Radar Chart")
 st.sidebar.header("Select Options")
+
+# Load data
+df = load_data()
 
 # Team selection
 team_selected = st.sidebar.selectbox("Select Team", sorted(df['Squad'].unique()))
@@ -110,15 +103,8 @@ if st.sidebar.button("Generate Radar Chart"):
     # Display radar chart
     st.pyplot(fig)
 
-    # Save radar chart
-    file_name = f"{player_selected} - {squad_name}.png"
-    fig.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#242424')
-
-    # Display download button
-    with open(file_name, "rb") as file:
-        btn = st.download_button(
-            label="Download Radar Chart",
-            data=file,
-            file_name=file_name,
-            mime="image/png"
-        )
+    # Option to download the image
+    file_name = f'{player_selected} - {squad_name}.png'
+    plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#242424')
+    with open(file_name, "rb") as img_file:
+        st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
