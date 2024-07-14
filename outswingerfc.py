@@ -63,7 +63,7 @@ def generate_radar_chart(df, player_name, squad_name):
         last_circle_lw=1,
         other_circle_lw=1,
         other_circle_ls="-.",
-        inner_circle_size=20  # Increase the size of the center circle
+        inner_circle_size=10  # Increase the size of the center circle
     )
     slice_colors = ["#008000"] * 7 + ["#FF9300"] * 7 + ["#D70232"] * 5
 
