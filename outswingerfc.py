@@ -1,16 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Jul 14 18:17:32 2024
-
-@author: marclambertes
-"""
-
-
 import streamlit as st
 import pandas as pd
 import numpy as np
-from scipy import stats
 import math
 from mplsoccer import PyPizza, add_image, FontManager
 import matplotlib.pyplot as plt
@@ -57,10 +47,17 @@ def preprocess_data(df):
                   'AerialWinsPer90'], axis=1)
     return df
 
+def percentile_rank(data, score):
+    count = len(data)
+    below = np.sum(data < score)
+    equal = np.sum(data == score)
+    percentile = (below + 0.5 * equal) / count * 100
+    return percentile
+
 def generate_radar_chart(df, player_name, squad_name):
     params = list(df.columns[2:])
     player = df.loc[df['Player'] == player_name].reset_index().loc[0, params].tolist()
-    values = [math.floor(stats.percentileofscore(df[param].fillna(0), val)) for param, val in zip(params, player)]
+    values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(params, player)]
     values = [99 if val == 100 else val for val in values]
 
     baker = PyPizza(
