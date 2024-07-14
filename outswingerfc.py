@@ -80,8 +80,8 @@ def generate_radar_chart(df, player_name, squad_name):
     )
     fig.text(0.515, 0.97, f"{player_name} - {squad_name}\n\n", size=25, ha="center", color="white")
     fig.text(0.515, 0.932, "Per 90 Percentile Rank T5 EU\n\n", size=15, ha="center", color="white")
-    fig.text(0.09, 0.005, f"Minimal 450 minutes \ midfielders", color="white")
-
+    fig.text(0.09, 0.005, f"Minimal 450 minutes", color="white")
+    fig.text(0.75, 0.005, f"Marc Lamberts - Outswinger FC" , color="white")
     return fig
 
 # Streamlit App
