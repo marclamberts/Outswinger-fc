@@ -62,7 +62,7 @@ def generate_radar_chart(df, player_name, squad_name):
 
     baker = PyPizza(
         params=params,
-        straight_line_color="white",
+        straight_line_color="black",
         straight_line_lw=1,
         last_circle_lw=1,
         other_circle_lw=1,
@@ -73,7 +73,7 @@ def generate_radar_chart(df, player_name, squad_name):
     fig, ax = baker.make_pizza(
         values, figsize=(8, 8.5), param_location=110, color_blank_space="same",
         slice_colors=slice_colors,
-        kwargs_slices=dict(edgecolor="white", zorder=2, linewidth=1),
+        kwargs_slices=dict(edgecolor="black", zorder=2, linewidth=1),
         kwargs_params=dict(color="white", fontsize=12, va="center", alpha=.5),
         kwargs_values=dict(color="white", fontsize=12, zorder=3,
                            bbox=dict(edgecolor="white", facecolor="#e5e5e5", boxstyle="round,pad=0.2", lw=1))
