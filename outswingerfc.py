@@ -112,11 +112,12 @@ elif page == "Player Analysis":
     # Load data
     df = load_data()
     
-    # League selection
-    league_selected = st.sidebar.selectbox("Select League", sorted(df['Comp'].unique()))
+    # League selection with 'All' option
+    league_options = ['All'] + sorted(df['Comp'].unique())
+    league_selected = st.sidebar.selectbox("Select League", league_options)
     
-    # Position selection
-    position_options = ['FW', 'MF', 'DF', 'GK']
+    # Position selection with 'All' option
+    position_options = ['All'] + sorted(df['Pos'].unique())
     position_selected = st.sidebar.selectbox("Select Position", position_options)
     
     # Minimum minutes selection
@@ -124,7 +125,17 @@ elif page == "Player Analysis":
     min_minutes = st.sidebar.selectbox("Select Minimum Minutes", min_minutes_options)
     
     # Filter players based on selected league, position, and minutes
-    filtered_players = df[(df['Comp'] == league_selected) & (df['Pos'].str.contains(position_selected)) & (df['Min'] > min_minutes)]
+    if league_selected == 'All':
+        league_filter = True
+    else:
+        league_filter = (df['Comp'] == league_selected)
+    
+    if position_selected == 'All':
+        position_filter = True
+    else:
+        position_filter = df['Pos'].str.contains(position_selected)
+    
+    filtered_players = df[league_filter & position_filter & (df['Min'] > min_minutes)]
     
     # Team selection
     team_selected = st.sidebar.selectbox("Select Team", sorted(filtered_players['Squad'].unique()))
@@ -155,35 +166,42 @@ elif page == "Team Analysis":
     # Load data
     df = load_data()
     
-    # League selection
-    league_selected = st.sidebar.selectbox("Select League", sorted(df['Comp'].unique()))
+    # League selection with 'All' option
+    league_options = ['All'] + sorted(df['Comp'].unique())
+    league_selected = st.sidebar.selectbox("Select League", league_options)
     
-    # Position selection
-    position_options = ['FW', 'MF', 'DF', 'GK']
+    # Position selection with 'All' option
+    position_options = ['All'] + sorted(df['Pos'].unique())
     position_selected = st.sidebar.selectbox("Select Position", position_options)
     
     # Filter players based on selected league and position
-    filtered_players = df[(df['Comp'] == league_selected) & (df['Pos'].str.contains(position_selected))]
+    if league_selected == 'All':
+        league_filter = True
+    else:
+        league_filter = (df['Comp'] == league_selected)
     
-    # Team selection
+    if position_selected == 'All':
+        position_filter = True
+    else:
+        position_filter = df['Pos'].str.contains(position_selected)
+    
+    filtered_players = df[league_filter & position_filter]
+    
+    # Team selection (no 'All' option)
     team_selected = st.sidebar.selectbox("Select Team", sorted(filtered_players['Squad'].unique()))
     
     if st.sidebar.button("Generate Radar Chart"):
-        params = list(df.columns[5:])
+        # Aggregate data for the selected team
+        team_data = filtered_players[filtered_players['Squad'] == team_selected].drop(columns=['Player', 'Squad', 'Comp', 'Pos', 'Min']).mean()
+        params = list(filtered_players.columns[5:])
+        
         # Ensure only numeric columns are included for aggregation
         numeric_params = [param for param in params if pd.api.types.is_numeric_dtype(df[param])]
         
-        # Aggregate team stats
-        team_data = filtered_players[filtered_players['Squad'] == team_selected][numeric_params].mean().tolist()
         values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(numeric_params, team_data)]
         values = [99 if val == 100 else val for val in values]  # Cap at 99
+        
         fig = generate_radar_chart(numeric_params, values, f"{team_selected} Team", "Per 90 Percentile Rank T5 EU")
         
         # Display radar chart
         st.pyplot(fig)
-    
-        # Option to download the image
-        file_name = f'{team_selected} Team.png'
-        plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
-        with open(file_name, "rb") as img_file:
-            st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
