@@ -195,23 +195,26 @@ elif page == "Team Analysis":
     team_selected = st.sidebar.selectbox("Select Team", team_options)
     
     if st.sidebar.button("Generate Radar Chart"):
-        # Aggregate data for the selected team
-        team_data = filtered_players[filtered_players['Squad'] == team_selected].drop(columns=['Player', 'Squad', 'Comp', 'Pos', 'Min']).mean()
-        params = list(filtered_players.columns[5:])
+        if team_selected:
+            # Aggregate data for the selected team
+            team_data = filtered_players[filtered_players['Squad'] == team_selected].drop(columns=['Player', 'Squad', 'Comp', 'Pos', 'Min']).mean()
+            params = list(filtered_players.columns[5:])
+            
+            # Ensure only numeric columns are included for aggregation
+            numeric_params = [param for param in params if pd.api.types.is_numeric_dtype(df[param])]
+            
+            values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(numeric_params, team_data)]
+            values = [99 if val == 100 else val for val in values]  # Cap at 99
+            
+            fig = generate_radar_chart(numeric_params, values, f"{team_selected} Team", "Per 90 Percentile Rank T5 EU")
+            
+            # Display radar chart
+            st.pyplot(fig)
         
-        # Ensure only numeric columns are included for aggregation
-        numeric_params = [param for param in params if pd.api.types.is_numeric_dtype(df[param])]
-        
-        values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(numeric_params, team_data)]
-        values = [99 if val == 100 else val for val in values]  # Cap at 99
-        
-        fig = generate_radar_chart(numeric_params, values, f"{team_selected} Team", "Per 90 Percentile Rank T5 EU")
-        
-        # Display radar chart
-        st.pyplot(fig)
-    
-        # Option to download the image
-        file_name = f'{team_selected} Team.png'
-        plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
-        with open(file_name, "rb") as img_file:
-            st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
+            # Option to download the image
+            file_name = f'{team_selected} Team.png'
+            plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
+            with open(file_name, "rb") as img_file:
+                st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
+        else:
+            st.error("Please select a team.")
