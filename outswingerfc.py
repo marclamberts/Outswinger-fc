@@ -187,7 +187,7 @@ elif page == "Team Analysis":
     
     filtered_players = df[league_filter & position_filter]
     
-    # Team selection (no 'All' option)
+    # Team selection
     team_selected = st.sidebar.selectbox("Select Team", sorted(filtered_players['Squad'].unique()))
     
     if st.sidebar.button("Generate Radar Chart"):
@@ -205,3 +205,9 @@ elif page == "Team Analysis":
         
         # Display radar chart
         st.pyplot(fig)
+    
+        # Option to download the image
+        file_name = f'{team_selected} Team.png'
+        plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
+        with open(file_name, "rb") as img_file:
+            st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
