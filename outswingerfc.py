@@ -51,6 +51,11 @@ def percentile_rank(data, score):
 
 # Define a function to generate the radar chart
 def generate_radar_chart(params, values, title, subtitle):
+    num_params = len(params)
+    
+    # Generate slice colors based on number of parameters
+    slice_colors = ["#008000" if i < num_params // 3 else "#FF9300" if i < 2 * num_params // 3 else "#D70232" for i in range(num_params)]
+    
     baker = PyPizza(
         params=params,
         straight_line_color="black",
@@ -60,8 +65,7 @@ def generate_radar_chart(params, values, title, subtitle):
         other_circle_ls="-.",
         inner_circle_size=10  # Increase the size of the center circle
     )
-    slice_colors = ["#008000"] * 7 + ["#FF9300"] * 7 + ["#D70232"] * 5
-
+    
     fig, ax = baker.make_pizza(
         values, figsize=(8, 8.5), param_location=110, color_blank_space="same",
         slice_colors=slice_colors,
@@ -142,12 +146,8 @@ elif page == "Team Analysis":
     # League selection
     league_selected = st.sidebar.selectbox("Select League", sorted(df['Comp'].unique()))
     
-    # Minimum minutes selection
-    min_minutes_options = [450, 600, 750, 900]
-    min_minutes = st.sidebar.selectbox("Select Minimum Minutes", min_minutes_options)
-    
-    # Filter players based on selected league and minutes
-    filtered_players = df[(df['Comp'] == league_selected) & (df['Min'] > min_minutes)]
+    # Filter players based on selected league
+    filtered_players = df[df['Comp'] == league_selected]
     
     # Aggregating team statistics
     numeric_columns = filtered_players.select_dtypes(include=[np.number]).columns
@@ -158,8 +158,8 @@ elif page == "Team Analysis":
     
     if st.sidebar.button("Generate Radar Chart"):
         params = list(numeric_columns)
-        team_data = team_stats[team_stats['Squad'] == team_selected].reset_index().loc[0, params].tolist()
-        values = [percentile_rank(team_stats[param].fillna(0).values, val) for param, val in zip(params, team_data)]
+        team_data = team_stats[team_stats['Squad'] == team_selected].iloc[0]
+        values = [percentile_rank(filtered_players[param].fillna(0).values, val) for param, val in zip(params, team_data)]
         values = [99 if val == 100 else val for val in values]  # Cap at 99
         fig = generate_radar_chart(params, values, f"{team_selected} Team", "Per 90 Percentile Rank T5 EU")
         
