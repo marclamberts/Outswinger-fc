@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 def load_data():
     df = pd.read_excel("T5 Women.xlsx")
     
-    # Ensure all relevant columns are numeric
+    # Convert relevant columns to numeric
     numeric_columns = [
         'npxGPer90', 'xAGPer90', 'PassesCompletedPer90', 'PassesAttemptedPer90', 'ProgPassesPer90', 'ProgCarriesPer90',
         'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90', 'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90',
@@ -170,10 +170,14 @@ elif page == "Team Analysis":
     
     if st.sidebar.button("Generate Radar Chart"):
         params = list(df.columns[5:])
-        team_data = filtered_players.groupby('Squad').mean().loc[team_selected, params].tolist()
-        values = [percentile_rank(filtered_players[param].fillna(0).values, val) for param, val in zip(params, team_data)]
+        # Ensure only numeric columns are included for aggregation
+        numeric_params = [param for param in params if pd.api.types.is_numeric_dtype(df[param])]
+        
+        # Aggregate team stats
+        team_data = filtered_players[filtered_players['Squad'] == team_selected][numeric_params].mean().tolist()
+        values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(numeric_params, team_data)]
         values = [99 if val == 100 else val for val in values]  # Cap at 99
-        fig = generate_radar_chart(params, values, f"{team_selected} Team", "Per 90 Percentile Rank T5 EU")
+        fig = generate_radar_chart(numeric_params, values, f"{team_selected} Team", "Per 90 Percentile Rank T5 EU")
         
         # Display radar chart
         st.pyplot(fig)
