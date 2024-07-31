@@ -50,12 +50,7 @@ def percentile_rank(data, score):
     return int(round(percentile))
 
 # Define a function to generate the radar chart
-def generate_radar_chart(df, player_name, squad_name):
-    params = list(df.columns[5:])  # Adjust index if 'Comp' and 'Pos' are included
-    player = df.loc[df['Player'] == player_name].reset_index().loc[0, params].tolist()
-    values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(params, player)]
-    values = [99 if val == 100 else val for val in values]  # Cap at 99
-
+def generate_radar_chart(params, values, title, subtitle):
     baker = PyPizza(
         params=params,
         straight_line_color="black",
@@ -76,14 +71,12 @@ def generate_radar_chart(df, player_name, squad_name):
                            bbox=dict(edgecolor="black", facecolor="#e5e5e5", boxstyle="round,pad=0.2", lw=1))
     )
 
-    fig.text(0.515, 0.97, f"{player_name} - {squad_name}\n\n", size=25, ha="center", color="black")
-    fig.text(0.515, 0.932, "Per 90 Percentile Rank T5 EU\n\n", size=15, ha="center", color="black")
-    fig.text(0.09, 0.005, f"Minimal {min_minutes} minutes", color="black")
-    fig.text(0.70, 0.005, f"Marc Lamberts - Outswinger FC", color="black")
+    fig.text(0.515, 0.97, title, size=25, ha="center", color="black")
+    fig.text(0.515, 0.932, subtitle, size=15, ha="center", color="black")
     return fig
 
 # Streamlit App
-st.title("Outswinger FC Football Analysis App")
+st.title("Football Analysis App")
 st.sidebar.header("Navigation")
 
 # Navigation
@@ -92,7 +85,7 @@ page = st.sidebar.radio("Go to", ("Welcome", "Player Analysis", "Team Analysis")
 if page == "Welcome":
     st.write("""
     # Welcome to the Football Analysis App
-    Explore comprehensive player and team statistics from Top women's leagues.
+    Explore comprehensive player and team statistics from top women's leagues.
     """)
     st.write("Choose an option from the sidebar to get started.")
     
@@ -124,7 +117,11 @@ elif page == "Player Analysis":
     
     if st.sidebar.button("Generate Radar Chart"):
         squad_name = filtered_players.loc[filtered_players['Player'] == player_selected, 'Squad'].iloc[0]
-        fig = generate_radar_chart(filtered_players, player_selected, squad_name)
+        params = list(df.columns[5:])
+        player_stats = df.loc[df['Player'] == player_selected].reset_index().loc[0, params].tolist()
+        values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(params, player_stats)]
+        values = [99 if val == 100 else val for val in values]  # Cap at 99
+        fig = generate_radar_chart(params, values, f"{player_selected} - {squad_name}", "Per 90 Percentile Rank T5 EU")
         
         # Display radar chart
         st.pyplot(fig)
@@ -136,6 +133,40 @@ elif page == "Player Analysis":
             st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
 
 elif page == "Team Analysis":
-    st.header("Team Analysis")
-    st.write("Team analysis feature is coming soon. Stay tuned!")
+    st.header("Team Radar Chart")
+    st.sidebar.header("Select Options")
 
+    # Load data
+    df = load_data()
+    
+    # League selection
+    league_selected = st.sidebar.selectbox("Select League", sorted(df['Comp'].unique()))
+    
+    # Minimum minutes selection
+    min_minutes_options = [450, 600, 750, 900]
+    min_minutes = st.sidebar.selectbox("Select Minimum Minutes", min_minutes_options)
+    
+    # Filter players based on selected league and minutes
+    filtered_players = df[(df['Comp'] == league_selected) & (df['Min'] > min_minutes)]
+    
+    # Aggregating team statistics
+    team_stats = filtered_players.groupby('Squad').mean().reset_index()
+
+    # Team selection
+    team_selected = st.sidebar.selectbox("Select Team", sorted(team_stats['Squad'].unique()))
+    
+    if st.sidebar.button("Generate Radar Chart"):
+        params = list(team_stats.columns[1:])
+        team_data = team_stats[team_stats['Squad'] == team_selected].reset_index().loc[0, params].tolist()
+        values = [percentile_rank(team_stats[param].fillna(0).values, val) for param, val in zip(params, team_data)]
+        values = [99 if val == 100 else val for val in values]  # Cap at 99
+        fig = generate_radar_chart(params, values, f"{team_selected} Team", "Average Per 90 Percentile Rank T5 EU")
+        
+        # Display radar chart
+        st.pyplot(fig)
+    
+        # Option to download the image
+        file_name = f'{team_selected} Team.png'
+        plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
+        with open(file_name, "rb") as img_file:
+            st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
