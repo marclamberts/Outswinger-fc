@@ -124,25 +124,26 @@ elif page == "Player Analysis":
     min_minutes_options = [450, 600, 750, 900]
     min_minutes = st.sidebar.selectbox("Select Minimum Minutes", min_minutes_options)
     
-    # Filter players based on selected league, position, and minutes
+    # Apply filters
     if league_selected == 'All':
-        league_filter = True
-        team_options = sorted(df['Squad'].unique())
+        league_filter = df['Comp'].notna()  # All rows if 'All' selected
     else:
-        league_filter = (df['Comp'] == league_selected)
-        team_options = sorted(df[league_filter]['Squad'].unique())
+        league_filter = df['Comp'] == league_selected
     
     if position_selected == 'All':
-        position_filter = True
+        position_filter = df['Pos'].notna()  # All rows if 'All' selected
     else:
-        position_filter = df['Pos'].str.contains(position_selected)
+        position_filter = df['Pos'].str.contains(position_selected, na=False)
     
     filtered_players = df[league_filter & position_filter & (df['Min'] > min_minutes)]
     
     # Team selection
+    team_options = sorted(df[league_filter]['Squad'].unique())
     team_selected = st.sidebar.selectbox("Select Team", team_options)
+    
     # Player selection
-    player_selected = st.sidebar.selectbox("Select Player", sorted(filtered_players[filtered_players['Squad'] == team_selected]['Player'].unique()))
+    player_options = sorted(filtered_players[filtered_players['Squad'] == team_selected]['Player'].unique())
+    player_selected = st.sidebar.selectbox("Select Player", player_options)
     
     if st.sidebar.button("Generate Radar Chart"):
         squad_name = filtered_players.loc[filtered_players['Player'] == player_selected, 'Squad'].iloc[0]
@@ -160,7 +161,7 @@ elif page == "Player Analysis":
         plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
         with open(file_name, "rb") as img_file:
             st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
-
+    
 elif page == "Team Analysis":
     st.header("Team Radar Chart")
     st.sidebar.header("Select Options")
@@ -176,22 +177,21 @@ elif page == "Team Analysis":
     position_options = ['All'] + sorted(df['Pos'].unique())
     position_selected = st.sidebar.selectbox("Select Position", position_options)
     
-    # Filter players based on selected league and position
+    # Apply filters
     if league_selected == 'All':
-        league_filter = True
-        team_options = sorted(df['Squad'].unique())
+        league_filter = df['Comp'].notna()  # All rows if 'All' selected
     else:
-        league_filter = (df['Comp'] == league_selected)
-        team_options = sorted(df[league_filter]['Squad'].unique())
+        league_filter = df['Comp'] == league_selected
     
     if position_selected == 'All':
-        position_filter = True
+        position_filter = df['Pos'].notna()  # All rows if 'All' selected
     else:
-        position_filter = df['Pos'].str.contains(position_selected)
+        position_filter = df['Pos'].str.contains(position_selected, na=False)
     
     filtered_players = df[league_filter & position_filter]
     
     # Team selection
+    team_options = sorted(filtered_players['Squad'].unique())
     team_selected = st.sidebar.selectbox("Select Team", team_options)
     
     if st.sidebar.button("Generate Radar Chart"):
@@ -201,7 +201,7 @@ elif page == "Team Analysis":
             params = list(filtered_players.columns[5:])
             
             # Ensure only numeric columns are included for aggregation
-            numeric_params = [param for param in params if pd.api.types.is_numeric_dtype(df[param])]
+            numeric_params = [param for param in params if pd.api.types.is_numeric_dtype(filtered_players[param])]
             
             values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(numeric_params, team_data)]
             values = [99 if val == 100 else val for val in values]  # Cap at 99
