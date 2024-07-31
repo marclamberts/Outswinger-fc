@@ -93,7 +93,7 @@ def generate_radar_chart(params, values, title, subtitle):
     return fig
 
 # Streamlit App
-st.title("Football Analysis App")
+st.title("Outswinger FC Analysis App")
 st.sidebar.header("Navigation")
 
 # Navigation
@@ -101,8 +101,9 @@ page = st.sidebar.radio("Go to", ("Welcome", "Player Analysis", "Team Analysis")
 
 if page == "Welcome":
     st.write("""
-    # Welcome to the Football Analysis App
-    Explore comprehensive player and team statistics from top women's leagues.
+    # Welcome to the Outswinger FC Analysis App
+    I made this app so that it will be more accessible for everyone interesting in data for women's football.
+    In this app you will find the data for the Top-5 European leagues (England, Spain, Italy, Germany, France) as well as NWSL (US) and A-League (Australia). The app is divided into a player and team section.
     """)
     st.write("Choose an option from the sidebar to get started.")
     
