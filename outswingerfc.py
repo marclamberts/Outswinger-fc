@@ -102,7 +102,7 @@ page = st.sidebar.radio("Go to", ("Welcome", "Player Analysis", "Team Analysis")
 if page == "Welcome":
     st.write("""
     # Welcome to the Outswinger FC Analysis App
-    I made this app so that it will be more accessible for everyone interesting in data for women's football.
+    I made this app so that it will be more accessible for everyone interesting in data for women's football.\n
     In this app you will find the data for the Top-5 European leagues (England, Spain, Italy, Germany, France) as well as NWSL (US) and A-League (Australia).\n The app is divided into a player and team section.\n\nThis app was last updated 31-07-2024\n\nPlease credit my work when using this in public articles, podcast, videos or other forms of media.
     """)
     st.write("Choose an option from the sidebar to get started.")
