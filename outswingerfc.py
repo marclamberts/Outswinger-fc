@@ -152,7 +152,7 @@ elif page == "Player Analysis":
         player_stats = df.loc[df['Player'] == player_selected].reset_index().loc[0, params].tolist()
         values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(params, player_stats)]
         values = [99 if val == 100 else val for val in values]  # Cap at 99
-        fig = generate_radar_chart(params, values, f"{player_selected} - {squad_name}", "Per 90 Percentile Rank T5 EU")
+        fig = generate_radar_chart(params, values, f"{player_selected} - {squad_name}", "Per 90 Percentile Rank T5")
         
         # Display radar chart
         st.pyplot(fig)
