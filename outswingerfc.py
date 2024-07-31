@@ -8,6 +8,16 @@ import matplotlib.pyplot as plt
 @st.cache_data
 def load_data():
     df = pd.read_excel("T5 Women.xlsx")
+    
+    # Ensure all relevant columns are numeric
+    numeric_columns = [
+        'npxGPer90', 'xAGPer90', 'PassesCompletedPer90', 'PassesAttemptedPer90', 'ProgPassesPer90', 'ProgCarriesPer90',
+        'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90', 'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90',
+        'AerialWinsPer90'
+    ]
+    
+    df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors='coerce')  # Convert to numeric, invalid parsing will be set as NaN
+    
     df['NpxG+xAG per 90'] = df['npxGPer90'] + df['xAGPer90']
     df["completion%"] = (df["PassesCompletedPer90"] / df["PassesAttemptedPer90"]) * 100
     df = df[['Player', 'Squad', 'Comp', 'Pos', 'Min', 'G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 
@@ -43,6 +53,8 @@ def load_data():
 
 # Define a function to calculate percentile ranks (without decimals)
 def percentile_rank(data, score):
+    data = np.array(data, dtype=float)  # Ensure data is numeric
+    score = float(score)  # Ensure score is numeric
     count = len(data)
     below = np.sum(data < score)
     equal = np.sum(data == score)
@@ -139,26 +151,26 @@ elif page == "Player Analysis":
 elif page == "Team Analysis":
     st.header("Team Radar Chart")
     st.sidebar.header("Select Options")
-
+    
     # Load data
     df = load_data()
     
     # League selection
     league_selected = st.sidebar.selectbox("Select League", sorted(df['Comp'].unique()))
     
-    # Filter players based on selected league
-    filtered_players = df[df['Comp'] == league_selected]
+    # Position selection
+    position_options = ['FW', 'MF', 'DF', 'GK']
+    position_selected = st.sidebar.selectbox("Select Position", position_options)
     
-    # Aggregating team statistics
-    numeric_columns = filtered_players.select_dtypes(include=[np.number]).columns
-    team_stats = filtered_players.groupby('Squad')[numeric_columns].mean().reset_index()
-
+    # Filter players based on selected league and position
+    filtered_players = df[(df['Comp'] == league_selected) & (df['Pos'].str.contains(position_selected))]
+    
     # Team selection
-    team_selected = st.sidebar.selectbox("Select Team", sorted(team_stats['Squad'].unique()))
+    team_selected = st.sidebar.selectbox("Select Team", sorted(filtered_players['Squad'].unique()))
     
     if st.sidebar.button("Generate Radar Chart"):
-        params = list(numeric_columns)
-        team_data = team_stats[team_stats['Squad'] == team_selected].iloc[0]
+        params = list(df.columns[5:])
+        team_data = filtered_players.groupby('Squad').mean().loc[team_selected, params].tolist()
         values = [percentile_rank(filtered_players[param].fillna(0).values, val) for param, val in zip(params, team_data)]
         values = [99 if val == 100 else val for val in values]  # Cap at 99
         fig = generate_radar_chart(params, values, f"{team_selected} Team", "Per 90 Percentile Rank T5 EU")
