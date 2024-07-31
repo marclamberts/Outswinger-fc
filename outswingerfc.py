@@ -5,7 +5,7 @@ from mplsoccer import PyPizza
 import matplotlib.pyplot as plt
 
 # Load your data
-@st.cache
+@st.cache_data
 def load_data():
     df = pd.read_excel("T5 Women.xlsx")
     df['NpxG+xAG per 90'] = df['npxGPer90'] + df['xAGPer90']
@@ -150,17 +150,18 @@ elif page == "Team Analysis":
     filtered_players = df[(df['Comp'] == league_selected) & (df['Min'] > min_minutes)]
     
     # Aggregating team statistics
-    team_stats = filtered_players.groupby('Squad').mean().reset_index()
+    numeric_columns = filtered_players.select_dtypes(include=[np.number]).columns
+    team_stats = filtered_players.groupby('Squad')[numeric_columns].mean().reset_index()
 
     # Team selection
     team_selected = st.sidebar.selectbox("Select Team", sorted(team_stats['Squad'].unique()))
     
     if st.sidebar.button("Generate Radar Chart"):
-        params = list(team_stats.columns[1:])
+        params = list(numeric_columns)
         team_data = team_stats[team_stats['Squad'] == team_selected].reset_index().loc[0, params].tolist()
         values = [percentile_rank(team_stats[param].fillna(0).values, val) for param, val in zip(params, team_data)]
         values = [99 if val == 100 else val for val in values]  # Cap at 99
-        fig = generate_radar_chart(params, values, f"{team_selected} Team", "Average Per 90 Percentile Rank T5 EU")
+        fig = generate_radar_chart(params, values, f"{team_selected} Team", "Per 90 Percentile Rank T5 EU")
         
         # Display radar chart
         st.pyplot(fig)
