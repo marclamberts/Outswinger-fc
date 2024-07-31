@@ -89,6 +89,7 @@ def generate_radar_chart(params, values, title, subtitle):
 
     fig.text(0.515, 0.97, title, size=25, ha="center", color="black")
     fig.text(0.515, 0.932, subtitle, size=15, ha="center", color="black")
+    fig.text(0.515, -0.05, "Marc Lamberts - Outswinger FC - @lambertsmarc", size=12, ha="center", color="black")
     return fig
 
 # Streamlit App
@@ -155,13 +156,13 @@ elif page == "Player Analysis":
         
         # Display radar chart
         st.pyplot(fig)
-    
+        
         # Option to download the image
         file_name = f'{player_selected} - {squad_name}.png'
         plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
         with open(file_name, "rb") as img_file:
             st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
-    
+
 elif page == "Team Analysis":
     st.header("Team Radar Chart")
     st.sidebar.header("Select Options")
