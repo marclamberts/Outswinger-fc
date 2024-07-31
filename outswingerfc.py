@@ -83,7 +83,7 @@ def generate_radar_chart(df, player_name, squad_name):
     return fig
 
 # Streamlit App
-st.title("Football Analysis App")
+st.title("Outswinger FC Football Analysis App")
 st.sidebar.header("Navigation")
 
 # Navigation
@@ -92,7 +92,7 @@ page = st.sidebar.radio("Go to", ("Welcome", "Player Analysis", "Team Analysis")
 if page == "Welcome":
     st.write("""
     # Welcome to the Football Analysis App
-    Explore comprehensive player and team statistics from top women's leagues.
+    Explore comprehensive player and team statistics from Top women's leagues.
     """)
     st.write("Choose an option from the sidebar to get started.")
     
