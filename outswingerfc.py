@@ -83,40 +83,59 @@ def generate_radar_chart(df, player_name, squad_name):
     return fig
 
 # Streamlit App
-st.title("Player Radar Chart")
-st.sidebar.header("Select Options")
+st.title("Football Analysis App")
+st.sidebar.header("Navigation")
 
-# Load data
-df = load_data()
+# Navigation
+page = st.sidebar.radio("Go to", ("Welcome", "Player Analysis", "Team Analysis"))
 
-# League selection
-league_selected = st.sidebar.selectbox("Select League", sorted(df['Comp'].unique()))
-
-# Position selection
-position_options = ['FW', 'MF', 'DF', 'GK']
-position_selected = st.sidebar.selectbox("Select Position", position_options)
-
-# Minimum minutes selection
-min_minutes_options = [450, 600, 750, 900]
-min_minutes = st.sidebar.selectbox("Select Minimum Minutes", min_minutes_options)
-
-# Filter players based on selected league, position, and minutes
-filtered_players = df[(df['Comp'] == league_selected) & (df['Pos'].str.contains(position_selected)) & (df['Min'] > min_minutes)]
-
-# Team selection
-team_selected = st.sidebar.selectbox("Select Team", sorted(filtered_players['Squad'].unique()))
-# Player selection
-player_selected = st.sidebar.selectbox("Select Player", sorted(filtered_players[filtered_players['Squad'] == team_selected]['Player'].unique()))
-
-if st.sidebar.button("Generate Radar Chart"):
-    squad_name = filtered_players.loc[filtered_players['Player'] == player_selected, 'Squad'].iloc[0]
-    fig = generate_radar_chart(filtered_players, player_selected, squad_name)
+if page == "Welcome":
+    st.write("""
+    # Welcome to the Football Analysis App
+    Explore comprehensive player and team statistics from top women's leagues.
+    """)
+    st.write("Choose an option from the sidebar to get started.")
     
-    # Display radar chart
-    st.pyplot(fig)
+elif page == "Player Analysis":
+    st.header("Player Radar Chart")
+    st.sidebar.header("Select Options")
+    
+    # Load data
+    df = load_data()
+    
+    # League selection
+    league_selected = st.sidebar.selectbox("Select League", sorted(df['Comp'].unique()))
+    
+    # Position selection
+    position_options = ['FW', 'MF', 'DF', 'GK']
+    position_selected = st.sidebar.selectbox("Select Position", position_options)
+    
+    # Minimum minutes selection
+    min_minutes_options = [450, 600, 750, 900]
+    min_minutes = st.sidebar.selectbox("Select Minimum Minutes", min_minutes_options)
+    
+    # Filter players based on selected league, position, and minutes
+    filtered_players = df[(df['Comp'] == league_selected) & (df['Pos'].str.contains(position_selected)) & (df['Min'] > min_minutes)]
+    
+    # Team selection
+    team_selected = st.sidebar.selectbox("Select Team", sorted(filtered_players['Squad'].unique()))
+    # Player selection
+    player_selected = st.sidebar.selectbox("Select Player", sorted(filtered_players[filtered_players['Squad'] == team_selected]['Player'].unique()))
+    
+    if st.sidebar.button("Generate Radar Chart"):
+        squad_name = filtered_players.loc[filtered_players['Player'] == player_selected, 'Squad'].iloc[0]
+        fig = generate_radar_chart(filtered_players, player_selected, squad_name)
+        
+        # Display radar chart
+        st.pyplot(fig)
+    
+        # Option to download the image
+        file_name = f'{player_selected} - {squad_name}.png'
+        plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
+        with open(file_name, "rb") as img_file:
+            st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
 
-    # Option to download the image
-    file_name = f'{player_selected} - {squad_name}.png'
-    plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
-    with open(file_name, "rb") as img_file:
-        st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
+elif page == "Team Analysis":
+    st.header("Team Analysis")
+    st.write("Team analysis feature is coming soon. Stay tuned!")
+
