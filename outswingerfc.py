@@ -111,6 +111,7 @@ if page == "Welcome":
     This app was last updated 31-07-2024.
     
     Please credit my work when using this in public articles, podcasts, videos, or other forms of media.
+    Marc Lamberts - @lambertsmarc on X/Twitter. - marclambertsanalysis@gmail.com
     """)
     st.write("Choose an option from the sidebar to get started.")
     
