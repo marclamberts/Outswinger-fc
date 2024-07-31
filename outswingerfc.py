@@ -207,7 +207,7 @@ elif page == "Team Analysis":
             values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(numeric_params, team_data)]
             values = [99 if val == 100 else val for val in values]  # Cap at 99
             
-            fig = generate_radar_chart(numeric_params, values, f"{team_selected} Team", "Per 90 Percentile Rank T5 EU")
+            fig = generate_radar_chart(numeric_params, values, f"{team_selected} Team", "Per 90 Percentile Rank")
             
             # Display radar chart
             st.pyplot(fig)
