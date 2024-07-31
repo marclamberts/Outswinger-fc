@@ -160,7 +160,7 @@ elif page == "Player Analysis":
         plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
         with open(file_name, "rb") as img_file:
             st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
-    
+
 elif page == "Team Analysis":
     st.header("Team Radar Chart")
     st.sidebar.header("Select Options")
