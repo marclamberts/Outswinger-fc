@@ -20,7 +20,7 @@ def load_data():
     df['Shots'] = df['Sh/90']
     df['Assists'] = df['AssistsPer90']
     df['xG assisted'] = df['xAGPer90']
-    df['NpxG+xAG '] = df['NpxG+xAG per 90']
+    df['NpxG+xAG'] = df['NpxG+xAG per 90']
     df['SCA'] = df['SCAPer90']
     df['Passes'] = df['PassesAttemptedPer90']
     df['Pass%'] = df['completion%']
