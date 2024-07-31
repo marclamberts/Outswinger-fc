@@ -127,8 +127,10 @@ elif page == "Player Analysis":
     # Filter players based on selected league, position, and minutes
     if league_selected == 'All':
         league_filter = True
+        team_options = sorted(df['Squad'].unique())
     else:
         league_filter = (df['Comp'] == league_selected)
+        team_options = sorted(df[league_filter]['Squad'].unique())
     
     if position_selected == 'All':
         position_filter = True
@@ -138,7 +140,7 @@ elif page == "Player Analysis":
     filtered_players = df[league_filter & position_filter & (df['Min'] > min_minutes)]
     
     # Team selection
-    team_selected = st.sidebar.selectbox("Select Team", sorted(filtered_players['Squad'].unique()))
+    team_selected = st.sidebar.selectbox("Select Team", team_options)
     # Player selection
     player_selected = st.sidebar.selectbox("Select Player", sorted(filtered_players[filtered_players['Squad'] == team_selected]['Player'].unique()))
     
@@ -177,8 +179,10 @@ elif page == "Team Analysis":
     # Filter players based on selected league and position
     if league_selected == 'All':
         league_filter = True
+        team_options = sorted(df['Squad'].unique())
     else:
         league_filter = (df['Comp'] == league_selected)
+        team_options = sorted(df[league_filter]['Squad'].unique())
     
     if position_selected == 'All':
         position_filter = True
@@ -188,7 +192,7 @@ elif page == "Team Analysis":
     filtered_players = df[league_filter & position_filter]
     
     # Team selection
-    team_selected = st.sidebar.selectbox("Select Team", sorted(filtered_players['Squad'].unique()))
+    team_selected = st.sidebar.selectbox("Select Team", team_options)
     
     if st.sidebar.button("Generate Radar Chart"):
         # Aggregate data for the selected team
