@@ -16,15 +16,15 @@ def load_data():
         'AerialWinsPer90'
     ]
     
-    df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors='coerce')  # Convert to numeric, invalid parsing will be set as NaN
-    
+    df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors='coerce')
     df['NpxG+xAG per 90'] = df['npxGPer90'] + df['xAGPer90']
     df["completion%"] = (df["PassesCompletedPer90"] / df["PassesAttemptedPer90"]) * 100
     df = df[['Player', 'Squad', 'Comp', 'Pos', 'Min', 'G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 
              'NpxG+xAG per 90', 'SCAPer90', 'PassesAttemptedPer90', 'completion%',
              'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90',
              'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90']]
-
+    
+    # Renaming columns for chart readability
     df['Goals'] = df['GoalsPer90']
     df['Non-penalty xG'] = df['npxGPer90']
     df['Shots'] = df['Sh/90']
@@ -44,7 +44,7 @@ def load_data():
     df['Blocks'] = df['BlocksPer90']
     df['Cleared'] = df['ClrPer90']
     df['Aerial%'] = df['AerialWinsPer90']
-
+    
     df = df.drop(['G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 'NpxG+xAG per 90', 'SCAPer90',
                   'PassesAttemptedPer90', 'completion%', 'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90',
                   'Att3rdTouchPer90', 'ProgPassesRecPer90', 'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90',
@@ -75,7 +75,7 @@ def generate_radar_chart(params, values, title, subtitle):
         last_circle_lw=1,
         other_circle_lw=1,
         other_circle_ls="-.",
-        inner_circle_size=10  # Increase the size of the center circle
+        inner_circle_size=10
     )
     
     fig, ax = baker.make_pizza(
@@ -97,18 +97,15 @@ st.title("Outswinger FC Analysis App")
 st.sidebar.header("Navigation")
 
 # Navigation
-page = st.sidebar.radio("Go to", ("Welcome", "Player Analysis", "Team Analysis"))
+page = st.sidebar.radio("Go to", ("Welcome", "Player Analysis"))
 
 if page == "Welcome":
     st.write("""
     # Welcome to the Outswinger FC Analysis App
 
-    I made this app so that it will be more accessible for everyone interested in data for women's football.
-    In this app, you will find the data for the Top-5 European leagues (England, Spain, Italy, Germany, France) as well as NWSL (US) and A-League (Australia).
+    This app provides data for women's football in the Top-5 European leagues and others.
     
-    The app is divided into a player and team section.
-    
-    This app was last updated 31-07-2024.
+    The app was last updated on 31-10-2024.
     
     Please credit my work when using this in public articles, podcasts, videos, or other forms of media.
     Marc Lamberts - @lambertsmarc on X/Twitter. - marclambertsanalysis@gmail.com
@@ -130,18 +127,18 @@ elif page == "Player Analysis":
     position_options = ['All'] + sorted(df['Pos'].unique())
     position_selected = st.sidebar.selectbox("Select Position", position_options)
     
-    # Minimum minutes selection
-    min_minutes_options = [450, 600, 750, 900]
+    # Minimum minutes selection with updated options
+    min_minutes_options = [180, 300, 450, 600, 750, 900]
     min_minutes = st.sidebar.selectbox("Select Minimum Minutes", min_minutes_options)
     
     # Apply filters
     if league_selected == 'All':
-        league_filter = df['Comp'].notna()  # All rows if 'All' selected
+        league_filter = df['Comp'].notna()
     else:
         league_filter = df['Comp'] == league_selected
     
     if position_selected == 'All':
-        position_filter = df['Pos'].notna()  # All rows if 'All' selected
+        position_filter = df['Pos'].notna()
     else:
         position_filter = df['Pos'].str.contains(position_selected, na=False)
     
@@ -160,7 +157,7 @@ elif page == "Player Analysis":
         params = list(df.columns[5:])
         player_stats = df.loc[df['Player'] == player_selected].reset_index().loc[0, params].tolist()
         values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(params, player_stats)]
-        values = [99 if val == 100 else val for val in values]  # Cap at 99
+        values = [99 if val == 100 else val for val in values]
         fig = generate_radar_chart(params, values, f"{player_selected} - {squad_name}", "Per 90 Percentile Rank")
         
         # Display radar chart
@@ -171,60 +168,3 @@ elif page == "Player Analysis":
         plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
         with open(file_name, "rb") as img_file:
             st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
-
-elif page == "Team Analysis":
-    st.header("Team Radar Chart")
-    st.sidebar.header("Select Options")
-    
-    # Load data
-    df = load_data()
-    
-    # League selection with 'All' option
-    league_options = ['All'] + sorted(df['Comp'].unique())
-    league_selected = st.sidebar.selectbox("Select League", league_options)
-    
-    # Position selection with 'All' option
-    position_options = ['All'] + sorted(df['Pos'].unique())
-    position_selected = st.sidebar.selectbox("Select Position", position_options)
-    
-    # Apply filters
-    if league_selected == 'All':
-        league_filter = df['Comp'].notna()  # All rows if 'All' selected
-    else:
-        league_filter = df['Comp'] == league_selected
-    
-    if position_selected == 'All':
-        position_filter = df['Pos'].notna()  # All rows if 'All' selected
-    else:
-        position_filter = df['Pos'].str.contains(position_selected, na=False)
-    
-    filtered_players = df[league_filter & position_filter]
-    
-    # Team selection
-    team_options = sorted(filtered_players['Squad'].unique())
-    team_selected = st.sidebar.selectbox("Select Team", team_options)
-    
-    if st.sidebar.button("Generate Radar Chart"):
-        if team_selected:
-            # Aggregate data for the selected team
-            team_data = filtered_players[filtered_players['Squad'] == team_selected].drop(columns=['Player', 'Squad', 'Comp', 'Pos', 'Min']).mean()
-            params = list(filtered_players.columns[5:])
-            
-            # Ensure only numeric columns are included for aggregation
-            numeric_params = [param for param in params if pd.api.types.is_numeric_dtype(filtered_players[param])]
-            
-            values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(numeric_params, team_data)]
-            values = [99 if val == 100 else val for val in values]  # Cap at 99
-            
-            fig = generate_radar_chart(numeric_params, values, f"{team_selected} Team", "Per 90 Percentile Rank")
-            
-            # Display radar chart
-            st.pyplot(fig)
-        
-            # Option to download the image
-            file_name = f'{team_selected} Team.png'
-            plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
-            with open(file_name, "rb") as img_file:
-                st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
-        else:
-            st.error("Please select a team.")
