@@ -89,7 +89,7 @@ def generate_radar_chart(params, values, title, subtitle):
 
     fig.text(0.515, 0.97, title, size=25, ha="center", color="black")
     fig.text(0.515, 0.932, subtitle, size=15, ha="center", color="black")
-    fig.text(0.515, -0.05, "Marc Lamberts - Outswinger FC - @lambertsmarc", size=12, ha="center", color="black")
+    fig.text(0.515, -0.05, "Marc Lamberts - Outswinger FC - @lambertsmarc/@ShePlotsFC", size=12, ha="center", color="black")
     return fig
 
 # Streamlit App
