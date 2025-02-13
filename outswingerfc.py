@@ -1,170 +1,101 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-from mplsoccer import PyPizza
 import matplotlib.pyplot as plt
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+import matplotlib.image as mpimg
+import os
 
-# Load your data
-@st.cache_data
-def load_data():
-    df = pd.read_excel("T5 Women.xlsx")
-    
-    # Convert relevant columns to numeric
-    numeric_columns = [
-        'npxGPer90', 'xAGPer90', 'PassesCompletedPer90', 'PassesAttemptedPer90', 'ProgPassesPer90', 'ProgCarriesPer90',
-        'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90', 'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90',
-        'AerialWinsPer90'
-    ]
-    
-    df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors='coerce')
-    df['NpxG+xAG per 90'] = df['npxGPer90'] + df['xAGPer90']
-    df["completion%"] = (df["PassesCompletedPer90"] / df["PassesAttemptedPer90"]) * 100
-    df = df[['Player', 'Squad', 'Comp', 'Pos', 'Min', 'G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 
-             'NpxG+xAG per 90', 'SCAPer90', 'PassesAttemptedPer90', 'completion%',
-             'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90', 'Att3rdTouchPer90', 'ProgPassesRecPer90',
-             'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90', 'AerialWinsPer90']]
-    
-    # Renaming columns for chart readability
-    df['Goals'] = df['GoalsPer90']
-    df['Non-penalty xG'] = df['npxGPer90']
-    df['Shots'] = df['Sh/90']
-    df['Assists'] = df['AssistsPer90']
-    df['xG assisted'] = df['xAGPer90']
-    df['NpxG+xAG'] = df['NpxG+xAG per 90']
-    df['SCA'] = df['SCAPer90']
-    df['Passes'] = df['PassesAttemptedPer90']
-    df['Pass%'] = df['completion%']
-    df['Prog Pass'] = df['ProgPassesPer90']
-    df['Prog Carries'] = df['ProgCarriesPer90']
-    df['Dribble%'] = df['SuccDrbPer90']
-    df['Final 3rd touch'] = df['Att3rdTouchPer90']
-    df['Prog pass rec'] = df['ProgPassesRecPer90']
-    df['Tackles'] = df['TklPer90']
-    df['Interceptions'] = df['IntPer90']
-    df['Blocks'] = df['BlocksPer90']
-    df['Cleared'] = df['ClrPer90']
-    df['Aerial%'] = df['AerialWinsPer90']
-    
-    df = df.drop(['G+A', 'GoalsPer90', 'npxGPer90', 'Sh/90', 'AssistsPer90', 'xAGPer90', 'NpxG+xAG per 90', 'SCAPer90',
-                  'PassesAttemptedPer90', 'completion%', 'ProgPassesPer90', 'ProgCarriesPer90', 'SuccDrbPer90',
-                  'Att3rdTouchPer90', 'ProgPassesRecPer90', 'TklPer90', 'IntPer90', 'BlocksPer90', 'ClrPer90',
-                  'AerialWinsPer90'], axis=1)
+def load_data(file_path):
+    df = pd.read_csv(file_path)
     return df
 
-# Define a function to calculate percentile ranks (without decimals)
-def percentile_rank(data, score):
-    data = np.array(data, dtype=float)  # Ensure data is numeric
-    score = float(score)  # Ensure score is numeric
-    count = len(data)
-    below = np.sum(data < score)
-    equal = np.sum(data == score)
-    percentile = (below + 0.5 * equal) / count * 100
-    return int(round(percentile))
-
-# Define a function to generate the radar chart
-def generate_radar_chart(params, values, title, subtitle):
-    num_params = len(params)
+def plot_xg_flow(df, logo_path):
+    hteam = df['HomeTeam'].iloc[0]
+    ateam = df['AwayTeam'].iloc[-1]
     
-    # Generate slice colors based on number of parameters
-    slice_colors = ["#008000" if i < num_params // 3 else "#FF9300" if i < 2 * num_params // 3 else "#D70232" for i in range(num_params)]
+    a_xG, h_xG, a_min, h_min, a_psxg, h_psxg = [0], [0], [0], [0], [0], [0]
+    a_goals_min, h_goals_min = [], []
     
-    baker = PyPizza(
-        params=params,
-        straight_line_color="black",
-        straight_line_lw=1,
-        last_circle_lw=1,
-        other_circle_lw=1,
-        other_circle_ls="-.",
-        inner_circle_size=10
-    )
+    for x in range(len(df['xG'])):
+        if df['TeamId'][x] == ateam:
+            a_xG.append(df['xG'][x])
+            a_min.append(df['timeMin'][x])
+            a_psxg.append(df['PsxG'][x] if 'PsxG' in df.columns else 0)
+            if df['isGoal'][x] == 1:
+                a_goals_min.append(df['timeMin'][x])
+        if df['TeamId'][x] == hteam:
+            h_xG.append(df['xG'][x])
+            h_min.append(df['timeMin'][x])
+            h_psxg.append(df['PsxG'][x] if 'PsxG' in df.columns else 0)
+            if df['isGoal'][x] == 1:
+                h_goals_min.append(df['timeMin'][x])
     
-    fig, ax = baker.make_pizza(
-        values, figsize=(8, 8.5), param_location=110, color_blank_space="same",
-        slice_colors=slice_colors,
-        kwargs_slices=dict(edgecolor="black", zorder=2, linewidth=1),
-        kwargs_params=dict(color="black", fontsize=12, va="center", alpha=.5),
-        kwargs_values=dict(color="black", fontsize=12, zorder=3,
-                           bbox=dict(edgecolor="black", facecolor="#e5e5e5", boxstyle="round,pad=0.2", lw=1))
-    )
-
-    fig.text(0.515, 0.97, title, size=25, ha="center", color="black")
-    fig.text(0.515, 0.932, subtitle, size=15, ha="center", color="black")
-    fig.text(0.515, -0.05, "Marc Lamberts - Outswinger FC - @lambertsmarc/@ShePlotsFC", size=12, ha="center", color="black")
+    def nums_cumulative_sum(nums_list):
+        return [sum(nums_list[:i+1]) for i in range(len(nums_list))]
+    
+    a_cumulative = nums_cumulative_sum(a_xG)
+    h_cumulative = nums_cumulative_sum(h_xG)
+    a_psxg_cumulative = nums_cumulative_sum(a_psxg)
+    h_psxg_cumulative = nums_cumulative_sum(h_psxg)
+    
+    alast, hlast = round(a_cumulative[-1], 2), round(h_cumulative[-1], 2)
+    a_psxg_last, h_psxg_last = round(a_psxg_cumulative[-1], 2), round(h_psxg_cumulative[-1], 2)
+    
+    fig, ax = plt.subplots(figsize=(16, 10))
+    fig.set_facecolor('white')
+    ax.patch.set_facecolor('white')
+    
+    ax.grid(ls='dotted', lw=1, color='black', axis='y', alpha=0.6)
+    ax.grid(ls='dotted', lw=1, color='black', axis='x', alpha=0.6)
+    
+    for spine in ['top', 'bottom', 'left', 'right']:
+        ax.spines[spine].set_visible(False)
+    
+    plt.xticks([0, 15, 30, 45, 60, 75, 90])
+    plt.xlabel('Minute', fontsize=16)
+    plt.ylabel('xG', fontsize=16)
+    
+    if hlast > alast:
+        ax.fill_between(h_min, h_cumulative, color='#ff6361', alpha=0.3)
+        ax.fill_between(a_min, a_cumulative, color='#003f5c', alpha=0.1)
+    else:
+        ax.fill_between(h_min, h_cumulative, color='#ff6361', alpha=0.1)
+        ax.fill_between(a_min, a_cumulative, color='#003f5c', alpha=0.3)
+    
+    ax.step(a_min, a_cumulative, color='#003f5c', linewidth=5, where='post')
+    ax.step(h_min, h_cumulative, color='#ff6361', linewidth=5, where='post')
+    
+    for goal in a_goals_min:
+        ax.scatter(goal, a_cumulative[a_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
+    for goal in h_goals_min:
+        ax.scatter(goal, h_cumulative[h_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
+    
+    home_goals = df[(df['TeamId'] == hteam) & (df['isGoal'] == 1)].shape[0]
+    away_goals = df[(df['TeamId'] == ateam) & (df['isGoal'] == 1)].shape[0]
+    ax.text(0.13, 1.1, f"{hteam}", fontsize=35, color="#ff6361", fontweight='bold', transform=ax.transAxes)
+    ax.text(0.30, 1.1, "vs", fontsize=35, color="black", fontweight='bold', transform=ax.transAxes)
+    ax.text(0.6, 1.1, f"{ateam}", fontsize=35, color="#003f5c", fontweight='bold', transform=ax.transAxes)
+    
+    score = f"{home_goals} - {away_goals}"
+    ax.text(0.95, 1.1, score, fontsize=35, color="black", transform=ax.transAxes)
+    
+    if os.path.exists(logo_path):
+        logo_img = mpimg.imread(logo_path)
+        imagebox = OffsetImage(logo_img, zoom=0.7)
+        ab = AnnotationBbox(imagebox, (1.15, 1.2), frameon=False, xycoords='axes fraction')
+        ax.add_artist(ab)
+    
+    plt.show()
     return fig
 
-# Streamlit App
-st.title("Outswinger FC Analysis App")
-st.sidebar.header("Navigation")
+st.title("xG Flow Analysis")
 
-# Navigation
-page = st.sidebar.radio("Go to", ("Welcome", "Player Analysis"))
+csv_folder = "xgCSV"  # Folder where CSV files are stored
+files = [f for f in os.listdir(csv_folder) if f.endswith('.csv')]
+selected_file = st.selectbox("Select a match CSV file:", files)
 
-if page == "Welcome":
-    st.write("""
-    # Welcome to the Outswinger FC Analysis App
-
-    This app provides data for women's football in the Top-5 European leagues and others.
-    
-    The app was last updated on 31-10-2024.
-    
-    Please credit my work when using this in public articles, podcasts, videos, or other forms of media.
-    Marc Lamberts - @lambertsmarc on X/Twitter. - marclambertsanalysis@gmail.com
-    """)
-    st.write("Choose an option from the sidebar to get started.")
-    
-elif page == "Player Analysis":
-    st.header("Player Radar Chart")
-    st.sidebar.header("Select Options")
-    
-    # Load data
-    df = load_data()
-    
-    # League selection with 'All' option
-    league_options = ['All'] + sorted(df['Comp'].unique())
-    league_selected = st.sidebar.selectbox("Select League", league_options)
-    
-    # Position selection with 'All' option
-    position_options = ['All'] + sorted(df['Pos'].unique())
-    position_selected = st.sidebar.selectbox("Select Position", position_options)
-    
-    # Minimum minutes selection with updated options
-    min_minutes_options = [180, 300, 450, 600, 750, 900]
-    min_minutes = st.sidebar.selectbox("Select Minimum Minutes", min_minutes_options)
-    
-    # Apply filters
-    if league_selected == 'All':
-        league_filter = df['Comp'].notna()
-    else:
-        league_filter = df['Comp'] == league_selected
-    
-    if position_selected == 'All':
-        position_filter = df['Pos'].notna()
-    else:
-        position_filter = df['Pos'].str.contains(position_selected, na=False)
-    
-    filtered_players = df[league_filter & position_filter & (df['Min'] > min_minutes)]
-    
-    # Team selection
-    team_options = sorted(df[league_filter]['Squad'].unique())
-    team_selected = st.sidebar.selectbox("Select Team", team_options)
-    
-    # Player selection
-    player_options = sorted(filtered_players[filtered_players['Squad'] == team_selected]['Player'].unique())
-    player_selected = st.sidebar.selectbox("Select Player", player_options)
-    
-    if st.sidebar.button("Generate Radar Chart"):
-        squad_name = filtered_players.loc[filtered_players['Player'] == player_selected, 'Squad'].iloc[0]
-        params = list(df.columns[5:])
-        player_stats = df.loc[df['Player'] == player_selected].reset_index().loc[0, params].tolist()
-        values = [percentile_rank(df[param].fillna(0).values, val) for param, val in zip(params, player_stats)]
-        values = [99 if val == 100 else val for val in values]
-        fig = generate_radar_chart(params, values, f"{player_selected} - {squad_name}", "Per 90 Percentile Rank")
-        
-        # Display radar chart
-        st.pyplot(fig)
-        
-        # Option to download the image
-        file_name = f'{player_selected} - {squad_name}.png'
-        plt.savefig(file_name, dpi=750, bbox_inches='tight', facecolor='#e5e5e5')
-        with open(file_name, "rb") as img_file:
-            st.download_button(label="Download Image", data=img_file, file_name=file_name, mime="image/png")
+if selected_file:
+    file_path = os.path.join(csv_folder, selected_file)
+    df = load_data(file_path)
+    logo_path = "Outswinger FC (3).png"
+    st.pyplot(plot_xg_flow(df, logo_path))
