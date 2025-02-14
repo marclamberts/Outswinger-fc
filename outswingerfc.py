@@ -519,7 +519,7 @@ import streamlit as st
 from mplsoccer import VerticalPitch
 from matplotlib.colors import Normalize
 
-# Ensure the selected page is Pass Network
+# Pass Network page
 if selected_page == "Pass Network":
     st.title("Pass Network Visualization")
 
@@ -571,94 +571,29 @@ if selected_page == "Pass Network":
         sub_one = sub_times.min()
         completions = completions.loc[completions['newsecond'] < sub_one]
 
-        average_locs_and_count = completions.groupby('passer').agg({'x': ['mean'], 'y': ['mean', 'count'], 'epv': ['mean']})
-        average_locs_and_count.columns = ['x', 'y', 'count', 'epv']
-
-        passes_between = completions.groupby(['passer', 'recipient']).id.count().reset_index()
-        passes_between.rename({'id': 'pass_count'}, axis='columns', inplace=True)
-        passes_between = passes_between.merge(average_locs_and_count, left_on='passer', right_index=True)
-        passes_between = passes_between.merge(average_locs_and_count, left_on='recipient', right_index=True, suffixes=['', '_end'])
-
-        passes_between = passes_between.loc[passes_between['pass_count'] >= 3]
+        average_locs_and_count = completions.groupby('passer').agg({'x': ['mean'], 'y': ['mean', 'count'], 'epv': ['mean']}).reset_index()
+        average_locs_and_count.columns = ['name', 'x', 'y', 'pass_count', 'epv']
+        passes_between = completions.groupby(['passer', 'recipient']).size().reset_index(name='pass_count')
 
         return average_locs_and_count, passes_between
 
-    # Load match data
-    match_data_folder = 'WSL 2024-2025'  # Adjust path to where your match data is stored
-    csv_files = sorted([f for f in os.listdir(match_data_folder) if f.endswith('.csv')],
-                       key=lambda f: os.path.getmtime(os.path.join(match_data_folder, f)),
-                       reverse=True)
-
+    # Select a match and team
+    st.write("Select a match and team for the Pass Network:")
     selected_match = st.selectbox("Select a match", csv_files)
+    selected_team = st.selectbox("Select a team", team_names)
 
-    if selected_match:
+    if selected_match and selected_team:
         file_path = os.path.join(match_data_folder, selected_match)
         df = pd.read_csv(file_path)
 
-        team_ids = df['contestantId'].unique()
-        selected_team = st.selectbox("Select a Team", team_ids)
+        # Get team_id based on the selected team
+        team_id = [k for k, v in id_to_team.items() if v == selected_team][0]
+        average_locs_and_count, passes_between = create_pass_network_data(df, team_id)
 
-        epv = pd.read_csv("epv_grid.csv", header=None).to_numpy()
-
-        df['x'] = pd.to_numeric(df['x'], errors='coerce')
-        df['y'] = pd.to_numeric(df['y'], errors='coerce')
-        df['endX'] = pd.to_numeric(df['endX'], errors='coerce')
-        df['endY'] = pd.to_numeric(df['endY'], errors='coerce')
-
-        # Calculate `endX` and `endY` first
-        type_cols = [col for col in df.columns if '/qualifierId' in col]
-        
-        df['endX'] = 0.0
-        df['endY'] = 0.0
-
-        for i in range(len(df)):
-            df1 = df.iloc[i:i+1, :]
-            for j in range(len(type_cols)):
-                col = df1[type_cols[j]].values[0]
-                if col == 140:
-                    endx = df1.loc[:, 'qualifier/%i/value' % j].values[0]
-                    df.at[i, 'endX'] = endx
-
-            for k in range(len(type_cols)):
-                col = df1[type_cols[k]].values[0]
-                if col == 141:
-                    endy = df1.loc[:, 'qualifier/%i/value' % k].values[0]
-                    df.at[i, 'endY'] = endy
-
-        # Apply EPV grid calculation
-        df['x1_bin'] = pd.cut(df['x'], bins=epv.shape[1], labels=False).astype('Int64')
-        df['y1_bin'] = pd.cut(df['y'], bins=epv.shape[0], labels=False).astype('Int64')
-        df['x2_bin'] = pd.cut(df['endX'], bins=epv.shape[1], labels=False).astype('Int64')
-        df['y2_bin'] = pd.cut(df['endY'], bins=epv.shape[0], labels=False).astype('Int64')
-
-        def get_epv_value(bin_indices, epv_grid):
-            if pd.notnull(bin_indices[0]) and pd.notnull(bin_indices[1]):
-                return epv_grid[int(bin_indices[1])][int(bin_indices[0])]
-            return np.nan
-
-        df['start_zone_value'] = df[['x1_bin', 'y1_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
-        df['end_zone_value'] = df[['x2_bin', 'y2_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
-
-        df['epv'] = df['end_zone_value'] - df['start_zone_value']
-
-        # Now we can calculate the pass network data
-        data_team = create_pass_network_data(df, selected_team)
-
-        # Plot the pass network
-        fig, axs = plt.subplots(1, 2, figsize=(20, 16), gridspec_kw={'wspace': 0.1})
-        fig.set_facecolor("white")
-
-        pitch = VerticalPitch(pitch_type='opta', pad_top=5, pitch_color='white', line_color='black', half=False, goal_type='box', goal_alpha=0.8)
-        logo_path = 'logo.png'  # Replace with your logo path
-
-        plot_pass_network_with_logo(axs[0], pitch, data_team[0], data_team[1], f"{selected_team} Passing Network", add_logo_to_this_plot=False)
-        plot_pass_network_with_logo(axs[1], pitch, data_team[0], data_team[1], f"{selected_team} Passing Network", add_logo_to_this_plot=True, logo_path=logo_path)
-
-        plt.subplots_adjust(bottom=0.15)
-        axs[0].text(0.05, -0.05, 'Node size = number of touches\nColor = Expected possession values (darker is higher)\nLine size = number of passes',
-                    transform=axs[0].transAxes, fontsize=20, color='black', ha='left', va='top', fontweight='normal')
-
-        axs[1].text(0.95, -0.05, 'OUTSWINGER FC\nData via Opta | Eredivisie 2024-2025',
-                    transform=axs[1].transAxes, fontsize=20, color='black', ha='right', va='top', fontweight='normal')
+        # Plot Pass Network
+        fig, ax = plt.subplots(figsize=(15, 10))
+        pitch = VerticalPitch(pitch_type='statsbomb', pitch_color='#A9A9A9', line_color='white', linewidth=2)
+        title = f"Pass Network for {selected_team} - {selected_match.split('.')[0]}"
+        plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=True, logo_path="logo.png")
 
         st.pyplot(fig)
