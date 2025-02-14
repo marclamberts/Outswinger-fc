@@ -310,15 +310,13 @@ if selected_page == "Flow Map":
                 ax.scatter(goal, h_cumulative[h_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
 
             # Title (all black)
-            ax.text(0.4, 1.1, f"{hteam} vs {ateam}", fontsize=35, color="black", fontweight='bold', ha='center', transform=ax.transAxes)
+            ax.text(0.4, 1.1, f"{hteam} vs {ateam} ({home_goals} - {away_goals})", fontsize=35, color="black", fontweight='bold', ha='center', transform=ax.transAxes)
 
             # Subtitle (adjusted y position to avoid overlap)
             subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
             ax.text(0.2, 1.02, subtitle, fontsize=18, color="black", ha='center', transform=ax.transAxes)
 
             # Show match score and expected points
-            st.write(f"**Match: {hteam} vs {ateam}**")
-            st.write(f"**Score: {home_goals} - {away_goals}**")
             st.write(f"**Expected Points:** {hteam} = {hlast:.2f}, {ateam} = {alast:.2f}")
             st.write(subtitle)
 
