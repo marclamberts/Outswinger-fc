@@ -133,7 +133,7 @@ if selected_file:
     plt.text(0.16, 1.02, subtitle, ha='right', va='bottom', fontsize=18, transform=ax.transAxes)
 
     # Add logo in the bottom-right corner (adjust size and position)
-    logo_path = 'logo.png'  # Adjust to your logo's path
+    logo_path = 'path/to/your/logo.png'  # Adjust to your logo's path
     logo_img = mpimg.imread(logo_path)  # Read the logo image
 
     # Create the logo image and place it at the bottom-right corner of the plot
@@ -142,6 +142,10 @@ if selected_file:
 
     # Add the logo to the plot
     ax.add_artist(ab)
+
+    # Add text in the bottom-right corner
+    text = "OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025"
+    plt.text(0.98, -0.03, text, ha='right', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
 
     # Save the plot to an in-memory buffer
     buf = io.BytesIO()
