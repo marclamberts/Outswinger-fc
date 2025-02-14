@@ -317,8 +317,8 @@ if selected_page == "Flow Map":
             st.write(f"**Expected Points:** {hteam} = {hlast:.2f}, {ateam} = {alast:.2f}")
             st.write(subtitle)
 
-            # Footer and logo
-            st.markdown("OUTSWINGERFC.COM\nData via Opta | Eredivisie 2024-2025")
-
             # Display the plot in Streamlit
             st.pyplot(fig)
+
+            # Footer and logo (placed under the plot)
+            st.markdown("OUTSWINGERFC.COM\nData via Opta | Eredivisie 2024-2025")
