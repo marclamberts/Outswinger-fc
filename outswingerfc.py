@@ -168,7 +168,7 @@ if selected_file:
             plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
 
     
-    plt.tight_layout(pad=3.0)  # Increase padding to avoid cut-off
+    plt.tight_layout(pad=8.0)  # Increase padding to avoid cut-off
     # Save the figure to a PNG image
     img_buf = io.BytesIO()
     fig.savefig(img_buf, format='png')
