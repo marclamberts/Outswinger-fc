@@ -605,31 +605,27 @@ if selected_page == "Pass Network":
         df['endX'] = pd.to_numeric(df['endX'], errors='coerce')
         df['endY'] = pd.to_numeric(df['endY'], errors='coerce')
 
-        # Diagnostic check: List columns that contain '/qualifierId'
-        print("Columns in DataFrame:", df.columns)
+        # Calculate `endX` and `endY` first
         type_cols = [col for col in df.columns if '/qualifierId' in col]
-        print("Columns with '/qualifierId':", type_cols)
+        
+        df['endX'] = 0.0
+        df['endY'] = 0.0
 
-        if type_cols:
-            # Process `endX` and `endY` columns based on `qualifierId`
-            df['endX'] = 0.0
-            df['endY'] = 0.0
+        for i in range(len(df)):
+            df1 = df.iloc[i:i+1, :]
+            for j in range(len(type_cols)):
+                col = df1[type_cols[j]].values[0]
+                if col == 140:
+                    endx = df1.loc[:, 'qualifier/%i/value' % j].values[0]
+                    df.at[i, 'endX'] = endx
 
-            for i in range(len(df)):
-                df1 = df.iloc[i:i+1, :]
-                for j in range(len(type_cols)):
-                    col = df1[type_cols[j]].values[0]
-                    if col == 140:
-                        endx = df1.loc[:, 'qualifier/%i/value' % j].values[0]
-                        df.at[i, 'endX'] = endx
+            for k in range(len(type_cols)):
+                col = df1[type_cols[k]].values[0]
+                if col == 141:
+                    endy = df1.loc[:, 'qualifier/%i/value' % k].values[0]
+                    df.at[i, 'endY'] = endy
 
-                for k in range(len(type_cols)):
-                    col = df1[type_cols[k]].values[0]
-                    if col == 141:
-                        endy = df1.loc[:, 'qualifier/%i/value' % k].values[0]
-                        df.at[i, 'endY'] = endy
-
-        # After calculating `endX` and `endY`, calculate the EPV as before
+        # Apply EPV grid calculation
         df['x1_bin'] = pd.cut(df['x'], bins=epv.shape[1], labels=False).astype('Int64')
         df['y1_bin'] = pd.cut(df['y'], bins=epv.shape[0], labels=False).astype('Int64')
         df['x2_bin'] = pd.cut(df['endX'], bins=epv.shape[1], labels=False).astype('Int64')
@@ -645,7 +641,7 @@ if selected_page == "Pass Network":
 
         df['epv'] = df['end_zone_value'] - df['start_zone_value']
 
-        # Calculate pass network data
+        # Now we can calculate the pass network data
         data_team = create_pass_network_data(df, selected_team)
 
         # Plot the pass network
