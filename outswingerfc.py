@@ -132,13 +132,13 @@ if selected_file:
     plt.text(0.40, 1.05, title, ha='center', va='bottom', fontsize=25, fontweight='bold', transform=ax.transAxes)
     plt.text(0.16, 1.02, subtitle, ha='right', va='bottom', fontsize=18, transform=ax.transAxes)
 
-    # Add logo in the top-right corner
-    logo_path = 'logo.png'  # Adjust to your logo's path
+    # Add logo in the bottom-right corner (adjust size and position)
+    logo_path = 'path/to/your/logo.png'  # Adjust to your logo's path
     logo_img = mpimg.imread(logo_path)  # Read the logo image
 
-    # Create the logo image and place it at the top-right corner of the plot
-    imagebox = OffsetImage(logo_img, zoom=0.5)  # Adjust zoom for scaling the logo
-    ab = AnnotationBbox(imagebox, (0.97, 1.15), frameon=False, xycoords='axes fraction', box_alignment=(1, 1))
+    # Create the logo image and place it at the bottom-right corner of the plot
+    imagebox = OffsetImage(logo_img, zoom=0.2)  # Adjust zoom for scaling the logo (smaller size)
+    ab = AnnotationBbox(imagebox, (0.98, 0.02), frameon=False, xycoords='axes fraction', box_alignment=(1, 0))
 
     # Add the logo to the plot
     ax.add_artist(ab)
