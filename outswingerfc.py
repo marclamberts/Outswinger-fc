@@ -521,4 +521,121 @@ from matplotlib.colors import Normalize
 
 if selected_page == "Pass Network":
     st.title("Pass Network Visualization")
+    
+    # Function to add logo to the plot
+def add_logo(ax, logo_path):
+    logo = mpimg.imread(logo_path)
+    imagebox = OffsetImage(logo, zoom=0.6)
+    ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, xycoords='axes fraction', boxcoords="axes fraction")
+    ax.add_artist(ab)
+
+# Function to plot the pass network with an optional logo
+def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
+    pitch.draw(ax=ax)
+    
+    norm = plt.Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
+    cmap = plt.cm.viridis
+    colors = cmap(norm(average_locs_and_count['epv']))
+    
+    max_pass_count = passes_between['pass_count'].max()
+    passes_between['zorder'] = passes_between['pass_count'] / max_pass_count * 10
+    passes_between['alpha'] = passes_between['pass_count'] / max_pass_count
+
+    for index, row in passes_between.iterrows():
+        pitch.lines(row['x'], row['y'], row['x_end'], row['y_end'], color='grey', alpha=row['alpha'], lw=4, ax=ax, zorder=row['zorder'])
+
+    pitch.scatter(average_locs_and_count['x'], average_locs_and_count['y'], s=500, color=colors, edgecolors="black", linewidth=1, alpha=1, ax=ax, zorder=11)
+
+    for index, row in average_locs_and_count.iterrows():
+        pitch.annotate(row.name, xy=(row.x, row.y), ax=ax, ha='center', va='bottom', fontsize=12, color='black', zorder=12, xytext=(0, -35), textcoords='offset points', bbox=dict(boxstyle="round,pad=0.3", edgecolor="black", facecolor="white", alpha=0.7))
+
+    ax.set_title(title, fontsize=18, color="black", fontweight='bold', pad=20)
+
+    if add_logo_to_this_plot:
+        add_logo(ax, logo_path)
+
+# Function to calculate the pass network data
+def create_pass_network_data(df, team_id):
+    team_data = df.loc[(df['contestantId'] == team_id)].reset_index()
+    team_data["newsecond"] = 60 * team_data["timeMin"] + team_data["timeSec"]
+    team_data.sort_values(by=['newsecond'], inplace=True)
+    team_data['passer'] = team_data['playerName']
+    team_data['recipient'] = team_data['passer'].shift(-1)
+
+    passes = team_data.loc[(team_data['typeId'] == 1)]
+    completions = passes.loc[(passes['outcome'] == 1)]
+
+    subs = team_data.loc[(team_data['typeId'] == 18)]
+    sub_times = subs["newsecond"]
+    sub_one = sub_times.min()
+    completions = completions.loc[completions['newsecond'] < sub_one]
+
+    average_locs_and_count = completions.groupby('passer').agg({'x': ['mean'], 'y': ['mean', 'count'], 'epv': ['mean']})
+    average_locs_and_count.columns = ['x', 'y', 'count', 'epv']
+
+    passes_between = completions.groupby(['passer', 'recipient']).id.count().reset_index()
+    passes_between.rename({'id': 'pass_count'}, axis='columns', inplace=True)
+    passes_between = passes_between.merge(average_locs_and_count, left_on='passer', right_index=True)
+    passes_between = passes_between.merge(average_locs_and_count, left_on='recipient', right_index=True, suffixes=['', '_end'])
+
+    passes_between = passes_between.loc[passes_between['pass_count'] >= 3]
+
+    return average_locs_and_count, passes_between
+
+
+    match_data_folder = 'WSL 2024-2025'  # Adjust path to where your match data is stored
+    csv_files = sorted([f for f in os.listdir(match_data_folder) if f.endswith('.csv')],
+                       key=lambda f: os.path.getmtime(os.path.join(match_data_folder, f)),
+                       reverse=True)
+
+    selected_match = st.selectbox("Select a match", csv_files)
+
+    if selected_match:
+        file_path = os.path.join(match_data_folder, selected_match)
+        df = pd.read_csv(file_path)
+
+        team_ids = df['contestantId'].unique()
+        selected_team = st.selectbox("Select a Team", team_ids)
+
+        epv = pd.read_csv("epv_grid.csv", header=None).to_numpy()
+
+        df['x'] = pd.to_numeric(df['x'], errors='coerce')
+        df['y'] = pd.to_numeric(df['y'], errors='coerce')
+        df['endX'] = pd.to_numeric(df['endX'], errors='coerce')
+        df['endY'] = pd.to_numeric(df['endY'], errors='coerce')
+
+        df['x1_bin'] = pd.cut(df['x'], bins=epv.shape[1], labels=False).astype('Int64')
+        df['y1_bin'] = pd.cut(df['y'], bins=epv.shape[0], labels=False).astype('Int64')
+        df['x2_bin'] = pd.cut(df['endX'], bins=epv.shape[1], labels=False).astype('Int64')
+        df['y2_bin'] = pd.cut(df['endY'], bins=epv.shape[0], labels=False).astype('Int64')
+
+        def get_epv_value(bin_indices, epv_grid):
+            if pd.notnull(bin_indices[0]) and pd.notnull(bin_indices[1]):
+                return epv_grid[int(bin_indices[1])][int(bin_indices[0])]
+            return np.nan
+
+        df['start_zone_value'] = df[['x1_bin', 'y1_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
+        df['end_zone_value'] = df[['x2_bin', 'y2_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
+
+        df['epv'] = df['end_zone_value'] - df['start_zone_value']
+
+        data_team = create_pass_network_data(df, selected_team)
+
+        fig, axs = plt.subplots(1, 2, figsize=(20, 16), gridspec_kw={'wspace': 0.1})
+        fig.set_facecolor("white")
+
+        pitch = VerticalPitch(pitch_type='opta', pad_top=5, pitch_color='white', line_color='black', half=False, goal_type='box', goal_alpha=0.8)
+        logo_path = 'logo.png'  # Replace with your logo path
+
+        plot_pass_network_with_logo(axs[0], pitch, data_team[0], data_team[1], f"{selected_team} Passing Network", add_logo_to_this_plot=False)
+        plot_pass_network_with_logo(axs[1], pitch, data_team[0], data_team[1], f"{selected_team} Passing Network", add_logo_to_this_plot=True, logo_path=logo_path)
+
+        plt.subplots_adjust(bottom=0.15)
+        axs[0].text(0.05, -0.05, 'Node size = number of touches\nColor = Expected possession values (darker is higher)\nLine size = number of passes',
+                    transform=axs[0].transAxes, fontsize=20, color='black', ha='left', va='top', fontweight='normal')
+
+        axs[1].text(0.95, -0.05, 'OUTSWINGER FC\nData via Opta | Eredivisie 2024-2025',
+                    transform=axs[1].transAxes, fontsize=20, color='black', ha='right', va='top', fontweight='normal')
+
+        st.pyplot(fig)
 
