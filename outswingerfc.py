@@ -17,7 +17,7 @@ st.title("Football Shot Map App")
 
 # Sidebar Menu
 st.sidebar.title("Navigation")
-selected_page = st.sidebar.radio("Go to", ("Home", "Shot Map", "Flow Map"))
+selected_page = st.sidebar.radio("Go to", ("Home", "Shot Map", "Flow Map", "Field Tilt"))
 
 if selected_page == "Shot Map":
     st.title("Expected Goals (xG) Shotmap")
@@ -269,15 +269,6 @@ if selected_page == "Flow Map":
             alast, hlast = round(a_cumulative[-1], 2), round(h_cumulative[-1], 2)
             a_psxg_last, h_psxg_last = round(a_psxg_cumulative[-1], 2), round(h_psxg_cumulative[-1], 2)
 
-            # Calculate win probabilities and expected points
-            total_xg = alast + hlast
-            team1_win_prob = alast / total_xg if total_xg > 0 else 0.5
-            team2_win_prob = hlast / total_xg if total_xg > 0 else 0.5
-            draw_prob = 1 - (team1_win_prob + team2_win_prob)
-
-            team1_xp = (3 * team1_win_prob) + (1 * draw_prob)
-            team2_xp = (3 * team2_win_prob) + (1 * draw_prob)
-
             # Calculate home and away goals from the dataset
             home_goals = df.loc[(df['TeamId'] == hteam) & (df['isGoal'] == 1)].shape[0]
             away_goals = df.loc[(df['TeamId'] == ateam) & (df['isGoal'] == 1)].shape[0]
@@ -305,8 +296,12 @@ if selected_page == "Flow Map":
             h_min.append(95)
             h_cumulative.append(hlast)
 
-            ax.step(a_min, a_cumulative, color='#003f5c', label=f'{ateam}\nTotal xG: {alast:.2f}', linewidth=5, where='post')
-            ax.step(h_min, h_cumulative, color='#ff6361', label=f'{hteam}\nTotal xG: {hlast:.2f}', linewidth=5, where='post')
+            ax.step(a_min, a_cumulative, color='#003f5c', linewidth=5, where='post')
+            ax.step(h_min, h_cumulative, color='#ff6361', linewidth=5, where='post')
+
+            # Label the lines on the plot
+            ax.text(92, a_cumulative[-1], ateam, color='#003f5c', fontsize=18, fontweight='bold')
+            ax.text(92, h_cumulative[-1], hteam, color='#ff6361', fontsize=18, fontweight='bold')
 
             # Goal annotations
             for goal in a_goals_min:
@@ -314,10 +309,8 @@ if selected_page == "Flow Map":
             for goal in h_goals_min:
                 ax.scatter(goal, h_cumulative[h_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
 
-            # Title, subtitle, footer, and logo
-            ax.text(0.13, 1.1, f"{hteam}", fontsize=35, color="#ff6361", fontweight='bold', ha='center', va='bottom', transform=ax.transAxes)
-            ax.text(0.30, 1.1, "vs", fontsize=35, color="black", fontweight='bold', ha='center', va='bottom', transform=ax.transAxes)
-            ax.text(0.6, 1.1, f"{ateam}", fontsize=35, color="#003f5c", fontweight='bold', ha='center', va='bottom', transform=ax.transAxes)
+            # Title (all black)
+            ax.text(0.5, 1.1, f"{hteam} vs {ateam}", fontsize=35, color="black", fontweight='bold', ha='center', transform=ax.transAxes)
 
             # Show match score and expected points
             subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
@@ -325,7 +318,7 @@ if selected_page == "Flow Map":
             # Display the match details
             st.write(f"**Match: {hteam} vs {ateam}**")
             st.write(f"**Score: {home_goals} - {away_goals}**")
-            st.write(f"**Expected Points:** {hteam} = {team1_xp:.2f}, {ateam} = {team2_xp:.2f}")
+            st.write(f"**Expected Points:** {hteam} = {hlast:.2f}, {ateam} = {alast:.2f}")
             st.write(subtitle)
 
             # Footer and logo
