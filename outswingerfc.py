@@ -510,60 +510,16 @@ if selected_page == "Field Tilt":
 
 import os
 import pandas as pd
-import numpy as np
 import streamlit as st
-import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-from mplsoccer import VerticalPitch
 import matplotlib.image as mpimg
-from matplotlib.cm import ScalarMappable
+from mplsoccer import VerticalPitch
+import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 
-# Function to add logo to the plot
-def add_logo(ax, logo_path):
-    logo = mpimg.imread(logo_path)
-    imagebox = OffsetImage(logo, zoom=0.6)  # Increased zoom for a bigger logo
-    ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, xycoords='axes fraction', boxcoords="axes fraction")
-    ax.add_artist(ab)
 
-# Plotting function for Pass Network
-def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
-    # Draw the pitch
-    pitch.draw(ax=ax)
-
-    # Normalize counts for coloring
-    norm = Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
-    cmap = plt.cm.viridis
-    colors = cmap(norm(average_locs_and_count['epv']))
-
-    # Normalize pass counts for zorder and alpha
-    max_pass_count = passes_between['pass_count'].max()
-    passes_between['zorder'] = passes_between['pass_count'] / max_pass_count * 10
-    passes_between['alpha'] = passes_between['pass_count'] / max_pass_count
-
-    # Draw pass lines
-    for index, row in passes_between.iterrows():
-        pitch.lines(row['x'], row['y'], row['x_end'], row['y_end'],
-                    color='grey', alpha=row['alpha'], lw=4, ax=ax, zorder=row['zorder'])
-
-    # Plot larger nodes with colors based on EPV values
-    pitch.scatter(average_locs_and_count['x'], average_locs_and_count['y'], s=500, 
-                  color=colors, edgecolors="black", linewidth=1, alpha=1, ax=ax, zorder=11)
-
-    # Annotate player names
-    for index, row in average_locs_and_count.iterrows():
-        pitch.annotate(row.name, xy=(row.x, row.y), ax=ax, ha='center', va='bottom',
-                       fontsize=12, color='black', zorder=12, xytext=(0, -35), textcoords='offset points',
-                       bbox=dict(boxstyle="round,pad=0.3", edgecolor="black", facecolor="white", alpha=0.7))
-
-    # Set title
-    ax.set_title(title, fontsize=18, color="black", fontweight='bold', pad=20)
-
-    # Add logo if required
-    if add_logo_to_this_plot:
-        add_logo(ax, logo_path)
-
-# Load match data based on Streamlit selection
+# Function to load match data
 def load_match_data(match_data_folder):
     # List all CSV files in the folder
     csv_files = sorted([f for f in os.listdir(match_data_folder) if f.endswith('.csv')],
@@ -578,12 +534,82 @@ def load_match_data(match_data_folder):
         df = pd.read_csv(file_path)
         st.write(f"Selected match: {selected_match}")
         st.write(df.head())  # Display first few rows as preview
+
+        # Step 1: Extract contest IDs for this match
+        if 'contestantId' in df.columns:
+            contestant_ids = df['contestantId'].unique()
+            st.write(f"Contestant IDs for the selected match: {contestant_ids}")
+        else:
+            st.write("contestantId not found in the selected match file.")
+        
         return df
     else:
         st.write("No match selected.")
         return None
 
-# Pass network analysis for team data
+
+# Function to add logo to the plot
+def add_logo(ax, logo_path):
+    # Load the logo image
+    logo = mpimg.imread(logo_path)
+    
+    # Create an OffsetImage object for the logo
+    imagebox = OffsetImage(logo, zoom=0.6)  # Increased zoom for a bigger logo
+    
+    # Position the logo at the top-right corner with a higher position
+    ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, 
+                        xycoords='axes fraction', boxcoords="axes fraction")
+    
+    # Add the logo as an artist to the plot
+    ax.add_artist(ab)
+
+
+# Function to plot pass network with logo
+def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
+    # Draw the pitch
+    pitch.draw(ax=ax)
+
+    # Normalize counts for coloring
+    norm = Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
+    cmap = plt.cm.viridis
+    colors = cmap(norm(average_locs_and_count['epv']))
+
+    # Normalize pass counts for zorder and alpha
+    max_pass_count = passes_between['pass_count'].max()
+    passes_between['zorder'] = passes_between['pass_count'] / max_pass_count * 10
+    passes_between['alpha'] = passes_between['pass_count'] / max_pass_count
+
+    # Draw pass lines without arrowheads
+    for index, row in passes_between.iterrows():
+        pitch.lines(row['x'], row['y'], row['x_end'], row['y_end'],
+                    color='grey', alpha=row['alpha'], lw=4, ax=ax, zorder=row['zorder'])
+
+    # Plot larger nodes with colors based on EPV values
+    pitch.scatter(average_locs_and_count['x'], average_locs_and_count['y'], s=500,  # Increased size
+                  color=colors, edgecolors="black", linewidth=1, alpha=1, ax=ax, zorder=11)
+
+    # Annotate player names with offsets to avoid overlap with nodes
+    for index, row in average_locs_and_count.iterrows():
+        pitch.annotate(row.name, xy=(row.x, row.y), ax=ax, ha='center', va='bottom',
+                       fontsize=12, color='black', zorder=12, xytext=(0, -35), textcoords='offset points',
+                       bbox=dict(boxstyle="round,pad=0.3", edgecolor="black", facecolor="white", alpha=0.7))
+
+    # Set title
+    ax.set_title(title, fontsize=18, color="black", fontweight='bold', pad=20)
+
+    # Add logo to the right plot if the flag is set
+    if add_logo_to_this_plot:
+        add_logo(ax, logo_path)
+
+
+# Function to get EPV values based on zones
+def get_epv_value(bin_indices, epv_grid):
+    if pd.notnull(bin_indices[0]) and pd.notnull(bin_indices[1]):
+        return epv_grid[int(bin_indices[1])][int(bin_indices[0])]
+    return np.nan  # Return NaN if indices are invalid
+
+
+# Function to create pass network data for a team
 def create_pass_network_data(df, team_id):
     # Filter the data for the given team
     team_data = df.loc[(df['contestantId'] == team_id)].reset_index()
@@ -621,6 +647,7 @@ def create_pass_network_data(df, team_id):
 
     return average_locs_and_count, passes_between
 
+
 # Streamlit page selection
 selected_page = st.selectbox("Select a page", ["Passnetwork"])
 
@@ -629,21 +656,51 @@ if selected_page == "Passnetwork":
 
     # Folder containing CSV match data
     match_data_folder = 'WSL 2024-2025'  # Replace with your folder path
-    
+
     # Step 1: Load match data
     df = load_match_data(match_data_folder)
     
     if df is not None:
-        # Step 2: Perform calculations (e.g., for both teams)
-        # Team IDs (Example, replace with actual team IDs)
-        team1_id = 'c8h9bw1l82s06h77xxrelzhur'  # Example Team 1 ID
-        team2_id = '22doj4sgsocqpxw45h607udje'  # Example Team 2 ID
+        # Extract contestantId and display
+        if 'contestantId' in df.columns:
+            contestant_ids = df['contestantId'].unique()
+            selected_team = st.selectbox("Select a team", contestant_ids)
+            st.write(f"Selected Team ID: {selected_team}")
+        else:
+            st.write("contestantId not found in the selected match file.")
 
-        # Create pass network data for both teams
-        data_team1 = create_pass_network_data(df, team1_id)
-        data_team2 = create_pass_network_data(df, team2_id)
+        # After team selection, perform calculations for EPV grid (assuming epv_grid.csv exists)
+        epv = pd.read_csv("epv_grid.csv", header=None)  # Load EPV grid
+        epv = np.array(epv)  # Convert to numpy array
+        epv_rows, epv_cols = epv.shape  # Get rows and columns
 
-        # Step 3: Visualize the pass network using mplsoccer
+        # Ensure coordinate columns are numeric
+        df['x'] = pd.to_numeric(df['x'], errors='coerce')
+        df['y'] = pd.to_numeric(df['y'], errors='coerce')
+        df['endX'] = pd.to_numeric(df['endX'], errors='coerce')
+        df['endY'] = pd.to_numeric(df['endY'], errors='coerce')
+
+        # Map start and end coordinates to EPV zones
+        df['x1_bin'] = pd.cut(df['x'], bins=epv_cols, labels=False).astype('Int64')
+        df['y1_bin'] = pd.cut(df['y'], bins=epv_rows, labels=False).astype('Int64')
+        df['x2_bin'] = pd.cut(df['endX'], bins=epv_cols, labels=False).astype('Int64')
+        df['y2_bin'] = pd.cut(df['endY'], bins=epv_rows, labels=False).astype('Int64')
+
+        # Calculate start and end zone EPV values
+        df['start_zone_value'] = df[['x1_bin', 'y1_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
+        df['end_zone_value'] = df[['x2_bin', 'y2_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
+
+        # Compute EPV for the action
+        df['epv'] = df['end_zone_value'] - df['start_zone_value']
+
+        # Save the results to an Excel file
+        df.to_excel("epv.xlsx", index=False)
+        st.write("EPV calculations saved to epv.xlsx")
+
+        # Create pass network data for selected team
+        data_team = create_pass_network_data(df, selected_team)
+
+        # Set up the vertical pitch
         fig, axs = plt.subplots(1, 2, figsize=(20, 16), gridspec_kw={'wspace': 0.1})
         fig.set_facecolor("white")
 
@@ -652,23 +709,16 @@ if selected_page == "Passnetwork":
                               half=False, goal_type='box', goal_alpha=0.8)
 
         # Path to the logo
-        logo_path = 'Data visuals/Outswinger FC (3).png'  # Replace with your logo path
+        logo_path = 'logo.png'  # Replace with your logo path
 
-        # Plot the pass network for Team 1 (no logo)
-        plot_pass_network_with_logo(axs[0], pitch, data_team1[0], data_team1[1], "Team 1 Passing Network", add_logo_to_this_plot=False)
-
-        # Plot the pass network for Team 2 (with logo)
-        plot_pass_network_with_logo(axs[1], pitch, data_team2[0], data_team2[1], "Team 2 Passing Network", add_logo_to_this_plot=True, logo_path=logo_path)
+        # Plot the pass network for selected team (with logo)
+        plot_pass_network_with_logo(axs[0], pitch, data_team[0], data_team[1], f"Pass Network for Team {selected_team}", add_logo_to_this_plot=True, logo_path=logo_path)
 
         # Adjust spacing and add explanatory text below each pitch
-        plt.subplots_adjust(bottom=0.15)
+        plt.subplots_adjust(bottom=0.15)  # Increase the bottom margin to give space for the text
         axs[0].text(0.05, -0.05, 'Node size = number of touches\nColor = Expected possession values (darker is higher)\nLine size = number of passes',
                     transform=axs[0].transAxes, fontsize=20, color='black', ha='left', va='top', fontweight='normal')
 
-        axs[1].text(0.95, -0.05, 'OUTSWINGER FC\nData via Opta | WSL 2024-2025',
-                    transform=axs[1].transAxes, fontsize=20, color='black', ha='right', va='top', fontweight='normal')
-
         # Save and show the plot
-        plt.savefig('Passnetwork_Team1_vs_Team2_with_logo.png', dpi=500, bbox_inches='tight', facecolor='white')
+        plt.savefig('Passnetwork_with_logo.png', dpi=500, bbox_inches='tight', facecolor='white')
         st.pyplot(fig)
-
