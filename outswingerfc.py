@@ -314,7 +314,7 @@ if selected_page == "Flow Map":
 
             # Subtitle (adjusted y position to avoid overlap)
             subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
-            ax.text(0.5, 1.05, subtitle, fontsize=18, color="black", ha='center', transform=ax.transAxes)
+            ax.text(0.2, 1.02, subtitle, fontsize=18, color="black", ha='center', transform=ax.transAxes)
 
             # Show match score and expected points
             st.write(f"**Match: {hteam} vs {ateam}**")
