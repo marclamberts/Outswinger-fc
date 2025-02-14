@@ -313,6 +313,7 @@ if selected_page == "Flow Map":
         score = f"{home_goals} - {away_goals}"
         subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
 
+        # Display the match details
         st.write(f"**Match: {hteam} vs {ateam}**")
         st.write(f"**Score: {home_goals} - {away_goals}**")
         st.write(f"**Expected Points:** {hteam} = {team1_xp:.2f}, {ateam} = {team2_xp:.2f}")
@@ -323,4 +324,3 @@ if selected_page == "Flow Map":
 
         # Display the plot in Streamlit
         st.pyplot(fig)
-
