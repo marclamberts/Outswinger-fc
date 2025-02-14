@@ -17,7 +17,7 @@ st.title("Football Shot Map App")
 
 # Sidebar Menu
 st.sidebar.title("Navigation")
-selected_page = st.sidebar.radio("Go to", ("Home", "Shot Map"))
+selected_page = st.sidebar.radio("Go to", ("Home", "Shot Map", "xG Flow Map"))
 
 if selected_page == "Shot Map":
     st.title("Expected Goals (xG) Shotmap")
@@ -121,66 +121,26 @@ if selected_page == "Shot Map":
         # Scatter plot code for team1 (home team)
         for x in range(len(team1['x'])):
             x_pos, y_pos = add_jitter(team1['x'][x], 100 - team1['y'][x])  # Apply jitter
-            if team1['Type_of_play'][x] == 'FromCorner' and team1['isGoal'][x] == True:
+            # Add conditions based on 'Type_of_play' and whether the shot is a goal or not
+            if team1['isGoal'][x]:
                 plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team1['Type_of_play'][x] == 'FromCorner' and team1['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team1['Type_of_play'][x] == 'RegularPlay' and team1['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team1['Type_of_play'][x] == 'RegularPlay' and team1['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team1['Type_of_play'][x] == 'FastBreak' and team1['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team1['Type_of_play'][x] == 'FastBreak' and team1['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team1['Type_of_play'][x] == 'ThrowinSetPiece' and team1['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team1['Type_of_play'][x] == 'ThrowinSetPiece' and team1['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team1['Type_of_play'][x] == 'SetPiece' and team1['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team1['Type_of_play'][x] == 'SetPiece' and team1['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team1['Type_of_play'][x] == 'Penalty' and team1['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team1['Type_of_play'][x] == 'Penalty' and team1['isGoal'][x] == False:
+            else:
                 plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
 
         # Scatter plot code for team2 (away team)
         for x in range(len(team2['x'])):
             x_pos, y_pos = add_jitter(100 - team2['x'][x], team2['y'][x])  # Apply jitter
-            if team2['Type_of_play'][x] == 'FromCorner' and team2['isGoal'][x] == True:
+            if team2['isGoal'][x]:
                 plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team2['Type_of_play'][x] == 'FromCorner' and team2['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team2['Type_of_play'][x] == 'RegularPlay' and team2['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team2['Type_of_play'][x] == 'RegularPlay' and team2['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team2['Type_of_play'][x] == 'FastBreak' and team2['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team2['Type_of_play'][x] == 'FastBreak' and team2['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team2['Type_of_play'][x] == 'ThrowinSetPiece' and team2['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team2['Type_of_play'][x] == 'ThrowinSetPiece' and team2['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team2['Type_of_play'][x] == 'SetPiece' and team2['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team2['Type_of_play'][x] == 'SetPiece' and team2['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team2['Type_of_play'][x] == 'Penalty' and team2['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team2['Type_of_play'][x] == 'Penalty' and team2['isGoal'][x] == False:
+            else:
                 plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
 
-        
         # Save the figure to a PNG image
         img_buf = io.BytesIO()
         fig.savefig(img_buf, format='png')
         img_buf.seek(0)
 
-        # Create download button
+        # Create download button for shot map
         st.download_button(
             label="Download Shot Map as PNG",
             data=img_buf,
@@ -190,3 +150,54 @@ if selected_page == "Shot Map":
 
         # Show the plot
         st.pyplot(fig)
+
+elif selected_page == "xG Flow Map":
+    st.title("xG Flow Map")
+
+    # Path to the xgCSV folder
+    xg_csv_folder = 'xgCSV'
+
+    # List all CSV files in the xgCSV folder and sort by modification time (most recent first)
+    csv_files = sorted(
+        [f for f in os.listdir(xg_csv_folder) if f.endswith('.csv')],
+        key=lambda f: os.path.getmtime(os.path.join(xg_csv_folder, f)),
+        reverse=True  # Sort by most recent first
+    )
+
+    # Let the user select a CSV file for the xG Flow Map
+    selected_file = st.selectbox("Select a CSV file for xG Flow Map", csv_files)
+
+    if selected_file:
+        # Load the data for xG flow map
+        file_path = os.path.join(xg_csv_folder, selected_file)
+        df_xg = pd.read_csv(file_path)
+
+        # Extract team names from the file name
+        teams = selected_file.split('_')[-1].split(' - ')  # Extract team names from the file name
+
+        team1_name = teams[0]
+        team2_name = teams[1].split('.')[0]
+
+        # Plot xG flow over time
+        fig, ax = plt.subplots(figsize=(16, 8))
+        ax.plot(df_xg['minute'], df_xg['team1_xg'], label=f"{team1_name} xG", color='#ff6361')
+        ax.plot(df_xg['minute'], df_xg['team2_xg'], label=f"{team2_name} xG", color='#003f5c')
+
+        ax.set_title(f"xG Flow Map: {team1_name} vs {team2_name}", fontsize=20)
+        ax.set_xlabel("Minute")
+        ax.set_ylabel("xG Value")
+        ax.legend(loc="upper left")
+
+        # Save the xG flow map to a buffer and show it in Streamlit
+        img_buf = io.BytesIO()
+        fig.savefig(img_buf, format='png')
+        img_buf.seek(0)
+
+        # Show the xG Flow Map
+        st.image(img_buf, caption="xG Flow Map")
+        st.download_button(
+            label="Download xG Flow Map as PNG",
+            data=img_buf,
+            file_name=f"xg_flow_map_{team1_name}_{team2_name}.png",
+            mime="image/png"
+        )
