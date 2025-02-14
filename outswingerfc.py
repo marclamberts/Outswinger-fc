@@ -543,8 +543,8 @@ def add_logo(ax, logo_path):
     ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, xycoords='axes fraction', boxcoords="axes fraction")
     ax.add_artist(ab)
 
-# Function to plot pass network with logo
-def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
+# Function to plot pass network
+def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, logo_path=None):
     pitch.draw(ax=ax)
     
     norm = Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
@@ -566,109 +566,50 @@ def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_betwee
 
     ax.set_title(title, fontsize=18, color="black", fontweight='bold', pad=20)
 
-    if add_logo_to_this_plot:
+    if logo_path:
         add_logo(ax, logo_path)
 
-# Function to get EPV value based on zones
-def get_epv_value(bin_indices, epv_grid):
-    if pd.notnull(bin_indices[0]) and pd.notnull(bin_indices[1]):
-        return epv_grid[int(bin_indices[1])][int(bin_indices[0])]
-    return np.nan
-
-# Function to calculate endX and endY values
-def calculate_end_coordinates(df):
-    type_cols = [col for col in df.columns if '/qualifierId' in col]
-
-    df['endX'] = 0.0
-    df['endY'] = 0.0
-
-    for i in range(len(df)):
-        df1 = df.iloc[i:i+1, :]
-        
-        for j in range(len(type_cols)):
-            col = df1[type_cols[j]].values[0]
-            if col == 140:
-                endx = df1.loc[:, 'qualifier/%i/value' % j].values[0]
-                df.at[i, 'endX'] = endx
-
-        for k in range(len(type_cols)):
-            col = df1[type_cols[k]].values[0]
-            if col == 141:
-                endy = df1.loc[:, 'qualifier/%i/value' % k].values[0]
-                df.at[i, 'endY'] = endy
-
-    return df
-
-# Function to create pass network data for a team
-def create_pass_network_data(df, team_id):
-    team_data = df.loc[(df['contestantId'] == team_id)].reset_index()
-
-    team_data["newsecond"] = 60 * team_data["timeMin"] + team_data["timeSec"]
-    team_data.sort_values(by=['newsecond'], inplace=True)
-
-    team_data['passer'] = team_data['playerName']
-    team_data['recipient'] = team_data['passer'].shift(-1)
-
-    passes = team_data.loc[(team_data['typeId'] == 1)]
-    completions = passes.loc[(passes['outcome'] == 1)]
-
-    subs = team_data.loc[(team_data['typeId'] == 18)]
-    sub_times = subs["newsecond"]
-    sub_one = sub_times.min()
-    completions = completions.loc[completions['newsecond'] < sub_one]
-
-    average_locs_and_count = completions.groupby('passer').agg({'x': ['mean'], 'y': ['mean', 'count'], 'epv': ['mean']})
-    average_locs_and_count.columns = ['x', 'y', 'count', 'epv']
-
-    passes_between = completions.groupby(['passer', 'recipient']).id.count().reset_index()
-    passes_between.rename({'id': 'pass_count'}, axis='columns', inplace=True)
-    passes_between = passes_between.merge(average_locs_and_count, left_on='passer', right_index=True)
-    passes_between = passes_between.merge(average_locs_and_count, left_on='recipient', right_index=True, suffixes=['', '_end'])
-
-    passes_between = passes_between.loc[passes_between['pass_count'] >= 3]
-
-    return average_locs_and_count, passes_between
-
-# Streamlit page selection
-selected_page = st.selectbox("Select a page", ["Passnetwork", "Other Page"])
+# Streamlit sidebar navigation
+selected_page = st.sidebar.selectbox("Select a page", ["Home", "Passnetwork", "Other Page"])
 
 if selected_page == "Passnetwork":
     st.title("Passnetwork Visualization")
 
     match_data_folder = 'WSL 2024-2025'
-
     df = load_match_data(match_data_folder)
     
     if df is not None:
-        df = calculate_end_coordinates(df)
+        epv = pd.read_csv("epv_grid.csv", header=None).values  
 
-        if 'contestantId' in df.columns:
-            contestant_ids = df['contestantId'].unique()
-            selected_teams = st.multiselect("Select teams", contestant_ids, default=contestant_ids[:2])
-        else:
-            st.write("contestantId not found in the selected match file.")
+        # Ensure numeric columns for calculations
+        df['x'] = pd.to_numeric(df['x'], errors='coerce')
+        df['y'] = pd.to_numeric(df['y'], errors='coerce')
+        df['endX'] = pd.to_numeric(df['endX'], errors='coerce')
+        df['endY'] = pd.to_numeric(df['endY'], errors='coerce')
 
-        epv = pd.read_csv("epv_grid.csv", header=None) 
-        epv = np.array(epv)  
-
-        df['epv'] = df.apply(lambda row: get_epv_value((row['x'], row['y']), epv) - get_epv_value((row['endX'], row['endY']), epv), axis=1)
+        df['epv'] = df.apply(lambda row: epv[int(row['y'])][int(row['x'])] - epv[int(row['endY'])][int(row['endX'])], axis=1)
 
         df.to_excel("epv.xlsx", index=False)
         st.download_button("Download EPV Data", "epv.xlsx")
 
-        data_team1 = create_pass_network_data(df, selected_teams[0])
-        data_team2 = create_pass_network_data(df, selected_teams[1])
+        contestant_ids = df['contestantId'].unique()
+        selected_teams = st.multiselect("Select teams", contestant_ids, default=contestant_ids[:2])
 
-        fig, axs = plt.subplots(1, 2, figsize=(20, 16))
-        fig.set_facecolor("white")
+        if len(selected_teams) == 2:
+            team1_data = df[df['contestantId'] == selected_teams[0]]
+            team2_data = df[df['contestantId'] == selected_teams[1]]
 
-        pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black')
+            fig, axs = plt.subplots(1, 2, figsize=(20, 16))
+            fig.set_facecolor("white")
 
-        plot_pass_network_with_logo(axs[0], pitch, data_team1[0], data_team1[1], f"Pass Network for {selected_teams[0]}", True, 'logo.png')
-        plot_pass_network_with_logo(axs[1], pitch, data_team2[0], data_team2[1], f"Pass Network for {selected_teams[1]}", True, 'logo.png')
+            pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black')
 
-        plt.savefig('Passnetwork_with_logo.png', dpi=500, bbox_inches='tight')
-        st.image('Passnetwork_with_logo.png', caption='Pass Network Visualization', use_column_width=True)
+            plot_pass_network_with_logo(axs[0], pitch, team1_data, team1_data, f"Pass Network for {selected_teams[0]}", 'logo.png')
+            plot_pass_network_with_logo(axs[1], pitch, team2_data, team2_data, f"Pass Network for {selected_teams[1]}", 'logo.png')
+
+            plt.savefig('Passnetwork_with_logo.png', dpi=500, bbox_inches='tight')
+            st.image('Passnetwork_with_logo.png', caption='Pass Network Visualization', use_column_width=True)
 
 else:
-    st.write("Select 'Passnetwork' from the menu to see the visualization.")
+    st.title("Welcome!")
+    st.write("Select 'Passnetwork' from the sidebar to see the visualization.")
