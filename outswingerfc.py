@@ -519,9 +519,10 @@ import streamlit as st
 from mplsoccer import VerticalPitch
 from matplotlib.colors import Normalize
 
+# Ensure the selected page is Pass Network
 if selected_page == "Pass Network":
     st.title("Pass Network Visualization")
-    
+
     # Function to add logo to the plot
     def add_logo(ax, logo_path):
         logo = mpimg.imread(logo_path)
@@ -532,11 +533,11 @@ if selected_page == "Pass Network":
     # Function to plot the pass network with an optional logo
     def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
         pitch.draw(ax=ax)
-        
-        norm = Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
+
+        norm = plt.Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
         cmap = plt.cm.viridis
         colors = cmap(norm(average_locs_and_count['epv']))
-        
+
         max_pass_count = passes_between['pass_count'].max()
         passes_between['zorder'] = passes_between['pass_count'] / max_pass_count * 10
         passes_between['alpha'] = passes_between['pass_count'] / max_pass_count
@@ -582,7 +583,7 @@ if selected_page == "Pass Network":
 
         return average_locs_and_count, passes_between
 
-
+    # Load match data
     match_data_folder = 'WSL 2024-2025'  # Adjust path to where your match data is stored
     csv_files = sorted([f for f in os.listdir(match_data_folder) if f.endswith('.csv')],
                        key=lambda f: os.path.getmtime(os.path.join(match_data_folder, f)),
@@ -596,34 +597,6 @@ if selected_page == "Pass Network":
 
         team_ids = df['contestantId'].unique()
         selected_team = st.selectbox("Select a Team", team_ids)
-        
-        # Identify columns with '/qualifierId' in their name
-    type_cols = [col for col in df.columns if '/qualifierId' in col]
-
-# Initialize endX and endY columns
-    df['endX'] = 0.0
-    df['endY'] = 0.0
-
-# Iterate through the rows in the dataframe
-    for i in range(len(df)):
-        df1 = df.iloc[i:i+1,:]  # Get current row as a dataframe
-
-    # Process endX
-    for j in range(len(type_cols)):
-        col = df1[type_cols[j]].values[0]
-        if col == 140:  # Check if qualifierId is 140 for endX
-            endx = df1.loc[:,'qualifier/%i/value' % j].values[0]  # Get the corresponding endX value
-            df.loc[i, 'endX'] = endx  # Assign the value to the correct row
-
-    # Process endY
-    for k in range(len(type_cols)):
-        col = df1[type_cols[k]].values[0]
-        if col == 141:  # Check if qualifierId is 141 for endY
-            endy = df1.loc[:,'qualifier/%i/value' % k].values[0]  # Get the corresponding endY value
-            df.loc[i, 'endY'] = endy  # Assign the value to the correct row
-
-# Now you can proceed with your existing EPV calculations or other logic
-
 
         epv = pd.read_csv("epv_grid.csv", header=None).to_numpy()
 
@@ -632,6 +605,31 @@ if selected_page == "Pass Network":
         df['endX'] = pd.to_numeric(df['endX'], errors='coerce')
         df['endY'] = pd.to_numeric(df['endY'], errors='coerce')
 
+        # Diagnostic check: List columns that contain '/qualifierId'
+        print("Columns in DataFrame:", df.columns)
+        type_cols = [col for col in df.columns if '/qualifierId' in col]
+        print("Columns with '/qualifierId':", type_cols)
+
+        if type_cols:
+            # Process `endX` and `endY` columns based on `qualifierId`
+            df['endX'] = 0.0
+            df['endY'] = 0.0
+
+            for i in range(len(df)):
+                df1 = df.iloc[i:i+1, :]
+                for j in range(len(type_cols)):
+                    col = df1[type_cols[j]].values[0]
+                    if col == 140:
+                        endx = df1.loc[:, 'qualifier/%i/value' % j].values[0]
+                        df.at[i, 'endX'] = endx
+
+                for k in range(len(type_cols)):
+                    col = df1[type_cols[k]].values[0]
+                    if col == 141:
+                        endy = df1.loc[:, 'qualifier/%i/value' % k].values[0]
+                        df.at[i, 'endY'] = endy
+
+        # After calculating `endX` and `endY`, calculate the EPV as before
         df['x1_bin'] = pd.cut(df['x'], bins=epv.shape[1], labels=False).astype('Int64')
         df['y1_bin'] = pd.cut(df['y'], bins=epv.shape[0], labels=False).astype('Int64')
         df['x2_bin'] = pd.cut(df['endX'], bins=epv.shape[1], labels=False).astype('Int64')
@@ -647,8 +645,10 @@ if selected_page == "Pass Network":
 
         df['epv'] = df['end_zone_value'] - df['start_zone_value']
 
+        # Calculate pass network data
         data_team = create_pass_network_data(df, selected_team)
 
+        # Plot the pass network
         fig, axs = plt.subplots(1, 2, figsize=(20, 16), gridspec_kw={'wspace': 0.1})
         fig.set_facecolor("white")
 
