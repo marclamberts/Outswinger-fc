@@ -523,64 +523,64 @@ if selected_page == "Pass Network":
     st.title("Pass Network Visualization")
     
     # Function to add logo to the plot
-def add_logo(ax, logo_path):
-    logo = mpimg.imread(logo_path)
-    imagebox = OffsetImage(logo, zoom=0.6)
-    ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, xycoords='axes fraction', boxcoords="axes fraction")
-    ax.add_artist(ab)
+    def add_logo(ax, logo_path):
+        logo = mpimg.imread(logo_path)
+        imagebox = OffsetImage(logo, zoom=0.6)
+        ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, xycoords='axes fraction', boxcoords="axes fraction")
+        ax.add_artist(ab)
 
-# Function to plot the pass network with an optional logo
-def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
-    pitch.draw(ax=ax)
-    
-    norm = plt.Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
-    cmap = plt.cm.viridis
-    colors = cmap(norm(average_locs_and_count['epv']))
-    
-    max_pass_count = passes_between['pass_count'].max()
-    passes_between['zorder'] = passes_between['pass_count'] / max_pass_count * 10
-    passes_between['alpha'] = passes_between['pass_count'] / max_pass_count
+    # Function to plot the pass network with an optional logo
+    def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
+        pitch.draw(ax=ax)
+        
+        norm = Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
+        cmap = plt.cm.viridis
+        colors = cmap(norm(average_locs_and_count['epv']))
+        
+        max_pass_count = passes_between['pass_count'].max()
+        passes_between['zorder'] = passes_between['pass_count'] / max_pass_count * 10
+        passes_between['alpha'] = passes_between['pass_count'] / max_pass_count
 
-    for index, row in passes_between.iterrows():
-        pitch.lines(row['x'], row['y'], row['x_end'], row['y_end'], color='grey', alpha=row['alpha'], lw=4, ax=ax, zorder=row['zorder'])
+        for index, row in passes_between.iterrows():
+            pitch.lines(row['x'], row['y'], row['x_end'], row['y_end'], color='grey', alpha=row['alpha'], lw=4, ax=ax, zorder=row['zorder'])
 
-    pitch.scatter(average_locs_and_count['x'], average_locs_and_count['y'], s=500, color=colors, edgecolors="black", linewidth=1, alpha=1, ax=ax, zorder=11)
+        pitch.scatter(average_locs_and_count['x'], average_locs_and_count['y'], s=500, color=colors, edgecolors="black", linewidth=1, alpha=1, ax=ax, zorder=11)
 
-    for index, row in average_locs_and_count.iterrows():
-        pitch.annotate(row.name, xy=(row.x, row.y), ax=ax, ha='center', va='bottom', fontsize=12, color='black', zorder=12, xytext=(0, -35), textcoords='offset points', bbox=dict(boxstyle="round,pad=0.3", edgecolor="black", facecolor="white", alpha=0.7))
+        for index, row in average_locs_and_count.iterrows():
+            pitch.annotate(row.name, xy=(row.x, row.y), ax=ax, ha='center', va='bottom', fontsize=12, color='black', zorder=12, xytext=(0, -35), textcoords='offset points', bbox=dict(boxstyle="round,pad=0.3", edgecolor="black", facecolor="white", alpha=0.7))
 
-    ax.set_title(title, fontsize=18, color="black", fontweight='bold', pad=20)
+        ax.set_title(title, fontsize=18, color="black", fontweight='bold', pad=20)
 
-    if add_logo_to_this_plot:
-        add_logo(ax, logo_path)
+        if add_logo_to_this_plot:
+            add_logo(ax, logo_path)
 
-# Function to calculate the pass network data
-def create_pass_network_data(df, team_id):
-    team_data = df.loc[(df['contestantId'] == team_id)].reset_index()
-    team_data["newsecond"] = 60 * team_data["timeMin"] + team_data["timeSec"]
-    team_data.sort_values(by=['newsecond'], inplace=True)
-    team_data['passer'] = team_data['playerName']
-    team_data['recipient'] = team_data['passer'].shift(-1)
+    # Function to calculate the pass network data
+    def create_pass_network_data(df, team_id):
+        team_data = df.loc[(df['contestantId'] == team_id)].reset_index()
+        team_data["newsecond"] = 60 * team_data["timeMin"] + team_data["timeSec"]
+        team_data.sort_values(by=['newsecond'], inplace=True)
+        team_data['passer'] = team_data['playerName']
+        team_data['recipient'] = team_data['passer'].shift(-1)
 
-    passes = team_data.loc[(team_data['typeId'] == 1)]
-    completions = passes.loc[(passes['outcome'] == 1)]
+        passes = team_data.loc[(team_data['typeId'] == 1)]
+        completions = passes.loc[(passes['outcome'] == 1)]
 
-    subs = team_data.loc[(team_data['typeId'] == 18)]
-    sub_times = subs["newsecond"]
-    sub_one = sub_times.min()
-    completions = completions.loc[completions['newsecond'] < sub_one]
+        subs = team_data.loc[(team_data['typeId'] == 18)]
+        sub_times = subs["newsecond"]
+        sub_one = sub_times.min()
+        completions = completions.loc[completions['newsecond'] < sub_one]
 
-    average_locs_and_count = completions.groupby('passer').agg({'x': ['mean'], 'y': ['mean', 'count'], 'epv': ['mean']})
-    average_locs_and_count.columns = ['x', 'y', 'count', 'epv']
+        average_locs_and_count = completions.groupby('passer').agg({'x': ['mean'], 'y': ['mean', 'count'], 'epv': ['mean']})
+        average_locs_and_count.columns = ['x', 'y', 'count', 'epv']
 
-    passes_between = completions.groupby(['passer', 'recipient']).id.count().reset_index()
-    passes_between.rename({'id': 'pass_count'}, axis='columns', inplace=True)
-    passes_between = passes_between.merge(average_locs_and_count, left_on='passer', right_index=True)
-    passes_between = passes_between.merge(average_locs_and_count, left_on='recipient', right_index=True, suffixes=['', '_end'])
+        passes_between = completions.groupby(['passer', 'recipient']).id.count().reset_index()
+        passes_between.rename({'id': 'pass_count'}, axis='columns', inplace=True)
+        passes_between = passes_between.merge(average_locs_and_count, left_on='passer', right_index=True)
+        passes_between = passes_between.merge(average_locs_and_count, left_on='recipient', right_index=True, suffixes=['', '_end'])
 
-    passes_between = passes_between.loc[passes_between['pass_count'] >= 3]
+        passes_between = passes_between.loc[passes_between['pass_count'] >= 3]
 
-    return average_locs_and_count, passes_between
+        return average_locs_and_count, passes_between
 
 
     match_data_folder = 'WSL 2024-2025'  # Adjust path to where your match data is stored
@@ -638,4 +638,3 @@ def create_pass_network_data(df, team_id):
                     transform=axs[1].transAxes, fontsize=20, color='black', ha='right', va='top', fontweight='normal')
 
         st.pyplot(fig)
-
