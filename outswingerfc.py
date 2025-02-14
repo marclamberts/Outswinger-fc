@@ -598,15 +598,15 @@ if selected_page == "Pass Network":
         selected_team = st.selectbox("Select a Team", team_ids)
         
         # Identify columns with '/qualifierId' in their name
-type_cols = [col for col in df.columns if '/qualifierId' in col]
+    type_cols = [col for col in df.columns if '/qualifierId' in col]
 
 # Initialize endX and endY columns
-df['endX'] = 0.0
-df['endY'] = 0.0
+    df['endX'] = 0.0
+    df['endY'] = 0.0
 
 # Iterate through the rows in the dataframe
-for i in range(len(df)):
-    df1 = df.iloc[i:i+1,:]  # Get current row as a dataframe
+    for i in range(len(df)):
+        df1 = df.iloc[i:i+1,:]  # Get current row as a dataframe
 
     # Process endX
     for j in range(len(type_cols)):
