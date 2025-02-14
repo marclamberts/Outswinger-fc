@@ -349,11 +349,12 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import streamlit as st
-
+from mplsoccer import VerticalPitch
+from matplotlib.colors import Normalize
 
 # Field Tilt page
-if selected_page == "Field Tilt":
-    st.title("Field Tilt Analysis")
+if selected_page == "Passnetwork":
+    st.title("Passnetwork")
 
     # Folder containing CSV match data (change to your path)
     match_data_folder = 'WSL 2024-2025'  # Replace with your folder path
@@ -368,143 +369,124 @@ if selected_page == "Field Tilt":
         file_path = os.path.join(match_data_folder, selected_match)
         df = pd.read_csv(file_path)
 
-        # Check if 'contestantId' is in the CSV columns
-        if 'contestantId' in df.columns:
-            # Extract and display unique contestantIds (home and away teams)
-            contestant_ids = df['contestantId'].unique()
+def add_logo(ax, logo_path):
+    # Load the logo image
+    logo = mpimg.imread(logo_path)
+    
+    # Create an OffsetImage object for the logo
+    imagebox = OffsetImage(logo, zoom=0.6)  # Increased zoom for a bigger logo
+    
+    # Position the logo at the top-right corner with a higher position
+    ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, 
+                        xycoords='axes fraction', boxcoords="axes fraction")
+    
+    # Add the logo as an artist to the plot
+    ax.add_artist(ab)
 
-            # You could also map contestantId to team names if the mapping is available
-            mapping_file_path = 'opta_club_rankings_womens_14022025.xlsx'  # Change to your mapping file path
-            mapping_df = pd.read_excel(mapping_file_path)
-            id_to_team = dict(zip(mapping_df['id'], mapping_df['team']))
+def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
+    pitch.draw(ax=ax)
+    
+    norm = Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
+    cmap = plt.cm.viridis
+    colors = cmap(norm(average_locs_and_count['epv']))
+    
+    max_pass_count = passes_between['pass_count'].max()
+    passes_between['zorder'] = passes_between['pass_count'] / max_pass_count * 10
+    passes_between['alpha'] = passes_between['pass_count'] / max_pass_count
+    
+    for _, row in passes_between.iterrows():
+        pitch.lines(row['x'], row['y'], row['x_end'], row['y_end'],
+                    color='grey', alpha=row['alpha'], lw=4, ax=ax, zorder=row['zorder'])
+    
+    pitch.scatter(average_locs_and_count['x'], average_locs_and_count['y'], s=500,
+                  color=colors, edgecolors="black", linewidth=1, alpha=1, ax=ax, zorder=11)
+    
+    for _, row in average_locs_and_count.iterrows():
+        pitch.annotate(row.name, xy=(row.x, row.y), ax=ax, ha='center', va='bottom',
+                       fontsize=12, color='black', zorder=12, xytext=(0, -35), textcoords='offset points',
+                       bbox=dict(boxstyle="round,pad=0.3", edgecolor="black", facecolor="white", alpha=0.7))
+    
+    ax.set_title(title, fontsize=18, color="black", fontweight='bold', pad=20)
+    
+    if add_logo_to_this_plot:
+        add_logo(ax, logo_path)
 
-            # Show team names based on contestantId
-            team_names = [id_to_team.get(str(contestant_id), 'Unknown Team') for contestant_id in contestant_ids]
+def get_end_coordinates(row, type_cols):
+    endX, endY = 0.0, 0.0
+    for j in range(len(type_cols)):
+        col = row[type_cols[j]]
+        if col == 140:
+            endX = row[f'qualifier/{j}/value']
+        elif col == 141:
+            endY = row[f'qualifier/{j}/value']
+    return endX, endY
 
-            # Assuming the first two contestant IDs are the home and away teams
-            hteam_id = contestant_ids[0]
-            ateam_id = contestant_ids[1]
+# Read the pass data from Excel
+#df = pd.read_excel("Pass.xlsx")
+epv = pd.read_csv("epv_grid.csv", header=None).to_numpy()
+epv_rows, epv_cols = epv.shape
 
-            # Get the corresponding team names
-            hteam_name = id_to_team.get(str(hteam_id), 'Unknown Team')
-            ateam_name = id_to_team.get(str(ateam_id), 'Unknown Team')
+# Convert columns to numeric and handle invalid data
+df['x'] = pd.to_numeric(df['x'], errors='coerce')
+df['y'] = pd.to_numeric(df['y'], errors='coerce')
+df['endX'] = 0.0
+df['endY'] = 0.0
 
-            # Filter final third passes
-            df_final_third = df.loc[(df['typeId'] == 1) & (df['x'] > 70)]  # Passes in the final third
+# Identify type columns (columns with /qualifierId in the name)
+type_cols = [col for col in df.columns if '/qualifierId' in col]
 
-            # Group by teams and count final third passes
-            final_third_count = df_final_third.groupby('contestantId').size().reset_index(name='Final third passes')
+# Apply function to set endX, endY based on type columns
+df[['endX', 'endY']] = df.apply(lambda row: get_end_coordinates(row, type_cols), axis=1, result_type="expand")
 
-            # Calculate total final third passes
-            total_final_third_passes = final_third_count['Final third passes'].sum()
+# Process EPV and assign values to each pass start and end zone
+df['x1_bin'] = pd.cut(df['x'], bins=epv_cols, labels=False).astype('Int64')
+df['y1_bin'] = pd.cut(df['y'], bins=epv_rows, labels=False).astype('Int64')
+df['x2_bin'] = pd.cut(df['endX'], bins=epv_cols, labels=False).astype('Int64')
+df['y2_bin'] = pd.cut(df['endY'], bins=epv_rows, labels=False).astype('Int64')
 
-            # Add Field Tilt for each team
-            final_third_count['Field Tilt'] = (final_third_count['Final third passes'] / total_final_third_passes) * 100
+def get_epv_value(bin_indices, epv_grid):
+    if pd.notnull(bin_indices[0]) and pd.notnull(bin_indices[1]):
+        return epv_grid[int(bin_indices[1])][int(bin_indices[0])]
+    return np.nan
 
-            # Initialize lists for minute-by-minute Field Tilt
-            minutes = list(range(0, 96))  # 0-95 minutes
-            home_tilt = []
-            away_tilt = []
+df['start_zone_value'] = df[['x1_bin', 'y1_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
+df['end_zone_value'] = df[['x2_bin', 'y2_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
+df['epv'] = df['end_zone_value'] - df['start_zone_value']
+df.to_excel("epv.xlsx", index=False)
 
-            # Compute Field Tilt per minute
-            for minute in minutes:
-                home_passes = df_final_third[(df_final_third['contestantId'] == hteam_id) & (df_final_third['timeMin'] == minute)].shape[0]
-                away_passes = df_final_third[(df_final_third['contestantId'] == ateam_id) & (df_final_third['timeMin'] == minute)].shape[0]
-                
-                total_passes = home_passes + away_passes
-                if total_passes == 0:
-                    home_tilt.append(0)  # Neutral if no attacking passes
-                    away_tilt.append(0)
-                else:
-                    home_tilt.append((home_passes / total_passes) * 100)
-                    away_tilt.append(-1 * (away_passes / total_passes) * 100)  # Make away team values negative
+# Create pass network data
+def create_pass_network_data(df, team_id):
+    team_data = df[df['contestantId'] == team_id].reset_index()
+    team_data["newsecond"] = 60 * team_data["timeMin"] + team_data["timeSec"]
+    team_data.sort_values(by=['newsecond'], inplace=True)
+    team_data['passer'] = team_data['playerName']
+    team_data['recipient'] = team_data['passer'].shift(-1)
+    passes = team_data[team_data['typeId'] == 1]
+    completions = passes[passes['outcome'] == 1]
+    
+    subs = team_data[team_data['typeId'] == 18]
+    sub_times = subs["newsecond"]
+    sub_one = sub_times.min()
+    completions = completions[completions['newsecond'] < sub_one]
+    
+    average_locs_and_count = completions.groupby('passer').agg({'x': ['mean'], 'y': ['mean', 'count'], 'epv': ['mean']})
+    average_locs_and_count.columns = ['x', 'y', 'count', 'epv']
+    
+    passes_between = completions.groupby(['passer', 'recipient']).id.count().reset_index()
+    passes_between.rename({'id': 'pass_count'}, axis='columns', inplace=True)
+    return average_locs_and_count, passes_between
 
-            # Smooth the Field Tilt using a larger moving average window
-            def moving_average(values, window):
-                return np.convolve(values, np.ones(window) / window, mode='same')
+# Create pass network data for both teams
+data_team1 = create_pass_network_data(df, 'c8h9bw1l82s06h77xxrelzhur')
+data_team2 = create_pass_network_data(df, '22doj4sgsocqpxw45h607udje')
 
-            home_tilt_smoothed = moving_average(home_tilt, 15)  # Larger window for rounder curves
-            away_tilt_smoothed = moving_average(away_tilt, 15)
+# Plot the pass networks
+fig, axs = plt.subplots(1, 2, figsize=(20, 16))
+fig.set_facecolor("white")
+pitch = VerticalPitch(pitch_type='opta', pad_top=5, pitch_color='white', line_color='black')
 
-            # Calculate total attacking contributions for percentages
-            home_total = sum([x for x in home_tilt if x > 0])
-            away_total = sum([-x for x in away_tilt if x < 0])  # Convert negative values to positive
-            overall_total = home_total + away_total
+plot_pass_network_with_logo(axs[0], pitch, data_team1[0], data_team1[1], "Liverpool Passing Network")
+plot_pass_network_with_logo(axs[1], pitch, data_team2[0], data_team2[1], "Tottenham Hotspur Passing Network", True, 'Data visuals/Outswinger FC (3).png')
 
-            home_percentage = (home_total / overall_total) * 100
-            away_percentage = (away_total / overall_total) * 100
-
-            # Calculate net dominance
-            net_tilt = np.maximum(home_tilt_smoothed + away_tilt_smoothed, 0)  # Positive area for home
-            net_tilt_away = np.minimum(home_tilt_smoothed + away_tilt_smoothed, 0)  # Negative area for away
-
-            # Goals for context
-            home_goals_min = df[(df['contestantId'] == hteam_id) & (df['typeId'] == 16)]['timeMin'].tolist()
-            away_goals_min = df[(df['contestantId'] == ateam_id) & (df['typeId'] == 16)]['timeMin'].tolist()
-
-            # Plot Field Dominance
-            fig, ax = plt.subplots(figsize=(22, 12))  # Increased plot size here
-            fig.set_facecolor('white')
-            ax.patch.set_facecolor('white')
-
-            # Grid and aesthetics
-            ax.grid(ls='dotted', lw=1, color='black', alpha=0.4, zorder=1)
-            ax.axhline(0, color='black', linestyle='dashed', linewidth=2, alpha=0.7)  # 0% line
-
-            # Fill regions based on net dominance
-            ax.fill_between(minutes, 0, net_tilt, where=(net_tilt > 0), interpolate=True, color='#ff6361', alpha=0.6, label=f'{hteam_name} Dominance')
-            ax.fill_between(minutes, 0, net_tilt_away, where=(net_tilt_away < 0), interpolate=True, color='#003f5c', alpha=0.6, label=f'{ateam_name} Dominance')
-
-            # Add goal markers
-            for goal in home_goals_min:
-                ax.scatter(goal, 0, color='black', marker='*', s=200, label=f'{hteam_name} Goal')
-
-            for goal in away_goals_min:
-                ax.scatter(goal, 0, color='black', marker='*', s=200, label=f'{ateam_name} Goal')
-
-            # Add logo in the top-right corner
-            logo_path = 'logo.png'  # Replace with the path to your logo file
-            logo_img = mpimg.imread(logo_path)  # Read the logo image
-            imagebox = OffsetImage(logo_img, zoom=0.08)  # Adjust zoom to control logo size
-            ab = AnnotationBbox(imagebox, (0.96, 1.25), frameon=False, xycoords='axes fraction', box_alignment=(1, 1))
-            ax.add_artist(ab)
-
-            # Title and subtitles
-            title = f"{hteam_name} ({len(home_goals_min)}) - {ateam_name} ({len(away_goals_min)})"
-            subtitle = f"{hteam_name}: {home_percentage:.1f}% | {ateam_name}: {away_percentage:.1f}%"
-            footer = "Field Tilt is the share of touches in the final third.\n15 Minute Moving Average | Data via Opta"
-
-            # Adjust the title and subtitle positions by increasing the `y` value
-            plt.title(title, fontsize=40, color='black', weight='bold', loc='left', y=1.12)  # Higher title
-            plt.suptitle(subtitle, fontsize=25, color='black', style='italic', x=0.27, y=0.93)  # Higher subtitle
-            fig.text(0.12, 0.02, footer, fontsize=20, color='black', style='italic')  # Larger footer text
-
-            # Remove spines
-            ax.spines['top'].set_visible(False)
-            ax.spines['right'].set_visible(False)
-
-            # Labels and limits
-            plt.xlabel('Minute', fontsize=18)  # Larger font size for labels
-            plt.ylabel('Field tilt (%)', fontsize=18)
-            plt.ylim(-100, 100)
-            plt.xlim(0, 95)
-
-            # Legend
-            ax.legend(loc='upper right', fontsize=14, frameon=False)  # Larger legend
-
-            # Save and display
-            plt.savefig('field_dominance_chart_with_logo.png', dpi=300, bbox_inches='tight', facecolor='white')
-            st.pyplot(fig)
-
-            # Display preview of the selected match data below the plot
-            st.write("Preview of the selected match data:")
-            st.write(df.head())
-
-            # Display the unique contestantIds (teams)
-            st.write(f"Unique contestantIds in the selected match: {contestant_ids}")
-            for cid, team in zip(contestant_ids, team_names):
-                st.write(f"Contestant ID: {cid} - Team Name: {team}")
-
-        else:
-            st.write("The selected CSV does not contain a 'contestantId' column.")
-
+# Display the plot in Streamlit
+st.pyplot(fig)
