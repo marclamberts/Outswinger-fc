@@ -151,7 +151,9 @@ if selected_file:
     buf = io.BytesIO()
     plt.savefig(buf, format="png", dpi=300, bbox_inches='tight', facecolor='white')
     buf.seek(0)
-    st.image(buf, use_column_width=True)
+
+# Update to use the new 'use_container_width' parameter
+    st.image(buf, use_container_width=True)
 
     # Add win probability text at the bottom-left
     win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.2f}%\n{team2_name}: {team2_win_prob*100:.2f}%"
