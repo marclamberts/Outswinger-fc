@@ -6,6 +6,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import matplotlib.image as mpimg
 import io
 import os
+from datetime import datetime
 
 # Streamlit app layout and settings
 st.set_page_config(page_title="Football Shot Map", layout="wide")
@@ -152,13 +153,22 @@ if selected_file:
     plt.savefig(buf, format="png", dpi=300, bbox_inches='tight', facecolor='white')
     buf.seek(0)
 
-# Update to use the new 'use_container_width' parameter
+    # Update to use the new 'use_container_width' parameter
     st.image(buf, use_container_width=True)
 
     # Add win probability text at the bottom-left
     win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.2f}%\n{team2_name}: {team2_win_prob*100:.2f}%"
     st.text(win_text)
 
-    # Show Expected Points for both teams
-    expected_points_text = f"Expected Points:\n{team1_name}: {team1_xp:.2f}\n{team2_name}: {team2_xp:.2f}"
-    st.text(expected_points_text)
+    # Add expected points text
+    xp_text = f"Expected Points:\n{team1_name}: {team1_xp:.2f}\n{team2_name}: {team2_xp:.2f}"
+    st.text(xp_text)
+
+    # Button for downloading the image with a dynamic filename
+    download_filename = f"{team1_name}_vs_{team2_name}_{team1_goals}-{team2_goals}_{datetime.now().strftime('%Y%m%d%H%M%S')}_outswingerfc.png"
+    st.download_button(
+        label="Download Shot Map",
+        data=buf,
+        file_name=download_filename,
+        mime="image/png"
+    )
