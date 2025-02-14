@@ -96,7 +96,7 @@ if selected_file:
     ax.add_artist(ab)
 
     # Add win probability text at the bottom-left
-    win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.2f}%\n{team2_name}: {team2_win_prob*100:.2f}%"
+    win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.2f}% | {team2_name}: {team2_win_prob*100:.2f}%"
     plt.text(0.02, -0.03, win_text, ha='left', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
 
     # Add Expected Points text in the bottom-left corner
