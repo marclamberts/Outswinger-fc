@@ -310,7 +310,7 @@ if selected_page == "Flow Map":
                 ax.scatter(goal, h_cumulative[h_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
 
             # Title (all black)
-            ax.text(0.5, 1.1, f"{hteam} vs {ateam}", fontsize=35, color="black", fontweight='bold', ha='center', transform=ax.transAxes)
+            ax.text(0.2, 1.1, f"{hteam} vs {ateam}", fontsize=35, color="black", fontweight='bold', ha='center', transform=ax.transAxes)
 
             # Subtitle (adjusted y position to avoid overlap)
             subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
