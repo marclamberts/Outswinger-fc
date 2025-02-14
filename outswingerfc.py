@@ -465,12 +465,12 @@ if selected_page == "Field Tilt":
             # Add logo in the top-right corner
             logo_path = 'logo.png'  # Replace with the path to your logo file
             logo_img = mpimg.imread(logo_path)  # Read the logo image
-            imagebox = OffsetImage(logo_img, zoom=0.05)  # Adjust zoom to control logo size
+            imagebox = OffsetImage(logo_img, zoom=0.08)  # Adjust zoom to control logo size
             ab = AnnotationBbox(imagebox, (0.95, 1.25), frameon=False, xycoords='axes fraction', box_alignment=(1, 1))
             ax.add_artist(ab)
 
             # Title and subtitles
-            title = f"{hteam_name} ({len(home_goals_min)}) - {ateam_name} ({len(away_goals_min)}) - Field Tilt"
+            title = f"{hteam_name} ({len(home_goals_min)}) - {ateam_name} ({len(away_goals_min)})"
             subtitle = f"{hteam_name}: {home_percentage:.1f}% | {ateam_name}: {away_percentage:.1f}%"
             footer = "Field Tilt is the share of touches in the final third.\n15 Minute Moving Average | Data via Opta"
 
