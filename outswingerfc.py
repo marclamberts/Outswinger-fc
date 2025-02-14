@@ -194,6 +194,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
+import io
 
 # Flow Map page
 if selected_page == "Flow Map":
@@ -318,26 +319,43 @@ if selected_page == "Flow Map":
             subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
             ax.text(0.2, 1.02, subtitle, fontsize=18, color="black", ha='center', transform=ax.transAxes)
 
+            # Add logo in the top-right corner
+            logo = plt.imread('logo.png')  # Path to your logo image
+            ax.imshow(logo, aspect='auto', extent=[90, 95, max(h_cumulative), max(h_cumulative) + 0.1], zorder=5)
+
             # Display the plot in Streamlit
             st.pyplot(fig)
 
             # Footer and logo (placed under the plot)
             st.markdown("OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025")
-            # Show match score and expected points
+            
             # Calculate win probabilities and expected points
             total_xg = alast + hlast
             team1_win_prob = alast / total_xg
             team2_win_prob = hlast / total_xg
             draw_prob = 1 - (team1_win_prob + team2_win_prob)
 
-# Expected Points Calculation
+            # Expected Points Calculation
             team1_xp = (3 * team1_win_prob) + (1 * draw_prob)
             team2_xp = (3 * team2_win_prob) + (1 * draw_prob)
 
-# Add win probability and expected points in bottom-left corner
+            # Add win probability and expected points in bottom-left corner
             win_prob_text = f"{hteam} Win Probability: {team1_win_prob * 100:.2f}%\n{ateam} Win Probability: {team2_win_prob * 100:.2f}%\n"
             xp_text = f"{ateam} Expected Points: {team1_xp:.2f}\n{hteam} Expected Points: {team2_xp:.2f}"
 
-# Show win probability and expected points
+            # Show win probability and expected points
             st.write(win_prob_text)
             st.write(xp_text)
+
+            # Save the plot to a BytesIO object to enable downloading
+            img_buf = io.BytesIO()
+            fig.savefig(img_buf, format='png')
+            img_buf.seek(0)
+
+            # Create a download button for the plot
+            st.download_button(
+                label="Download Plot as PNG",
+                data=img_buf,
+                file_name="xg_flow_map.png",
+                mime="image/png"
+            )
