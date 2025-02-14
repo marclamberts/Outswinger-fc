@@ -33,7 +33,7 @@ if selected_file:
     file_path = os.path.join(xg_csv_folder, selected_file)
     df = pd.read_csv(file_path)
 
-    # Extract team names from the file name
+    # Extract team names from   the file name
     teams = selected_file.split('_')[-1].split(' - ')  # Extract team names from the file name
 
     # Define the home and away teams
@@ -144,6 +144,11 @@ if selected_file:
     # Add win probability text at the bottom-left
     win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.2f}% | {team2_name}: {team2_win_prob*100:.2f}%"
     xp_text = f"Expected Points:\n{team1_name}: {team1_xp:.2f} | {team2_name}: {team2_xp:.2f}"
+    
+    # Add text in the bottom-right corner
+    text = "OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025"
+    plt.text(0.98, -0.03, text, ha='right', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
+
 
     st.markdown(win_text)
     st.markdown(xp_text)
