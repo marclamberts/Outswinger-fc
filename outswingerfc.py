@@ -350,8 +350,6 @@ import matplotlib.image as mpimg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import streamlit as st
 
-# Streamlit page selection
-selected_page = st.selectbox("Select a page", ["Field Tilt"])
 
 # Field Tilt page
 if selected_page == "Field Tilt":
@@ -370,15 +368,10 @@ if selected_page == "Field Tilt":
         file_path = os.path.join(match_data_folder, selected_match)
         df = pd.read_csv(file_path)
 
-        # Show the first few rows of the selected match data
-        st.write("Preview of the selected match data:")
-        st.write(df.head())
-
         # Check if 'contestantId' is in the CSV columns
         if 'contestantId' in df.columns:
             # Extract and display unique contestantIds (home and away teams)
             contestant_ids = df['contestantId'].unique()
-            st.write(f"Unique contestantIds in the selected match: {contestant_ids}")
 
             # You could also map contestantId to team names if the mapping is available
             mapping_file_path = 'opta_club_rankings_womens_14022025.xlsx'  # Change to your mapping file path
@@ -387,9 +380,6 @@ if selected_page == "Field Tilt":
 
             # Show team names based on contestantId
             team_names = [id_to_team.get(str(contestant_id), 'Unknown Team') for contestant_id in contestant_ids]
-            st.write("Corresponding Team Names:")
-            for cid, team in zip(contestant_ids, team_names):
-                st.write(f"Contestant ID: {cid} - Team Name: {team}")
 
             # Assuming the first two contestant IDs are the home and away teams
             hteam_id = contestant_ids[0]
@@ -506,6 +496,14 @@ if selected_page == "Field Tilt":
             plt.savefig('field_dominance_chart_with_logo.png', dpi=300, bbox_inches='tight', facecolor='white')
             st.pyplot(fig)
 
+            # Display preview of the selected match data below the plot
+            st.write("Preview of the selected match data:")
+            st.write(df.head())
+
+            # Display the unique contestantIds (teams)
+            st.write(f"Unique contestantIds in the selected match: {contestant_ids}")
+            for cid, team in zip(contestant_ids, team_names):
+                st.write(f"Contestant ID: {cid} - Team Name: {team}")
+
         else:
             st.write("The selected CSV does not contain a 'contestantId' column.")
-
