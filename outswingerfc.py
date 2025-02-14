@@ -722,7 +722,7 @@ def create_pass_network_data(df, team_id):
                               half=False, goal_type='box', goal_alpha=0.8)
 
         # Path to the logo
-        logo_path = 'Data visuals/Outswinger FC (3).png'  # Replace with your logo path
+        logo_path = 'logo.png'  # Replace with your logo path
 
         # Plot the pass network for selected team 1 (with logo)
         plot_pass_network_with_logo(axs[0], pitch, data_team1[0], data_team1[1], f"Pass Network for {selected_teams[0]}", add_logo_to_this_plot=True, logo_path=logo_path)
