@@ -147,7 +147,7 @@ if selected_file:
     
     # Add text in the bottom-right corner
     text = "OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025"
-    plt.text(0.98, -0.03, text, ha='right', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
+    plt.text(0.98, 0.02, text, ha='right', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
 
 
     st.markdown(win_text)
