@@ -167,5 +167,18 @@ if selected_file:
         elif team2['Type_of_play'][x] == 'Penalty' and team2['isGoal'][x] == False:
             plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
 
+    # Save the figure to a PNG image
+    img_buf = io.BytesIO()
+    fig.savefig(img_buf, format='png')
+    img_buf.seek(0)
+
+    # Create download button
+    st.download_button(
+        label="Download Shot Map as PNG",
+        data=img_buf,
+        file_name="shot_map.png",
+        mime="image/png"
+    )
+
     # Show the plot
     st.pyplot(fig)
