@@ -511,7 +511,7 @@ if selected_page == "Field Tilt":
 if selected_page == "Pass Network":
     st.title("Pass Network Visualization")
 
-   import os
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
