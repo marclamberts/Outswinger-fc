@@ -157,11 +157,11 @@ if selected_file:
     st.image(buf, use_container_width=True)
 
     # Add win probability text at the bottom-left
-    win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.2f}%\n{team2_name}: {team2_win_prob*100:.2f}%"
+    win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.2f}% | {team2_name}: {team2_win_prob*100:.2f}%"
     st.text(win_text)
 
     # Add expected points text
-    xp_text = f"Expected Points:\n{team1_name}: {team1_xp:.2f}\n{team2_name}: {team2_xp:.2f}"
+    xp_text = f"Expected Points:\n{team1_name}: {team1_xp:.2f} | {team2_name}: {team2_xp:.2f}"
     st.text(xp_text)
 
     # Button for downloading the image with a dynamic filename
