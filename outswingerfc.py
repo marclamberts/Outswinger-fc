@@ -663,6 +663,12 @@ def create_pass_network_data(df, team_id):
 
     return average_locs_and_count, passes_between
 
+# Streamlit page selection
+selected_page = st.selectbox("Select a page", ["Passnetwork"])
+
+if selected_page == "Passnetwork":
+    st.title("Passnetwork Visualization")
+
     # Folder containing CSV match data
     match_data_folder = 'WSL 2024-2025'  # Replace with your folder path
 
