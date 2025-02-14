@@ -353,6 +353,17 @@ import streamlit as st
 # Streamlit page selection
 selected_page = st.selectbox("Select a page", ["Field Tilt"])
 
+import os
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+import streamlit as st
+
+# Streamlit page selection
+selected_page = st.selectbox("Select a page", ["Field Tilt"])
+
 # Field Tilt page
 if selected_page == "Field Tilt":
     st.title("Field Tilt Analysis")
@@ -369,10 +380,6 @@ if selected_page == "Field Tilt":
     if selected_match:
         file_path = os.path.join(match_data_folder, selected_match)
         df = pd.read_csv(file_path)
-
-        # Show the first few rows of the selected match data
-        st.write("Preview of the selected match data:")
-        st.write(df.head())
 
         # Check if 'contestantId' is in the CSV columns
         if 'contestantId' in df.columns:
@@ -508,4 +515,3 @@ if selected_page == "Field Tilt":
 
         else:
             st.write("The selected CSV does not contain a 'contestantId' column.")
-
