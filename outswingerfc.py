@@ -13,7 +13,7 @@ from datetime import datetime
 st.set_page_config(page_title="Football Shot Map", layout="wide")
 
 # Title of the app
-st.title("Football Shot Map with xG, Win Probability, and Expected Points")
+st.title("Expected Goals (xG) Shotmap")
 
 # Path to the xgCSV folder
 xg_csv_folder = 'xgCSV'
