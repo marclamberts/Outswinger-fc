@@ -138,7 +138,7 @@ if selected_file:
 
     # Create the logo image and place it at the bottom-right corner of the plot
     imagebox = OffsetImage(logo_img, zoom=0.05)  # Adjust zoom for scaling the logo (smaller size)
-    ab = AnnotationBbox(imagebox, (0.98, 0.02), frameon=False, xycoords='axes fraction', box_alignment=(1, 0))
+    ab = AnnotationBbox(imagebox, (0.98, 1.02), frameon=False, xycoords='axes fraction', box_alignment=(1, 0))
 
     # Add the logo to the plot
     ax.add_artist(ab)
