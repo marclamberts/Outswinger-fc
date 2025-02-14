@@ -194,6 +194,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
+import matplotlib.image as mpimg
 
 # Flow Map page
 if selected_page == "Flow Map":
@@ -318,11 +319,16 @@ if selected_page == "Flow Map":
             subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
             ax.text(0.2, 1.02, subtitle, fontsize=18, color="black", ha='center', transform=ax.transAxes)
 
+            # Add logo image at top-right corner
+            logo = mpimg.imread('logo.png')  # Adjust path if necessary
+            ax.imshow(logo, aspect='auto', extent=[0.85, 0.95, 0.95, 1], zorder=2)  # Adjust the position of the logo
+
             # Display the plot in Streamlit
             st.pyplot(fig)
 
             # Footer and logo (placed under the plot)
             st.markdown("OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025")
+            
             # Show match score and expected points
             # Calculate win probabilities and expected points
             total_xg = alast + hlast
@@ -330,14 +336,14 @@ if selected_page == "Flow Map":
             team2_win_prob = hlast / total_xg
             draw_prob = 1 - (team1_win_prob + team2_win_prob)
 
-# Expected Points Calculation
+            # Expected Points Calculation
             team1_xp = (3 * team1_win_prob) + (1 * draw_prob)
             team2_xp = (3 * team2_win_prob) + (1 * draw_prob)
 
-# Add win probability and expected points in bottom-left corner
+            # Add win probability and expected points in bottom-left corner
             win_prob_text = f"{hteam} Win Probability: {team1_win_prob * 100:.2f}%\n{ateam} Win Probability: {team2_win_prob * 100:.2f}%\n"
             xp_text = f"{ateam} Expected Points: {team1_xp:.2f}\n{hteam} Expected Points: {team2_xp:.2f}"
 
-# Show win probability and expected points
+            # Show win probability and expected points
             st.write(win_prob_text)
             st.write(xp_text)
