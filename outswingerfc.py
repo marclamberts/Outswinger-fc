@@ -10,7 +10,7 @@ import numpy as np
 from datetime import datetime
 
 # Streamlit app layout and settings
-st.set_page_config(page_title="Football Shot Map", layout="wide")
+st.set_page_config(page_title="Outswinger FC - Data visualisation app", layout="wide")
 
 # Title of the app
 st.title("Football Shot Map App")
@@ -190,6 +190,11 @@ if selected_page == "Shot Map":
         st.pyplot(fig)
 
 
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+
 # Flow Map page
 if selected_page == "Flow Map":
     st.title("Expected Goals (xG) Flow Map")
@@ -214,113 +219,119 @@ if selected_page == "Flow Map":
         df = pd.read_csv(file_path)
 
         # Extract team names from the file name
-        teams = selected_file.split('_')[-1].split(' - ')  # Extract team names from the file name
-        hteam = teams[0]
-        ateam = teams[1]
+        teams = selected_file.replace('.csv', '').split(' - ')
+        if len(teams) < 2:
+            st.error("Error extracting team names. Check filename format.")
+        else:
+            hteam, ateam = teams
 
-        # Initialize lists to store xG, PsxG, and goal data for both teams
-        a_xG = [0]
-        h_xG = [0]
-        a_min = [0]
-        h_min = [0]
-        a_psxg = [0]
-        h_psxg = [0]
-        a_goals_min = []
-        h_goals_min = []
+            # Initialize lists to store xG, PsxG, and goal data for both teams
+            a_xG, h_xG = [0], [0]
+            a_min, h_min = [0], [0]
+            a_psxg, h_psxg = [0], [0]
+            a_goals_min, h_goals_min = [], []
 
-        # Process each row to track xG, PsxG, and goals for both teams
-        for x in range(len(df['xG'])):
-            if df['TeamId'][x] == ateam:
-                a_xG.append(df['xG'][x])
-                a_min.append(df['timeMin'][x])
-                a_psxg.append(df['PsxG'][x] if 'PsxG' in df.columns else 0)
-                if df['isGoal'][x] == 1:
-                    a_goals_min.append(df['timeMin'][x])
-            if df['TeamId'][x] == hteam:
-                h_xG.append(df['xG'][x])
-                h_min.append(df['timeMin'][x])
-                h_psxg.append(df['PsxG'][x] if 'PsxG' in df.columns else 0)
-                if df['isGoal'][x] == 1:
-                    h_goals_min.append(df['timeMin'][x])
+            # Process each row to track xG, PsxG, and goals for both teams
+            for x in range(len(df)):
+                team_id = df['TeamId'][x]
+                xg_value = df['xG'][x]
+                psxg_value = df['PsxG'][x] if 'PsxG' in df.columns else 0
+                minute = df['timeMin'][x]
 
-        # Cumulative xG and PsxG calculations
-        def nums_cumulative_sum(nums_list):
-            return [sum(nums_list[:i+1]) for i in range(len(nums_list))]
+                if team_id == ateam:
+                    a_xG.append(xg_value)
+                    a_min.append(minute)
+                    a_psxg.append(psxg_value)
+                    if df['isGoal'][x] == 1:
+                        a_goals_min.append(minute)
 
-        a_cumulative = nums_cumulative_sum(a_xG)
-        h_cumulative = nums_cumulative_sum(h_xG)
-        a_psxg_cumulative = nums_cumulative_sum(a_psxg)
-        h_psxg_cumulative = nums_cumulative_sum(h_psxg)
+                elif team_id == hteam:
+                    h_xG.append(xg_value)
+                    h_min.append(minute)
+                    h_psxg.append(psxg_value)
+                    if df['isGoal'][x] == 1:
+                        h_goals_min.append(minute)
 
-        # Last xG and PsxG values
-        alast = round(a_cumulative[-1], 2)
-        hlast = round(h_cumulative[-1], 2)
-        a_psxg_last = round(a_psxg_cumulative[-1], 2)
-        h_psxg_last = round(h_psxg_cumulative[-1], 2)
+            # Cumulative xG and PsxG calculations
+            def nums_cumulative_sum(nums_list):
+                return [sum(nums_list[:i+1]) for i in range(len(nums_list))]
 
-        # Calculate win probabilities and expected points
-        total_xg = alast + hlast
-        team1_win_prob = alast / total_xg
-        team2_win_prob = hlast / total_xg
-        draw_prob = 1 - (team1_win_prob + team2_win_prob)
+            a_cumulative = nums_cumulative_sum(a_xG)
+            h_cumulative = nums_cumulative_sum(h_xG)
+            a_psxg_cumulative = nums_cumulative_sum(a_psxg)
+            h_psxg_cumulative = nums_cumulative_sum(h_psxg)
 
-        team1_xp = (3 * team1_win_prob) + (1 * draw_prob)
-        team2_xp = (3 * team2_win_prob) + (1 * draw_prob)
+            # Last xG and PsxG values
+            alast, hlast = round(a_cumulative[-1], 2), round(h_cumulative[-1], 2)
+            a_psxg_last, h_psxg_last = round(a_psxg_cumulative[-1], 2), round(h_psxg_cumulative[-1], 2)
 
-        # Calculate home and away goals from the dataset
-        home_goals = df.loc[(df['TeamId'] == hteam) & (df['isGoal'] == 1)].shape[0]
-        away_goals = df.loc[(df['TeamId'] == ateam) & (df['isGoal'] == 1)].shape[0]
+            # Calculate win probabilities and expected points
+            total_xg = alast + hlast
+            if total_xg > 0:
+                team1_win_prob = alast / total_xg
+                team2_win_prob = hlast / total_xg
+            else:
+                team1_win_prob = team2_win_prob = 0.5
 
-        # Plot setup
-        fig, ax = plt.subplots(figsize=(16, 10))
-        fig.set_facecolor('white')
-        ax.patch.set_facecolor('white')
+            draw_prob = 1 - (team1_win_prob + team2_win_prob)
+            team1_xp = (3 * team1_win_prob) + (1 * draw_prob)
+            team2_xp = (3 * team2_win_prob) + (1 * draw_prob)
 
-        # Set up grid and axis labels
-        ax.grid(ls='dotted', lw=1, color='black', axis='y', zorder=1, which='both', alpha=0.6)
-        ax.grid(ls='dotted', lw=1, color='black', axis='x', zorder=1, which='both', alpha=0.6)
-        ax.spines[['top', 'bottom', 'left', 'right']].set_visible(False)
-        plt.xticks([0, 15, 30, 45, 60, 75, 90])
-        plt.xlabel('Minute', fontsize=16)
-        plt.ylabel('xG', fontsize=16)
+            # Calculate home and away goals from the dataset
+            home_goals = df.loc[(df['TeamId'] == hteam) & (df['isGoal'] == 1)].shape[0]
+            away_goals = df.loc[(df['TeamId'] == ateam) & (df['isGoal'] == 1)].shape[0]
 
-        # Plot cumulative xG and PsxG fill
-        ax.fill_between(h_min, h_cumulative, color='#ff6361', alpha=0.3)
-        ax.fill_between(a_min, a_cumulative, color='#003f5c', alpha=0.3)
+            # Plot setup
+            fig, ax = plt.subplots(figsize=(16, 10))
+            fig.set_facecolor('white')
+            ax.patch.set_facecolor('white')
 
-        # Step plot for cumulative xG
-        a_min.append(95)
-        a_cumulative.append(alast)
-        h_min.append(95)
-        h_cumulative.append(hlast)
+            # Set up grid and axis labels
+            ax.grid(ls='dotted', lw=1, color='black', axis='y', zorder=1, which='both', alpha=0.6)
+            ax.grid(ls='dotted', lw=1, color='black', axis='x', zorder=1, which='both', alpha=0.6)
+            ax.spines[['top', 'bottom', 'left', 'right']].set_visible(False)
+            plt.xticks([0, 15, 30, 45, 60, 75, 90])
+            plt.xlabel('Minute', fontsize=16)
+            plt.ylabel('xG', fontsize=16)
 
-        ax.step(a_min, a_cumulative, color='#003f5c', label=f'{ateam}\nTotal xG: {alast:.2f}', linewidth=5, where='post')
-        ax.step(h_min, h_cumulative, color='#ff6361', label=f'{hteam}\nTotal xG: {hlast:.2f}', linewidth=5, where='post')
+            # Plot cumulative xG and PsxG fill
+            ax.fill_between(h_min, h_cumulative, color='#ff6361', alpha=0.3)
+            ax.fill_between(a_min, a_cumulative, color='#003f5c', alpha=0.3)
 
-        # Goal annotations
-        for goal in a_goals_min:
-            ax.scatter(goal, a_cumulative[a_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
+            # Step plot for cumulative xG
+            if len(a_min) > 1:
+                a_min.append(95)
+                a_cumulative.append(alast)
+            if len(h_min) > 1:
+                h_min.append(95)
+                h_cumulative.append(hlast)
 
-        for goal in h_goals_min:
-            ax.scatter(goal, h_cumulative[h_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
+            ax.step(a_min, a_cumulative, color='#003f5c', label=f'{ateam}\nTotal xG: {alast:.2f}', linewidth=5, where='post')
+            ax.step(h_min, h_cumulative, color='#ff6361', label=f'{hteam}\nTotal xG: {hlast:.2f}', linewidth=5, where='post')
 
-        # Title, subtitle, footer, and logo
-        ax.text(0.13, 1.1, f"{hteam}", fontsize=35, color="#ff6361", fontweight='bold', ha='center', va='bottom', transform=ax.transAxes)
-        ax.text(0.30, 1.1, "vs", fontsize=35, color="black", fontweight='bold', ha='center', va='bottom', transform=ax.transAxes)
-        ax.text(0.6, 1.1, f"{ateam}", fontsize=35, color="#003f5c", fontweight='bold', ha='center', va='bottom', transform=ax.transAxes)
+            # Goal annotations
+            for goal in a_goals_min:
+                ax.scatter(goal, a_cumulative[a_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
+            for goal in h_goals_min:
+                ax.scatter(goal, h_cumulative[h_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
 
-        # Show match score and expected points
-        score = f"{home_goals} - {away_goals}"
-        subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
+            # Title, subtitle, footer, and logo
+            ax.text(0.13, 1.1, f"{hteam}", fontsize=35, color="#ff6361", fontweight='bold', ha='center', va='bottom', transform=ax.transAxes)
+            ax.text(0.30, 1.1, "vs", fontsize=35, color="black", fontweight='bold', ha='center', va='bottom', transform=ax.transAxes)
+            ax.text(0.6, 1.1, f"{ateam}", fontsize=35, color="#003f5c", fontweight='bold', ha='center', va='bottom', transform=ax.transAxes)
 
-        # Display the match details
-        st.write(f"**Match: {hteam} vs {ateam}**")
-        st.write(f"**Score: {home_goals} - {away_goals}**")
-        st.write(f"**Expected Points:** {hteam} = {team1_xp:.2f}, {ateam} = {team2_xp:.2f}")
-        st.write(subtitle)
+            # Show match score and expected points
+            score = f"{home_goals} - {away_goals}"
+            subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
 
-        # Footer and logo
-        st.markdown("OUTSWINGERFC.COM\nData via Opta | Eredivisie 2024-2025")
+            # Display the match details
+            st.write(f"**Match: {hteam} vs {ateam}**")
+            st.write(f"**Score: {home_goals} - {away_goals}**")
+            st.write(f"**Expected Points:** {hteam} = {team1_xp:.2f}, {ateam} = {team2_xp:.2f}")
+            st.write(subtitle)
 
-        # Display the plot in Streamlit
-        st.pyplot(fig)
+            # Footer and logo
+            st.markdown("OUTSWINGERFC.COM\nData via Opta | Eredivisie 2024-2025")
+
+            # Display the plot in Streamlit
+            st.pyplot(fig)
