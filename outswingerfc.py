@@ -596,6 +596,34 @@ if selected_page == "Pass Network":
 
         team_ids = df['contestantId'].unique()
         selected_team = st.selectbox("Select a Team", team_ids)
+        
+        # Identify columns with '/qualifierId' in their name
+type_cols = [col for col in df.columns if '/qualifierId' in col]
+
+# Initialize endX and endY columns
+df['endX'] = 0.0
+df['endY'] = 0.0
+
+# Iterate through the rows in the dataframe
+for i in range(len(df)):
+    df1 = df.iloc[i:i+1,:]  # Get current row as a dataframe
+
+    # Process endX
+    for j in range(len(type_cols)):
+        col = df1[type_cols[j]].values[0]
+        if col == 140:  # Check if qualifierId is 140 for endX
+            endx = df1.loc[:,'qualifier/%i/value' % j].values[0]  # Get the corresponding endX value
+            df.loc[i, 'endX'] = endx  # Assign the value to the correct row
+
+    # Process endY
+    for k in range(len(type_cols)):
+        col = df1[type_cols[k]].values[0]
+        if col == 141:  # Check if qualifierId is 141 for endY
+            endy = df1.loc[:,'qualifier/%i/value' % k].values[0]  # Get the corresponding endY value
+            df.loc[i, 'endY'] = endy  # Assign the value to the correct row
+
+# Now you can proceed with your existing EPV calculations or other logic
+
 
         epv = pd.read_csv("epv_grid.csv", header=None).to_numpy()
 
