@@ -508,7 +508,10 @@ if selected_page == "Field Tilt":
         else:
             st.write("The selected CSV does not contain a 'contestantId' column.")
         
-import os
+if selected_page == "Pass Network":
+    st.title("Pass Network Visualization")
+
+   import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -518,7 +521,7 @@ import streamlit as st
 from mplsoccer import VerticalPitch
 from matplotlib.colors import Normalize
 
-# Function to add logo to the plot
+# Function to add logo to the pitch
 def add_logo(ax, logo_path):
     # Load the logo image
     logo = mpimg.imread(logo_path)
@@ -533,7 +536,7 @@ def add_logo(ax, logo_path):
     # Add the logo as an artist to the plot
     ax.add_artist(ab)
 
-# Function to plot the pass network with logo added only to the second (right) pitch
+# Function to plot the pass network
 def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
     # Draw the pitch
     pitch.draw(ax=ax)
@@ -608,81 +611,65 @@ def create_pass_network_data(df, team_id):
 
     return average_locs_and_count, passes_between
 
-# Streamlit interface
-st.title("Select a Match and Contestant")
+# Streamlit sidebar navigation and app structure
+selected_page = st.sidebar.radio("Go to", ("Home", "Shot Map", "Flow Map", "Field Tilt", "Pass Network"))
 
-# Folder containing CSV match data
-match_data_folder = 'WSL 2024-2025'  # Adjust path to where your match data is stored
-csv_files = sorted([f for f in os.listdir(match_data_folder) if f.endswith('.csv')],
-                   key=lambda f: os.path.getmtime(os.path.join(match_data_folder, f)),
-                   reverse=True)
+if selected_page == "Pass Network":
+    st.title("Pass Network Visualization")
 
-# Let the user select a match
-selected_match = st.selectbox("Select a match", csv_files)
+    # Folder containing match data
+    match_data_folder = 'WSL 2024-2025'  # Adjust path to where your match data is stored
+    csv_files = sorted([f for f in os.listdir(match_data_folder) if f.endswith('.csv')],
+                       key=lambda f: os.path.getmtime(os.path.join(match_data_folder, f)),
+                       reverse=True)
 
-if selected_match:
-    # Load the match data from the selected CSV file
-    file_path = os.path.join(match_data_folder, selected_match)
-    df = pd.read_csv(file_path)
+    selected_match = st.selectbox("Select a match", csv_files)
 
-    # Extract contestantId's (teams) for the match
-    team_ids = df['contestantId'].unique()
-    selected_team = st.selectbox("Select a Team", team_ids)
+    if selected_match:
+        file_path = os.path.join(match_data_folder, selected_match)
+        df = pd.read_csv(file_path)
 
-    # Load the EPV grid
-    epv = pd.read_csv("epv_grid.csv", header=None).to_numpy()
+        team_ids = df['contestantId'].unique()
+        selected_team = st.selectbox("Select a Team", team_ids)
 
-    # Calculate EPV values for passes
-    df['x'] = pd.to_numeric(df['x'], errors='coerce')
-    df['y'] = pd.to_numeric(df['y'], errors='coerce')
-    df['endX'] = pd.to_numeric(df['endX'], errors='coerce')
-    df['endY'] = pd.to_numeric(df['endY'], errors='coerce')
+        epv = pd.read_csv("epv_grid.csv", header=None).to_numpy()
 
-    # Map start and end coordinates to EPV zones
-    df['x1_bin'] = pd.cut(df['x'], bins=epv.shape[1], labels=False).astype('Int64')
-    df['y1_bin'] = pd.cut(df['y'], bins=epv.shape[0], labels=False).astype('Int64')
-    df['x2_bin'] = pd.cut(df['endX'], bins=epv.shape[1], labels=False).astype('Int64')
-    df['y2_bin'] = pd.cut(df['endY'], bins=epv.shape[0], labels=False).astype('Int64')
+        df['x'] = pd.to_numeric(df['x'], errors='coerce')
+        df['y'] = pd.to_numeric(df['y'], errors='coerce')
+        df['endX'] = pd.to_numeric(df['endX'], errors='coerce')
+        df['endY'] = pd.to_numeric(df['endY'], errors='coerce')
 
-    # Calculate EPV for start and end zones
-    def get_epv_value(bin_indices, epv_grid):
-        if pd.notnull(bin_indices[0]) and pd.notnull(bin_indices[1]):
-            return epv_grid[int(bin_indices[1])][int(bin_indices[0])]
-        return np.nan  # Return NaN if indices are invalid
+        df['x1_bin'] = pd.cut(df['x'], bins=epv.shape[1], labels=False).astype('Int64')
+        df['y1_bin'] = pd.cut(df['y'], bins=epv.shape[0], labels=False).astype('Int64')
+        df['x2_bin'] = pd.cut(df['endX'], bins=epv.shape[1], labels=False).astype('Int64')
+        df['y2_bin'] = pd.cut(df['endY'], bins=epv.shape[0], labels=False).astype('Int64')
 
-    df['start_zone_value'] = df[['x1_bin', 'y1_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
-    df['end_zone_value'] = df[['x2_bin', 'y2_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
+        def get_epv_value(bin_indices, epv_grid):
+            if pd.notnull(bin_indices[0]) and pd.notnull(bin_indices[1]):
+                return epv_grid[int(bin_indices[1])][int(bin_indices[0])]
+            return np.nan
 
-    # Compute EPV for each pass action
-    df['epv'] = df['end_zone_value'] - df['start_zone_value']
+        df['start_zone_value'] = df[['x1_bin', 'y1_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
+        df['end_zone_value'] = df[['x2_bin', 'y2_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
 
-    # Create pass network data for the selected team
-    data_team = create_pass_network_data(df, selected_team)
+        df['epv'] = df['end_zone_value'] - df['start_zone_value']
 
-    # Set up the two vertical pitches side by side
-    fig, axs = plt.subplots(1, 2, figsize=(20, 16), gridspec_kw={'wspace': 0.1})
-    fig.set_facecolor("white")
+        data_team = create_pass_network_data(df, selected_team)
 
-    # Create vertical pitch
-    pitch = VerticalPitch(pitch_type='opta', pad_top=5, pitch_color='white', line_color='black',
-                          half=False, goal_type='box', goal_alpha=0.8)
+        fig, axs = plt.subplots(1, 2, figsize=(20, 16), gridspec_kw={'wspace': 0.1})
+        fig.set_facecolor("white")
 
-    # Path to the logo (change the path accordingly)
-    logo_path = 'Data visuals/Outswinger FC (3).png'  # Replace with your logo path
+        pitch = VerticalPitch(pitch_type='opta', pad_top=5, pitch_color='white', line_color='black', half=False, goal_type='box', goal_alpha=0.8)
+        logo_path = 'Data visuals/Outswinger FC (3).png'  # Replace with your logo path
 
-    # Plot the pass network for the selected team (with logo for the second team)
-    plot_pass_network_with_logo(axs[0], pitch, data_team[0], data_team[1], f"{selected_team} Passing Network", add_logo_to_this_plot=False)
-    plot_pass_network_with_logo(axs[1], pitch, data_team[0], data_team[1], f"{selected_team} Passing Network with Logo", add_logo_to_this_plot=True, logo_path=logo_path)
+        plot_pass_network_with_logo(axs[0], pitch, data_team[0], data_team[1], f"{selected_team} Passing Network", add_logo_to_this_plot=False)
+        plot_pass_network_with_logo(axs[1], pitch, data_team[0], data_team[1], f"{selected_team} Passing Network", add_logo_to_this_plot=True, logo_path=logo_path)
 
-    # Adjust spacing and add explanatory text below each pitch
-    plt.subplots_adjust(bottom=0.15)  # Increase the bottom margin to give space for the text
-    axs[0].text(0.05, -0.05, 'Node size = number of touches\nColor = Expected possession values (darker is higher)\nLine size = number of passes',
-                transform=axs[0].transAxes, fontsize=20, color='black', ha='left', va='top', fontweight='normal')
+        plt.subplots_adjust(bottom=0.15)
+        axs[0].text(0.05, -0.05, 'Node size = number of touches\nColor = Expected possession values (darker is higher)\nLine size = number of passes',
+                    transform=axs[0].transAxes, fontsize=20, color='black', ha='left', va='top', fontweight='normal')
 
-    axs[1].text(0.95, -0.05, 'OUTSWINGER FC\nData via Opta | Eredivisie 2024-2025',
-                transform=axs[1].transAxes, fontsize=20, color='black', ha='right', va='top', fontweight='normal')
+        axs[1].text(0.95, -0.05, 'OUTSWINGER FC\nData via Opta | Eredivisie 2024-2025',
+                    transform=axs[1].transAxes, fontsize=20, color='black', ha='right', va='top', fontweight='normal')
 
-    # Display the plot in Streamlit
-    st.pyplot(fig)
-
-
+        st.pyplot(fig)
