@@ -190,6 +190,11 @@ if selected_page == "Shot Map":
         st.pyplot(fig)
 
 
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+import streamlit as st
+
 # Flow Map page
 if selected_page == "Flow Map":
     st.title("Expected Goals (xG) Flow Map")
@@ -294,9 +299,9 @@ if selected_page == "Flow Map":
             ax.step(a_min, a_cumulative, color='#003f5c', linewidth=5, where='post')
             ax.step(h_min, h_cumulative, color='#ff6361', linewidth=5, where='post')
 
-            # Label the lines on the plot
-            ax.text(92, a_cumulative[-1], ateam, color='#003f5c', fontsize=18, fontweight='bold')
-            ax.text(92, h_cumulative[-1], hteam, color='#ff6361', fontsize=18, fontweight='bold')
+            # Label the lines on the plot (make labels black and adjusted positioning)
+            ax.text(92, a_cumulative[-1] + 0.05, ateam, color='black', fontsize=18, fontweight='bold')  # Adjust y position to avoid overlap
+            ax.text(92, h_cumulative[-1] + 0.05, hteam, color='black', fontsize=18, fontweight='bold')  # Adjust y position to avoid overlap
 
             # Goal annotations
             for goal in a_goals_min:
