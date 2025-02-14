@@ -324,5 +324,20 @@ if selected_page == "Flow Map":
             # Footer and logo (placed under the plot)
             st.markdown("OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025")
             # Show match score and expected points
-            st.write(f"**Expected Points:** {hteam} = {hlast:.2f}, {ateam} = {alast:.2f}")
-            st.write(subtitle)
+            # Calculate win probabilities and expected points
+            total_xg = alast + hlast
+            team1_win_prob = alast / total_xg
+            team2_win_prob = hlast / total_xg
+            draw_prob = 1 - (team1_win_prob + team2_win_prob)
+
+# Expected Points Calculation
+            team1_xp = (3 * team1_win_prob) + (1 * draw_prob)
+            team2_xp = (3 * team2_win_prob) + (1 * draw_prob)
+
+# Add win probability and expected points in bottom-left corner
+            win_prob_text = f"{hteam} Win Probability: {team1_win_prob * 100:.2f}%\n{ateam} Win Probability: {team2_win_prob * 100:.2f}%\n"
+            xp_text = f"{ateam} Expected Points: {team1_xp:.2f}\n{hteam} Expected Points: {team2_xp:.2f}"
+
+# Show win probability and expected points
+            st.write(win_prob_text)
+            st.write(xp_text)
