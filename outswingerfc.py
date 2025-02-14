@@ -6,6 +6,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import matplotlib.image as mpimg
 import io
 import os
+import numpy as np
 from datetime import datetime
 
 # Streamlit app layout and settings
@@ -106,22 +107,65 @@ if selected_file:
     text = "OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025"
     plt.text(0.98, -0.03, text, ha='right', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
 
-    # Save the plot to a file (in memory buffer)
-    img_buf = io.BytesIO()
-    plt.savefig(img_buf, format="png", dpi=300, bbox_inches='tight', facecolor='white')
-    img_buf.seek(0)
+    # Function to add jitter to the scatter plot (random small shift in position)
+    def add_jitter(x, y, jitter_strength=0.5):
+        return x + np.random.uniform(-jitter_strength, jitter_strength), y + np.random.uniform(-jitter_strength, jitter_strength)
 
-    # Provide a download button for the image
-    st.download_button(
-        label="Download Shot Map",
-        data=img_buf,
-        file_name=f"{team1_name}_vs_{team2_name}_shot_map.png",
-        mime="image/png"
-    )
+    # Scatter plot code for team1 (home team)
+    for x in range(len(team1['x'])):
+        x_pos, y_pos = add_jitter(team1['x'][x], 100 - team1['y'][x])  # Apply jitter
+        if team1['Type_of_play'][x] == 'FromCorner' and team1['isGoal'][x] == True:
+            plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
+        elif team1['Type_of_play'][x] == 'FromCorner' and team1['isGoal'][x] == False:
+            plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
+        elif team1['Type_of_play'][x] == 'RegularPlay' and team1['isGoal'][x] == True:
+            plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
+        elif team1['Type_of_play'][x] == 'RegularPlay' and team1['isGoal'][x] == False:
+            plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
+        elif team1['Type_of_play'][x] == 'FastBreak' and team1['isGoal'][x] == True:
+            plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
+        elif team1['Type_of_play'][x] == 'FastBreak' and team1['isGoal'][x] == False:
+            plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
+        elif team1['Type_of_play'][x] == 'ThrowinSetPiece' and team1['isGoal'][x] == True:
+            plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
+        elif team1['Type_of_play'][x] == 'ThrowinSetPiece' and team1['isGoal'][x] == False:
+            plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
+        elif team1['Type_of_play'][x] == 'SetPiece' and team1['isGoal'][x] == True:
+            plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
+        elif team1['Type_of_play'][x] == 'SetPiece' and team1['isGoal'][x] == False:
+            plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
+        elif team1['Type_of_play'][x] == 'Penalty' and team1['isGoal'][x] == True:
+            plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
+        elif team1['Type_of_play'][x] == 'Penalty' and team1['isGoal'][x] == False:
+            plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
 
-    # Optionally, display the plot in Streamlit
-    st.image(img_buf, use_container_width=True)
+    # Scatter plot code for team2 (away team)
+    for x in range(len(team2['x'])):
+        x_pos, y_pos = add_jitter(100 - team2['x'][x], team2['y'][x])  # Apply jitter
+        if team2['Type_of_play'][x] == 'FromCorner' and team2['isGoal'][x] == True:
+            plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
+        elif team2['Type_of_play'][x] == 'FromCorner' and team2['isGoal'][x] == False:
+            plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
+        elif team2['Type_of_play'][x] == 'RegularPlay' and team2['isGoal'][x] == True:
+            plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
+        elif team2['Type_of_play'][x] == 'RegularPlay' and team2['isGoal'][x] == False:
+            plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
+        elif team2['Type_of_play'][x] == 'FastBreak' and team2['isGoal'][x] == True:
+            plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
+        elif team2['Type_of_play'][x] == 'FastBreak' and team2['isGoal'][x] == False:
+            plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
+        elif team2['Type_of_play'][x] == 'ThrowinSetPiece' and team2['isGoal'][x] == True:
+            plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
+        elif team2['Type_of_play'][x] == 'ThrowinSetPiece' and team2['isGoal'][x] == False:
+            plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
+        elif team2['Type_of_play'][x] == 'SetPiece' and team2['isGoal'][x] == True:
+            plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
+        elif team2['Type_of_play'][x] == 'SetPiece' and team2['isGoal'][x] == False:
+            plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
+        elif team2['Type_of_play'][x] == 'Penalty' and team2['isGoal'][x] == True:
+            plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
+        elif team2['Type_of_play'][x] == 'Penalty' and team2['isGoal'][x] == False:
+            plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
 
-    # Display the win probability and expected points as text
-    st.markdown(win_text)
-    st.markdown(xp_text)
+    # Show the plot
+    st.pyplot(fig)
