@@ -518,6 +518,9 @@ from mplsoccer import VerticalPitch
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 
+if selected_page == "Passnetwork":
+    st.title("Passnetwork")
+
 # Function to load match data
 def load_match_data(match_data_folder):
     csv_files = sorted([f for f in os.listdir(match_data_folder) if f.endswith('.csv')],
@@ -569,11 +572,6 @@ def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_betwee
     if logo_path:
         add_logo(ax, logo_path)
 
-# Streamlit sidebar navigation
-selected_page = st.sidebar.selectbox("Select a page", ["Home", "Passnetwork", "Other Page"])
-
-if selected_page == "Passnetwork":
-    st.title("Passnetwork Visualization")
 
     match_data_folder = 'WSL 2024-2025'
     df = load_match_data(match_data_folder)
@@ -610,6 +608,3 @@ if selected_page == "Passnetwork":
             plt.savefig('Passnetwork_with_logo.png', dpi=500, bbox_inches='tight')
             st.image('Passnetwork_with_logo.png', caption='Pass Network Visualization', use_column_width=True)
 
-else:
-    st.title("Welcome!")
-    st.write("Select 'Passnetwork' from the sidebar to see the visualization.")
