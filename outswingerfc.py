@@ -315,6 +315,11 @@ if selected_file:
 
     fig.text(0.12, 0.001, win_prob_text + xp_text, ha='left', va='bottom', fontsize=12, fontstyle='italic', color='black')
 
+    # Show match stats
+    st.write(f"**Match: {hteam} vs {ateam}**")
+    st.write(f"**Score: {home_goals} - {away_goals}**")
+    st.write(f"**Expected Points:** {hteam} = {team1_xp:.2f}, {ateam} = {team2_xp:.2f}")
+
     # Footer
     st.markdown("OUTSWINGERFC.COM\nData via Opta | Eredivisie 2024-2025")
 
