@@ -313,12 +313,11 @@ if selected_page == "Flow Map":
             subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
             ax.text(0.2, 1.02, subtitle, fontsize=18, color="black", ha='center', transform=ax.transAxes)
 
-            # Show match score and expected points
-            st.write(f"**Expected Points:** {hteam} = {hlast:.2f}, {ateam} = {alast:.2f}")
-            st.write(subtitle)
-
             # Display the plot in Streamlit
             st.pyplot(fig)
 
             # Footer and logo (placed under the plot)
             st.markdown("OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025")
+            # Show match score and expected points
+            st.write(f"**Expected Points:** {hteam} = {hlast:.2f}, {ateam} = {alast:.2f}")
+            st.write(subtitle)
