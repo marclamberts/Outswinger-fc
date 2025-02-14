@@ -321,4 +321,4 @@ if selected_page == "Flow Map":
             st.pyplot(fig)
 
             # Footer and logo (placed under the plot)
-            st.markdown("OUTSWINGERFC.COM\nData via Opta | Eredivisie 2024-2025")
+            st.markdown("OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025")
