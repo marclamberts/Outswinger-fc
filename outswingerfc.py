@@ -195,134 +195,137 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
-# Flow Map page
-if selected_page == "Flow Map":
-    st.title("Expected Goals (xG) Flow Map")
+import os
+import pandas as pd
+import streamlit as st
+import matplotlib.pyplot as plt
 
-    # Path to the xgCSV folder
-    xg_csv_folder = 'xgCSV'
+# Set Streamlit page
+st.title("Expected Goals (xG) Flow Map")
 
-    # List all CSV files in the xgCSV folder and sort by modification time (most recent first)
-    csv_files = sorted(
-        [f for f in os.listdir(xg_csv_folder) if f.endswith('.csv')],
-        key=lambda f: os.path.getmtime(os.path.join(xg_csv_folder, f)),
-        reverse=True  # Sort by most recent first
+# Path to the xgCSV folder
+xg_csv_folder = 'xgCSV'
+
+# List all CSV files in the xgCSV folder and sort by modification time (most recent first)
+csv_files = sorted(
+    [f for f in os.listdir(xg_csv_folder) if f.endswith('.csv')],
+    key=lambda f: os.path.getmtime(os.path.join(xg_csv_folder, f)),
+    reverse=True  # Sort by most recent first
+)
+
+# Let the user select a CSV file
+selected_file = st.selectbox("Select a CSV file", csv_files)
+
+# If a file is selected, process and display it
+if selected_file:
+    # Load the data
+    file_path = os.path.join(xg_csv_folder, selected_file)
+    df = pd.read_csv(file_path)
+
+    # Extract team names from the file name
+    teams = selected_file.split('_')[-1].split(' - ')  
+    hteam = teams[0].strip()
+    ateam = teams[1].strip()
+
+    # Initialize lists for xG, PsxG, and goals
+    a_xG, h_xG = [0], [0]
+    a_min, h_min = [0], [0]
+    a_psxg, h_psxg = [0], [0]
+    a_goals_min, h_goals_min = [], []
+
+    # Process each row to track xG, PsxG, and goals
+    for index, row in df.iterrows():
+        if row['TeamId'] == ateam:
+            a_xG.append(row['xG'])
+            a_min.append(row['timeMin'])
+            a_psxg.append(row['PsxG'] if 'PsxG' in df.columns else 0)
+            if row['isGoal'] == 1:
+                a_goals_min.append(row['timeMin'])
+        
+        if row['TeamId'] == hteam:
+            h_xG.append(row['xG'])
+            h_min.append(row['timeMin'])
+            h_psxg.append(row['PsxG'] if 'PsxG' in df.columns else 0)
+            if row['isGoal'] == 1:
+                h_goals_min.append(row['timeMin'])
+
+    # Cumulative xG and PsxG calculations
+    def cumulative_sum(nums):
+        return [sum(nums[:i+1]) for i in range(len(nums))]
+
+    a_cumulative = cumulative_sum(a_xG)
+    h_cumulative = cumulative_sum(h_xG)
+    a_psxg_cumulative = cumulative_sum(a_psxg)
+    h_psxg_cumulative = cumulative_sum(h_psxg)
+
+    # Final xG and PsxG values
+    alast, hlast = round(a_cumulative[-1], 2), round(h_cumulative[-1], 2)
+    a_psxg_last, h_psxg_last = round(a_psxg_cumulative[-1], 2), round(h_psxg_cumulative[-1], 2)
+
+    # Win probability and expected points calculation
+    total_xg = alast + hlast if (alast + hlast) > 0 else 1  # Avoid division by zero
+    team1_win_prob, team2_win_prob = alast / total_xg, hlast / total_xg
+    draw_prob = 1 - (team1_win_prob + team2_win_prob)
+    
+    team1_xp = (3 * team1_win_prob) + (1 * draw_prob)
+    team2_xp = (3 * team2_win_prob) + (1 * draw_prob)
+
+    # Goals calculation
+    home_goals = df.loc[(df['TeamId'] == hteam) & (df['isGoal'] == 1)].shape[0]
+    away_goals = df.loc[(df['TeamId'] == ateam) & (df['isGoal'] == 1)].shape[0]
+
+    # Plot setup
+    fig, ax = plt.subplots(figsize=(16, 10))
+    fig.set_facecolor('white')
+    ax.patch.set_facecolor('white')
+
+    # Grid & labels
+    ax.grid(ls='dotted', lw=1, color='black', axis='y', alpha=0.6)
+    ax.grid(ls='dotted', lw=1, color='black', axis='x', alpha=0.6)
+    ax.spines[['top', 'bottom', 'left', 'right']].set_visible(False)
+    plt.xticks([0, 15, 30, 45, 60, 75, 90])
+    plt.xlabel('Minute', fontsize=16)
+    plt.ylabel('xG', fontsize=16)
+
+    # Title (in black)
+    ax.set_title(f"{hteam} vs {ateam}", fontsize=35, fontweight='bold', color="black")
+
+    # Extend data to 95th minute for full-time view
+    a_min.append(95), a_cumulative.append(alast)
+    h_min.append(95), h_cumulative.append(hlast)
+
+    # Plot xG flow
+    ax.fill_between(h_min, h_cumulative, color='#ff6361', alpha=0.3)
+    ax.fill_between(a_min, a_cumulative, color='#003f5c', alpha=0.3)
+    ax.step(a_min, a_cumulative, color='#003f5c', linewidth=5, where='post', label=f'{ateam} xG: {alast:.2f}')
+    ax.step(h_min, h_cumulative, color='#ff6361', linewidth=5, where='post', label=f'{hteam} xG: {hlast:.2f}')
+
+    # Goal markers
+    for goal in a_goals_min:
+        ax.scatter(goal, a_cumulative[a_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
+
+    for goal in h_goals_min:
+        ax.scatter(goal, h_cumulative[h_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
+
+    # Add win probability and expected points in bottom-left
+    win_prob_text = (
+        f"{hteam} Win Probability: {team1_win_prob * 100:.2f}%\n"
+        f"{ateam} Win Probability: {team2_win_prob * 100:.2f}%\n"
     )
+    xp_text = f"{hteam} Expected Points: {team1_xp:.2f}\n{ateam} Expected Points: {team2_xp:.2f}"
 
-    # Let the user select a CSV file
-    selected_file = st.selectbox("Select a CSV file", csv_files)
+    fig.text(0.12, 0.001, win_prob_text + xp_text, ha='left', va='bottom', fontsize=12, fontstyle='italic', color='black')
 
-    # If a file is selected, process and display it
-    if selected_file:
-        # Load the data
-        file_path = os.path.join(xg_csv_folder, selected_file)
-        df = pd.read_csv(file_path)
+    # Show match stats
+    score_text = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
+    
+    st.write(f"**Match: {hteam} vs {ateam}**")
+    st.write(f"**Score: {home_goals} - {away_goals}**")
+    st.write(f"**Expected Points:** {hteam} = {team1_xp:.2f}, {ateam} = {team2_xp:.2f}")
+    st.write(score_text)
 
-        # Extract team names from the file name
-        teams = selected_file.replace('.csv', '').split('_')[-1].split(' - ')
-        if len(teams) < 2:
-            st.error("Error extracting team names. Check filename format.")
-        else:
-            hteam, ateam = teams
+    # Footer
+    st.markdown("OUTSWINGERFC.COM\nData via Opta | Eredivisie 2024-2025")
 
-            # Initialize lists to store xG, PsxG, and goal data for both teams
-            a_xG, h_xG = [], []
-            a_min, h_min = [], []
-            a_psxg, h_psxg = [], []
-            a_goals_min, h_goals_min = [], []
-
-            # Process each row to track xG, PsxG, and goals for both teams
-            for _, row in df.iterrows():
-                team_id = row['TeamId']
-                xg_value = row['xG']
-                psxg_value = row['PsxG'] if 'PsxG' in df.columns else 0
-                minute = row['timeMin']
-
-                if team_id == ateam:
-                    a_xG.append(xg_value)
-                    a_min.append(minute)
-                    a_psxg.append(psxg_value)
-                    if row['isGoal'] == 1:
-                        a_goals_min.append(minute)
-
-                elif team_id == hteam:
-                    h_xG.append(xg_value)
-                    h_min.append(minute)
-                    h_psxg.append(psxg_value)
-                    if row['isGoal'] == 1:
-                        h_goals_min.append(minute)
-
-            # Cumulative xG and PsxG calculations
-            def nums_cumulative_sum(nums_list):
-                return [sum(nums_list[:i+1]) for i in range(len(nums_list))]
-
-            a_cumulative = nums_cumulative_sum([0] + a_xG)
-            h_cumulative = nums_cumulative_sum([0] + h_xG)
-            a_psxg_cumulative = nums_cumulative_sum([0] + a_psxg)
-            h_psxg_cumulative = nums_cumulative_sum([0] + h_psxg)
-
-            # Ensure xG and time lists have the same starting values
-            a_min = [0] + a_min
-            h_min = [0] + h_min
-
-            # Last xG and PsxG values
-            alast, hlast = round(a_cumulative[-1], 2), round(h_cumulative[-1], 2)
-            a_psxg_last, h_psxg_last = round(a_psxg_cumulative[-1], 2), round(h_psxg_cumulative[-1], 2)
-
-            # Calculate home and away goals from the dataset
-            home_goals = df.loc[(df['TeamId'] == hteam) & (df['isGoal'] == 1)].shape[0]
-            away_goals = df.loc[(df['TeamId'] == ateam) & (df['isGoal'] == 1)].shape[0]
-
-            # Plot setup
-            fig, ax = plt.subplots(figsize=(16, 10))
-            fig.set_facecolor('white')
-            ax.patch.set_facecolor('white')
-
-            # Set up grid and axis labels
-            ax.grid(ls='dotted', lw=1, color='black', axis='y', zorder=1, which='both', alpha=0.6)
-            ax.grid(ls='dotted', lw=1, color='black', axis='x', zorder=1, which='both', alpha=0.6)
-            ax.spines[['top', 'bottom', 'left', 'right']].set_visible(False)
-            plt.xticks([0, 15, 30, 45, 60, 75, 90])
-            plt.xlabel('Minute', fontsize=16)
-            plt.ylabel('xG', fontsize=16)
-
-            # Plot cumulative xG and PsxG fill
-            ax.fill_between(h_min, h_cumulative, color='#ff6361', alpha=0.3)
-            ax.fill_between(a_min, a_cumulative, color='#003f5c', alpha=0.3)
-
-            # Ensure both teams are plotted fully
-            a_min.append(95)
-            a_cumulative.append(alast)
-            h_min.append(95)
-            h_cumulative.append(hlast)
-
-            ax.step(a_min, a_cumulative, color='#003f5c', linewidth=5, where='post')
-            ax.step(h_min, h_cumulative, color='#ff6361', linewidth=5, where='post')
-
-            # Label the lines on the plot
-            ax.text(92, a_cumulative[-1], ateam, color='#003f5c', fontsize=18, fontweight='bold')
-            ax.text(92, h_cumulative[-1], hteam, color='#ff6361', fontsize=18, fontweight='bold')
-
-            # Goal annotations
-            for goal in a_goals_min:
-                ax.scatter(goal, a_cumulative[a_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
-            for goal in h_goals_min:
-                ax.scatter(goal, h_cumulative[h_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
-
-            # Title (all black)
-            ax.text(0.5, 1.1, f"{hteam} vs {ateam}", fontsize=35, color="black", fontweight='bold', ha='center', transform=ax.transAxes)
-
-            # Show match score and expected points
-            subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
-
-            # Display the match details
-            st.write(f"**Match: {hteam} vs {ateam}**")
-            st.write(f"**Score: {home_goals} - {away_goals}**")
-            st.write(f"**Expected Points:** {hteam} = {hlast:.2f}, {ateam} = {alast:.2f}")
-            st.write(subtitle)
-
-            # Footer and logo
-            st.markdown("OUTSWINGERFC.COM\nData via Opta | Eredivisie 2024-2025")
-
-            # Display the plot in Streamlit
-            st.pyplot(fig)
+    # Display the plot
+    st.pyplot(fig)
