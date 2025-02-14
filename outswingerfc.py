@@ -630,7 +630,7 @@ if df is not None:
 
         pitch = VerticalPitch(pitch_type='opta', pad_top=5, pitch_color='white', line_color='black', half=False, goal_type='box', goal_alpha=0.8)
 
-        logo_path = 'Data visuals/Outswinger FC (3).png'
+        logo_path = 'logo.png'
 
         plot_pass_network_with_logo(axs[0], pitch, data_team1[0], data_team1[1], f"{selected_teams[0]}\nPassing Network\nThrough First Sub", add_logo_to_this_plot=False)
 
