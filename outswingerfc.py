@@ -342,3 +342,159 @@ if selected_page == "Flow Map":
             st.write(win_prob_text)
             st.write(xp_text)
     
+import os
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+import streamlit as st
+from mplsoccer import VerticalPitch
+from matplotlib.colors import Normalize
+
+
+# Flow Map page
+if selected_page == "Passnetwork":
+    st.title("Expected Goals (xG) Flow Map")
+
+# 1. Function to calculate endX and endY based on the type of pass
+def get_end_coordinates(row, type_cols):
+    endX, endY = 0.0, 0.0
+    for j in range(len(type_cols)):
+        col = row[type_cols[j]]
+        if col == 140:
+            endX = row[f'qualifier/{j}/value']
+        elif col == 141:
+            endY = row[f'qualifier/{j}/value']
+    return endX, endY
+
+# 2. Function to calculate EPV values
+def calculate_epv(df, epv):
+    epv_rows, epv_cols = epv.shape
+
+    # Bin coordinates for x and y based on EPV grid
+    df['x1_bin'] = pd.cut(df['x'], bins=epv_cols, labels=False).astype('Int64')
+    df['y1_bin'] = pd.cut(df['y'], bins=epv_rows, labels=False).astype('Int64')
+    df['x2_bin'] = pd.cut(df['endX'], bins=epv_cols, labels=False).astype('Int64')
+    df['y2_bin'] = pd.cut(df['endY'], bins=epv_rows, labels=False).astype('Int64')
+
+    # Function to get EPV value based on the bin indices
+    def get_epv_value(bin_indices, epv_grid):
+        if pd.notnull(bin_indices[0]) and pd.notnull(bin_indices[1]):
+            return epv_grid[int(bin_indices[1])][int(bin_indices[0])]
+        return np.nan
+
+    # Assign EPV values for start and end zones
+    df['start_zone_value'] = df[['x1_bin', 'y1_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
+    df['end_zone_value'] = df[['x2_bin', 'y2_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
+    
+    # Calculate EPV as the difference between start and end zones
+    df['epv'] = df['end_zone_value'] - df['start_zone_value']
+
+    return df
+
+# 3. Function to plot the pass network with an optional logo
+def add_logo(ax, logo_path):
+    logo = mpimg.imread(logo_path)
+    imagebox = OffsetImage(logo, zoom=0.6)
+    ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, 
+                        xycoords='axes fraction', boxcoords="axes fraction")
+    ax.add_artist(ab)
+
+def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
+    pitch.draw(ax=ax)
+
+    norm = Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
+    cmap = plt.cm.viridis
+    colors = cmap(norm(average_locs_and_count['epv']))
+
+    max_pass_count = passes_between['pass_count'].max()
+    passes_between['zorder'] = passes_between['pass_count'] / max_pass_count * 10
+    passes_between['alpha'] = passes_between['pass_count'] / max_pass_count
+
+    for _, row in passes_between.iterrows():
+        pitch.lines(row['x'], row['y'], row['x_end'], row['y_end'],
+                    color='grey', alpha=row['alpha'], lw=4, ax=ax, zorder=row['zorder'])
+
+    pitch.scatter(average_locs_and_count['x'], average_locs_and_count['y'], s=500,
+                  color=colors, edgecolors="black", linewidth=1, alpha=1, ax=ax, zorder=11)
+
+    for _, row in average_locs_and_count.iterrows():
+        pitch.annotate(row.name, xy=(row.x, row.y), ax=ax, ha='center', va='bottom',
+                       fontsize=12, color='black', zorder=12, xytext=(0, -35), textcoords='offset points',
+                       bbox=dict(boxstyle="round,pad=0.3", edgecolor="black", facecolor="white", alpha=0.7))
+
+    ax.set_title(title, fontsize=18, color="black", fontweight='bold', pad=20)
+
+    if add_logo_to_this_plot:
+        add_logo(ax, logo_path)
+
+# 4. Function to create pass network data
+def create_pass_network_data(df, team_id):
+    team_data = df[df['contestantId'] == team_id].reset_index()
+    team_data["newsecond"] = 60 * team_data["timeMin"] + team_data["timeSec"]
+    team_data.sort_values(by=['newsecond'], inplace=True)
+    team_data['passer'] = team_data['playerName']
+    team_data['recipient'] = team_data['passer'].shift(-1)
+    passes = team_data[team_data['typeId'] == 1]
+    completions = passes[passes['outcome'] == 1]
+
+    subs = team_data[team_data['typeId'] == 18]
+    sub_times = subs["newsecond"]
+    sub_one = sub_times.min()
+    completions = completions[completions['newsecond'] < sub_one]
+
+    average_locs_and_count = completions.groupby('passer').agg({'x': ['mean'], 'y': ['mean', 'count'], 'epv': ['mean']})
+    average_locs_and_count.columns = ['x', 'y', 'count', 'epv']
+
+    passes_between = completions.groupby(['passer', 'recipient']).id.count().reset_index()
+    passes_between.rename({'id': 'pass_count'}, axis='columns', inplace=True)
+    return average_locs_and_count, passes_between
+
+# 5. Streamlit interface: Let the user select a match
+st.title("Select a Match and Contestant")
+
+# Folder containing CSV match data
+match_data_folder = 'WSL 2024-2025'  # Update to your match data folder path
+csv_files = sorted([f for f in os.listdir(match_data_folder) if f.endswith('.csv')],
+                   key=lambda f: os.path.getmtime(os.path.join(match_data_folder, f)),
+                   reverse=True)
+
+# Let the user select a match
+selected_match = st.selectbox("Select a match", csv_files)
+
+if selected_match:
+    # Load the match data from the selected CSV file
+    file_path = os.path.join(match_data_folder, selected_match)
+    df = pd.read_csv(file_path)
+
+    # Extract contestantId's (teams) for the match
+    team_ids = df['contestantId'].unique()
+    selected_team = st.selectbox("Select a Team", team_ids)
+
+    # Calculate the endX and endY using the `type_cols` columns
+    df['x'] = pd.to_numeric(df['x'], errors='coerce')
+    df['y'] = pd.to_numeric(df['y'], errors='coerce')
+
+    # Identify type columns (columns with /qualifierId in the name)
+    type_cols = [col for col in df.columns if '/qualifierId' in col]
+    df[['endX', 'endY']] = df.apply(lambda row: get_end_coordinates(row, type_cols), axis=1, result_type="expand")
+
+    # Load the EPV grid
+    epv = pd.read_csv("epv_grid.csv", header=None).to_numpy()
+
+    # Calculate EPV values
+    df = calculate_epv(df, epv)
+
+    # Create pass network data for the selected team
+    data_team = create_pass_network_data(df, selected_team)
+
+    # Plotting the pass network
+    fig, axs = plt.subplots(figsize=(20, 16))
+    fig.set_facecolor("white")
+    pitch = VerticalPitch(pitch_type='opta', pad_top=5, pitch_color='white', line_color='black')
+
+    plot_pass_network_with_logo(axs, pitch, data_team[0], data_team[1], f"{selected_team} Passing Network")
+
+    # Display the plot in Streamlit
+    st.pyplot(fig)
