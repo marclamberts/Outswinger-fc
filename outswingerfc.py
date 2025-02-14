@@ -89,8 +89,8 @@ if selected_file:
     logo_img = mpimg.imread(logo_path)  # Read the logo image
 
     # Create the logo image and place it at the top-right corner of the plot
-    imagebox = OffsetImage(logo_img, zoom=0.08)  # Adjust zoom for scaling the logo
-    ab = AnnotationBbox(imagebox, (0.98, 1.15), frameon=False, xycoords='axes fraction', box_alignment=(1, 1))
+    imagebox = OffsetImage(logo_img, zoom=0.06)  # Adjust zoom for scaling the logo
+    ab = AnnotationBbox(imagebox, (0.99, 1.15), frameon=False, xycoords='axes fraction', box_alignment=(1, 1))
 
     # Add the logo to the plot
     ax.add_artist(ab)
