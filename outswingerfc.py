@@ -539,7 +539,7 @@ def load_match_data(match_data_folder):
 # Function to add logo to the plot
 def add_logo(ax, logo_path):
     logo = mpimg.imread(logo_path)
-    imagebox = OffsetImage(logo, zoom=0.6)  # Adjust zoom for a larger logo
+    imagebox = OffsetImage(logo, zoom=0.6)
     ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, xycoords='axes fraction', boxcoords="axes fraction")
     ax.add_artist(ab)
 
@@ -630,7 +630,7 @@ def create_pass_network_data(df, team_id):
     return average_locs_and_count, passes_between
 
 # Streamlit page selection
-selected_page = st.selectbox("Select a page", ["Passnetwork"])
+selected_page = st.selectbox("Select a page", ["Passnetwork", "Other Page"])
 
 if selected_page == "Passnetwork":
     st.title("Passnetwork Visualization")
@@ -645,53 +645,30 @@ if selected_page == "Passnetwork":
         if 'contestantId' in df.columns:
             contestant_ids = df['contestantId'].unique()
             selected_teams = st.multiselect("Select teams", contestant_ids, default=contestant_ids[:2])
-            st.write(f"Selected Teams: {selected_teams}")
         else:
             st.write("contestantId not found in the selected match file.")
 
         epv = pd.read_csv("epv_grid.csv", header=None) 
         epv = np.array(epv)  
-        epv_rows, epv_cols = epv.shape  
 
-        df['x'] = pd.to_numeric(df['x'], errors='coerce')
-        df['y'] = pd.to_numeric(df['y'], errors='coerce')
-        df['endX'] = pd.to_numeric(df['endX'], errors='coerce')
-        df['endY'] = pd.to_numeric(df['endY'], errors='coerce')
+        df['epv'] = df.apply(lambda row: get_epv_value((row['x'], row['y']), epv) - get_epv_value((row['endX'], row['endY']), epv), axis=1)
 
-        df['x1_bin'] = pd.cut(df['x'], bins=epv_cols, labels=False).astype('Int64')
-        df['y1_bin'] = pd.cut(df['y'], bins=epv_rows, labels=False).astype('Int64')
-        df['x2_bin'] = pd.cut(df['endX'], bins=epv_cols, labels=False).astype('Int64')
-        df['y2_bin'] = pd.cut(df['endY'], bins=epv_rows, labels=False).astype('Int64')
-
-        df['start_zone_value'] = df[['x1_bin', 'y1_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
-        df['end_zone_value'] = df[['x2_bin', 'y2_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
-
-        df['epv'] = df['end_zone_value'] - df['start_zone_value']
-
-        # Save EPV results for download
         df.to_excel("epv.xlsx", index=False)
         st.download_button("Download EPV Data", "epv.xlsx")
 
         data_team1 = create_pass_network_data(df, selected_teams[0])
         data_team2 = create_pass_network_data(df, selected_teams[1])
 
-        fig, axs = plt.subplots(1, 2, figsize=(20, 16), gridspec_kw={'wspace': 0.1})
+        fig, axs = plt.subplots(1, 2, figsize=(20, 16))
         fig.set_facecolor("white")
 
-        pitch = VerticalPitch(pitch_type='opta', pad_top=5, pitch_color='white', line_color='black',
-                              half=False, goal_type='box', goal_alpha=0.8)
+        pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black')
 
-        logo_path = 'logo.png'  
+        plot_pass_network_with_logo(axs[0], pitch, data_team1[0], data_team1[1], f"Pass Network for {selected_teams[0]}", True, 'logo.png')
+        plot_pass_network_with_logo(axs[1], pitch, data_team2[0], data_team2[1], f"Pass Network for {selected_teams[1]}", True, 'logo.png')
 
-        plot_pass_network_with_logo(axs[0], pitch, data_team1[0], data_team1[1], f"Pass Network for {selected_teams[0]}", add_logo_to_this_plot=True, logo_path=logo_path)
-        plot_pass_network_with_logo(axs[1], pitch, data_team2[0], data_team2[1], f"Pass Network for {selected_teams[1]}", add_logo_to_this_plot=True, logo_path=logo_path)
-
-        plt.subplots_adjust(bottom=0.15)  
-        axs[0].text(0.05, -0.05, 'Node size = number of touches\nColor = Expected possession values (darker is higher)\nLine size = number of passes',
-                    transform=axs[0].transAxes, fontsize=20, color='black', ha='left', va='top', fontweight='normal')
-        axs[1].text(0.05, -0.05, 'Node size = number of touches\nColor = Expected possession values (darker is higher)\nLine size = number of passes',
-                    transform=axs[1].transAxes, fontsize=20, color='black', ha='left', va='top', fontweight='normal')
-
-        # Save the plot and display it
-        plt.savefig('Passnetwork_with_logo.png', dpi=500, bbox_inches='tight', facecolor='white')
+        plt.savefig('Passnetwork_with_logo.png', dpi=500, bbox_inches='tight')
         st.image('Passnetwork_with_logo.png', caption='Pass Network Visualization', use_column_width=True)
+
+else:
+    st.write("Select 'Passnetwork' from the menu to see the visualization.")
