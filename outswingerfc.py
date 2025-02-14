@@ -312,10 +312,11 @@ if selected_page == "Flow Map":
             # Title (all black)
             ax.text(0.5, 1.1, f"{hteam} vs {ateam}", fontsize=35, color="black", fontweight='bold', ha='center', transform=ax.transAxes)
 
-            # Show match score and expected points
+            # Subtitle (adjusted y position to avoid overlap)
             subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
+            ax.text(0.5, 1.05, subtitle, fontsize=18, color="black", ha='center', transform=ax.transAxes)
 
-            # Display the match details
+            # Show match score and expected points
             st.write(f"**Match: {hteam} vs {ateam}**")
             st.write(f"**Score: {home_goals} - {away_goals}**")
             st.write(f"**Expected Points:** {hteam} = {hlast:.2f}, {ateam} = {alast:.2f}")
