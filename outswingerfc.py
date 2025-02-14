@@ -519,6 +519,7 @@ import streamlit as st
 from mplsoccer import VerticalPitch
 from matplotlib.colors import Normalize
 
+# Ensure the selected page is Pass Network
 # Pass Network page
 if selected_page == "Pass Network":
     st.title("Pass Network Visualization")
@@ -566,14 +567,23 @@ if selected_page == "Pass Network":
         passes = team_data.loc[(team_data['typeId'] == 1)]
         completions = passes.loc[(passes['outcome'] == 1)]
 
+        if completions.empty:
+            st.warning("No completed passes found for this team in the selected match!")
+            return None, None
+
         subs = team_data.loc[(team_data['typeId'] == 18)]
         sub_times = subs["newsecond"]
-        sub_one = sub_times.min()
-        completions = completions.loc[completions['newsecond'] < sub_one]
+        if not sub_times.empty:
+            sub_one = sub_times.min()
+            completions = completions.loc[completions['newsecond'] < sub_one]
 
         average_locs_and_count = completions.groupby('passer').agg({'x': ['mean'], 'y': ['mean', 'count'], 'epv': ['mean']}).reset_index()
         average_locs_and_count.columns = ['name', 'x', 'y', 'pass_count', 'epv']
         passes_between = completions.groupby(['passer', 'recipient']).size().reset_index(name='pass_count')
+
+        if passes_between.empty:
+            st.warning("No pass network data available for this team in the selected match!")
+            return None, None
 
         return average_locs_and_count, passes_between
 
@@ -590,10 +600,13 @@ if selected_page == "Pass Network":
         team_id = [k for k, v in id_to_team.items() if v == selected_team][0]
         average_locs_and_count, passes_between = create_pass_network_data(df, team_id)
 
-        # Plot Pass Network
-        fig, ax = plt.subplots(figsize=(15, 10))
-        pitch = VerticalPitch(pitch_type='statsbomb', pitch_color='#A9A9A9', line_color='white', linewidth=2)
-        title = f"Pass Network for {selected_team} - {selected_match.split('.')[0]}"
-        plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=True, logo_path="logo.png")
+        if average_locs_and_count is not None and passes_between is not None:
+            # Plot Pass Network
+            fig, ax = plt.subplots(figsize=(15, 10))
+            pitch = VerticalPitch(pitch_type='statsbomb', pitch_color='#A9A9A9', line_color='white', linewidth=2)
+            title = f"Pass Network for {selected_team} - {selected_match.split('.')[0]}"
+            plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=True, logo_path="logo.png")
 
-        st.pyplot(fig)
+            st.pyplot(fig)
+        else:
+            st.error("No valid pass network data available for plotting.")
