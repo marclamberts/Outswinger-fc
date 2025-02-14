@@ -17,8 +17,12 @@ st.title("Football Shot Map with xG, Win Probability, and Expected Points")
 # Path to the xgCSV folder
 xg_csv_folder = 'xgCSV'
 
-# List all CSV files in the xgCSV folder
-csv_files = [f for f in os.listdir(xg_csv_folder) if f.endswith('.csv')]
+# List all CSV files in the xgCSV folder and sort by modification time (most recent first)
+csv_files = sorted(
+    [f for f in os.listdir(xg_csv_folder) if f.endswith('.csv')],
+    key=lambda f: os.path.getmtime(os.path.join(xg_csv_folder, f)),
+    reverse=True  # Sort by most recent first
+)
 
 # Let the user select a CSV file
 selected_file = st.selectbox("Select a CSV file", csv_files)
@@ -47,7 +51,7 @@ if selected_file:
     team1_xg = team1['xG'].sum()
     team2_xg = team2['xG'].sum()
     team1_psxg = team1['PsxG'].sum() if 'PsxG' in team1.columns else 0
-    team2_psxg = team2['PsxG'].sum() if 'PsxG' in team2.columns else 0
+    team2_psxg = team2['PsxG'].sum() if 'PsxG' in team1.columns else 0
 
     # Calculate Win Probabilities and Expected Points for each team
     total_xg = team1_xg + team2_xg
@@ -121,54 +125,25 @@ if selected_file:
         elif team2['Type_of_play'][x] == 'Penalty' and team2['isGoal'][x] == False:
             plt.scatter(100 - team2['x'][x], team2['y'][x], color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
 
-    # Display xG for each team in the title
-    plt.text(80, 90, f"{team1_xg:.2f} xG", color='#ff6361', ha='center', fontsize=30, fontweight='bold')
-    plt.text(20, 90, f"{team2_xg:.2f} xG", color='#003f5c', ha='center', fontsize=30, fontweight='bold')
+    # Save the plot to a file (in memory buffer)
+    img_buf = io.BytesIO()
+    plt.savefig(img_buf, format="png", dpi=300, bbox_inches='tight', facecolor='white')
+    img_buf.seek(0)
 
-    # Create the title with goals and expected points included
-    title = f"{team1_name} vs {team2_name} ({team1_goals} - {team2_goals})"
-    subtitle = f"xG Shot Map"
+    # Provide a download button for the image
+    st.download_button(
+        label="Download Shot Map",
+        data=img_buf,
+        file_name=f"{team1_name}_vs_{team2_name}_shot_map.png",
+        mime="image/png"
+    )
 
-    # Title text
-    plt.text(0.40, 1.05, title, ha='center', va='bottom', fontsize=25, fontweight='bold', transform=ax.transAxes)
-    plt.text(0.16, 1.02, subtitle, ha='right', va='bottom', fontsize=18, transform=ax.transAxes)
-
-    # Add logo in the bottom-right corner (adjust size and position)
-    logo_path = 'logo.png'  # Adjust to your logo's path
-    logo_img = mpimg.imread(logo_path)  # Read the logo image
-
-    # Create the logo image and place it at the bottom-right corner of the plot
-    imagebox = OffsetImage(logo_img, zoom=0.05)  # Adjust zoom for scaling the logo (smaller size)
-    ab = AnnotationBbox(imagebox, (0.98, 1.02), frameon=False, xycoords='axes fraction', box_alignment=(1, 0))
-
-    # Add the logo to the plot
-    ax.add_artist(ab)
-
-    # Add text in the bottom-right corner
-    text = "OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025"
-    plt.text(0.98, -0.03, text, ha='right', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
-
-    # Save the plot to an in-memory buffer
-    buf = io.BytesIO()
-    plt.savefig(buf, format="png", dpi=300, bbox_inches='tight', facecolor='white')
-    buf.seek(0)
-
-    # Update to use the new 'use_container_width' parameter
-    st.image(buf, use_container_width=True)
+    # Optionally, display the plot in Streamlit
+    st.image(img_buf, use_container_width=True)
 
     # Add win probability text at the bottom-left
     win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.2f}% | {team2_name}: {team2_win_prob*100:.2f}%"
-    st.text(win_text)
-
-    # Add expected points text
     xp_text = f"Expected Points:\n{team1_name}: {team1_xp:.2f} | {team2_name}: {team2_xp:.2f}"
-    st.text(xp_text)
 
-    # Button for downloading the image with a dynamic filename
-    download_filename = f"{team1_name}_vs_{team2_name}_{team1_goals}-{team2_goals}_{datetime.now().strftime('%Y%m%d%H%M%S')}_outswingerfc.png"
-    st.download_button(
-        label="Download Shot Map",
-        data=buf,
-        file_name=download_filename,
-        mime="image/png"
-    )
+    st.markdown(win_text)
+    st.markdown(xp_text)
