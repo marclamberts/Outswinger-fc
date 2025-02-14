@@ -176,7 +176,7 @@ if selected_file:
     st.download_button(
         label="Download Shot Map as PNG",
         data=img_buf,
-        file_name="shot_map.png",
+        file_name="shot_map_{team1_name}_{team2_name} - outswingerfc.png",
         mime="image/png"
     )
 
