@@ -33,7 +33,7 @@ if selected_file:
     file_path = os.path.join(xg_csv_folder, selected_file)
     df = pd.read_csv(file_path)
 
-    # Extract team names from   the file name
+    # Extract team names from the file name
     teams = selected_file.split('_')[-1].split(' - ')  # Extract team names from the file name
 
     # Define the home and away teams
@@ -71,59 +71,40 @@ if selected_file:
     fig.set_facecolor('white')  # Set background to white
     plt.gca().invert_xaxis()
 
-    # Scatter plot code for team1 (home team)
-    for x in range(len(team1['x'])):
-        if team1['Type_of_play'][x] == 'FromCorner' and team1['isGoal'][x] == True:
-            plt.scatter(team1['x'][x], 100 - team1['y'][x], color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-        elif team1['Type_of_play'][x] == 'FromCorner' and team1['isGoal'][x] == False:
-            plt.scatter(team1['x'][x], team1['y'][x], color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-        elif team1['Type_of_play'][x] == 'RegularPlay' and team1['isGoal'][x] == True:
-            plt.scatter(team1['x'][x], 100 - team1['y'][x], color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-        elif team1['Type_of_play'][x] == 'RegularPlay' and team1['isGoal'][x] == False:
-            plt.scatter(team1['x'][x], 100 - team1['y'][x], color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-        elif team1['Type_of_play'][x] == 'FastBreak' and team1['isGoal'][x] == True:
-            plt.scatter(team1['x'][x], 100 - team1['y'][x], color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-        elif team1['Type_of_play'][x] == 'FastBreak' and team1['isGoal'][x] == False:
-            plt.scatter(team1['x'][x], 100 - team1['y'][x], color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-        elif team1['Type_of_play'][x] == 'ThrowinSetPiece' and team1['isGoal'][x] == True:
-            plt.scatter(team1['x'][x], 100 - team1['y'][x], color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-        elif team1['Type_of_play'][x] == 'ThrowinSetPiece' and team1['isGoal'][x] == False:
-            plt.scatter(team1['x'][x], 100 - team1['y'][x], color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-        elif team1['Type_of_play'][x] == 'SetPiece' and team1['isGoal'][x] == True:
-            plt.scatter(team1['x'][x], 100 - team1['y'][x], color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-        elif team1['Type_of_play'][x] == 'SetPiece' and team1['isGoal'][x] == False:
-            plt.scatter(team1['x'][x], 100 - team1['y'][x], color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-        elif team1['Type_of_play'][x] == 'Penalty' and team1['isGoal'][x] == True:
-            plt.scatter(team1['x'][x], 100 - team1['y'][x], color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-        elif team1['Type_of_play'][x] == 'Penalty' and team1['isGoal'][x] == False:
-            plt.scatter(team1['x'][x], 100 - team1['y'][x], color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
+    # Add xG for each team in the title
+    plt.text(80, 90, f"{team1_xg:.2f} xG", color='#ff6361', ha='center', fontsize=30, fontweight='bold')
+    plt.text(20, 90, f"{team2_xg:.2f} xG", color='#003f5c', ha='center', fontsize=30, fontweight='bold')
 
-    # Scatter plot code for team2 (away team)
-    for x in range(len(team2['x'])):
-        if team2['Type_of_play'][x] == 'FromCorner' and team2['isGoal'][x] == True:
-            plt.scatter(100 - team2['x'][x], team2['y'][x], color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-        elif team2['Type_of_play'][x] == 'FromCorner' and team2['isGoal'][x] == False:
-            plt.scatter(100 - team2['x'][x], team2['y'][x], color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-        elif team2['Type_of_play'][x] == 'RegularPlay' and team2['isGoal'][x] == True:
-            plt.scatter(100 - team2['x'][x], team2['y'][x], color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-        elif team2['Type_of_play'][x] == 'RegularPlay' and team2['isGoal'][x] == False:
-            plt.scatter(100 - team2['x'][x], team2['y'][x], color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-        elif team2['Type_of_play'][x] == 'FastBreak' and team2['isGoal'][x] == True:
-            plt.scatter(100 - team2['x'][x], team2['y'][x], color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-        elif team2['Type_of_play'][x] == 'FastBreak' and team2['isGoal'][x] == False:
-            plt.scatter(100 - team2['x'][x], team2['y'][x], color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-        elif team2['Type_of_play'][x] == 'ThrowinSetPiece' and team2['isGoal'][x] == True:
-            plt.scatter(100 - team2['x'][x], team2['y'][x], color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-        elif team2['Type_of_play'][x] == 'ThrowinSetPiece' and team2['isGoal'][x] == False:
-            plt.scatter(100 - team2['x'][x], team2['y'][x], color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-        elif team2['Type_of_play'][x] == 'SetPiece' and team2['isGoal'][x] == True:
-            plt.scatter(100 - team2['x'][x], team2['y'][x], color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-        elif team2['Type_of_play'][x] == 'SetPiece' and team2['isGoal'][x] == False:
-            plt.scatter(100 - team2['x'][x], team2['y'][x], color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-        elif team2['Type_of_play'][x] == 'Penalty' and team2['isGoal'][x] == True:
-            plt.scatter(100 - team2['x'][x], team2['y'][x], color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-        elif team2['Type_of_play'][x] == 'Penalty' and team2['isGoal'][x] == False:
-            plt.scatter(100 - team2['x'][x], team2['y'][x], color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
+    # Create the title with goals and expected points included
+    title = f"{team1_name} vs {team2_name} ({team1_goals} - {team2_goals})"
+    subtitle = f"xG Shot Map"
+
+    # Title text
+    plt.text(0.40, 1.05, title, ha='center', va='bottom', fontsize=25, fontweight='bold', transform=ax.transAxes)
+    plt.text(0.16, 1.02, subtitle, ha='right', va='bottom', fontsize=18, transform=ax.transAxes)
+
+    # Add logo in the top-right corner
+    logo_path = 'logo.png'  # Replace with the path to your logo file
+    logo_img = mpimg.imread(logo_path)  # Read the logo image
+
+    # Create the logo image and place it at the top-right corner of the plot
+    imagebox = OffsetImage(logo_img, zoom=0.05)  # Adjust zoom for scaling the logo
+    ab = AnnotationBbox(imagebox, (0.98, 1.2), frameon=False, xycoords='axes fraction', box_alignment=(1, 1))
+
+    # Add the logo to the plot
+    ax.add_artist(ab)
+
+    # Add win probability text at the bottom-left
+    win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.2f}%\n{team2_name}: {team2_win_prob*100:.2f}%"
+    plt.text(0.02, -0.03, win_text, ha='left', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
+
+    # Add Expected Points text in the bottom-left corner
+    xp_text = f"Expected Points:\n{team1_name}: {team1_xp:.2f} | {team2_name}: {team2_xp:.2f}"
+    plt.text(0.02, -0.10, xp_text, ha='left', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
+
+    # Add text in the bottom-right corner
+    text = "OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025"
+    plt.text(0.98, -0.03, text, ha='right', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
 
     # Save the plot to a file (in memory buffer)
     img_buf = io.BytesIO()
@@ -141,14 +122,6 @@ if selected_file:
     # Optionally, display the plot in Streamlit
     st.image(img_buf, use_container_width=True)
 
-    # Add win probability text at the bottom-left
-    win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.2f}% | {team2_name}: {team2_win_prob*100:.2f}%"
-    xp_text = f"Expected Points:\n{team1_name}: {team1_xp:.2f} | {team2_name}: {team2_xp:.2f}"
-    
-    # Add text in the bottom-right corner
-    text = "OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025"
-    plt.text(0.98, 0.02, text, ha='right', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
-
-
+    # Display the win probability and expected points as text
     st.markdown(win_text)
     st.markdown(xp_text)
