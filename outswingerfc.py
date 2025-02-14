@@ -65,7 +65,7 @@ if selected_file:
     team2_xp = (3 * team2_win_prob) + (1 * draw_prob)
 
     # Plot the pitch
-    pitch = Pitch(pitch_type='opta', pitch_width=68, pitch_length=105, pad_bottom=0.5, pad_top=5, pitch_color='white',
+    pitch = Pitch(pitch_type='opta', pitch_width=68, pitch_length=105, pad_bottom=1.5, pad_top=5, pitch_color='white',
                   line_color='black', half=False, goal_type='box', goal_alpha=0.8)
     fig, ax = plt.subplots(figsize=(16, 10))
     pitch.draw(ax=ax)
@@ -176,7 +176,7 @@ if selected_file:
     st.download_button(
         label="Download Shot Map as PNG",
         data=img_buf,
-        file_name="shot_map_{team1_name}_{team2_name} - outswingerfc.png",
+        file_name="shot_map_{team1_name}_{team2_name}_outswingerfc.png",
         mime="image/png"
     )
 
