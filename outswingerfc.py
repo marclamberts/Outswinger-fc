@@ -190,11 +190,6 @@ if selected_page == "Shot Map":
         st.pyplot(fig)
 
 
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import os
-
 # Flow Map page
 if selected_page == "Flow Map":
     st.title("Expected Goals (xG) Flow Map")
@@ -309,8 +304,10 @@ if selected_page == "Flow Map":
             for goal in h_goals_min:
                 ax.scatter(goal, h_cumulative[h_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
 
-            # Title (all black)
-            ax.text(0.4, 1.1, f"{hteam} vs {ateam} ({home_goals} - {away_goals})", fontsize=35, color="black", fontweight='bold', ha='center', transform=ax.transAxes)
+            # Title (remove 'WFC' from title only)
+            title_hteam = hteam.replace('WFC', '').strip()  # Remove WFC from home team name for title
+            title_ateam = ateam.replace('WFC', '').strip()  # Remove WFC from away team name for title
+            ax.text(0.4, 1.1, f"{title_hteam} vs {title_ateam} ({home_goals} - {away_goals})", fontsize=35, color="black", fontweight='bold', ha='center', transform=ax.transAxes)
 
             # Subtitle (adjusted y position to avoid overlap)
             subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
