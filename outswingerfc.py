@@ -381,7 +381,7 @@ if selected_page == "Field Tilt":
             st.write(f"Unique contestantIds in the selected match: {contestant_ids}")
 
             # You could also map contestantId to team names if the mapping is available
-            mapping_file_path = 'opta_club_rankings_14022025.xlsx'  # Change to your mapping file path
+            mapping_file_path = 'opta_club_rankings_womens_14022025.xlsx'  # Change to your mapping file path
             mapping_df = pd.read_excel(mapping_file_path)
             id_to_team = dict(zip(mapping_df['id'], mapping_df['team']))
 
