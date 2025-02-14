@@ -17,7 +17,7 @@ st.title("Football Shot Map App")
 
 # Sidebar Menu
 st.sidebar.title("Navigation")
-selected_page = st.sidebar.radio("Go to", ("Home", "Shot Map", "Flow Map", "Field Tilt"))
+selected_page = st.sidebar.radio("Go to", ("Home", "Shot Map", "Flow Map", "Field Tilt", "Passnetwork"))
 
 if selected_page == "Shot Map":
     st.title("Expected Goals (xG) Shotmap")
@@ -507,3 +507,168 @@ if selected_page == "Field Tilt":
 
         else:
             st.write("The selected CSV does not contain a 'contestantId' column.")
+
+import os
+import pandas as pd
+import numpy as np
+import streamlit as st
+import matplotlib.pyplot as plt
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+from mplsoccer import VerticalPitch
+import matplotlib.image as mpimg
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
+
+# Function to add logo to the plot
+def add_logo(ax, logo_path):
+    logo = mpimg.imread(logo_path)
+    imagebox = OffsetImage(logo, zoom=0.6)  # Increased zoom for a bigger logo
+    ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, xycoords='axes fraction', boxcoords="axes fraction")
+    ax.add_artist(ab)
+
+# Plotting function for Pass Network
+def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
+    # Draw the pitch
+    pitch.draw(ax=ax)
+
+    # Normalize counts for coloring
+    norm = Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
+    cmap = plt.cm.viridis
+    colors = cmap(norm(average_locs_and_count['epv']))
+
+    # Normalize pass counts for zorder and alpha
+    max_pass_count = passes_between['pass_count'].max()
+    passes_between['zorder'] = passes_between['pass_count'] / max_pass_count * 10
+    passes_between['alpha'] = passes_between['pass_count'] / max_pass_count
+
+    # Draw pass lines
+    for index, row in passes_between.iterrows():
+        pitch.lines(row['x'], row['y'], row['x_end'], row['y_end'],
+                    color='grey', alpha=row['alpha'], lw=4, ax=ax, zorder=row['zorder'])
+
+    # Plot larger nodes with colors based on EPV values
+    pitch.scatter(average_locs_and_count['x'], average_locs_and_count['y'], s=500, 
+                  color=colors, edgecolors="black", linewidth=1, alpha=1, ax=ax, zorder=11)
+
+    # Annotate player names
+    for index, row in average_locs_and_count.iterrows():
+        pitch.annotate(row.name, xy=(row.x, row.y), ax=ax, ha='center', va='bottom',
+                       fontsize=12, color='black', zorder=12, xytext=(0, -35), textcoords='offset points',
+                       bbox=dict(boxstyle="round,pad=0.3", edgecolor="black", facecolor="white", alpha=0.7))
+
+    # Set title
+    ax.set_title(title, fontsize=18, color="black", fontweight='bold', pad=20)
+
+    # Add logo if required
+    if add_logo_to_this_plot:
+        add_logo(ax, logo_path)
+
+# Load match data based on Streamlit selection
+def load_match_data(match_data_folder):
+    # List all CSV files in the folder
+    csv_files = sorted([f for f in os.listdir(match_data_folder) if f.endswith('.csv')],
+                       key=lambda f: os.path.getmtime(os.path.join(match_data_folder, f)),
+                       reverse=True)
+
+    # Let the user select a match
+    selected_match = st.selectbox("Select a match", csv_files)
+
+    if selected_match:
+        file_path = os.path.join(match_data_folder, selected_match)
+        df = pd.read_csv(file_path)
+        st.write(f"Selected match: {selected_match}")
+        st.write(df.head())  # Display first few rows as preview
+        return df
+    else:
+        st.write("No match selected.")
+        return None
+
+# Pass network analysis for team data
+def create_pass_network_data(df, team_id):
+    # Filter the data for the given team
+    team_data = df.loc[(df['contestantId'] == team_id)].reset_index()
+
+    # Create a new column for time in seconds
+    team_data["newsecond"] = 60 * team_data["timeMin"] + team_data["timeSec"]
+    team_data.sort_values(by=['newsecond'], inplace=True)
+
+    # Identify the passer and recipient
+    team_data['passer'] = team_data['playerName']
+    team_data['recipient'] = team_data['passer'].shift(-1)
+
+    # Filter for only passes and successful passes
+    passes = team_data.loc[(team_data['typeId'] == 1)]
+    completions = passes.loc[(passes['outcome'] == 1)]
+
+    # Find the time of the team's first substitution and filter passes before that
+    subs = team_data.loc[(team_data['typeId'] == 18)]
+    sub_times = subs["newsecond"]
+    sub_one = sub_times.min()
+    completions = completions.loc[completions['newsecond'] < sub_one]
+
+    # Calculate average locations and count of passes
+    average_locs_and_count = completions.groupby('passer').agg({'x': ['mean'], 'y': ['mean', 'count'], 'epv': ['mean']})
+    average_locs_and_count.columns = ['x', 'y', 'count', 'epv']
+
+    # Calculate passes between players
+    passes_between = completions.groupby(['passer', 'recipient']).id.count().reset_index()
+    passes_between.rename({'id': 'pass_count'}, axis='columns', inplace=True)
+    passes_between = passes_between.merge(average_locs_and_count, left_on='passer', right_index=True)
+    passes_between = passes_between.merge(average_locs_and_count, left_on='recipient', right_index=True, suffixes=['', '_end'])
+
+    # Filter for minimal 3 passes in combinations
+    passes_between = passes_between.loc[passes_between['pass_count'] >= 3]
+
+    return average_locs_and_count, passes_between
+
+# Streamlit page selection
+selected_page = st.selectbox("Select a page", ["Passnetwork"])
+
+if selected_page == "Passnetwork":
+    st.title("Passnetwork Visualization")
+
+    # Folder containing CSV match data
+    match_data_folder = 'WSL 2024-2025'  # Replace with your folder path
+    
+    # Step 1: Load match data
+    df = load_match_data(match_data_folder)
+    
+    if df is not None:
+        # Step 2: Perform calculations (e.g., for both teams)
+        # Team IDs (Example, replace with actual team IDs)
+        team1_id = 'c8h9bw1l82s06h77xxrelzhur'  # Example Team 1 ID
+        team2_id = '22doj4sgsocqpxw45h607udje'  # Example Team 2 ID
+
+        # Create pass network data for both teams
+        data_team1 = create_pass_network_data(df, team1_id)
+        data_team2 = create_pass_network_data(df, team2_id)
+
+        # Step 3: Visualize the pass network using mplsoccer
+        fig, axs = plt.subplots(1, 2, figsize=(20, 16), gridspec_kw={'wspace': 0.1})
+        fig.set_facecolor("white")
+
+        # Create vertical pitch
+        pitch = VerticalPitch(pitch_type='opta', pad_top=5, pitch_color='white', line_color='black',
+                              half=False, goal_type='box', goal_alpha=0.8)
+
+        # Path to the logo
+        logo_path = 'Data visuals/Outswinger FC (3).png'  # Replace with your logo path
+
+        # Plot the pass network for Team 1 (no logo)
+        plot_pass_network_with_logo(axs[0], pitch, data_team1[0], data_team1[1], "Team 1 Passing Network", add_logo_to_this_plot=False)
+
+        # Plot the pass network for Team 2 (with logo)
+        plot_pass_network_with_logo(axs[1], pitch, data_team2[0], data_team2[1], "Team 2 Passing Network", add_logo_to_this_plot=True, logo_path=logo_path)
+
+        # Adjust spacing and add explanatory text below each pitch
+        plt.subplots_adjust(bottom=0.15)
+        axs[0].text(0.05, -0.05, 'Node size = number of touches\nColor = Expected possession values (darker is higher)\nLine size = number of passes',
+                    transform=axs[0].transAxes, fontsize=20, color='black', ha='left', va='top', fontweight='normal')
+
+        axs[1].text(0.95, -0.05, 'OUTSWINGER FC\nData via Opta | WSL 2024-2025',
+                    transform=axs[1].transAxes, fontsize=20, color='black', ha='right', va='top', fontweight='normal')
+
+        # Save and show the plot
+        plt.savefig('Passnetwork_Team1_vs_Team2_with_logo.png', dpi=500, bbox_inches='tight', facecolor='white')
+        st.pyplot(fig)
+
