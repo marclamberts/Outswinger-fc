@@ -518,7 +518,6 @@ from mplsoccer import VerticalPitch
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 
-
 # Function to load match data
 def load_match_data(match_data_folder):
     # List all CSV files in the folder
@@ -534,19 +533,10 @@ def load_match_data(match_data_folder):
         df = pd.read_csv(file_path)
         st.write(f"Selected match: {selected_match}")
         st.write(df.head())  # Display first few rows as preview
-
-        # Step 1: Extract contest IDs for this match
-        if 'contestantId' in df.columns:
-            contestant_ids = df['contestantId'].unique()
-            st.write(f"Contestant IDs for the selected match: {contestant_ids}")
-        else:
-            st.write("contestantId not found in the selected match file.")
-        
         return df
     else:
         st.write("No match selected.")
         return None
-
 
 # Function to add logo to the plot
 def add_logo(ax, logo_path):
@@ -562,7 +552,6 @@ def add_logo(ax, logo_path):
     
     # Add the logo as an artist to the plot
     ax.add_artist(ab)
-
 
 # Function to plot pass network with logo
 def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
@@ -601,13 +590,40 @@ def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_betwee
     if add_logo_to_this_plot:
         add_logo(ax, logo_path)
 
-
-# Function to get EPV values based on zones
+# Function to get EPV value based on zones
 def get_epv_value(bin_indices, epv_grid):
     if pd.notnull(bin_indices[0]) and pd.notnull(bin_indices[1]):
         return epv_grid[int(bin_indices[1])][int(bin_indices[0])]
     return np.nan  # Return NaN if indices are invalid
 
+# Function to calculate endX and endY values before proceeding
+def calculate_end_coordinates(df):
+    # Step 1: Get the columns containing '/qualifierId'
+    type_cols = [col for col in df.columns if '/qualifierId' in col]
+
+    # Step 2: Initialize endX and endY
+    df['endX'] = 0.0
+    df['endY'] = 0.0
+
+    # Step 3: Iterate over each row to calculate endX and endY
+    for i in range(len(df)):
+        df1 = df.iloc[i:i+1, :]
+        
+        # Calculate endX
+        for j in range(len(type_cols)):
+            col = df1[type_cols[j]].values[0]
+            if col == 140:  # Check for qualifierId 140 (endX)
+                endx = df1.loc[:, 'qualifier/%i/value' % j].values[0]
+                df.at[i, 'endX'] = endx
+
+        # Calculate endY
+        for k in range(len(type_cols)):
+            col = df1[type_cols[k]].values[0]
+            if col == 141:  # Check for qualifierId 141 (endY)
+                endy = df1.loc[:, 'qualifier/%i/value' % k].values[0]
+                df.at[i, 'endY'] = endy
+
+    return df
 
 # Function to create pass network data for a team
 def create_pass_network_data(df, team_id):
@@ -647,13 +663,6 @@ def create_pass_network_data(df, team_id):
 
     return average_locs_and_count, passes_between
 
-
-# Streamlit page selection
-selected_page = st.selectbox("Select a page", ["Passnetwork"])
-
-if selected_page == "Passnetwork":
-    st.title("Passnetwork Visualization")
-
     # Folder containing CSV match data
     match_data_folder = 'WSL 2024-2025'  # Replace with your folder path
 
@@ -661,11 +670,14 @@ if selected_page == "Passnetwork":
     df = load_match_data(match_data_folder)
     
     if df is not None:
+        # Calculate endX and endY
+        df = calculate_end_coordinates(df)
+        
         # Extract contestantId and display
         if 'contestantId' in df.columns:
             contestant_ids = df['contestantId'].unique()
-            selected_team = st.selectbox("Select a team", contestant_ids)
-            st.write(f"Selected Team ID: {selected_team}")
+            selected_teams = st.multiselect("Select teams", contestant_ids, default=contestant_ids[:2])
+            st.write(f"Selected Teams: {selected_teams}")
         else:
             st.write("contestantId not found in the selected match file.")
 
@@ -697,8 +709,9 @@ if selected_page == "Passnetwork":
         df.to_excel("epv.xlsx", index=False)
         st.write("EPV calculations saved to epv.xlsx")
 
-        # Create pass network data for selected team
-        data_team = create_pass_network_data(df, selected_team)
+        # Create pass network data for selected teams
+        data_team1 = create_pass_network_data(df, selected_teams[0])
+        data_team2 = create_pass_network_data(df, selected_teams[1])
 
         # Set up the vertical pitch
         fig, axs = plt.subplots(1, 2, figsize=(20, 16), gridspec_kw={'wspace': 0.1})
@@ -709,15 +722,20 @@ if selected_page == "Passnetwork":
                               half=False, goal_type='box', goal_alpha=0.8)
 
         # Path to the logo
-        logo_path = 'logo.png'  # Replace with your logo path
+        logo_path = 'Data visuals/Outswinger FC (3).png'  # Replace with your logo path
 
-        # Plot the pass network for selected team (with logo)
-        plot_pass_network_with_logo(axs[0], pitch, data_team[0], data_team[1], f"Pass Network for Team {selected_team}", add_logo_to_this_plot=True, logo_path=logo_path)
+        # Plot the pass network for selected team 1 (with logo)
+        plot_pass_network_with_logo(axs[0], pitch, data_team1[0], data_team1[1], f"Pass Network for {selected_teams[0]}", add_logo_to_this_plot=True, logo_path=logo_path)
+
+        # Plot the pass network for selected team 2 (with logo)
+        plot_pass_network_with_logo(axs[1], pitch, data_team2[0], data_team2[1], f"Pass Network for {selected_teams[1]}", add_logo_to_this_plot=True, logo_path=logo_path)
 
         # Adjust spacing and add explanatory text below each pitch
         plt.subplots_adjust(bottom=0.15)  # Increase the bottom margin to give space for the text
         axs[0].text(0.05, -0.05, 'Node size = number of touches\nColor = Expected possession values (darker is higher)\nLine size = number of passes',
                     transform=axs[0].transAxes, fontsize=20, color='black', ha='left', va='top', fontweight='normal')
+        axs[1].text(0.05, -0.05, 'Node size = number of touches\nColor = Expected possession values (darker is higher)\nLine size = number of passes',
+                    transform=axs[1].transAxes, fontsize=20, color='black', ha='left', va='top', fontweight='normal')
 
         # Save and show the plot
         plt.savefig('Passnetwork_with_logo.png', dpi=500, bbox_inches='tight', facecolor='white')
