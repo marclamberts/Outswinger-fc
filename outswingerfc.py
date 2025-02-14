@@ -465,7 +465,7 @@ if selected_page == "Field Tilt":
             # Add logo in the top-right corner
             logo_path = 'logo.png'  # Replace with the path to your logo file
             logo_img = mpimg.imread(logo_path)  # Read the logo image
-            imagebox = OffsetImage(logo_img, zoom=0.2)  # Adjust zoom to control logo size
+            imagebox = OffsetImage(logo_img, zoom=0.05)  # Adjust zoom to control logo size
             ab = AnnotationBbox(imagebox, (0.95, 1.25), frameon=False, xycoords='axes fraction', box_alignment=(1, 1))
             ax.add_artist(ab)
 
