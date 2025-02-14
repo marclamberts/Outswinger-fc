@@ -218,14 +218,12 @@ if selected_page == "Flow Map":
         file_path = os.path.join(xg_csv_folder, selected_file)
         df = pd.read_csv(file_path)
 
-        # Extract team names from the file name and remove 'WFC' if present
+        # Extract team names from the file name
         teams = selected_file.replace('.csv', '').split('_')[-1].split(' - ')
         if len(teams) < 2:
             st.error("Error extracting team names. Check filename format.")
         else:
             hteam, ateam = teams
-            hteam = hteam.replace('WFC', '').strip()  # Remove WFC from home team name
-            ateam = ateam.replace('WFC', '').strip()  # Remove WFC from away team name
 
             # Initialize lists to store xG, PsxG, and goal data for both teams
             a_xG, h_xG = [], []
