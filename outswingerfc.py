@@ -520,12 +520,10 @@ from matplotlib.colors import Normalize
 
 # Function to load match data
 def load_match_data(match_data_folder):
-    # List all CSV files in the folder
     csv_files = sorted([f for f in os.listdir(match_data_folder) if f.endswith('.csv')],
                        key=lambda f: os.path.getmtime(os.path.join(match_data_folder, f)),
                        reverse=True)
 
-    # Let the user select a match
     selected_match = st.selectbox("Select a match", csv_files)
 
     if selected_match:
@@ -540,53 +538,34 @@ def load_match_data(match_data_folder):
 
 # Function to add logo to the plot
 def add_logo(ax, logo_path):
-    # Load the logo image
     logo = mpimg.imread(logo_path)
-    
-    # Create an OffsetImage object for the logo
-    imagebox = OffsetImage(logo, zoom=0.6)  # Increased zoom for a bigger logo
-    
-    # Position the logo at the top-right corner with a higher position
-    ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, 
-                        xycoords='axes fraction', boxcoords="axes fraction")
-    
-    # Add the logo as an artist to the plot
+    imagebox = OffsetImage(logo, zoom=0.6)  # Adjust zoom for a larger logo
+    ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, xycoords='axes fraction', boxcoords="axes fraction")
     ax.add_artist(ab)
 
 # Function to plot pass network with logo
 def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
-    # Draw the pitch
     pitch.draw(ax=ax)
-
-    # Normalize counts for coloring
+    
     norm = Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
     cmap = plt.cm.viridis
     colors = cmap(norm(average_locs_and_count['epv']))
 
-    # Normalize pass counts for zorder and alpha
     max_pass_count = passes_between['pass_count'].max()
     passes_between['zorder'] = passes_between['pass_count'] / max_pass_count * 10
     passes_between['alpha'] = passes_between['pass_count'] / max_pass_count
 
-    # Draw pass lines without arrowheads
     for index, row in passes_between.iterrows():
-        pitch.lines(row['x'], row['y'], row['x_end'], row['y_end'],
-                    color='grey', alpha=row['alpha'], lw=4, ax=ax, zorder=row['zorder'])
+        pitch.lines(row['x'], row['y'], row['x_end'], row['y_end'], color='grey', alpha=row['alpha'], lw=4, ax=ax, zorder=row['zorder'])
 
-    # Plot larger nodes with colors based on EPV values
-    pitch.scatter(average_locs_and_count['x'], average_locs_and_count['y'], s=500,  # Increased size
-                  color=colors, edgecolors="black", linewidth=1, alpha=1, ax=ax, zorder=11)
+    pitch.scatter(average_locs_and_count['x'], average_locs_and_count['y'], s=500, color=colors, edgecolors="black", linewidth=1, alpha=1, ax=ax, zorder=11)
 
-    # Annotate player names with offsets to avoid overlap with nodes
     for index, row in average_locs_and_count.iterrows():
-        pitch.annotate(row.name, xy=(row.x, row.y), ax=ax, ha='center', va='bottom',
-                       fontsize=12, color='black', zorder=12, xytext=(0, -35), textcoords='offset points',
+        pitch.annotate(row.name, xy=(row.x, row.y), ax=ax, ha='center', va='bottom', fontsize=12, color='black', zorder=12, xytext=(0, -35), textcoords='offset points',
                        bbox=dict(boxstyle="round,pad=0.3", edgecolor="black", facecolor="white", alpha=0.7))
 
-    # Set title
     ax.set_title(title, fontsize=18, color="black", fontweight='bold', pad=20)
 
-    # Add logo to the right plot if the flag is set
     if add_logo_to_this_plot:
         add_logo(ax, logo_path)
 
@@ -594,32 +573,27 @@ def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_betwee
 def get_epv_value(bin_indices, epv_grid):
     if pd.notnull(bin_indices[0]) and pd.notnull(bin_indices[1]):
         return epv_grid[int(bin_indices[1])][int(bin_indices[0])]
-    return np.nan  # Return NaN if indices are invalid
+    return np.nan
 
-# Function to calculate endX and endY values before proceeding
+# Function to calculate endX and endY values
 def calculate_end_coordinates(df):
-    # Step 1: Get the columns containing '/qualifierId'
     type_cols = [col for col in df.columns if '/qualifierId' in col]
 
-    # Step 2: Initialize endX and endY
     df['endX'] = 0.0
     df['endY'] = 0.0
 
-    # Step 3: Iterate over each row to calculate endX and endY
     for i in range(len(df)):
         df1 = df.iloc[i:i+1, :]
         
-        # Calculate endX
         for j in range(len(type_cols)):
             col = df1[type_cols[j]].values[0]
-            if col == 140:  # Check for qualifierId 140 (endX)
+            if col == 140:
                 endx = df1.loc[:, 'qualifier/%i/value' % j].values[0]
                 df.at[i, 'endX'] = endx
 
-        # Calculate endY
         for k in range(len(type_cols)):
             col = df1[type_cols[k]].values[0]
-            if col == 141:  # Check for qualifierId 141 (endY)
+            if col == 141:
                 endy = df1.loc[:, 'qualifier/%i/value' % k].values[0]
                 df.at[i, 'endY'] = endy
 
@@ -627,38 +601,30 @@ def calculate_end_coordinates(df):
 
 # Function to create pass network data for a team
 def create_pass_network_data(df, team_id):
-    # Filter the data for the given team
     team_data = df.loc[(df['contestantId'] == team_id)].reset_index()
 
-    # Create a new column for time in seconds
     team_data["newsecond"] = 60 * team_data["timeMin"] + team_data["timeSec"]
     team_data.sort_values(by=['newsecond'], inplace=True)
 
-    # Identify the passer and recipient
     team_data['passer'] = team_data['playerName']
     team_data['recipient'] = team_data['passer'].shift(-1)
 
-    # Filter for only passes and successful passes
     passes = team_data.loc[(team_data['typeId'] == 1)]
     completions = passes.loc[(passes['outcome'] == 1)]
 
-    # Find the time of the team's first substitution and filter passes before that
     subs = team_data.loc[(team_data['typeId'] == 18)]
     sub_times = subs["newsecond"]
     sub_one = sub_times.min()
     completions = completions.loc[completions['newsecond'] < sub_one]
 
-    # Calculate average locations and count of passes
     average_locs_and_count = completions.groupby('passer').agg({'x': ['mean'], 'y': ['mean', 'count'], 'epv': ['mean']})
     average_locs_and_count.columns = ['x', 'y', 'count', 'epv']
 
-    # Calculate passes between players
     passes_between = completions.groupby(['passer', 'recipient']).id.count().reset_index()
     passes_between.rename({'id': 'pass_count'}, axis='columns', inplace=True)
     passes_between = passes_between.merge(average_locs_and_count, left_on='passer', right_index=True)
     passes_between = passes_between.merge(average_locs_and_count, left_on='recipient', right_index=True, suffixes=['', '_end'])
 
-    # Filter for minimal 3 passes in combinations
     passes_between = passes_between.loc[passes_between['pass_count'] >= 3]
 
     return average_locs_and_count, passes_between
@@ -669,17 +635,13 @@ selected_page = st.selectbox("Select a page", ["Passnetwork"])
 if selected_page == "Passnetwork":
     st.title("Passnetwork Visualization")
 
-    # Folder containing CSV match data
-    match_data_folder = 'WSL 2024-2025'  # Replace with your folder path
+    match_data_folder = 'WSL 2024-2025'
 
-    # Step 1: Load match data
     df = load_match_data(match_data_folder)
     
     if df is not None:
-        # Calculate endX and endY
         df = calculate_end_coordinates(df)
-        
-        # Extract contestantId and display
+
         if 'contestantId' in df.columns:
             contestant_ids = df['contestantId'].unique()
             selected_teams = st.multiselect("Select teams", contestant_ids, default=contestant_ids[:2])
@@ -687,62 +649,49 @@ if selected_page == "Passnetwork":
         else:
             st.write("contestantId not found in the selected match file.")
 
-        # After team selection, perform calculations for EPV grid (assuming epv_grid.csv exists)
-        epv = pd.read_csv("epv_grid.csv", header=None)  # Load EPV grid
-        epv = np.array(epv)  # Convert to numpy array
-        epv_rows, epv_cols = epv.shape  # Get rows and columns
+        epv = pd.read_csv("epv_grid.csv", header=None) 
+        epv = np.array(epv)  
+        epv_rows, epv_cols = epv.shape  
 
-        # Ensure coordinate columns are numeric
         df['x'] = pd.to_numeric(df['x'], errors='coerce')
         df['y'] = pd.to_numeric(df['y'], errors='coerce')
         df['endX'] = pd.to_numeric(df['endX'], errors='coerce')
         df['endY'] = pd.to_numeric(df['endY'], errors='coerce')
 
-        # Map start and end coordinates to EPV zones
         df['x1_bin'] = pd.cut(df['x'], bins=epv_cols, labels=False).astype('Int64')
         df['y1_bin'] = pd.cut(df['y'], bins=epv_rows, labels=False).astype('Int64')
         df['x2_bin'] = pd.cut(df['endX'], bins=epv_cols, labels=False).astype('Int64')
         df['y2_bin'] = pd.cut(df['endY'], bins=epv_rows, labels=False).astype('Int64')
 
-        # Calculate start and end zone EPV values
         df['start_zone_value'] = df[['x1_bin', 'y1_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
         df['end_zone_value'] = df[['x2_bin', 'y2_bin']].apply(lambda x: get_epv_value(x, epv), axis=1)
 
-        # Compute EPV for the action
         df['epv'] = df['end_zone_value'] - df['start_zone_value']
 
-        # Save the results to an Excel file
+        # Save EPV results for download
         df.to_excel("epv.xlsx", index=False)
-        st.write("EPV calculations saved to epv.xlsx")
+        st.download_button("Download EPV Data", "epv.xlsx")
 
-        # Create pass network data for selected teams
         data_team1 = create_pass_network_data(df, selected_teams[0])
         data_team2 = create_pass_network_data(df, selected_teams[1])
 
-        # Set up the vertical pitch
         fig, axs = plt.subplots(1, 2, figsize=(20, 16), gridspec_kw={'wspace': 0.1})
         fig.set_facecolor("white")
 
-        # Create vertical pitch
         pitch = VerticalPitch(pitch_type='opta', pad_top=5, pitch_color='white', line_color='black',
                               half=False, goal_type='box', goal_alpha=0.8)
 
-        # Path to the logo
-        logo_path = 'logo.png'  # Replace with your logo path
+        logo_path = 'logo.png'  
 
-        # Plot the pass network for selected team 1 (with logo)
         plot_pass_network_with_logo(axs[0], pitch, data_team1[0], data_team1[1], f"Pass Network for {selected_teams[0]}", add_logo_to_this_plot=True, logo_path=logo_path)
-
-        # Plot the pass network for selected team 2 (with logo)
         plot_pass_network_with_logo(axs[1], pitch, data_team2[0], data_team2[1], f"Pass Network for {selected_teams[1]}", add_logo_to_this_plot=True, logo_path=logo_path)
 
-        # Adjust spacing and add explanatory text below each pitch
-        plt.subplots_adjust(bottom=0.15)  # Increase the bottom margin to give space for the text
+        plt.subplots_adjust(bottom=0.15)  
         axs[0].text(0.05, -0.05, 'Node size = number of touches\nColor = Expected possession values (darker is higher)\nLine size = number of passes',
                     transform=axs[0].transAxes, fontsize=20, color='black', ha='left', va='top', fontweight='normal')
         axs[1].text(0.05, -0.05, 'Node size = number of touches\nColor = Expected possession values (darker is higher)\nLine size = number of passes',
                     transform=axs[1].transAxes, fontsize=20, color='black', ha='left', va='top', fontweight='normal')
 
-        # Save and show the plot
+        # Save the plot and display it
         plt.savefig('Passnetwork_with_logo.png', dpi=500, bbox_inches='tight', facecolor='white')
-        st.pyplot(fig)
+        st.image('Passnetwork_with_logo.png', caption='Pass Network Visualization', use_column_width=True)
