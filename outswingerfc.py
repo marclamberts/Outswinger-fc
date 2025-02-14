@@ -190,11 +190,6 @@ if selected_page == "Shot Map":
         st.pyplot(fig)
 
 
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import os
-
 import os
 import pandas as pd
 import streamlit as st
@@ -290,6 +285,10 @@ if selected_file:
     # Title (in black)
     ax.set_title(f"{hteam} vs {ateam}", fontsize=35, fontweight='bold', color="black")
 
+    # Subtitle with xG and PsxG values
+    subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
+    fig.text(0.12, 0.9, subtitle, ha='left', va='bottom', fontsize=14, color='black', fontstyle='italic')
+
     # Extend data to 95th minute for full-time view
     a_min.append(95), a_cumulative.append(alast)
     h_min.append(95), h_cumulative.append(hlast)
@@ -317,12 +316,9 @@ if selected_file:
     fig.text(0.12, 0.001, win_prob_text + xp_text, ha='left', va='bottom', fontsize=12, fontstyle='italic', color='black')
 
     # Show match stats
-    score_text = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
-    
     st.write(f"**Match: {hteam} vs {ateam}**")
     st.write(f"**Score: {home_goals} - {away_goals}**")
     st.write(f"**Expected Points:** {hteam} = {team1_xp:.2f}, {ateam} = {team2_xp:.2f}")
-    st.write(score_text)
 
     # Footer
     st.markdown("OUTSWINGERFC.COM\nData via Opta | Eredivisie 2024-2025")
