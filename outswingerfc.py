@@ -187,6 +187,7 @@ if selected_page == "Shot Map":
             file_name=f"shot_map_{team1_name}_{team2_name}_outswingerfc.png",
             mime="image/png"
         )
+        st.pyplot(fig)
 
 
 # Flow Map page
