@@ -1,612 +1,370 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from mplsoccer.pitch import Pitch
+from mplsoccer.pitch import Pitch, VerticalPitch
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import matplotlib.image as mpimg
 import io
 import os
 import numpy as np
-from datetime import datetime
+import json
+
+# ==============================================================================
+# 1. HELPER FUNCTION FOR LOADING AND PROCESSING JSON DATA
+# ==============================================================================
+
+def load_and_process_json(json_path, team_map_dict, event_map_df):
+    """
+    Loads a JSON event data file, flattens it, and merges it with team/event mappings.
+    """
+    with open(json_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    events = data.get('event', [])
+    rows = []
+
+    for e in events:
+        row = {
+            'id': e.get('id'),
+            'eventId': e.get('eventId'),
+            'typeId': e.get('typeId'),
+            'periodId': e.get('periodId'),
+            'timeMin': e.get('timeMin'),
+            'timeSec': e.get('timeSec'),
+            'contestantId': str(e.get('contestantId')), # Ensure ID is string for mapping
+            'playerId': e.get('playerId'),
+            'playerName': e.get('playerName'),
+            'outcome': 1 if e.get('outcome') == 'Successful' else 0,
+            'x': e.get('x'),
+            'y': e.get('y'),
+            'timeStamp': e.get('timeStamp'),
+            'xG': 0.0,
+            'PsxG': 0.0,
+            'epv': 0.0,
+            'isFromCorner': 0,
+            'isSetPiece': 0,
+            'isFastBreak': 0,
+            'isThrowIn': 0,
+        }
+
+        # Extract key metrics and play types from qualifiers
+        for q in e.get('qualifier', []):
+            qid = str(q.get('qualifierId'))
+            val = q.get('value', 1)
+            if qid == '318': row['xG'] = float(val)
+            if qid == '321': row['PsxG'] = float(val)
+            # Add EPV if available, assuming a qualifierId (e.g., '333')
+            # if qid == '333': row['epv'] = float(val)
+            if qid == '5': row['isFromCorner'] = 1
+            if qid == '6': row['isSetPiece'] = 1
+            if qid == '23': row['isFastBreak'] = 1
+            if qid == '107': row['isThrowIn'] = 1
+        
+        rows.append(row)
+
+    df = pd.DataFrame(rows)
+
+    # Return empty DataFrame if no data
+    if df.empty:
+        return pd.DataFrame()
+
+    # Create 'Type_of_play' column for Shot Map
+    def get_play_type(row):
+        # typeId for Penalty is 9
+        if row['typeId'] == 9: return 'Penalty'
+        if row['isFromCorner'] == 1: return 'FromCorner'
+        if row['isSetPiece'] == 1: return 'SetPiece'
+        if row['isFastBreak'] == 1: return 'FastBreak'
+        if row['isThrowIn'] == 1: return 'ThrowinSetPiece'
+        return 'RegularPlay'
+
+    df['Type_of_play'] = df.apply(get_play_type, axis=1)
+
+    # Create 'isGoal' column (typeId for Goal is 16)
+    df['isGoal'] = df['typeId'] == 16
+    
+    # Merge with event type names
+    df = df.merge(event_map_df[['typeId', 'Event Type']], on='typeId', how='left')
+    
+    # Map contestantId to team name
+    df['Team'] = df['contestantId'].map(team_map_dict)
+
+    return df
+
+
+# ==============================================================================
+# 2. INITIAL APP SETUP AND DATA MAPPING LOADING
+# ==============================================================================
 
 # Streamlit app layout and settings
 st.set_page_config(page_title="Outswinger FC - Data visualisation app", layout="wide")
+st.title("Football Data Visualization App")
 
-# Title of the app
-st.title("Football Shot Map App")
+# --- Load Mapping Files ---
+# This is done once to improve performance.
 
-# Sidebar Menu
+# Load Team Mapping (from WSL Matches.csv or similar)
+try:
+    team_mapping_df = pd.read_csv('WSL Matches.csv')
+    home_teams = team_mapping_df[["matchInfo/contestant/0/id", "matchInfo/contestant/0/name"]].copy()
+    home_teams.columns = ["contestantId", "Team"]
+    away_teams = team_mapping_df[["matchInfo/contestant/1/id", "matchInfo/contestant/1/name"]].copy()
+    away_teams.columns = ["contestantId", "Team"]
+    team_map_full = pd.concat([home_teams, away_teams]).drop_duplicates().dropna()
+    # Convert contestantId to string to match JSON data
+    team_map_full['contestantId'] = team_map_full['contestantId'].astype(str)
+    id_to_name_dict = dict(zip(team_map_full["contestantId"], team_map_full["Team"]))
+except FileNotFoundError:
+    st.error("Team mapping file ('WSL Matches.csv') not found.")
+    id_to_name_dict = {}
+
+# Load Event Mapping
+try:
+    event_map_df = pd.read_csv("event_mapping.csv", encoding="ISO-8859-1")
+    event_map_df.columns = ["typeId", "Event Type", "Description"]
+except FileNotFoundError:
+    st.error("Event mapping file ('event_mapping.csv') not found.")
+    event_map_df = pd.DataFrame(columns=["typeId", "Event Type"])
+
+# --- Sidebar Menu ---
 st.sidebar.title("Navigation")
-selected_page = st.sidebar.radio("Go to", ("Home", "Shot Map", "Flow Map", "Field Tilt", "Passnetwork"))
+selected_page = st.sidebar.radio("Go to", ("Home", "Shot Map", "Flow Map", "Field Tilt", "Pass Network"))
 
-if selected_page == "Shot Map":
-    st.title("Expected Goals (xG) Shotmap")
+if selected_page == "Home":
+    st.header("Welcome!")
+    st.write("Select a visualization from the navigation menu on the left.")
 
-    # Path to the xgCSV folder
-    xg_csv_folder = 'xgCSV'
+# ==============================================================================
+# 3. SHOT MAP PAGE
+# ==============================================================================
+elif selected_page == "Shot Map":
+    st.header("Expected Goals (xG) Shot Map")
 
-    # List all CSV files in the xgCSV folder and sort by modification time (most recent first)
-    csv_files = sorted(
-        [f for f in os.listdir(xg_csv_folder) if f.endswith('.csv')],
-        key=lambda f: os.path.getmtime(os.path.join(xg_csv_folder, f)),
-        reverse=True  # Sort by most recent first
+    json_folder = 'json_data'  # Folder with your JSON match files
+    json_files = sorted(
+        [f for f in os.listdir(json_folder) if f.endswith('.json')],
+        key=lambda f: os.path.getmtime(os.path.join(json_folder, f)),
+        reverse=True
     )
+    selected_file = st.selectbox("Select a Match JSON file", json_files)
 
-    # Let the user select a CSV file
-    selected_file = st.selectbox("Select a CSV file", csv_files)
-
-    # If a file is selected, process and display it
     if selected_file:
-        # Load the data
-        file_path = os.path.join(xg_csv_folder, selected_file)
-        df = pd.read_csv(file_path)
-
-        # Extract team names from the file name
-        teams = selected_file.split('_')[-1].split(' - ')  # Extract team names from the file name
-
-        # Define the home and away teams
-        team1_name = teams[0]
-        team2_name = teams[1].split('.')[0]
-
-        # Count goals for each team
-        team1_goals = df.loc[(df['TeamId'] == team1_name) & (df['isGoal'] == True), 'isGoal'].sum()
-        team2_goals = df.loc[(df['TeamId'] == team2_name) & (df['isGoal'] == True), 'isGoal'].sum()
-
-        team1 = df.loc[df['TeamId'] == team1_name].reset_index()
-        team2 = df.loc[df['TeamId'] == team2_name].reset_index()
-
-        # Calculate total xG and PsxG for each team
-        team1_xg = team1['xG'].sum()
-        team2_xg = team2['xG'].sum()
-        team1_psxg = team1['PsxG'].sum() if 'PsxG' in team1.columns else 0
-        team2_psxg = team2['PsxG'].sum() if 'PsxG' in team1.columns else 0
-
-        # Calculate Win Probabilities and Expected Points for each team
-        total_xg = team1_xg + team2_xg
-        team1_win_prob = team1_xg / total_xg
-        team2_win_prob = team2_xg / total_xg
-        draw_prob = 1 - (team1_win_prob + team2_win_prob)
-
-        # Expected Points Calculation
-        team1_xp = (3 * team1_win_prob) + (1 * draw_prob)
-        team2_xp = (3 * team2_win_prob) + (1 * draw_prob)
-
-        # Plot the pitch
-        pitch = Pitch(pitch_type='opta', pitch_width=68, pitch_length=105, pad_bottom=1.5, pad_top=5, pitch_color='white',
-                      line_color='black', half=False, goal_type='box', goal_alpha=0.8)
-        fig, ax = plt.subplots(figsize=(16, 10))
-        pitch.draw(ax=ax)
-        fig.set_facecolor('white')  # Set background to white
-        plt.gca().invert_xaxis()
-
-        # Add xG for each team in the title
-        plt.text(80, 90, f"{team1_xg:.2f} xG", color='#ff6361', ha='center', fontsize=30, fontweight='bold')
-        plt.text(20, 90, f"{team2_xg:.2f} xG", color='#003f5c', ha='center', fontsize=30, fontweight='bold')
-
-        # Create the title with goals and expected points included
-        title = f"{team1_name} vs {team2_name} ({team1_goals} - {team2_goals})"
-        subtitle = f"xG Shot Map"
-
-        # Title text
-        plt.text(0.40, 1.05, title, ha='center', va='bottom', fontsize=25, fontweight='bold', transform=ax.transAxes)
-        plt.text(0.16, 1.02, subtitle, ha='right', va='bottom', fontsize=18, transform=ax.transAxes)
-
-        # Add logo in the top-right corner
-        logo_path = 'logo.png'  # Replace with the path to your logo file
-        logo_img = mpimg.imread(logo_path)  # Read the logo image
-
-        # Create the logo image and place it at the top-right corner of the plot
-        imagebox = OffsetImage(logo_img, zoom=0.06)  # Adjust zoom for scaling the logo
-        ab = AnnotationBbox(imagebox, (0.99, 1.15), frameon=False, xycoords='axes fraction', box_alignment=(1, 1))
-
-        # Add the logo to the plot
-        ax.add_artist(ab)
-
-        # Add win probability text at the bottom-left
-        win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.2f}% | {team2_name}: {team2_win_prob*100:.2f}%"
-        plt.text(0.02, -0.03, win_text, ha='left', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
-
-        # Add Expected Points text in the bottom-left corner
-        xp_text = f"Expected Points:\n{team1_name}: {team1_xp:.2f} | {team2_name}: {team2_xp:.2f}"
-        plt.text(0.02, -0.10, xp_text, ha='left', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
-
-        # Add text in the bottom-right corner
-        text = "OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025"
-        plt.text(0.98, -0.03, text, ha='right', va='top', fontsize=12, color='black', weight='bold', transform=ax.transAxes)
-
-        # Function to add jitter to the scatter plot (random small shift in position)
-        def add_jitter(x, y, jitter_strength=0.5):
-            return x + np.random.uniform(-jitter_strength, jitter_strength), y + np.random.uniform(-jitter_strength, jitter_strength)
-
-        # Scatter plot code for team1 (home team)
-        for x in range(len(team1['x'])):
-            x_pos, y_pos = add_jitter(team1['x'][x], 100 - team1['y'][x])  # Apply jitter
-            if team1['Type_of_play'][x] == 'FromCorner' and team1['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team1['Type_of_play'][x] == 'FromCorner' and team1['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team1['Type_of_play'][x] == 'RegularPlay' and team1['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team1['Type_of_play'][x] == 'RegularPlay' and team1['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team1['Type_of_play'][x] == 'FastBreak' and team1['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team1['Type_of_play'][x] == 'FastBreak' and team1['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team1['Type_of_play'][x] == 'ThrowinSetPiece' and team1['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team1['Type_of_play'][x] == 'ThrowinSetPiece' and team1['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team1['Type_of_play'][x] == 'SetPiece' and team1['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team1['Type_of_play'][x] == 'SetPiece' and team1['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team1['Type_of_play'][x] == 'Penalty' and team1['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team1['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team1['Type_of_play'][x] == 'Penalty' and team1['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#ff6361', s=team1['xG'][x] * 800, alpha=0.9, zorder=2)
-
-        # Scatter plot code for team2 (away team)
-        for x in range(len(team2['x'])):
-            x_pos, y_pos = add_jitter(100 - team2['x'][x], team2['y'][x])  # Apply jitter
-            if team2['Type_of_play'][x] == 'FromCorner' and team2['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team2['Type_of_play'][x] == 'FromCorner' and team2['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team2['Type_of_play'][x] == 'RegularPlay' and team2['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team2['Type_of_play'][x] == 'RegularPlay' and team2['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team2['Type_of_play'][x] == 'FastBreak' and team2['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team2['Type_of_play'][x] == 'FastBreak' and team2['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team2['Type_of_play'][x] == 'ThrowinSetPiece' and team2['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team2['Type_of_play'][x] == 'ThrowinSetPiece' and team2['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team2['Type_of_play'][x] == 'SetPiece' and team2['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team2['Type_of_play'][x] == 'SetPiece' and team2['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-            elif team2['Type_of_play'][x] == 'Penalty' and team2['isGoal'][x] == True:
-                plt.scatter(x_pos, y_pos, color='#ffa600', s=team2['xG'][x] * 800, alpha=0.9, zorder=3)
-            elif team2['Type_of_play'][x] == 'Penalty' and team2['isGoal'][x] == False:
-                plt.scatter(x_pos, y_pos, color='#003f5c', s=team2['xG'][x] * 800, alpha=0.9, zorder=2)
-
+        file_path = os.path.join(json_folder, selected_file)
+        df = load_and_process_json(file_path, id_to_name_dict, event_map_df)
         
-        # Save the figure to a PNG image
-        img_buf = io.BytesIO()
-        fig.savefig(img_buf, format='png')
-        img_buf.seek(0)
-
-        # Create download button
-        st.download_button(
-            label="Download Shot Map as PNG",
-            data=img_buf,
-            file_name=f"shot_map_{team1_name}_{team2_name}_outswingerfc.png",
-            mime="image/png"
-        )
-        st.pyplot(fig)
-
-
-import os
-import pandas as pd
-import matplotlib.pyplot as plt
-import streamlit as st
-
-# Flow Map page
-if selected_page == "Flow Map":
-    st.title("Expected Goals (xG) Flow Map")
-
-    # Path to the xgCSV folder
-    xg_csv_folder = 'xgCSV'
-
-    # List all CSV files in the xgCSV folder and sort by modification time (most recent first)
-    csv_files = sorted(
-        [f for f in os.listdir(xg_csv_folder) if f.endswith('.csv')],
-        key=lambda f: os.path.getmtime(os.path.join(xg_csv_folder, f)),
-        reverse=True  # Sort by most recent first
-    )
-
-    # Let the user select a CSV file
-    selected_file = st.selectbox("Select a CSV file", csv_files)
-
-    # If a file is selected, process and display it
-    if selected_file:
-        # Load the data
-        file_path = os.path.join(xg_csv_folder, selected_file)
-        df = pd.read_csv(file_path)
-
-        # Extract team names from the file name
-        teams = selected_file.replace('.csv', '').split('_')[-1].split(' - ')
-        if len(teams) < 2:
-            st.error("Error extracting team names. Check filename format.")
+        if df.empty or df['Team'].isnull().any():
+            st.warning("Could not process the selected file. It might be empty or team IDs could not be mapped.")
         else:
-            hteam, ateam = teams
+            # Filter for only shot events (typeId 7=Failed attempt, 8=Save, 9=Miss, 10=Post, 16=Goal)
+            shots_df = df[df['typeId'].isin([7, 8, 9, 10, 16])].copy()
+            team_names = shots_df['Team'].unique()
+            team1_name, team2_name = team_names[0], team_names[1]
 
-            # Initialize lists to store xG, PsxG, and goal data for both teams
-            a_xG, h_xG = [], []
-            a_min, h_min = [], []
-            a_psxg, h_psxg = [], []
-            a_goals_min, h_goals_min = [], []
+            team1 = shots_df.loc[shots_df['Team'] == team1_name].reset_index()
+            team2 = shots_df.loc[shots_df['Team'] == team2_name].reset_index()
 
-            # Process each row to track xG, PsxG, and goals for both teams
-            for _, row in df.iterrows():
-                team_id = row['TeamId']
-                xg_value = row['xG']
-                psxg_value = row['PsxG'] if 'PsxG' in df.columns else 0
-                minute = row['timeMin']
+            team1_goals = team1['isGoal'].sum()
+            team2_goals = team2['isGoal'].sum()
+            team1_xg = team1['xG'].sum()
+            team2_xg = team2['xG'].sum()
+            
+            # --- Plotting ---
+            pitch = Pitch(pitch_type='opta', pitch_width=68, pitch_length=105, pad_bottom=1.5, pad_top=5, pitch_color='white', line_color='black', half=False, goal_type='box', goal_alpha=0.8)
+            fig, ax = plt.subplots(figsize=(16, 10))
+            pitch.draw(ax=ax)
+            fig.set_facecolor('white')
+            plt.gca().invert_xaxis()
+            
+            title = f"{team1_name} ({team1_goals}) vs {team2_name} ({team2_goals})"
+            plt.text(0.5, 1.05, title, ha='center', va='bottom', fontsize=25, fontweight='bold', transform=ax.transAxes)
+            plt.text(80, 90, f"{team1_xg:.2f} xG", color='#ff6361', ha='center', fontsize=30, fontweight='bold')
+            plt.text(20, 90, f"{team2_xg:.2f} xG", color='#003f5c', ha='center', fontsize=30, fontweight='bold')
 
-                if team_id == ateam:
-                    a_xG.append(xg_value)
-                    a_min.append(minute)
-                    a_psxg.append(psxg_value)
-                    if row['isGoal'] == 1:
-                        a_goals_min.append(minute)
+            # Plot Team 1 Shots
+            for i, shot in team1.iterrows():
+                color = '#ffa600' if shot['isGoal'] else '#ff6361'
+                plt.scatter(shot['x'], 100 - shot['y'], color=color, s=shot['xG'] * 800, alpha=0.9, zorder=3 if shot['isGoal'] else 2)
 
-                elif team_id == hteam:
-                    h_xG.append(xg_value)
-                    h_min.append(minute)
-                    h_psxg.append(psxg_value)
-                    if row['isGoal'] == 1:
-                        h_goals_min.append(minute)
+            # Plot Team 2 Shots
+            for i, shot in team2.iterrows():
+                color = '#ffa600' if shot['isGoal'] else '#003f5c'
+                plt.scatter(100 - shot['x'], shot['y'], color=color, s=shot['xG'] * 800, alpha=0.9, zorder=3 if shot['isGoal'] else 2)
+            
+            st.pyplot(fig)
 
-            # Cumulative xG and PsxG calculations
-            def nums_cumulative_sum(nums_list):
-                return [sum(nums_list[:i+1]) for i in range(len(nums_list))]
 
-            a_cumulative = nums_cumulative_sum([0] + a_xG)
-            h_cumulative = nums_cumulative_sum([0] + h_xG)
-            a_psxg_cumulative = nums_cumulative_sum([0] + a_psxg)
-            h_psxg_cumulative = nums_cumulative_sum([0] + h_psxg)
+# ==============================================================================
+# 4. FLOW MAP PAGE
+# ==============================================================================
+elif selected_page == "Flow Map":
+    st.header("Expected Goals (xG) Flow Map")
 
-            # Ensure xG and time lists have the same starting values
-            a_min = [0] + a_min
-            h_min = [0] + h_min
+    json_folder = 'json_data'
+    json_files = sorted(
+        [f for f in os.listdir(json_folder) if f.endswith('.json')],
+        key=lambda f: os.path.getmtime(os.path.join(json_folder, f)),
+        reverse=True
+    )
+    selected_file = st.selectbox("Select a Match JSON file", json_files)
 
-            # Last xG and PsxG values
-            alast, hlast = round(a_cumulative[-1], 2), round(h_cumulative[-1], 2)
-            a_psxg_last, h_psxg_last = round(a_psxg_cumulative[-1], 2), round(h_psxg_cumulative[-1], 2)
+    if selected_file:
+        file_path = os.path.join(json_folder, selected_file)
+        df = load_and_process_json(file_path, id_to_name_dict, event_map_df)
+        
+        if df.empty or df['Team'].isnull().any():
+            st.warning("Could not process the selected file.")
+        else:
+            shots_df = df[df['typeId'].isin([7, 8, 9, 10, 16])].copy()
+            team_names = shots_df['Team'].unique()
+            hteam, ateam = team_names[0], team_names[1]
 
-            # Calculate home and away goals from the dataset
-            home_goals = df.loc[(df['TeamId'] == hteam) & (df['isGoal'] == 1)].shape[0]
-            away_goals = df.loc[(df['TeamId'] == ateam) & (df['isGoal'] == 1)].shape[0]
+            hteam_df = shots_df[shots_df['Team'] == hteam].sort_values('timeMin')
+            ateam_df = shots_df[shots_df['Team'] == ateam].sort_values('timeMin')
 
-            # Plot setup
+            h_xG_cumulative = np.cumsum(hteam_df['xG'])
+            a_xG_cumulative = np.cumsum(ateam_df['xG'])
+            h_min = hteam_df['timeMin']
+            a_min = ateam_df['timeMin']
+
             fig, ax = plt.subplots(figsize=(16, 10))
             fig.set_facecolor('white')
             ax.patch.set_facecolor('white')
 
-            # Set up grid and axis labels
-            ax.grid(ls='dotted', lw=1, color='black', axis='y', zorder=1, which='both', alpha=0.6)
-            ax.grid(ls='dotted', lw=1, color='black', axis='x', zorder=1, which='both', alpha=0.6)
-            ax.spines[['top', 'bottom', 'left', 'right']].set_visible(False)
+            ax.step([0, *h_min], [0, *h_xG_cumulative], color='#ff6361', linewidth=5, where='post', label=hteam)
+            ax.step([0, *a_min], [0, *a_xG_cumulative], color='#003f5c', linewidth=5, where='post', label=ateam)
+
+            ax.fill_between([0, *h_min], [0, *h_xG_cumulative], color='#ff6361', alpha=0.3, step='post')
+            ax.fill_between([0, *a_min], [0, *a_xG_cumulative], color='#003f5c', alpha=0.3, step='post')
+            
+            # Goal markers
+            h_goals = hteam_df[hteam_df['isGoal']]
+            a_goals = ateam_df[ateam_df['isGoal']]
+            h_goal_cumulative_xg = np.cumsum(hteam_df['xG'])[h_goals.index.to_series().apply(lambda x: hteam_df.index.get_loc(x))]
+            a_goal_cumulative_xg = np.cumsum(ateam_df['xG'])[a_goals.index.to_series().apply(lambda x: ateam_df.index.get_loc(x))]
+
+            ax.scatter(h_goals['timeMin'], h_goal_cumulative_xg, color='#ffa600', marker='*', s=500, zorder=3)
+            ax.scatter(a_goals['timeMin'], a_goal_cumulative_xg, color='#ffa600', marker='*', s=500, zorder=3)
+            
             plt.xticks([0, 15, 30, 45, 60, 75, 90])
             plt.xlabel('Minute', fontsize=16)
-            plt.ylabel('xG', fontsize=16)
-
-            # Plot cumulative xG and PsxG fill
-            ax.fill_between(h_min, h_cumulative, color='#ff6361', alpha=0.3)
-            ax.fill_between(a_min, a_cumulative, color='#003f5c', alpha=0.3)
-
-            # Ensure both teams are plotted fully
-            a_min.append(95)
-            a_cumulative.append(alast)
-            h_min.append(95)
-            h_cumulative.append(hlast)
-
-            ax.step(a_min, a_cumulative, color='#003f5c', linewidth=5, where='post')
-            ax.step(h_min, h_cumulative, color='#ff6361', linewidth=5, where='post')
-
-            # Label the lines on the plot (make labels black and adjusted positioning)
-            ax.text(92, a_cumulative[-1] + 0.05, ateam, color='black', fontsize=18, fontweight='bold')  # Adjust y position to avoid overlap
-            ax.text(92, h_cumulative[-1] + 0.05, hteam, color='black', fontsize=18, fontweight='bold')  # Adjust y position to avoid overlap
-
-            # Goal annotations
-            for goal in a_goals_min:
-                ax.scatter(goal, a_cumulative[a_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
-            for goal in h_goals_min:
-                ax.scatter(goal, h_cumulative[h_min.index(goal)], color='#ffa600', marker='*', s=500, zorder=3)
-
-            # Title (remove 'WFC' from title only)
-            title_hteam = hteam.replace('WFC', '').strip()  # Remove WFC from home team name for title
-            title_ateam = ateam.replace('WFC', '').strip()  # Remove WFC from away team name for title
-            ax.text(0.4, 1.1, f"{title_hteam} vs {title_ateam} ({home_goals} - {away_goals})", fontsize=35, color="black", fontweight='bold', ha='center', transform=ax.transAxes)
-
-            # Subtitle (adjusted y position to avoid overlap)
-            subtitle = f"{hteam} xG: {hlast:.2f} | PsxG: {h_psxg_last:.2f}\n{ateam} xG: {alast:.2f} | PsxG: {a_psxg_last:.2f}"
-            ax.text(0.2, 1.02, subtitle, fontsize=18, color="black", ha='center', transform=ax.transAxes)
-
-            # Display the plot in Streamlit
+            plt.ylabel('Cumulative xG', fontsize=16)
+            plt.legend()
             st.pyplot(fig)
 
-            # Footer and logo (placed under the plot)
-            st.markdown("OUTSWINGERFC.COM\nData via Opta | Women's Super League 2024-2025")
-            # Show match score and expected points
-            # Calculate win probabilities and expected points
-            total_xg = alast + hlast
-            team1_win_prob = alast / total_xg
-            team2_win_prob = hlast / total_xg
-            draw_prob = 1 - (team1_win_prob + team2_win_prob)
+# ==============================================================================
+# 5. FIELD TILT PAGE
+# ==============================================================================
+elif selected_page == "Field Tilt":
+    st.header("Field Tilt Analysis")
 
-# Expected Points Calculation
-            team1_xp = (3 * team1_win_prob) + (1 * draw_prob)
-            team2_xp = (3 * team2_win_prob) + (1 * draw_prob)
-
-# Add win probability and expected points in bottom-left corner
-            win_prob_text = f"{hteam} Win Probability: {team1_win_prob * 100:.2f}%\n{ateam} Win Probability: {team2_win_prob * 100:.2f}%\n"
-            xp_text = f"{ateam} Expected Points: {team1_xp:.2f}\n{hteam} Expected Points: {team2_xp:.2f}"
-
-# Show win probability and expected points
-            st.write(win_prob_text)
-            st.write(xp_text)
-    
-import os
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-import streamlit as st
-
-
-# Field Tilt page
-if selected_page == "Field Tilt":
-    st.title("Field Tilt Analysis")
-
-    # Folder containing CSV match data (change to your path)
-    match_data_folder = 'WSL 2024-2025'  # Replace with your folder path
-    csv_files = sorted([f for f in os.listdir(match_data_folder) if f.endswith('.csv')],
-                       key=lambda f: os.path.getmtime(os.path.join(match_data_folder, f)),
-                       reverse=True)
-
-    # Let the user select a match
-    selected_match = st.selectbox("Select a match", csv_files)
+    json_folder = 'json_data'
+    json_files = sorted(
+        [f for f in os.listdir(json_folder) if f.endswith('.json')],
+        key=lambda f: os.path.getmtime(os.path.join(json_folder, f)),
+        reverse=True
+    )
+    selected_match = st.selectbox("Select a Match JSON file", json_files)
 
     if selected_match:
-        file_path = os.path.join(match_data_folder, selected_match)
-        df = pd.read_csv(file_path)
+        file_path = os.path.join(json_folder, selected_match)
+        df = load_and_process_json(file_path, id_to_name_dict, event_map_df)
+        
+        if df.empty or df['Team'].isnull().any():
+            st.warning("Could not process the selected file.")
+        else:
+            team_names = df['Team'].unique()
+            hteam_name, ateam_name = team_names[0], team_names[1]
 
-        # Check if 'contestantId' is in the CSV columns
-        if 'contestantId' in df.columns:
-            # Extract and display unique contestantIds (home and away teams)
-            contestant_ids = df['contestantId'].unique()
-
-            # You could also map contestantId to team names if the mapping is available
-            mapping_file_path = 'opta_club_rankings_womens_14022025.xlsx'  # Change to your mapping file path
-            mapping_df = pd.read_excel(mapping_file_path)
-            id_to_team = dict(zip(mapping_df['id'], mapping_df['team']))
-
-            # Show team names based on contestantId
-            team_names = [id_to_team.get(str(contestant_id), 'Unknown Team') for contestant_id in contestant_ids]
-
-            # Assuming the first two contestant IDs are the home and away teams
-            hteam_id = contestant_ids[0]
-            ateam_id = contestant_ids[1]
-
-            # Get the corresponding team names
-            hteam_name = id_to_team.get(str(hteam_id), 'Unknown Team')
-            ateam_name = id_to_team.get(str(ateam_id), 'Unknown Team')
-
-            # Filter final third passes
-            df_final_third = df.loc[(df['typeId'] == 1) & (df['x'] > 70)]  # Passes in the final third
-
-            # Group by teams and count final third passes
-            final_third_count = df_final_third.groupby('contestantId').size().reset_index(name='Final third passes')
-
-            # Calculate total final third passes
-            total_final_third_passes = final_third_count['Final third passes'].sum()
-
-            # Add Field Tilt for each team
-            final_third_count['Field Tilt'] = (final_third_count['Final third passes'] / total_final_third_passes) * 100
-
-            # Initialize lists for minute-by-minute Field Tilt
-            minutes = list(range(0, 96))  # 0-95 minutes
-            home_tilt = []
-            away_tilt = []
-
-            # Compute Field Tilt per minute
+            # Filter for passes (typeId 1) in the final third (x > 66.7)
+            df_final_third = df.loc[(df['typeId'] == 1) & (df['x'] > 66.7)]
+            
+            minutes = list(range(0, 96))
+            home_tilt, away_tilt = [], []
+            
             for minute in minutes:
-                home_passes = df_final_third[(df_final_third['contestantId'] == hteam_id) & (df_final_third['timeMin'] == minute)].shape[0]
-                away_passes = df_final_third[(df_final_third['contestantId'] == ateam_id) & (df_final_third['timeMin'] == minute)].shape[0]
-                
+                min_df = df_final_third[df_final_third['timeMin'] == minute]
+                home_passes = min_df[min_df['Team'] == hteam_name].shape[0]
+                away_passes = min_df[min_df['Team'] == ateam_name].shape[0]
                 total_passes = home_passes + away_passes
+                
                 if total_passes == 0:
-                    home_tilt.append(0)  # Neutral if no attacking passes
-                    away_tilt.append(0)
+                    home_tilt.append(50) # Neutral if no passes
                 else:
                     home_tilt.append((home_passes / total_passes) * 100)
-                    away_tilt.append(-1 * (away_passes / total_passes) * 100)  # Make away team values negative
 
-            # Smooth the Field Tilt using a larger moving average window
-            def moving_average(values, window):
-                return np.convolve(values, np.ones(window) / window, mode='same')
+            # Use a rolling average to smooth the line
+            tilt_series = pd.Series(home_tilt)
+            smoothed_tilt = tilt_series.rolling(window=10, min_periods=1, center=True).mean()
 
-            home_tilt_smoothed = moving_average(home_tilt, 15)  # Larger window for rounder curves
-            away_tilt_smoothed = moving_average(away_tilt, 15)
+            fig, ax = plt.subplots(figsize=(22, 12))
+            ax.plot(minutes, smoothed_tilt, color='#ff6361', lw=3)
+            ax.plot(minutes, 100 - smoothed_tilt, color='#003f5c', lw=3)
+            ax.axhline(50, color='grey', linestyle='--', lw=2)
 
-            # Calculate total attacking contributions for percentages
-            home_total = sum([x for x in home_tilt if x > 0])
-            away_total = sum([-x for x in away_tilt if x < 0])  # Convert negative values to positive
-            overall_total = home_total + away_total
+            ax.fill_between(minutes, 50, smoothed_tilt, where=smoothed_tilt > 50, interpolate=True, color='#ff6361', alpha=0.6, label=f'{hteam_name} Dominance')
+            ax.fill_between(minutes, 50, smoothed_tilt, where=smoothed_tilt < 50, interpolate=True, color='#003f5c', alpha=0.6, label=f'{ateam_name} Dominance')
 
-            home_percentage = (home_total / overall_total) * 100
-            away_percentage = (away_total / overall_total) * 100
-
-            # Calculate net dominance
-            net_tilt = np.maximum(home_tilt_smoothed + away_tilt_smoothed, 0)  # Positive area for home
-            net_tilt_away = np.minimum(home_tilt_smoothed + away_tilt_smoothed, 0)  # Negative area for away
-
-            # Goals for context
-            home_goals_min = df[(df['contestantId'] == hteam_id) & (df['typeId'] == 16)]['timeMin'].tolist()
-            away_goals_min = df[(df['contestantId'] == ateam_id) & (df['typeId'] == 16)]['timeMin'].tolist()
-
-            # Plot Field Dominance
-            fig, ax = plt.subplots(figsize=(22, 12))  # Increased plot size here
-            fig.set_facecolor('white')
-            ax.patch.set_facecolor('white')
-
-            # Grid and aesthetics
-            ax.grid(ls='dotted', lw=1, color='black', alpha=0.4, zorder=1)
-            ax.axhline(0, color='black', linestyle='dashed', linewidth=2, alpha=0.7)  # 0% line
-
-            # Fill regions based on net dominance
-            ax.fill_between(minutes, 0, net_tilt, where=(net_tilt > 0), interpolate=True, color='#ff6361', alpha=0.6, label=f'{hteam_name} Dominance')
-            ax.fill_between(minutes, 0, net_tilt_away, where=(net_tilt_away < 0), interpolate=True, color='#003f5c', alpha=0.6, label=f'{ateam_name} Dominance')
-
-            # Add goal markers
-            for goal in home_goals_min:
-                ax.scatter(goal, 0, color='black', marker='*', s=200, label=f'{hteam_name} Goal')
-
-            for goal in away_goals_min:
-                ax.scatter(goal, 0, color='black', marker='*', s=200, label=f'{ateam_name} Goal')
-
-            # Add logo in the top-right corner
-            logo_path = 'logo.png'  # Replace with the path to your logo file
-            logo_img = mpimg.imread(logo_path)  # Read the logo image
-            imagebox = OffsetImage(logo_img, zoom=0.08)  # Adjust zoom to control logo size
-            ab = AnnotationBbox(imagebox, (0.96, 1.25), frameon=False, xycoords='axes fraction', box_alignment=(1, 1))
-            ax.add_artist(ab)
-
-            # Title and subtitles
-            title = f"{hteam_name} ({len(home_goals_min)}) - {ateam_name} ({len(away_goals_min)})"
-            subtitle = f"{hteam_name}: {home_percentage:.1f}% | {ateam_name}: {away_percentage:.1f}%"
-            footer = "Field Tilt is the share of touches in the final third.\n15 Minute Moving Average | Data via Opta"
-
-            # Adjust the title and subtitle positions by increasing the `y` value
-            plt.title(title, fontsize=40, color='black', weight='bold', loc='left', y=1.12)  # Higher title
-            plt.suptitle(subtitle, fontsize=25, color='black', style='italic', x=0.27, y=0.93)  # Higher subtitle
-            fig.text(0.12, 0.02, footer, fontsize=20, color='black', style='italic')  # Larger footer text
-
-            # Remove spines
-            ax.spines['top'].set_visible(False)
-            ax.spines['right'].set_visible(False)
-
-            # Labels and limits
-            plt.xlabel('Minute', fontsize=18)  # Larger font size for labels
-            plt.ylabel('Field tilt (%)', fontsize=18)
-            plt.ylim(-100, 100)
+            plt.ylim(0, 100)
             plt.xlim(0, 95)
-
-            # Legend
-            ax.legend(loc='upper right', fontsize=14, frameon=False)  # Larger legend
-
-            # Save and display
-            plt.savefig('field_dominance_chart_with_logo.png', dpi=300, bbox_inches='tight', facecolor='white')
+            plt.ylabel('Field Tilt (%)', fontsize=18)
+            plt.xlabel('Minute', fontsize=18)
+            plt.legend()
             st.pyplot(fig)
 
-            # Display preview of the selected match data below the plot
-            st.write("Preview of the selected match data:")
-            st.write(df.head())
+# ==============================================================================
+# 6. PASS NETWORK PAGE
+# ==============================================================================
+elif selected_page == "Pass Network":
+    st.header("Pass Network Visualization")
 
-            # Display the unique contestantIds (teams)
-            st.write(f"Unique contestantIds in the selected match: {contestant_ids}")
-            for cid, team in zip(contestant_ids, team_names):
-                st.write(f"Contestant ID: {cid} - Team Name: {team}")
+    json_folder = 'json_data'
+    json_files = sorted(
+        [f for f in os.listdir(json_folder) if f.endswith('.json')],
+        key=lambda f: os.path.getmtime(os.path.join(json_folder, f)),
+        reverse=True
+    )
+    selected_match = st.selectbox("Select a match", json_files, key="pass_network_match")
 
-        else:
-            st.write("The selected CSV does not contain a 'contestantId' column.")
-    
+    if selected_match:
+        file_path = os.path.join(json_folder, selected_match)
+        df = load_and_process_json(file_path, id_to_name_dict, event_map_df)
+        
+        if not df.empty and not df['Team'].isnull().any():
+            team_names = df['Team'].unique().tolist()
+            selected_team = st.selectbox("Select a team", team_names, key="pass_network_team")
 
-import os
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-import streamlit as st
-from mplsoccer import VerticalPitch
-from matplotlib.colors import Normalize
+            if selected_team:
+                team_data = df.loc[df['Team'] == selected_team].copy()
+                team_data['recipient'] = team_data['playerName'].shift(-1)
+                
+                # Filter for successful passes only
+                passes = team_data.loc[(team_data['typeId'] == 1) & (team_data['outcome'] == 1)]
+                
+                if passes.empty:
+                    st.warning(f"No completed passes found for {selected_team}.")
+                else:
+                    avg_locs = passes.groupby('playerName').agg({'x': ['mean'], 'y': ['mean']})
+                    avg_locs.columns = ['x', 'y']
 
-# Ensure the selected page is Pass Network
-# Pass Network page
-if selected_page == "Pass Network":
-    st.title("Pass Network Visualization")
+                    passes_between = passes.groupby(['playerName', 'recipient']).id.count().reset_index()
+                    passes_between.rename({'id': 'pass_count'}, axis='columns', inplace=True)
+                    
+                    passes_between = passes_between.merge(avg_locs, left_on='playerName', right_index=True)
+                    passes_between = passes_between.merge(avg_locs, left_on='recipient', right_index=True, suffixes=('', '_end'))
+                    
+                    pitch = VerticalPitch(pitch_type='opta', pitch_color='#22312b', line_color='#c7d5cc')
+                    fig, ax = plt.subplots(figsize=(16, 11))
+                    pitch.draw(ax=ax)
 
-    # Function to add logo to the plot
-    def add_logo(ax, logo_path):
-        logo = mpimg.imread(logo_path)
-        imagebox = OffsetImage(logo, zoom=0.6)
-        ab = AnnotationBbox(imagebox, (0.95, 1.1), frameon=False, xycoords='axes fraction', boxcoords="axes fraction")
-        ax.add_artist(ab)
+                    # Plot edges
+                    for _, row in passes_between.iterrows():
+                        if row['pass_count'] > 2: # Filter for significant connections
+                            pitch.lines(row.x, row.y, row.x_end, row.y_end,
+                                        alpha=1, lw=row.pass_count/2, color='white', ax=ax, zorder=1)
 
-    # Function to plot the pass network with an optional logo
-    def plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=False, logo_path=None):
-        pitch.draw(ax=ax)
-
-        norm = plt.Normalize(vmin=average_locs_and_count['epv'].min(), vmax=average_locs_and_count['epv'].max())
-        cmap = plt.cm.viridis
-        colors = cmap(norm(average_locs_and_count['epv']))
-
-        max_pass_count = passes_between['pass_count'].max()
-        passes_between['zorder'] = passes_between['pass_count'] / max_pass_count * 10
-        passes_between['alpha'] = passes_between['pass_count'] / max_pass_count
-
-        for index, row in passes_between.iterrows():
-            pitch.lines(row['x'], row['y'], row['x_end'], row['y_end'], color='grey', alpha=row['alpha'], lw=4, ax=ax, zorder=row['zorder'])
-
-        pitch.scatter(average_locs_and_count['x'], average_locs_and_count['y'], s=500, color=colors, edgecolors="black", linewidth=1, alpha=1, ax=ax, zorder=11)
-
-        for index, row in average_locs_and_count.iterrows():
-            pitch.annotate(row.name, xy=(row.x, row.y), ax=ax, ha='center', va='bottom', fontsize=12, color='black', zorder=12, xytext=(0, -35), textcoords='offset points', bbox=dict(boxstyle="round,pad=0.3", edgecolor="black", facecolor="white", alpha=0.7))
-
-        ax.set_title(title, fontsize=18, color="black", fontweight='bold', pad=20)
-
-        if add_logo_to_this_plot:
-            add_logo(ax, logo_path)
-
-    # Function to calculate the pass network data
-    def create_pass_network_data(df, team_id):
-        team_data = df.loc[(df['contestantId'] == team_id)].reset_index()
-        team_data["newsecond"] = 60 * team_data["timeMin"] + team_data["timeSec"]
-        team_data.sort_values(by=['newsecond'], inplace=True)
-        team_data['passer'] = team_data['playerName']
-        team_data['recipient'] = team_data['passer'].shift(-1)
-
-        passes = team_data.loc[(team_data['typeId'] == 1)]
-        completions = passes.loc[(passes['outcome'] == 1)]
-
-        if completions.empty:
-            st.warning("No completed passes found for this team in the selected match!")
-            return None, None
-
-        subs = team_data.loc[(team_data['typeId'] == 18)]
-        sub_times = subs["newsecond"]
-        if not sub_times.empty:
-            sub_one = sub_times.min()
-            completions = completions.loc[completions['newsecond'] < sub_one]
-
-        average_locs_and_count = completions.groupby('passer').agg({'x': ['mean'], 'y': ['mean', 'count'], 'epv': ['mean']}).reset_index()
-        average_locs_and_count.columns = ['name', 'x', 'y', 'pass_count', 'epv']
-        passes_between = completions.groupby(['passer', 'recipient']).size().reset_index(name='pass_count')
-
-        if passes_between.empty:
-            st.warning("No pass network data available for this team in the selected match!")
-            return None, None
-
-        return average_locs_and_count, passes_between
-
-    # Select a match and team
-    st.write("Select a match and team for the Pass Network:")
-    selected_match = st.selectbox("Select a match", csv_files)
-    selected_team = st.selectbox("Select a team", team_names)
-
-    if selected_match and selected_team:
-        file_path = os.path.join(match_data_folder, selected_match)
-        df = pd.read_csv(file_path)
-
-        # Get team_id based on the selected team
-        team_id = [k for k, v in id_to_team.items() if v == selected_team][0]
-        average_locs_and_count, passes_between = create_pass_network_data(df, team_id)
-
-        if average_locs_and_count is not None and passes_between is not None:
-            # Plot Pass Network
-            fig, ax = plt.subplots(figsize=(15, 10))
-            pitch = VerticalPitch(pitch_type='statsbomb', pitch_color='#A9A9A9', line_color='white', linewidth=2)
-            title = f"Pass Network for {selected_team} - {selected_match.split('.')[0]}"
-            plot_pass_network_with_logo(ax, pitch, average_locs_and_count, passes_between, title, add_logo_to_this_plot=True, logo_path="logo.png")
-
-            st.pyplot(fig)
-        else:
-            st.error("No valid pass network data available for plotting.")
+                    # Plot nodes
+                    pitch.scatter(avg_locs.x, avg_locs.y, s=600, color='#d3d3d3', edgecolors='black', ax=ax, zorder=2)
+                    for i, row in avg_locs.iterrows():
+                        pitch.annotate(i.split()[-1], xy=(row.x, row.y), c='black', va='center', ha='center', size=12, ax=ax, zorder=3)
+                    
+                    st.pyplot(fig)
