@@ -13,14 +13,13 @@ from functools import reduce
 st.set_page_config(page_title="Soccer Analytics Hub", layout="wide")
 
 # --- AESTHETIC CHOICES ---
-# Colors for plots
-BG_COLOR = '#0d1117'  # Dark background similar to GitHub dark mode
-TEXT_COLOR = '#c9d1d9'
-PITCH_COLOR = '#0d1117'
-LINE_COLOR = '#21262d'
-TEAM_A_COLOR = '#58a6ff'  # A vibrant blue
-TEAM_B_COLOR = '#f0883e'  # A vibrant orange
-GOAL_COLOR = '#3fb950'    # A vibrant green
+BG_COLOR = '#0d1117'      # Dark background
+TEXT_COLOR = '#c9d1d9'    # Light text
+PITCH_COLOR = '#0d1117'   # Dark pitch
+LINE_COLOR = '#21262d'    # Muted lines for the pitch
+TEAM_A_COLOR = '#58a6ff'  # Vibrant blue
+TEAM_B_COLOR = '#f0883e'  # Vibrant orange
+GOAL_COLOR = '#3fb950'    # Vibrant green
 
 # ==============================================================================
 # 2. DATA LOADING & CACHING FUNCTIONS
@@ -30,7 +29,8 @@ GOAL_COLOR = '#3fb950'    # A vibrant green
 def load_mapping_files():
     """Loads team and event mapping files once and caches them."""
     try:
-        team_mapping_df = pd.read_csv('WSL Matches.csv') # Extend this for more leagues if needed
+        # This can be extended for more leagues if needed
+        team_mapping_df = pd.read_csv('WSL Matches.csv') 
         home = team_mapping_df[["matchInfo/contestant/0/id", "matchInfo/contestant/0/name"]].rename(columns={"matchInfo/contestant/0/id": "id", "matchInfo/contestant/0/name": "name"})
         away = team_mapping_df[["matchInfo/contestant/1/id", "matchInfo/contestant/1/name"]].rename(columns={"matchInfo/contestant/1/id": "id", "matchInfo/contestant/1/name": "name"})
         team_map_df = pd.concat([home, away]).drop_duplicates('id').dropna()
@@ -47,7 +47,7 @@ def load_mapping_files():
         st.sidebar.error("Mapping file 'event_mapping.csv' not found.")
         event_map_df = pd.DataFrame(columns=["typeId", "Event Type"])
         
-    return id_to_name_dict, event_map_df, list(id_to_name_dict.values())
+    return id_to_name_dict, event_map_df
 
 @st.cache_data
 def get_matches_for_league(league_folder):
@@ -55,14 +55,14 @@ def get_matches_for_league(league_folder):
     match_files = []
     base_path = os.path.join('data', league_folder)
     if not os.path.exists(base_path):
-        return {}
+        return []
     
     for filename in os.listdir(base_path):
         if filename.endswith('.json'):
             file_path = os.path.join(base_path, filename)
             with open(file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-            # Extract contestant IDs to create a unique identifier for the match
+            
             contestant_ids = []
             if 'matchInfo' in data and 'contestant' in data['matchInfo']:
                  for contestant in data['matchInfo']['contestant']:
@@ -71,11 +71,11 @@ def get_matches_for_league(league_folder):
             if len(contestant_ids) == 2:
                  match_files.append({
                      'path': file_path,
-                     'ids': frozenset(contestant_ids) # Use frozenset for hashing in dict keys
+                     'ids': frozenset(contestant_ids)
                  })
     return match_files
 
-def load_match_data(json_path, team_map_dict, event_map_df):
+def load_match_data(json_path, team_map_dict):
     """Loads and processes a single JSON match file."""
     with open(json_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -86,7 +86,6 @@ def load_match_data(json_path, team_map_dict, event_map_df):
                'playerName': e.get('playerName'), 'outcome': 1 if e.get('outcome') == 'Successful' else 0,
                'x': e.get('x'), 'y': e.get('y'), 'id': e.get('id')}
         
-        # Extract xG from qualifiers
         row['xG'] = 0.0
         for q in e.get('qualifier', []):
             if str(q.get('qualifierId')) == '318':
@@ -120,25 +119,22 @@ def plot_shotmap(df, team1_name, team2_name):
     pitch.draw(ax=ax)
     plt.gca().invert_xaxis()
 
-    # Plot Team 1 Shots
     for _, shot in team1.iterrows():
         color = GOAL_COLOR if shot['isGoal'] else TEAM_A_COLOR
-        plt.scatter(shot['x'], 100 - shot['y'], color=color, s=shot['xG'] * 800, alpha=0.8, ec='white', lw=0.5, zorder=3)
-    # Plot Team 2 Shots
+        ax.scatter(shot['x'], 100 - shot['y'], color=color, s=shot['xG'] * 800, alpha=0.8, ec='white', lw=0.5, zorder=3)
     for _, shot in team2.iterrows():
         color = GOAL_COLOR if shot['isGoal'] else TEAM_B_COLOR
-        plt.scatter(100 - shot['x'], shot['y'], color=color, s=shot['xG'] * 800, alpha=0.8, ec='white', lw=0.5, zorder=3)
+        ax.scatter(100 - shot['x'], shot['y'], color=color, s=shot['xG'] * 800, alpha=0.8, ec='white', lw=0.5, zorder=3)
 
-    # Titles and annotations
     team1_goals = int(team1['isGoal'].sum())
     team2_goals = int(team2['isGoal'].sum())
     team1_xg = team1['xG'].sum()
     team2_xg = team2['xG'].sum()
     
     title = f"{team1_name} ({team1_goals}) vs. {team2_name} ({team2_goals})"
-    plt.text(0.5, 1.02, title, ha='center', va='bottom', fontsize=25, fontweight='bold', color=TEXT_COLOR, transform=ax.transAxes)
-    plt.text(80, 88, f"{team1_xg:.2f} xG", color=TEAM_A_COLOR, ha='center', fontsize=20, fontweight='bold')
-    plt.text(20, 88, f"{team2_xg:.2f} xG", color=TEAM_B_COLOR, ha='center', fontsize=20, fontweight='bold')
+    ax.text(0.5, 1.02, title, ha='center', va='bottom', fontsize=25, fontweight='bold', color=TEXT_COLOR, transform=ax.transAxes)
+    ax.text(80, 88, f"{team1_xg:.2f} xG", color=TEAM_A_COLOR, ha='center', fontsize=20, fontweight='bold')
+    ax.text(20, 88, f"{team2_xg:.2f} xG", color=TEAM_B_COLOR, ha='center', fontsize=20, fontweight='bold')
     
     return fig
 
@@ -151,7 +147,6 @@ def plot_flowmap(df, team1_name, team2_name):
     fig.set_facecolor(BG_COLOR)
     ax.set_facecolor(BG_COLOR)
     
-    # Cumulative xG
     t1_cum_xg = np.cumsum(team1['xG'])
     t2_cum_xg = np.cumsum(team2['xG'])
     
@@ -160,12 +155,9 @@ def plot_flowmap(df, team1_name, team2_name):
     ax.fill_between([0, *team1['timeMin']], [0, *t1_cum_xg], color=TEAM_A_COLOR, alpha=0.3, step='post')
     ax.fill_between([0, *team2['timeMin']], [0, *t2_cum_xg], color=TEAM_B_COLOR, alpha=0.3, step='post')
     
-    # Aesthetics
     ax.grid(True, ls='--', color=LINE_COLOR)
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.spines['bottom'].set_color(LINE_COLOR)
-    ax.spines['left'].set_color(LINE_COLOR)
+    ax.spines[['top', 'right']].set_visible(False)
+    ax.spines[['bottom', 'left']].set_color(LINE_COLOR)
     ax.tick_params(colors=TEXT_COLOR, labelsize=12)
     plt.xticks([0, 15, 30, 45, 60, 75, 90])
     plt.xlabel('Minute', color=TEXT_COLOR, fontsize=14)
@@ -176,9 +168,7 @@ def plot_flowmap(df, team1_name, team2_name):
     return fig
     
 def plot_field_tilt(df, team1_name, team2_name):
-    passes = df[df['typeId'] == 1]
-    final_third_passes = passes[passes['x'] > 66.7]
-
+    final_third_passes = df[(df['typeId'] == 1) & (df['x'] > 66.7)]
     minutes = list(range(0, int(df['timeMin'].max()) + 2))
     t1_tilt_raw = []
     
@@ -202,10 +192,8 @@ def plot_field_tilt(df, team1_name, team2_name):
     ax.fill_between(minutes, 50, tilt, where=tilt < 50, color=TEAM_B_COLOR, alpha=0.5, label=f'{team2_name} Dominance')
 
     ax.grid(True, ls='--', color=LINE_COLOR)
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.spines['bottom'].set_color(LINE_COLOR)
-    ax.spines['left'].set_color(LINE_COLOR)
+    ax.spines[['top', 'right']].set_visible(False)
+    ax.spines[['bottom', 'left']].set_color(LINE_COLOR)
     ax.tick_params(colors=TEXT_COLOR, labelsize=12)
     plt.ylim(0, 100)
     plt.xlim(0, max(minutes) - 1)
@@ -237,13 +225,14 @@ def plot_pass_network(df, team_name):
     pitch.draw(ax=ax)
     
     max_lw = 10
-    max_pass_count = passes_between['pass_count'].max()
+    max_pass_count = passes_between['pass_count'].max() if not passes_between.empty else 0
     
-    lines = pitch.lines(passes_between.x, passes_between.y, passes_between.x_end, passes_between.y_end,
-                        lw=passes_between.pass_count / max_pass_count * max_lw,
-                        color=TEXT_COLOR, zorder=1, ax=ax)
+    if max_pass_count > 0:
+        pitch.lines(passes_between.x, passes_between.y, passes_between.x_end, passes_between.y_end,
+                            lw=passes_between.pass_count / max_pass_count * max_lw,
+                            color=TEXT_COLOR, zorder=1, ax=ax)
     
-    nodes = pitch.scatter(avg_locs.x, avg_locs.y, s=800, color=BG_COLOR, edgecolors=TEAM_A_COLOR, linewidth=3, ax=ax, zorder=2)
+    pitch.scatter(avg_locs.x, avg_locs.y, s=800, color=BG_COLOR, edgecolors=TEAM_A_COLOR, linewidth=3, ax=ax, zorder=2)
     for i, row in avg_locs.iterrows():
         pitch.annotate(i.split()[-1], xy=(row.x, row.y), c=TEXT_COLOR, va='center', ha='center', size=12, ax=ax, zorder=3)
         
@@ -253,75 +242,68 @@ def plot_pass_network(df, team_name):
 # 4. STREAMLIT APP UI
 # ==============================================================================
 
+st.title("Soccer Analytics Hub")
+
 # --- Load Data ---
-ID_TO_NAME, EVENT_MAP, TEAM_LIST = load_mapping_files()
-LEAGUES = {"WSL": "WSL", "NWSL": "NWSL"} # Add other leagues here as you add folders
+ID_TO_NAME, EVENT_MAP = load_mapping_files()
+# Define leagues and their corresponding folder names
+LEAGUES = {
+    "WSL": "WSL 2024-2025", 
+    "NWSL": "NWSL" # Add other leagues here as you add folders
+}
 
 # --- Top Menu: League Selection ---
-st.title("Soccer Analytics Hub")
-selected_league = st.radio("SELECT LEAGUE", list(LEAGUES.keys()), horizontal=True)
+selected_league_name = st.radio("SELECT LEAGUE", list(LEAGUES.keys()), horizontal=True)
 
 # --- Sidebar: Controls ---
 st.sidebar.title("Controls")
 selected_visual = st.sidebar.selectbox("Select Visualisation", ["Shot Map", "Flow Map", "Field Tilt", "Pass Network"])
 
 # --- Dynamic Sidebar: Team and Match Selection ---
-if selected_league:
-    league_folder = LEAGUES[selected_league]
+if selected_league_name:
+    league_folder = LEAGUES[selected_league_name]
     all_matches = get_matches_for_league(league_folder)
     
-    # Get unique list of team names for the selected league
     league_team_ids = reduce(lambda x, y: x.union(y['ids']), all_matches, set())
     league_teams = sorted([ID_TO_NAME[id] for id in league_team_ids if id in ID_TO_NAME])
     
     if not league_teams:
-        st.sidebar.warning(f"No teams found for {selected_league}. Check your data folder and mapping file.")
+        st.sidebar.warning(f"No teams found for {selected_league_name}. Check your data folder and mapping file.")
     else:
-        # If the visual is a Pass Network, we select a team first
+        team_matches = all_matches
+        selected_team = None
         if selected_visual == "Pass Network":
             selected_team = st.sidebar.selectbox("Select Team", league_teams)
-            team_id = [k for k, v in ID_TO_NAME.items() if v == selected_team][0]
-            team_matches = [m for m in all_matches if team_id in m['ids']]
-        else:
-            # For other visuals, we can show all matches
-            team_matches = all_matches
+            if selected_team:
+                team_id = [k for k, v in ID_TO_NAME.items() if v == selected_team][0]
+                team_matches = [m for m in all_matches if team_id in m['ids']]
 
-        # Create user-friendly labels for match selection
         match_labels = {f"{ID_TO_NAME.get(list(m['ids'])[0], '?')} vs. {ID_TO_NAME.get(list(m['ids'])[1], '?')}": m['path'] for m in team_matches}
         
         if not match_labels:
-            st.sidebar.warning(f"No matches found for the selected team.")
+            st.sidebar.warning(f"No matches found for the selected team or league.")
         else:
             selected_match_label = st.sidebar.selectbox("Select Match", list(match_labels.keys()))
 
-            # --- Main Panel: Display Visualization ---
             if selected_match_label:
                 json_path = match_labels[selected_match_label]
-                df, team1, team2 = load_match_data(json_path, ID_TO_NAME, EVENT_MAP)
+                df, team1, team2 = load_match_data(json_path, ID_TO_NAME)
                 
                 if not df.empty:
-                    # Dynamically set team colors for non-pass network charts
-                    if selected_visual != "Pass Network":
-                        st.header(f"{team1} vs. {team2}")
-                        st.markdown(f"**Visualisation:** {selected_visual}")
+                    st.header(f"{selected_match_label}")
+                    st.markdown(f"**Visualisation:** {selected_visual}")
                     
                     if selected_visual == "Shot Map":
                         fig = plot_shotmap(df, team1, team2)
-                        st.pyplot(fig, use_container_width=True)
-                    
                     elif selected_visual == "Flow Map":
                         fig = plot_flowmap(df, team1, team2)
-                        st.pyplot(fig, use_container_width=True)
-                    
                     elif selected_visual == "Field Tilt":
                         fig = plot_field_tilt(df, team1, team2)
-                        st.pyplot(fig, use_container_width=True)
-
                     elif selected_visual == "Pass Network":
                         st.header(f"Pass Network for {selected_team}")
-                        st.markdown(f"**Match:** {selected_match_label}")
                         fig = plot_pass_network(df, selected_team)
-                        if fig:
-                            st.pyplot(fig, use_container_width=True)
+                    
+                    if 'fig' in locals() and fig is not None:
+                        st.pyplot(fig, use_container_width=True)
                 else:
                     st.error("Failed to load or process data for the selected match.")
