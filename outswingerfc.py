@@ -55,7 +55,7 @@ def main():
         st.session_state.selected_metric = metric_pages[0] # Default to the first metric
 
     # --- Sidebar Navigation ---
-    st.sidebar.title("🎙️ The Analyst's Booth")
+    st.sidebar.title("Women's Footy Data")
     st.sidebar.image("https://placehold.co/400x200/2d3748/ffffff?text=SOCCER+ANALYSIS", use_container_width=True)
     
     st.sidebar.info(
@@ -86,7 +86,7 @@ def main():
     # --- Data Loading and Processing ---
     # Map leagues to their respective CSV filenames
     league_data_files = {
-        "WSL": "2025-09-05_Chelsea FC Women - Manchester City WFC.csv",
+        "WSL": "WSL.csv",
         "WSL 2": "2025-09-05_Sheffield United WFC - Sunderland WFC.csv",
         "Frauen-Bundesliga": "2025-09-05_Eintracht Frankfurt - SGS Essen 1968.csv",
         "NWSL": "nwsl_data.csv"
