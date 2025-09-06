@@ -145,7 +145,6 @@ def display_corners_page(data_config):
     selected_league = st.session_state.selected_league
     st.header(f"Corner Analysis for {selected_league}")
     
-    # Use the xG config to get the base filename for the league
     metric_config = data_config.get(selected_league, {}).get('xG (Expected Goals)')
     if not metric_config:
         st.error(f"Base data file configuration not found for {selected_league}.")
@@ -167,7 +166,6 @@ def display_corners_page(data_config):
         st.warning("No corner data ('Type_of_play' == 'FromCorner') found in the dataset.")
         return
 
-    # --- Sidebar Filters for Corners ---
     st.sidebar.header("Corner Filters")
     teams = ["All"] + sorted(df_corners['TeamId'].unique().tolist())
     players = ["All"] + sorted(df_corners['PlayerId'].unique().tolist())
@@ -181,7 +179,6 @@ def display_corners_page(data_config):
     selected_goal = st.sidebar.selectbox("Filter by Goal:", is_goal_options, format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
     selected_time = st.sidebar.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time))
 
-    # --- Apply Filters ---
     df_filtered = df_corners.copy()
     if selected_team != "All": df_filtered = df_filtered[df_filtered['TeamId'] == selected_team]
     if selected_player != "All": df_filtered = df_filtered[df_filtered['PlayerId'] == selected_player]
@@ -192,7 +189,6 @@ def display_corners_page(data_config):
     st.markdown("---")
     st.write(f"#### Displaying `{len(df_filtered)}` corner events based on filters.")
 
-    # --- Plotting ---
     if not df_filtered.empty and all(c in df_filtered.columns for c in ['X', 'Y', 'xG']):
         pitch = VerticalPitch(half=True, pitch_type='opta', pitch_color='#22312b', line_color='#c7d5cc')
         fig, ax = pitch.draw(figsize=(8, 6))
@@ -215,7 +211,6 @@ def main():
     if 'selected_league' not in st.session_state: st.session_state.selected_league = "WSL"
     if 'selected_metric' not in st.session_state: st.session_state.selected_metric = metric_pages[0]
 
-    # --- Sidebar ---
     st.sidebar.title("Outswinger FC")
     st.sidebar.image("https://placehold.co/400x200/2d3748/e2e8f0?text=Outswinger+FC", use_container_width=True)
     
@@ -223,11 +218,41 @@ def main():
     st.sidebar.markdown("---")
 
     data_config = {
-        "WSL": {'xG (Expected Goals)': {"file": "WSL.csv"},'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv"}, 'xT (Expected Threat)': {"file": "WSL_xT.csv"}, 'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv"}, 'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv"}},
-        "WSL 2": {'xG (Expected Goals)': {"file": "WSL2.csv"}, 'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv"}, 'xT (Expected Threat)': {"file": "WSL2_xT.csv"}, 'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv"}, 'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv"}},
-        "Frauen-Bundesliga": {'xG (Expected Goals)': {"file": "FBL.csv"}, 'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv"}, 'xT (Expected Threat)': {"file": "FBL_xT.csv"}, 'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv"},'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv"}},
-        "Liga F": {'xG (Expected Goals)': {"file": "LigaF.csv"}, 'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv"}, 'xT (Expected Threat)': {"file": "LigaF_xT.csv"}, 'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv"}, 'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv"}},
-        "NWSL": {'xG (Expected Goals)': {"file": "NWSL.csv"}, 'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv"}, 'xT (Expected Threat)': {"file": "NWSL_xT.csv"}, 'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv"}, 'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv"}}
+        "WSL": {
+            'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
+            'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+        },
+        "WSL 2": {
+            'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
+            'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+        },
+        "Frauen-Bundesliga": {
+            'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
+            'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+        },
+        "Liga F": {
+            'xG (Expected Goals)': {"file": "LigaF.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "LigaF_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
+            'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+        },
+        "NWSL": {
+            'xG (Expected Goals)': {"file": "NWSL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "NWSL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
+            'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+        }
     }
 
     if page_view == "Metrics Leaderboard":
@@ -245,7 +270,6 @@ def main():
         st.session_state.selected_league = st.selectbox("Select a league to analyze:", leagues, index=leagues.index(st.session_state.selected_league))
         display_corners_page(data_config)
 
-    # --- Footer ---
     st.markdown("---")
     st.markdown(f"© {datetime.now().year} Outswinger FC | All rights reserved.")
 
