@@ -77,7 +77,7 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
 
     # Create the pitch
     pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=False, line_zorder=2, linewidth=0.5)
-    fig, ax = pitch.draw(figsize=(14, 10))
+    fig, ax = pitch.draw(figsize=(10, 7)) # Reduced figsize for a smaller plot
     fig.set_facecolor("white")
     ax.set_ylim(49.8, 105) # Cut pitch at halfway line
 
@@ -89,8 +89,8 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
         ax.scatter(row['y'], row['x'], color=color, s=size, alpha=0.7, zorder=3)
 
     # Add title and subtitle
-    ax.text(50, 108, title_text, fontsize=30, weight='bold', color='black', ha='center', va='top')
-    ax.text(50, 104, "Shot Map from Corners", fontsize=15, style='italic', color='black', ha='center', va='top')
+    ax.text(50, 108, title_text, fontsize=24, weight='bold', color='black', ha='center', va='top') # Adjusted font size
+    ax.text(50, 104, "Shot Map from Corners", fontsize=12, style='italic', color='black', ha='center', va='top') # Adjusted font size
     
     # Adjust plot for additional space at the bottom
     plt.subplots_adjust(bottom=0.3)
