@@ -133,7 +133,7 @@ def main():
 
     # --- Data Loading and Processing ---
     # !!! IMPORTANT: Replace this URL with the raw GitHub URL of your CSV file !!!
-    github_csv_url = "https://raw.githubusercontent.com/statsbomb/open-data/master/data/events/8658.csv" # Example URL
+    github_csv_url = "data/2025-09-05_Chelsea FC Women - Manchester City WFC.csv" # Example URL
     st.info(f"Loading xG data from a public source. To use your own, edit the `github_csv_url` in `app.py`.")
 
     df_raw = None
