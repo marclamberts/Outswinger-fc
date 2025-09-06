@@ -226,7 +226,7 @@ def display_corners_page(data_config):
         fig, ax = pitch.draw(figsize=(8, 6))
         fig.set_facecolor('#22312b')
         
-        sizes = df_filtered['xG'] * 1000
+        sizes = df_filtered['xG'] * 900
         pitch.scatter(df_filtered.X, df_filtered.Y, s=sizes, ax=ax, alpha=0.7, ec='white', c='#e789e7')
         st.pyplot(fig)
     elif not df_filtered.empty:
