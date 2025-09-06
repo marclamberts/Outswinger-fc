@@ -147,8 +147,8 @@ def main():
         except Exception as e:
             st.error(f"An error occurred: {e}.")
 
-        cols_to_show = ['playerName', 'Team', 'Actual disruption', 'expected disruptions']
-        sort_by_col = 'expected disruptions'
+        cols_to_show = ['playerName', 'Team', 'ActualDisruptions', 'ExpectedDisruptions']
+        sort_by_col = 'ExpectedDisruptions'
 
     # --- Filter for necessary columns, sort, and display ---
     if not df_processed.empty and sort_by_col in df_processed.columns:
