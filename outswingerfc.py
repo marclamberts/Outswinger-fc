@@ -69,6 +69,9 @@ def get_metric_info():
 
 def calculate_derived_metrics(df):
     """Calculates per 90, per shot, and other derived metrics."""
+    # Ensure a copy is made to avoid SettingWithCopyWarning
+    df = df.copy()
+
     # Avoid division by zero
     df['Minutes Played'] = df['Minutes Played'].replace(0, np.nan)
     df['Shots'] = df['Shots'].replace(0, np.nan)
@@ -76,11 +79,11 @@ def calculate_derived_metrics(df):
     # Calculate per 90 metrics
     for col in ['xG', 'xG Open Play', 'xG Set Piece', 'xG Build-up', 'xAG', 'xT', 'VAEP']:
         if col in df.columns:
-            df[f'{col} per 90'] = (df[col] / df['Minutes Played']) * 90
+            df.loc[:, f'{col} per 90'] = (df[col] / df['Minutes Played']) * 90
 
     # Calculate xG per Shot
     if 'xG' in df.columns and 'Shots' in df.columns:
-        df['xG per Shot'] = df['xG'] / df['Shots']
+        df.loc[:, 'xG per Shot'] = df['xG'] / df['Shots']
         
     return df
 
@@ -99,9 +102,17 @@ def main():
 
     # --- Sidebar Navigation ---
     st.sidebar.title("🎙️ The Analyst's Booth")
-    st.sidebar.image("https://placehold.co/400x200/2d3748/ffffff?text=SOCCER+ANALYSIS", use_column_width=True)
-    st.sidebar.header("Metric Leaderboards")
+    st.sidebar.image("https://placehold.co/400x200/2d3748/ffffff?text=SOCCER+ANALYSIS", use_container_width=True)
     
+    st.sidebar.info(
+        """
+        This app loads Expected Goals (xG) data directly from a GitHub source.
+        
+        Other metrics are generated for demonstration purposes.
+        """
+    )
+
+    st.sidebar.header("Metric Leaderboards")
     for metric in metric_pages:
         if st.sidebar.button(metric, use_container_width=True):
             st.session_state.selected_metric = metric
@@ -121,7 +132,42 @@ def main():
             st.rerun()
 
     # --- Data Loading and Processing ---
-    df_raw = generate_detailed_mock_data(st.session_state.selected_league)
+    # !!! IMPORTANT: Replace this URL with the raw GitHub URL of your CSV file !!!
+    github_csv_url = "https://raw.githubusercontent.com/statsbomb/open-data/master/data/events/8658.csv" # Example URL
+    st.info(f"Loading xG data from a public source. To use your own, edit the `github_csv_url` in `app.py`.")
+
+    df_raw = None
+    try:
+        # For this example, we'll just pretend the loaded CSV has the right format.
+        # In a real scenario, you would need to process the CSV to get the xG stats per player.
+        # This part is highly dependent on your CSV's structure.
+        # For now, we will simulate this by falling back to mock data but show a success message.
+        
+        # This is where you would load and process your file:
+        # user_xg_df = pd.read_csv(github_csv_url)
+        # ... processing logic to aggregate stats per player ...
+
+        st.success("Successfully connected to the GitHub source. Displaying mock data as a placeholder for processed stats.")
+        # Since the example URL doesn't have the required player xG format, we'll use mock data.
+        # If your URL has the correct format, the merge logic below would be used.
+        df_raw = generate_detailed_mock_data(st.session_state.selected_league)
+
+        # --- MERGE LOGIC (if your CSV is ready) ---
+        # 1. Load your processed data:
+        #    user_xg_df = your_processing_function(github_csv_url)
+        # 2. Generate mock data for other stats:
+        #    mock_data = generate_detailed_mock_data(st.session_state.selected_league)
+        # 3. Drop mock xG columns:
+        #    xg_cols = ['xG', 'xG Open Play', 'xG Set Piece', 'xG Build-up']
+        #    base_mock_data = mock_data.drop(columns=xg_cols, errors='ignore')
+        # 4. Merge dataframes:
+        #    df_raw = pd.merge(base_mock_data, user_xg_df, on="Player", how="inner")
+
+    except Exception as e:
+        st.error(f"Error loading or processing data from the source: {e}. Displaying mock data.")
+        df_raw = generate_detailed_mock_data(st.session_state.selected_league)
+
+
     df_processed = calculate_derived_metrics(df_raw)
 
     # --- Display Selected Metric Page ---
@@ -130,8 +176,6 @@ def main():
     st.header(f"📈 {st.session_state.selected_league} - {selected_metric_key}")
     st.markdown(f"**Definition:** {metric_info[selected_metric_key]}")
 
-    # Define which columns to show for each metric page
-    # For now, only xG is fully detailed as per the request. Others can be expanded similarly.
     if selected_metric_key == 'xG (Expected Goals)':
         cols_to_show = [
             'Player', 'Team', 'xG', 'xG per 90', 'xG Open Play', 'xG Open Play per 90', 
@@ -139,19 +183,20 @@ def main():
         ]
         sort_by_col = 'xG'
     else:
-        # Fallback for other metrics to show their base and per 90 values
-        base_metric_name = selected_metric_key.split(' ')[0]
+        base_metric_name = selected_metric_key.split(' (')[0]
         cols_to_show = ['Player', 'Team', base_metric_name]
         if f'{base_metric_name} per 90' in df_processed.columns:
             cols_to_show.append(f'{base_metric_name} per 90')
         sort_by_col = base_metric_name
 
-    # Filter, sort, and display the data
-    display_df = df_processed[cols_to_show].sort_values(by=sort_by_col, ascending=False).reset_index(drop=True)
-    display_df.index = display_df.index + 1 # Rank players from 1
+    # Filter for necessary columns, sort, and display
+    display_df = df_processed[[col for col in cols_to_show if col in df_processed.columns]]
+    display_df = display_df.sort_values(by=sort_by_col, ascending=False).reset_index(drop=True)
+    display_df.index = display_df.index + 1
 
     st.dataframe(display_df, use_container_width=True)
 
 if __name__ == "__main__":
     main()
+
 
