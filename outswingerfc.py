@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import os
 
 def get_metric_info():
     """Returns a dictionary of metric explanations."""
@@ -83,25 +84,30 @@ def main():
             st.rerun()
 
     # --- Data Loading and Processing ---
-    # Map leagues to their respective CSV files
-    league_data_paths = {
-        "WSL": "data/2025-09-05_Chelsea FC Women - Manchester City WFC.csv",
-        "WSL 2": "data/2025-09-05_Sheffield United WFC - Sunderland WFC.csv",  # Add the path to your WSL2 csv file
-        "Frauen-Bundesliga": "data/2025-09-05_Eintracht Frankfurt - SGS Essen 1968.csv", # Add the path to your Frauen-Bundesliga csv
-        "NWSL": "data/nwsl_data.csv" # Add the path to your NWSL csv
+    # Map leagues to their respective CSV filenames
+    league_data_files = {
+        "WSL": "2025-09-05_Chelsea FC Women - Manchester City WFC.csv",
+        "WSL 2": "2025-09-05_Sheffield United WFC - Sunderland WFC.csv",
+        "Frauen-Bundesliga": "2025-09-05_Eintracht Frankfurt - SGS Essen 1968.csv",
+        "NWSL": "nwsl_data.csv"
     }
     
-    # Get the path for the currently selected league
-    local_csv_path = league_data_paths.get(st.session_state.selected_league)
+    # Get the filename for the currently selected league
+    filename = league_data_files.get(st.session_state.selected_league)
     df_raw = pd.DataFrame() # Start with an empty DataFrame
 
-    if local_csv_path:
+    if filename:
+        # Construct the full, robust path to the file
+        local_csv_path = os.path.join("data", filename)
+        
+        st.info(f"Attempting to load data for **{st.session_state.selected_league}** from file: `{local_csv_path}`")
+        
         try:
             # Load the data from the local CSV
             df_raw = pd.read_csv(local_csv_path)
-            st.success(f"Successfully loaded data for {st.session_state.selected_league} from `{local_csv_path}`.")
+            st.success(f"Successfully loaded data.")
         except FileNotFoundError:
-            st.error(f"Error: The file `{local_csv_path}` was not found. Please make sure it's in the correct directory.")
+            st.error(f"Error: The file `{local_csv_path}` was not found. Please make sure the file exists in your 'data' directory.")
         except Exception as e:
             st.error(f"An error occurred while processing `{local_csv_path}`: {e}.")
     else:
