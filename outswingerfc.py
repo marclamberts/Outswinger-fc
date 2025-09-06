@@ -7,7 +7,8 @@ def get_metric_info():
     """Returns a dictionary of metric explanations."""
     return {
         'xG (Expected Goals)': 'Estimates the probability of a shot resulting in a goal based on factors like shot angle, distance, and type of assist. A higher xG suggests a player is getting into high-quality scoring positions.',
-        'xAG (Expected Assisted Goals)': 'Measures the likelihood that a given pass will become a goal assist. It credits creative players for setting up scoring chances, even if the shot is missed.'
+        'xAG (Expected Assisted Goals)': 'Measures the likelihood that a given pass will become a goal assist. It credits creative players for setting up scoring chances, even if the shot is missed.',
+        'xT (Expected Threat)': 'Quantifies the increase in the probability of scoring a goal by moving the ball between two points on the pitch. It rewards players for advancing the ball into dangerous areas.'
     }
 
 def calculate_derived_metrics(df):
@@ -25,7 +26,7 @@ def calculate_derived_metrics(df):
     df['Shots'] = df['Shots'].replace(0, np.nan)
 
     # Calculate per 90 metrics for the remaining core metrics
-    for col in ['xG', 'xAG']:
+    for col in ['xG', 'xAG', 'xT']:
         if col in df.columns:
             df.loc[:, f'{col} per 90'] = (df[col] / df['Minutes Played']) * 90
 
@@ -102,6 +103,23 @@ def main():
 
         base_metric_name = 'xAG'
         cols_to_show = ['Player', 'Team', 'Assists', 'ShotAssists', base_metric_name]
+        if f'{base_metric_name} per 90' in df_processed.columns:
+            cols_to_show.append(f'{base_metric_name} per 90')
+        sort_by_col = base_metric_name
+        
+    elif selected_metric_key == 'xT (Expected Threat)':
+        local_csv_path = os.path.join("data", "WSL_xT.csv")
+        try:
+            df_raw = pd.read_csv(local_csv_path)
+            st.success(f"Successfully loaded data from `{local_csv_path}`.")
+            df_processed = calculate_derived_metrics(df_raw) # Process for per 90 stats
+        except FileNotFoundError:
+            st.error(f"Error: The file `{local_csv_path}` was not found.")
+        except Exception as e:
+            st.error(f"An error occurred: {e}.")
+
+        base_metric_name = 'xT'
+        cols_to_show = ['Player', 'Team', base_metric_name]
         if f'{base_metric_name} per 90' in df_processed.columns:
             cols_to_show.append(f'{base_metric_name} per 90')
         sort_by_col = base_metric_name
