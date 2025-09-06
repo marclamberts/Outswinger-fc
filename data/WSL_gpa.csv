@@ -1,64 +1,64 @@
 Player,Team,GPA,Avg,GPA Rating
-A. Greenwood,Manchester City,14.33,14.33,80.89
-A. Yamashita,Manchester City,5.25,5.25,52.36
-G. Prior,Manchester City,11.58,11.58,72.25
-I. Beney,Manchester City,0.62,0.62,37.81
-J. Rose,Manchester City,9.01,9.01,64.17
-K. Casparij,Manchester City,7.58,7.58,59.68
-K. Shaw,Manchester City,4.17,4.17,48.97
-L. Blindkilde Brown,Manchester City,1.58,1.58,40.83
-L. Hemp,Manchester City,6.11,6.11,55.06
-L. Murphy,Manchester City,4.3100000000000005,4.3100000000000005,49.41
-Leila Ouahabi,Manchester City,0.64,0.64,37.88
-S. Lohmann,Manchester City,6.47,6.47,56.19
-V. Miedema,Manchester City,3.7800000000000002,3.7800000000000002,47.74
-Y. Hasegawa,Manchester City,9.02,9.02,64.21
-A. Russo,Arsenal,2.63,2.63,44.13
-B. Mead,Arsenal,2.16,2.16,42.65
-C. Foord,Arsenal,1.9200000000000002,1.9200000000000002,41.9
-C. Kelly,Arsenal,3.71,3.71,47.52
-D. van Domselaar,Arsenal,3.91,3.91,48.15
-E. Fox,Arsenal,7.1,7.1,58.17
-F. Maanum,Arsenal,2.51,2.51,43.75
-K. Little,Arsenal,4.55,4.55,50.16
-K. McCabe,Arsenal,6.76,6.76,57.11
-K. Reid,Arsenal,4.7,4.7,50.63
-Mariona Caldentey,Arsenal,8.81,8.81,63.55
-O. Smith,Arsenal,2.75,2.75,44.51
-S. Blackstenius,Arsenal,1.28,1.28,39.89
-S. Catley,Arsenal,5.15,5.15,52.05
-T. Hinds,Arsenal,1.08,1.08,39.26
-V. Pelova,Arsenal,2.3,2.3,43.09
-A. Kennedy,London City Lionesses,7.37,7.37,59.02
-E. Linari,London City Lionesses,3.36,3.36,46.42
-Elene Lete,London City Lionesses,4.3,4.3,49.38
-I. Goodwin,London City Lionesses,2.74,2.74,44.47
-J. Roddar,London City Lionesses,1.73,1.73,41.3
-Jana Fernández,London City Lionesses,5.73,5.73,53.87
-K. Asllani,London City Lionesses,3.5,3.5,46.86
-K. Zelem,London City Lionesses,2.3,2.3,43.09
-Lucía Corrales,London City Lionesses,0.35,0.35,36.97
-María Pérez,London City Lionesses,3.08,3.08,45.54
-N. Parris,London City Lionesses,2.5300000000000002,2.5300000000000002,43.81
-R. Imuran,London City Lionesses,4.54,4.54,50.13
-S. Franssi,London City Lionesses,0.59,0.59,37.72
-S. Jakobsson,London City Lionesses,1.12,1.12,39.38
-S. Kumagai,London City Lionesses,5.7,5.7,53.77
-T. Goldie,London City Lionesses,1.52,1.52,40.64
-W. Sangaré,London City Lionesses,0.05,0.05,36.02
-A. Beever-Jones,Chelsea,2.98,2.98,45.23
-C. Macário,Chelsea,2.08,2.08,42.4
-E. Carpenter,Chelsea,9.25,9.25,64.93
-E. Cuthbert,Chelsea,6.42,6.42,56.04
-H. Hampton,Chelsea,6.39,6.39,55.94
-J. Rytting Kaneryd,Chelsea,1.93,1.93,41.93
-K. Walsh,Chelsea,8.59,8.59,62.85
-M. Bright,Chelsea,7.45,7.45,59.27
-M. Hamano,Chelsea,8.15,8.15,61.47
-N. Björn,Chelsea,10.64,10.64,69.3
-N. Charles,Chelsea,9.39,9.39,65.37
-O. Jean-François,Chelsea,1.31,1.31,39.98
-S. Baltimore,Chelsea,6.82,6.82,57.29
-S. Nüsken,Chelsea,0.61,0.61,37.78
-V. Buurman,Chelsea,0.05,0.05,36.02
-W. Kaptein,Chelsea,5.07,5.07,51.8
+A. Greenwood,Manchester City,1.433,1.433,80.89
+A. Yamashita,Manchester City,0.525,0.525,52.36
+G. Prior,Manchester City,1.158,1.158,72.25
+I. Beney,Manchester City,0.062,0.062,37.81
+J. Rose,Manchester City,0.901,0.901,64.17
+K. Casparij,Manchester City,0.758,0.758,59.68
+K. Shaw,Manchester City,0.417,0.417,48.97
+L. Blindkilde Brown,Manchester City,0.158,0.158,40.83
+L. Hemp,Manchester City,0.611,0.611,55.06
+L. Murphy,Manchester City,0.43100000000000005,0.43100000000000005,49.41
+Leila Ouahabi,Manchester City,0.064,0.064,37.88
+S. Lohmann,Manchester City,0.647,0.647,56.19
+V. Miedema,Manchester City,0.378,0.378,47.74
+Y. Hasegawa,Manchester City,0.9019999999999999,0.9019999999999999,64.21
+A. Russo,Arsenal,0.263,0.263,44.13
+B. Mead,Arsenal,0.21600000000000003,0.21600000000000003,42.65
+C. Foord,Arsenal,0.192,0.192,41.9
+C. Kelly,Arsenal,0.371,0.371,47.52
+D. van Domselaar,Arsenal,0.391,0.391,48.15
+E. Fox,Arsenal,0.71,0.71,58.17
+F. Maanum,Arsenal,0.251,0.251,43.75
+K. Little,Arsenal,0.45499999999999996,0.45499999999999996,50.16
+K. McCabe,Arsenal,0.6759999999999999,0.6759999999999999,57.11
+K. Reid,Arsenal,0.47000000000000003,0.47000000000000003,50.63
+Mariona Caldentey,Arsenal,0.881,0.881,63.55
+O. Smith,Arsenal,0.275,0.275,44.51
+S. Blackstenius,Arsenal,0.128,0.128,39.89
+S. Catley,Arsenal,0.515,0.515,52.05
+T. Hinds,Arsenal,0.10800000000000001,0.10800000000000001,39.26
+V. Pelova,Arsenal,0.22999999999999998,0.22999999999999998,43.09
+A. Kennedy,London City Lionesses,0.737,0.737,59.02
+E. Linari,London City Lionesses,0.33599999999999997,0.33599999999999997,46.42
+Elene Lete,London City Lionesses,0.43,0.43,49.38
+I. Goodwin,London City Lionesses,0.274,0.274,44.47
+J. Roddar,London City Lionesses,0.173,0.173,41.3
+Jana Fernández,London City Lionesses,0.5730000000000001,0.5730000000000001,53.87
+K. Asllani,London City Lionesses,0.35,0.35,46.86
+K. Zelem,London City Lionesses,0.22999999999999998,0.22999999999999998,43.09
+Lucía Corrales,London City Lionesses,0.034999999999999996,0.034999999999999996,36.97
+María Pérez,London City Lionesses,0.308,0.308,45.54
+N. Parris,London City Lionesses,0.253,0.253,43.81
+R. Imuran,London City Lionesses,0.454,0.454,50.13
+S. Franssi,London City Lionesses,0.059,0.059,37.72
+S. Jakobsson,London City Lionesses,0.11200000000000002,0.11200000000000002,39.38
+S. Kumagai,London City Lionesses,0.5700000000000001,0.5700000000000001,53.77
+T. Goldie,London City Lionesses,0.152,0.152,40.64
+W. Sangaré,London City Lionesses,0.005,0.005,36.02
+A. Beever-Jones,Chelsea,0.298,0.298,45.23
+C. Macário,Chelsea,0.20800000000000002,0.20800000000000002,42.4
+E. Carpenter,Chelsea,0.925,0.925,64.93
+E. Cuthbert,Chelsea,0.642,0.642,56.04
+H. Hampton,Chelsea,0.639,0.639,55.94
+J. Rytting Kaneryd,Chelsea,0.193,0.193,41.93
+K. Walsh,Chelsea,0.859,0.859,62.85
+M. Bright,Chelsea,0.745,0.745,59.27
+M. Hamano,Chelsea,0.8150000000000001,0.8150000000000001,61.47
+N. Björn,Chelsea,1.064,1.064,69.3
+N. Charles,Chelsea,0.9390000000000001,0.9390000000000001,65.37
+O. Jean-François,Chelsea,0.131,0.131,39.98
+S. Baltimore,Chelsea,0.682,0.682,57.29
+S. Nüsken,Chelsea,0.061,0.061,37.78
+V. Buurman,Chelsea,0.005,0.005,36.02
+W. Kaptein,Chelsea,0.507,0.507,51.8

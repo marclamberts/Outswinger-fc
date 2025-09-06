@@ -1,61 +1,61 @@
 Player,Team,GPA,Avg,GPA Rating
-B. Westrup,Sunderland,0.86,0.86,38.21
-E. Jones,Sunderland,1.19,1.19,39.4
-E. Scarr,Sunderland,5.04,5.04,53.19
-G. Moloney,Sunderland,5.7,5.7,55.55
-H. Greenwood,Sunderland,4.44,4.44,51.04
-I. Atkinson,Sunderland,3.29,3.29,46.92
-J. Brown,Sunderland,6.85,6.85,59.67
-J. Finn,Sunderland,0.37,0.37,36.46
-K. Barry,Sunderland,1.36,1.36,40.0
-K. Kitching,Sunderland,2.27,2.27,43.26
-K. Watson,Sunderland,3.3200000000000003,3.3200000000000003,47.02
-L. Griffiths,Sunderland,9.77,9.77,70.13
-M. Sheva,Sunderland,4.7,4.7,51.97
-N. Fenton,Sunderland,7.41,7.41,61.67
-R. Roberts,Sunderland,5.14,5.14,53.54
-A. Aherne,Sheffield United,1.75,1.75,41.4
-A. Andrews,Sheffield United,1.6800000000000002,1.6800000000000002,41.15
-A. Lafayette,Sheffield United,8.73,8.73,66.4
-C. Devlin,Sheffield United,3.83,3.83,48.85
-C. Parker-Smith,Sheffield United,4.7299999999999995,4.7299999999999995,52.07
-E. Butler,Sheffield United,0.91,0.91,38.39
-E. Kinzett,Sheffield United,5.69,5.69,55.51
-E. Taylor,Sheffield United,11.34,11.34,75.75
-J. Ralph,Sheffield United,0.39,0.39,36.53
-J. Reavill,Sheffield United,10.47,10.47,72.63
-L. Cowan,Sheffield United,6.82,6.82,59.56
-L. Thomas,Sheffield United,1.2,1.2,39.43
-S. O'Rourke,Sheffield United,3.08,3.08,46.17
-T. Bristow,Sheffield United,1.59,1.59,40.83
-T. George,Sheffield United,4.01,4.01,49.5
-B. Roe,Ipswich Town,5.430000000000001,5.430000000000001,54.58
-G. Neville,Ipswich Town,6.9,6.9,59.85
-J. Dear,Ipswich Town,2.24,2.24,43.16
-K. Robertson,Ipswich Town,3.31,3.31,46.99
-L. Mitchell,Ipswich Town,5.79,5.79,55.87
-L. O'Brien,Ipswich Town,1.45,1.45,40.33
-M. Boswell,Ipswich Town,7.65,7.65,62.53
-M. Earl,Ipswich Town,0.39,0.39,36.53
-N. Negri,Ipswich Town,5.38,5.38,54.4
-N. Thomas,Ipswich Town,4.01,4.01,49.5
-P. Peake,Ipswich Town,5.82,5.82,55.98
-R. Dean,Ipswich Town,1.1400000000000001,1.1400000000000001,39.22
-R. Doe,Ipswich Town,3.39,3.39,47.28
-S. Peskett,Ipswich Town,4.87,4.87,52.58
-A. Akpan,Southampton,3.0100000000000002,3.0100000000000002,45.91
-A. Ferguson,Southampton,2.58,2.58,44.37
-A. Goddard,Southampton,6.62,6.62,58.84
-A. Primus,Southampton,3.14,3.14,46.38
-C. Peplow,Southampton,3.29,3.29,46.92
-E. Brazil,Southampton,1.8900000000000001,1.8900000000000001,41.9
-E. Roberts,Southampton,0.45,0.45,36.75
-F. Stenson,Southampton,6.93,6.93,59.95
-I. Watts,Southampton,0.38,0.38,36.49
-J. Simpson,Southampton,7.17,7.17,60.81
-K. Sena,Southampton,0.28,0.28,36.14
-M. Bashford,Southampton,5.91,5.91,56.3
-M. Collett,Southampton,6.0600000000000005,6.0600000000000005,56.84
-M. McAlonie,Southampton,4.32,4.32,50.61
-R. Tucker,Southampton,1.6800000000000002,1.6800000000000002,41.15
-T. Bourne,Southampton,9.63,9.63,69.63
+B. Westrup,Sunderland,0.086,0.086,38.21
+E. Jones,Sunderland,0.119,0.119,39.4
+E. Scarr,Sunderland,0.504,0.504,53.19
+G. Moloney,Sunderland,0.5700000000000001,0.5700000000000001,55.55
+H. Greenwood,Sunderland,0.44400000000000006,0.44400000000000006,51.04
+I. Atkinson,Sunderland,0.329,0.329,46.92
+J. Brown,Sunderland,0.6849999999999999,0.6849999999999999,59.67
+J. Finn,Sunderland,0.037,0.037,36.46
+K. Barry,Sunderland,0.136,0.136,40.0
+K. Kitching,Sunderland,0.227,0.227,43.26
+K. Watson,Sunderland,0.332,0.332,47.02
+L. Griffiths,Sunderland,0.977,0.977,70.13
+M. Sheva,Sunderland,0.47000000000000003,0.47000000000000003,51.97
+N. Fenton,Sunderland,0.741,0.741,61.67
+R. Roberts,Sunderland,0.514,0.514,53.54
+A. Aherne,Sheffield United,0.175,0.175,41.4
+A. Andrews,Sheffield United,0.168,0.168,41.15
+A. Lafayette,Sheffield United,0.873,0.873,66.4
+C. Devlin,Sheffield United,0.383,0.383,48.85
+C. Parker-Smith,Sheffield United,0.473,0.473,52.07
+E. Butler,Sheffield United,0.091,0.091,38.39
+E. Kinzett,Sheffield United,0.5690000000000001,0.5690000000000001,55.51
+E. Taylor,Sheffield United,1.134,1.134,75.75
+J. Ralph,Sheffield United,0.039,0.039,36.53
+J. Reavill,Sheffield United,1.0470000000000002,1.0470000000000002,72.63
+L. Cowan,Sheffield United,0.682,0.682,59.56
+L. Thomas,Sheffield United,0.12,0.12,39.43
+S. O'Rourke,Sheffield United,0.308,0.308,46.17
+T. Bristow,Sheffield United,0.159,0.159,40.83
+T. George,Sheffield United,0.40099999999999997,0.40099999999999997,49.5
+B. Roe,Ipswich Town,0.543,0.543,54.58
+G. Neville,Ipswich Town,0.6900000000000001,0.6900000000000001,59.85
+J. Dear,Ipswich Town,0.22400000000000003,0.22400000000000003,43.16
+K. Robertson,Ipswich Town,0.331,0.331,46.99
+L. Mitchell,Ipswich Town,0.579,0.579,55.87
+L. O'Brien,Ipswich Town,0.145,0.145,40.33
+M. Boswell,Ipswich Town,0.765,0.765,62.53
+M. Earl,Ipswich Town,0.039,0.039,36.53
+N. Negri,Ipswich Town,0.538,0.538,54.4
+N. Thomas,Ipswich Town,0.40099999999999997,0.40099999999999997,49.5
+P. Peake,Ipswich Town,0.5820000000000001,0.5820000000000001,55.98
+R. Dean,Ipswich Town,0.11400000000000002,0.11400000000000002,39.22
+R. Doe,Ipswich Town,0.339,0.339,47.28
+S. Peskett,Ipswich Town,0.487,0.487,52.58
+A. Akpan,Southampton,0.30100000000000005,0.30100000000000005,45.91
+A. Ferguson,Southampton,0.258,0.258,44.37
+A. Goddard,Southampton,0.662,0.662,58.84
+A. Primus,Southampton,0.314,0.314,46.38
+C. Peplow,Southampton,0.329,0.329,46.92
+E. Brazil,Southampton,0.189,0.189,41.9
+E. Roberts,Southampton,0.045,0.045,36.75
+F. Stenson,Southampton,0.693,0.693,59.95
+I. Watts,Southampton,0.038,0.038,36.49
+J. Simpson,Southampton,0.717,0.717,60.81
+K. Sena,Southampton,0.028000000000000004,0.028000000000000004,36.14
+M. Bashford,Southampton,0.591,0.591,56.3
+M. Collett,Southampton,0.6060000000000001,0.6060000000000001,56.84
+M. McAlonie,Southampton,0.43200000000000005,0.43200000000000005,50.61
+R. Tucker,Southampton,0.168,0.168,41.15
+T. Bourne,Southampton,0.9630000000000001,0.9630000000000001,69.63
