@@ -74,7 +74,7 @@ def main():
     # --- Sidebar ---
     st.sidebar.title("Outswinger FC")
     st.sidebar.image("https://placehold.co/400x200/2d3748/e2e8f0?text=Outswinger+FC", use_container_width=True)
-    st.sidebar.info("This app displays player stats for the WSL, WSL 2, Frauen-Bundesliga, and Liga F.")
+    st.sidebar.info("This app displays player stats for the WSL, WSL 2, Frauen-Bundesliga, Liga F, and NWSL.")
     st.sidebar.header("Metric Leaderboards")
 
     for metric in metric_pages:
@@ -85,12 +85,22 @@ def main():
     # --- Main Page ---
     st.title(f"📊 {st.session_state.selected_league} Advanced Metrics Leaderboard")
 
-    leagues = ["WSL", "WSL 2", "Frauen-Bundesliga", "Liga F"]
-    cols = st.columns(len(leagues))
-    for i, league in enumerate(leagues):
-        if cols[i].button(league, use_container_width=True, disabled=(st.session_state.selected_league == league)):
+    # --- League Selection Buttons (Two Rows) ---
+    leagues_row1 = ["WSL", "WSL 2", "Frauen-Bundesliga"]
+    leagues_row2 = ["Liga F", "NWSL"]
+    
+    cols_row1 = st.columns(len(leagues_row1))
+    for i, league in enumerate(leagues_row1):
+        if cols_row1[i].button(league, use_container_width=True, disabled=(st.session_state.selected_league == league)):
             st.session_state.selected_league = league
             st.rerun()
+
+    cols_row2 = st.columns(len(leagues_row2) + 1) # Add an extra column for spacing
+    for i, league in enumerate(leagues_row2):
+        if cols_row2[i].button(league, use_container_width=True, disabled=(st.session_state.selected_league == league)):
+            st.session_state.selected_league = league
+            st.rerun()
+
 
     selected_league = st.session_state.selected_league
     selected_metric_key = st.session_state.selected_metric
@@ -130,6 +140,13 @@ def main():
             'xT (Expected Threat)': {"file": "LigaF_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
             'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
             'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+        },
+        "NWSL": {
+            'xG (Expected Goals)': {"file": "NWSL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "NWSL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
+            'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
         }
     }
     
@@ -149,12 +166,22 @@ def main():
             
             df_processed = calculate_derived_metrics(df_raw)
             sort_by_col = metric_config["sort"]
+            
+            # --- Dynamic Search Placeholder ---
+            search_placeholders = {
+                "WSL": "e.g., Sam Kerr",
+                "WSL 2": "e.g., Melissa Johnson",
+                "Frauen-Bundesliga": "e.g., Alexandra Popp",
+                "Liga F": "e.g., Alexia Putellas",
+                "NWSL": "e.g., Sophia Smith"
+            }
+            placeholder = search_placeholders.get(selected_league, "Search for a player...")
 
             # --- Interactive Controls ---
             st.markdown("---")
             col1, col2 = st.columns([2, 1.5])
             with col1:
-                search_term = st.text_input("Search for a player:", placeholder="e.g., Alexia Putellas")
+                search_term = st.text_input("Search for a player:", placeholder=placeholder)
             with col2:
                 top_n = st.slider("Number of players to display:", min_value=5, max_value=50, value=15, step=5)
             
@@ -176,7 +203,6 @@ def main():
                 if display_option == "📊 Visualization":
                     st.subheader("Top Performers Chart")
                     
-                    # Calculate axis limits and create a custom altair chart
                     max_val = display_df[sort_by_col].max()
                     x_domain = [0, max_val]
                     
