@@ -96,8 +96,8 @@ def main():
                 cols_to_show.append(f'{base_metric_name} per 90')
             sort_by_col = base_metric_name
 
-    elif selected_metric_key == 'Assists':
-        local_csv_path = os.path.join("data", "WSL_assists.csv")
+    elif selected_metric_key == 'xAG':
+        local_csv_path = os.path.join("data", "WSL_assists .csv")
         try:
             df_processed = pd.read_csv(local_csv_path) # No derived metrics needed
             st.success(f"Successfully loaded data from `{local_csv_path}`.")
