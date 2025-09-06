@@ -7,7 +7,8 @@ def get_metric_info():
     """Returns a dictionary of metric explanations."""
     return {
         'xG (Expected Goals)': 'Estimates the probability of a shot resulting in a goal based on factors like shot angle, distance, and type of assist. A higher xG suggests a player is getting into high-quality scoring positions.',
-        'xAG (Expected Goals Assisted)': 'Measures the likelihood that a given pass will become a goal assist. It credits creative players for setting up scoring chances, even if the shot is missed.',
+        'xAG (Expected Assisted Goals)': 'Measures the likelihood that a given pass will become a goal assist. It credits creative players for setting up scoring chances, even if the shot is missed.',
+        'Assists': 'The total number of passes that directly lead to a shot and a goal.'
     }
 
 def calculate_derived_metrics(df):
