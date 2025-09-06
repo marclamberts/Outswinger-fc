@@ -66,7 +66,7 @@ def main():
     
     st.sidebar.info(
         """
-        This app displays player stats for the WSL and WSL 2.
+        This app displays player stats for the WSL, WSL 2, and Frauen-Bundesliga.
         """
     )
 
@@ -80,7 +80,7 @@ def main():
     st.title(f"📊 {st.session_state.selected_league} Advanced Metrics Leaderboard")
 
     # --- League Selection Buttons ---
-    leagues = ["WSL", "WSL 2"]
+    leagues = ["WSL", "WSL 2", "Frauen-Bundesliga"]
     cols = st.columns(len(leagues))
     for i, league in enumerate(leagues):
         if cols[i].button(league, use_container_width=True):
@@ -107,6 +107,12 @@ def main():
             'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
             'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
             'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['playerName', 'Team', 'ActualDisruptions', 'ExpectedDisruptions'], "sort": 'ExpectedDisruptions'}
+        },
+        "Frauen-Bundesliga": {
+            'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['playerName', 'Team', 'ActualDisruptions', 'ExpectedDisruptions'], "sort": 'ExpectedDisruptions'}
         }
     }
 
