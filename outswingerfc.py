@@ -227,7 +227,7 @@ def display_corners_page(data_config):
         fig.set_facecolor('#22312b')
         
         sizes = df_filtered['xG'] * 900
-        pitch.scatter(df_filtered.X, df_filtered.Y, s=sizes, ax=ax, alpha=0.7, ec='white', c='#e789e7')
+        pitch.scatter(df_filtered.x, df_filtered.y, s=sizes, ax=ax, alpha=0.7, ec='white', c='#e789e7')
         st.pyplot(fig)
     elif not df_filtered.empty:
         st.warning("Required columns ('X', 'Y', 'xG') not found for plotting.")
