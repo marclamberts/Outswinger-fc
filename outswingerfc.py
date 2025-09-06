@@ -5,6 +5,25 @@ import os
 import sys
 from datetime import datetime
 
+# --- Configuration & Setup ---
+
+st.set_page_config(
+    page_title="Outswinger FC | Women's Football Analytics",
+    page_icon="⚽",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# --- Caching ---
+# Cache the data loading to prevent re-reading files on every interaction.
+# TTL (time-to-live) set to 1 hour to allow for data updates.
+@st.cache_data(ttl=3600)
+def load_data(file_path):
+    """Loads a CSV file into a pandas DataFrame."""
+    return pd.read_csv(file_path)
+
+# --- Helper Functions ---
+
 def get_metric_info():
     """Returns a dictionary of metric explanations."""
     return {
@@ -18,102 +37,34 @@ def get_metric_info():
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
     except Exception:
         base_path = os.path.abspath(".")
-
     return os.path.join(base_path, relative_path)
 
 def calculate_derived_metrics(df):
-    """Calculates per 90, per shot, and other derived metrics."""
+    """Calculates per 90 and per shot metrics if applicable."""
     df = df.copy()
-    if 'Minutes Played' not in df.columns or 'Shots' not in df.columns:
-        return df
-
-    df['Minutes Played'] = pd.to_numeric(df['Minutes Played'], errors='coerce').replace(0, np.nan)
-    df['Shots'] = pd.to_numeric(df['Shots'], errors='coerce').replace(0, np.nan)
-
-    for col in ['xG', 'xAG', 'xT', 'xDisruption', 'GPA']:
-        if col in df.columns:
-            df[f'{col} per 90'] = (df[col] / df['Minutes Played']) * 90
-
-    if 'xG' in df.columns and 'Shots' in df.columns:
-        df['xG per Shot'] = df['xG'] / df['Shots']
+    if 'Minutes Played' in df.columns and 'Shots' in df.columns:
+        df['Minutes Played'] = pd.to_numeric(df['Minutes Played'], errors='coerce').replace(0, np.nan)
+        df['Shots'] = pd.to_numeric(df['Shots'], errors='coerce').replace(0, np.nan)
         
+        for col in ['xG', 'xAG', 'xT', 'xDisruption', 'GPA']:
+            if col in df.columns:
+                df[f'{col} per 90'] = (df[col] / df['Minutes Played'] * 90).round(2)
+        
+        if 'xG' in df.columns:
+            df['xG per Shot'] = (df['xG'] / df['Shots']).round(2)
     return df
 
-def load_and_process_data(selected_league, selected_metric_key):
-    """Loads, processes, and standardizes data based on user selection."""
-    data_config = {
-        "WSL": {
-            'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
-        },
-        "WSL 2": {
-            'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
-        },
-        "Frauen-Bundesliga": {
-            'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
-        }
-    }
-    
-    metric_config = data_config.get(selected_league, {}).get(selected_metric_key)
-
-    if not metric_config:
-        st.warning("No data configuration found for the selected league and metric.")
-        return pd.DataFrame(), [], ''
-
-    try:
-        file_path = resource_path(os.path.join("data", metric_config["file"]))
-        df_raw = pd.read_csv(file_path)
-
-        # Standardize column names for consistency
-        rename_map = {
-            'playerName': 'Player',
-            'ActualDisruptions': 'Actual disruption',
-            'ExpectedDisruptions': 'expected disruptions'
-        }
-        df_raw.rename(columns=rename_map, inplace=True)
-
-        df_processed = calculate_derived_metrics(df_raw)
-        cols_to_show = metric_config["cols"]
-        sort_by_col = metric_config["sort"]
-        
-        # Dynamically add 'per 90' metrics if available
-        for base_col in ['xAG', 'xT']:
-            per_90_col = f'{base_col} per 90'
-            if per_90_col in df_processed.columns and base_col in cols_to_show:
-                cols_to_show.append(per_90_col)
-        
-        return df_processed, cols_to_show, sort_by_col
-
-    except FileNotFoundError:
-        st.error(f"Error: The data file `{metric_config['file']}` was not found in the 'data' directory.")
-    except Exception as e:
-        st.error(f"An error occurred while loading the data: {e}.")
-    
-    return pd.DataFrame(), [], ''
+# --- Main App Logic ---
 
 def main():
     """Main function to run the Streamlit app."""
-    st.set_page_config(page_title="Outswinger FC | Women's Football Analytics", layout="wide", initial_sidebar_state="expanded")
-
     metric_info = get_metric_info()
     metric_pages = list(metric_info.keys())
 
-    # --- Initialize Session State ---
+    # --- Session State Initialization ---
     if 'selected_league' not in st.session_state:
         st.session_state.selected_league = "WSL"
     if 'selected_metric' not in st.session_state:
@@ -149,20 +100,82 @@ def main():
     if selected_league == "Frauen-Bundesliga":
         st.info("Note: Data of FC Köln - RB Leipzig is not present as of 06-09-2025")
 
-    with st.spinner("Loading data..."):
-        df_processed, cols_to_show, sort_by_col = load_and_process_data(selected_league, selected_metric_key)
+    # --- Data Configuration ---
+    data_config = {
+        "WSL": {
+            'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
+            'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+        },
+        "WSL 2": {
+            'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
+            'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+        },
+        "Frauen-Bundesliga": {
+            'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
+            'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+        }
+    }
+    
+    metric_config = data_config.get(selected_league, {}).get(selected_metric_key)
 
-        if not df_processed.empty and sort_by_col and sort_by_col in df_processed.columns:
-            existing_cols = [col for col in cols_to_show if col in df_processed.columns]
-            if not existing_cols:
-                 st.warning("None of the required columns for this metric were found in the data file.")
-            else:
-                display_df = df_processed[existing_cols]
-                display_df = display_df.sort_values(by=sort_by_col, ascending=False).reset_index(drop=True)
+    if metric_config:
+        try:
+            file_path = resource_path(os.path.join("data", metric_config["file"]))
+            df_raw = load_data(file_path)
+
+            rename_map = {
+                'playerName': 'Player', 
+                'ActualDisruptions': 'Actual disruption', 
+                'ExpectedDisruptions': 'expected disruptions'
+            }
+            df_raw.rename(columns=rename_map, inplace=True)
+            
+            df_processed = calculate_derived_metrics(df_raw)
+            sort_by_col = metric_config["sort"]
+
+            # --- Interactive Controls ---
+            st.markdown("---")
+            col1, col2 = st.columns([2, 1])
+            with col1:
+                search_term = st.text_input("Search for a player:", placeholder="e.g., Sam Kerr")
+            with col2:
+                top_n = st.slider("Select number of players to display:", min_value=5, max_value=50, value=15, step=5)
+
+            if search_term:
+                df_processed = df_processed[df_processed['Player'].str.contains(search_term, case=False)]
+
+            # --- Data Display ---
+            if not df_processed.empty and sort_by_col in df_processed.columns:
+                display_df = df_processed.sort_values(by=sort_by_col, ascending=False).head(top_n).reset_index(drop=True)
                 display_df.index = display_df.index + 1
-                st.dataframe(display_df, use_container_width=True)
-        elif not df_processed.empty:
-            st.warning(f"The required sorting metric '{sort_by_col}' is not available in the loaded data file.")
+
+                # --- Visualization & Data Table ---
+                st.subheader("Top Performers Chart")
+                st.bar_chart(data=display_df, x='Player', y=sort_by_col)
+
+                st.subheader("Detailed Data Table")
+                st.dataframe(display_df[metric_config["cols"]], use_container_width=True)
+            
+            elif not df_processed.empty:
+                st.warning(f"The required metric '{sort_by_col}' is not available in the loaded data file.")
+            else:
+                 st.info("No matching players found.")
+
+        except FileNotFoundError:
+            st.error(f"Error: The data file `{metric_config['file']}` was not found.")
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+    else:
+        st.warning("No data configuration found for the selected league and metric.")
 
     # --- Footer ---
     st.markdown("---")
