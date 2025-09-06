@@ -124,9 +124,7 @@ def main():
 
     if selected_metric_key == 'xG (Expected Goals)':
         cols_to_show = [
-            'PlayerId', 'TeamId', 'xG', 'xG per 90', 'xG Open Play', 'xG Open Play per 90', 
-            'xG Set Piece', 'xG Set Piece per 90', 'xG per Shot', 'xG Build-up', 'xG Build-up per 90'
-        ]
+            'Player', 'Team', 'Shots', 'xG', 'xG OpenPlay_xG', 'SetPiece_xG']
         sort_by_col = 'xG'
     else:
         # Handle other metrics dynamically
