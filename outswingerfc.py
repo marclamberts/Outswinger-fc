@@ -142,10 +142,11 @@ def display_metrics_page(data_config, metric_info):
 
 def display_corners_page(data_config):
     """Renders the corner analysis page."""
+    st.sidebar.header("Corner Filters")
     leagues = list(data_config.keys())
     leagues_with_total = ["Total"] + leagues
     
-    selected_league_corners = st.selectbox("Select a league to analyze:", leagues_with_total)
+    selected_league_corners = st.sidebar.selectbox("Select League:", leagues_with_total)
     
     st.header(f"Corner Analysis for {selected_league_corners}")
     
@@ -185,13 +186,11 @@ def display_corners_page(data_config):
         st.warning("No corner data could be loaded for the selected league(s).")
         return
 
-    # Filter for corners just in case the source file contains other data types
     df_corners = df_full[df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
     if df_corners.empty:
         st.warning("No events of type 'FromCorner' found in the dataset.")
         return
 
-    st.sidebar.header("Corner Filters")
     teams = ["All"] + sorted(df_corners['TeamId'].unique().tolist())
     players = ["All"] + sorted(df_corners['PlayerId'].unique().tolist())
     is_goal_options = ["All", True, False]
@@ -200,12 +199,11 @@ def display_corners_page(data_config):
     selected_team = st.sidebar.selectbox("Filter by Team:", teams)
     selected_player = st.sidebar.selectbox("Filter by Player:", players)
 
-    # Safely add GameState filter only if the column exists
     if 'GameState' in df_corners.columns:
         game_states = ["All"] + sorted(df_corners['GameState'].unique().tolist())
         selected_state = st.sidebar.selectbox("Filter by Game State:", game_states)
     else:
-        selected_state = "All" # Default to "All" if column is missing
+        selected_state = "All"
 
     selected_goal = st.sidebar.selectbox("Filter by Goal:", is_goal_options, format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
     selected_time = st.sidebar.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time))
@@ -219,14 +217,29 @@ def display_corners_page(data_config):
     df_filtered = df_filtered[df_filtered['timeMin'].between(selected_time[0], selected_time[1])]
 
     st.markdown("---")
-    st.write(f"#### Displaying `{len(df_filtered)}` corner events based on filters.")
+
+    # --- Summary Metrics ---
+    total_shots = len(df_filtered)
+    total_goals = int(df_filtered['isGoal'].sum())
+    total_xg = df_filtered['xG'].sum()
+    xg_per_shot = (total_xg / total_shots) if total_shots > 0 else 0
+
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Shots from Corners", f"{total_shots}")
+    col2.metric("Total Goals", f"{total_goals}")
+    col3.metric("Total xG", f"{total_xg:.2f}")
+    col4.metric("xG per Shot", f"{xg_per_shot:.2f}")
+    
+    st.markdown("---")
+
+    st.write(f"#### Displaying `{total_shots}` corner events on the pitch.")
 
     if not df_filtered.empty and all(c in df_filtered.columns for c in ['x', 'y', 'xG']):
         pitch = VerticalPitch(half=True, pitch_type='opta', pitch_color='#22312b', line_color='#c7d5cc')
         fig, ax = pitch.draw(figsize=(8, 6))
         fig.set_facecolor('#22312b')
         
-        sizes = df_filtered['xG'] * 900
+        sizes = df_filtered['xG'] * 1000
         pitch.scatter(df_filtered.x, df_filtered.y, s=sizes, ax=ax, alpha=0.7, ec='white', c='#e789e7')
         st.pyplot(fig)
     elif not df_filtered.empty:
