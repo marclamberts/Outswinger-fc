@@ -98,7 +98,7 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     plt.subplots_adjust(bottom=0.3)
 
     # --- Circles for Stats ---
-    circle_positions = [(0.2, -0.10), (0.2, -0.3), (0.35, -0.10), (0.35, -0.3)]
+    circle_positions = [(0.2, -0.10), (0.2, -0.25), (0.35, -0.10), (0.35, -0.25)]
     circle_texts = ["Shots", "xG/Shot", "Goals", "xG"]
     values = [total_shots, round(xg_per_shot, 2), total_goals, round(total_xg, 2)]
     circle_colors = [colors["missed"], colors["missed"], colors["goal"], colors["goal"]]
