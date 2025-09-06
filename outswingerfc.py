@@ -98,7 +98,7 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     plt.subplots_adjust(bottom=0.3)
 
     # --- Circles for Stats ---
-    circle_positions = [(0.2, -0.10), (0.2, -0.2), (0.35, -0.10), (0.35, -0.2)]
+    circle_positions = [(0.2, -0.10), (0.2, -0.1), (0.35, -0.10), (0.35, -0.1)]
     circle_texts = ["Shots", "xG/Shot", "Goals", "xG"]
     values = [total_shots, round(xg_per_shot, 2), total_goals, round(total_xg, 2)]
     circle_colors = [colors["missed"], colors["missed"], colors["goal"], colors["goal"]]
@@ -115,7 +115,7 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     ax.text(0.75, -0.18, "Low → High", transform=ax.transAxes, fontsize=10, color='black', ha='center', va='center')
 
     # --- Branding ---
-    ax.text(0.75, -0.25, "OUTSWINGERFC.COM", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
+    ax.text(0.75, -0.25, "OUTSWINGER FC", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
 
     return fig, None
 
