@@ -28,9 +28,8 @@ def calculate_derived_metrics(df):
     # Ensure a copy is made to avoid SettingWithCopyWarning
     df = df.copy()
 
-    # Check if essential columns exist before calculations
+    # Check if essential columns exist before calculations. If not, return original df.
     if 'Minutes Played' not in df.columns or 'Shots' not in df.columns:
-        st.warning("'Minutes Played' and/or 'Shots' columns not found in the data. Cannot calculate per 90 or per shot metrics.")
         return df
 
     # Avoid division by zero
@@ -56,6 +55,8 @@ def main():
     metric_pages = list(metric_info.keys())
 
     # --- Initialize Session State ---
+    if 'selected_league' not in st.session_state:
+        st.session_state.selected_league = "WSL"
     if 'selected_metric' not in st.session_state:
         st.session_state.selected_metric = metric_pages[0] # Default to the first metric
 
@@ -65,7 +66,7 @@ def main():
     
     st.sidebar.info(
         """
-        This app displays player stats for the WSL.
+        This app displays player stats for the WSL and WSL 2.
         """
     )
 
@@ -73,86 +74,71 @@ def main():
     for metric in metric_pages:
         if st.sidebar.button(metric, use_container_width=True):
             st.session_state.selected_metric = metric
-            # No rerun needed here, button click handles it
+            st.rerun()
 
     # --- Main Page ---
-    st.title("📊 WSL Advanced Metrics Leaderboard")
+    st.title(f"📊 {st.session_state.selected_league} Advanced Metrics Leaderboard")
+
+    # --- League Selection Buttons ---
+    leagues = ["WSL", "WSL 2"]
+    cols = st.columns(len(leagues))
+    for i, league in enumerate(leagues):
+        if cols[i].button(league, use_container_width=True):
+            st.session_state.selected_league = league
+            st.rerun()
 
     # --- Display Selected Metric Page ---
+    selected_league = st.session_state.selected_league
     selected_metric_key = st.session_state.selected_metric
     
-    st.header(f"📈 WSL - {selected_metric_key}")
-    st.markdown(f"**Definition:** {metric_info[selected_metric_key]}")
+    st.header(f"📈 {selected_league} - {selected_metric_key}")
+    st.markdown(f"**Definition:** {metric_info.get(selected_metric_key, '')}")
 
-    df_processed = pd.DataFrame() # Initialize an empty dataframe
-    sort_by_col = '' # Initialize sort_by_col to avoid reference before assignment error
+    # --- Data Configuration ---
+    data_config = {
+        "WSL": {
+            'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "WSL_xt.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['playerName', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'}
+        },
+        "WSL 2": {
+            'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "WSL2_xt.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['playerName', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'}
+        }
+    }
 
-    # --- Data Loading and Logic based on selected metric ---
-    if selected_metric_key == 'xG (Expected Goals)':
-        local_csv_path = resource_path(os.path.join("data", "WSL.csv"))
+    df_processed = pd.DataFrame()
+    sort_by_col = ''
+    cols_to_show = []
+
+    # --- Data Loading and Processing ---
+    metric_config = data_config.get(selected_league, {}).get(selected_metric_key)
+
+    if metric_config:
+        local_csv_path = resource_path(os.path.join("data", metric_config["file"]))
         try:
             df_raw = pd.read_csv(local_csv_path)
-            st.success(f"Successfully loaded data from `{local_csv_path}`.")
             df_processed = calculate_derived_metrics(df_raw)
+            cols_to_show = metric_config["cols"]
+            sort_by_col = metric_config["sort"]
+
+            # Add per 90 columns if they exist after processing
+            for col in ['xAG per 90', 'xT per 90', 'xDisruption per 90']:
+                 if col in df_processed.columns and col.split(' ')[0] in cols_to_show:
+                    cols_to_show.append(col)
+
         except FileNotFoundError:
             st.error(f"Error: The file `{local_csv_path}` was not found.")
         except Exception as e:
-            st.error(f"An error occurred: {e}.")
-            
-        cols_to_show = ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG']
-        sort_by_col = 'xG'
-
-    elif selected_metric_key == 'xAG (Expected Assisted Goals)':
-        local_csv_path = resource_path(os.path.join("data", "WSL_assists.csv"))
-        try:
-            df_raw = pd.read_csv(local_csv_path)
-            st.success(f"Successfully loaded data from `{local_csv_path}`.")
-            df_processed = calculate_derived_metrics(df_raw) # Process for per 90 stats
-        except FileNotFoundError:
-            st.error(f"Error: The file `{local_csv_path}` was not found.")
-        except Exception as e:
-            st.error(f"An error occurred: {e}.")
-
-        base_metric_name = 'xAG'
-        cols_to_show = ['Player', 'Team', 'Assists', 'ShotAssists', base_metric_name]
-        if f'{base_metric_name} per 90' in df_processed.columns:
-            cols_to_show.append(f'{base_metric_name} per 90')
-        sort_by_col = base_metric_name
-        
-    elif selected_metric_key == 'xT (Expected Threat)':
-        local_csv_path = resource_path(os.path.join("data", "WSL_xT.csv"))
-        try:
-            df_raw = pd.read_csv(local_csv_path)
-            st.success(f"Successfully loaded data from `{local_csv_path}`.")
-            df_processed = calculate_derived_metrics(df_raw) # Process for per 90 stats
-        except FileNotFoundError:
-            st.error(f"Error: The file `{local_csv_path}` was not found.")
-        except Exception as e:
-            st.error(f"An error occurred: {e}.")
-
-        base_metric_name = 'xT'
-        cols_to_show = ['Player', 'Team', base_metric_name]
-        if f'{base_metric_name} per 90' in df_processed.columns:
-            cols_to_show.append(f'{base_metric_name} per 90')
-        sort_by_col = base_metric_name
-
-    elif selected_metric_key == 'Expected Disruption (xDisruption)':
-        local_csv_path = resource_path(os.path.join("data", "WSL_xDisruption.csv"))
-        try:
-            df_raw = pd.read_csv(local_csv_path)
-            st.success(f"Successfully loaded data from `{local_csv_path}`.")
-            df_processed = calculate_derived_metrics(df_raw)
-        except FileNotFoundError:
-            st.error(f"Error: The file `{local_csv_path}` was not found.")
-        except Exception as e:
-            st.error(f"An error occurred: {e}.")
-
-        cols_to_show = ['playerName', 'Team', 'ActualDisruptions', 'ExpectedDisruptions']
-        sort_by_col = 'ExpectedDisruptions'
+            st.error(f"An error occurred while loading the data: {e}.")
+    else:
+        st.warning("No data configuration found for the selected league and metric.")
 
     # --- Filter for necessary columns, sort, and display ---
     if not df_processed.empty and sort_by_col in df_processed.columns:
-        # Ensure all columns to show actually exist in the dataframe before trying to select them
         existing_cols = [col for col in cols_to_show if col in df_processed.columns]
         if not existing_cols:
              st.warning(f"None of the required columns for this metric are in the data file.")
@@ -164,7 +150,7 @@ def main():
     elif not df_processed.empty:
         st.warning(f"The metric '{sort_by_col}' is not available in the loaded data file.")
     else:
-        st.warning("No data to display. Please check the data source.")
+        st.info("No data to display. This might be because the corresponding data file is missing.")
 
 
 if __name__ == "__main__":
