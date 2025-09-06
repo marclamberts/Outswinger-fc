@@ -102,23 +102,11 @@ def main():
             st.error(f"An error occurred: {e}.")
 
         base_metric_name = 'xAG'
-        cols_to_show = ['Player', 'Team', base_metric_name]
+        cols_to_show = ['Player', 'Team','Assists','ShotAssists', base_metric_name]
         if f'{base_metric_name} per 90' in df_processed.columns:
             cols_to_show.append(f'{base_metric_name} per 90')
         sort_by_col = base_metric_name
 
-    elif selected_metric_key == 'Assists':
-        local_csv_path = os.path.join("data", "WSL_assists.csv")
-        try:
-            df_processed = pd.read_csv(local_csv_path) # No derived metrics needed
-            st.success(f"Successfully loaded data from `{local_csv_path}`.")
-        except FileNotFoundError:
-            st.error(f"Error: The file `{local_csv_path}` was not found.")
-        except Exception as e:
-            st.error(f"An error occurred: {e}.")
-        
-        cols_to_show = ['Player', 'Team', 'Assists']
-        sort_by_col = 'Assists'
 
     # --- Filter for necessary columns, sort, and display ---
     if not df_processed.empty and sort_by_col in df_processed.columns:
