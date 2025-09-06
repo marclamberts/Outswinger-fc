@@ -93,6 +93,9 @@ def main():
     
     st.header(f"📈 {selected_league} - {selected_metric_key}")
     st.markdown(f"**Definition:** {metric_info.get(selected_metric_key, '')}")
+    
+    if selected_league == "Frauen-Bundesliga":
+        st.info("Note: Data of FC Köln - RB Leipzig is not present as of 06-09-2025")
 
     # --- Data Configuration ---
     data_config = {
