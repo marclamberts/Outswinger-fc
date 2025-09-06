@@ -8,12 +8,6 @@ def get_metric_info():
     return {
         'xG (Expected Goals)': 'Estimates the probability of a shot resulting in a goal based on factors like shot angle, distance, and type of assist. A higher xG suggests a player is getting into high-quality scoring positions.',
         'xAG (Expected Assisted Goals)': 'Measures the likelihood that a given pass will become a goal assist. It credits creative players for setting up scoring chances, even if the shot is missed.',
-        'xT (Expected Threat)': 'Quantifies the increase in the probability of scoring a goal by moving the ball between two points on the pitch. It rewards players for advancing the ball into dangerous areas.',
-        'VAEP (Valuing Actions by Estimating Probabilities)': 'A comprehensive metric that assigns a value to every action on the ball (passes, dribbles, shots) based on how it impacts the chances of scoring and conceding.',
-        'Expected Shot Danger': 'Focuses on the quality of the shot itself, evaluating how likely a shot from a certain position, under certain pressure, would trouble the goalkeeper.',
-        'Expected Cross': 'Evaluates the probability of a cross being successfully completed to a teammate, factoring in the crosser\'s location and the number of defenders in the box.',
-        'Expected Disruption': 'Measures a defensive player\'s ability to break up opposition plays. It values tackles and interceptions that prevent high-probability scoring chances for the opponent.',
-        'Dribble Success Rate (%)': 'The percentage of attempted dribbles that successfully beat an opponent. A key indicator of a player\'s one-on-one offensive ability.'
     }
 
 def calculate_derived_metrics(df):
@@ -30,8 +24,8 @@ def calculate_derived_metrics(df):
     df['Minutes Played'] = df['Minutes Played'].replace(0, np.nan)
     df['Shots'] = df['Shots'].replace(0, np.nan)
 
-    # Calculate per 90 metrics
-    for col in ['xG', 'xG Open Play', 'xG Set Piece', 'xG Build-up', 'xAG', 'xT', 'VAEP']:
+    # Calculate per 90 metrics for the remaining core metrics
+    for col in ['xG', 'xAG']:
         if col in df.columns:
             df.loc[:, f'{col} per 90'] = (df[col] / df['Minutes Played']) * 90
 
@@ -49,8 +43,6 @@ def main():
     metric_pages = list(metric_info.keys())
 
     # --- Initialize Session State ---
-    if 'selected_league' not in st.session_state:
-        st.session_state.selected_league = "WSL"
     if 'selected_metric' not in st.session_state:
         st.session_state.selected_metric = metric_pages[0] # Default to the first metric
 
@@ -60,7 +52,7 @@ def main():
     
     st.sidebar.info(
         """
-        This app displays player stats by loading a dedicated CSV for the selected league.
+        This app displays player stats for the WSL.
         """
     )
 
@@ -71,47 +63,20 @@ def main():
             # No rerun needed here, button click handles it
 
     # --- Main Page ---
-    st.title("📊 Advanced Metrics Leaderboard")
-
-    # --- League Selection Buttons ---
-    leagues = ["WSL", "WSL 2", "Frauen-Bundesliga", "NWSL"]
-    cols = st.columns(len(leagues))
-    for i, league in enumerate(leagues):
-        # Change league and reset to xG page of that league
-        if cols[i].button(league, use_container_width=True):
-            st.session_state.selected_league = league
-            st.session_state.selected_metric = metric_pages[0]
-            st.rerun()
+    st.title("📊 WSL Advanced Metrics Leaderboard")
 
     # --- Data Loading and Processing ---
-    # Map leagues to their respective CSV filenames
-    league_data_files = {
-        "WSL": "WSL.csv",
-        "WSL 2": "2025-09-05_Sheffield United WFC - Sunderland WFC.csv",
-        "Frauen-Bundesliga": "2025-09-05_Eintracht Frankfurt - SGS Essen 1968.csv",
-        "NWSL": "nwsl_data.csv"
-    }
-    
-    # Get the filename for the currently selected league
-    filename = league_data_files.get(st.session_state.selected_league)
+    local_csv_path = os.path.join("data", "WSL.csv")
     df_raw = pd.DataFrame() # Start with an empty DataFrame
 
-    if filename:
-        # Construct the full, robust path to the file
-        local_csv_path = os.path.join("data", filename)
-        
-        st.info(f"Attempting to load data for **{st.session_state.selected_league}** from file: `{local_csv_path}`")
-        
-        try:
-            # Load the data from the local CSV
-            df_raw = pd.read_csv(local_csv_path)
-            st.success(f"Successfully loaded data.")
-        except FileNotFoundError:
-            st.error(f"Error: The file `{local_csv_path}` was not found. Please make sure the file exists in your 'data' directory.")
-        except Exception as e:
-            st.error(f"An error occurred while processing `{local_csv_path}`: {e}.")
-    else:
-        st.error(f"No data file specified for the selected league: {st.session_state.selected_league}")
+    try:
+        # Load the data from the local CSV
+        df_raw = pd.read_csv(local_csv_path)
+        st.success(f"Successfully loaded data from `{local_csv_path}`.")
+    except FileNotFoundError:
+        st.error(f"Error: The file `{local_csv_path}` was not found. Please make sure the file exists in your 'data' directory.")
+    except Exception as e:
+        st.error(f"An error occurred while processing `{local_csv_path}`: {e}.")
 
 
     df_processed = calculate_derived_metrics(df_raw)
@@ -119,27 +84,32 @@ def main():
     # --- Display Selected Metric Page ---
     selected_metric_key = st.session_state.selected_metric
     
-    st.header(f"📈 {st.session_state.selected_league} - {selected_metric_key}")
+    st.header(f"📈 WSL - {selected_metric_key}")
     st.markdown(f"**Definition:** {metric_info[selected_metric_key]}")
 
     if selected_metric_key == 'xG (Expected Goals)':
         cols_to_show = [
-            'Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG']
+            'Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'
+        ]
         sort_by_col = 'xG'
-    else:
-        # Handle other metrics dynamically
-        base_metric_name = selected_metric_key.split(' (')[0]
-        cols_to_show = ['PlayerId', 'TeamId', base_metric_name]
+    else: # Handles xAG
+        base_metric_name = 'xAG'
+        cols_to_show = ['Player', 'Team', base_metric_name]
         if f'{base_metric_name} per 90' in df_processed.columns:
             cols_to_show.append(f'{base_metric_name} per 90')
         sort_by_col = base_metric_name
 
     # --- Filter for necessary columns, sort, and display ---
     if not df_processed.empty and sort_by_col in df_processed.columns:
-        display_df = df_processed[[col for col in cols_to_show if col in df_processed.columns]]
-        display_df = display_df.sort_values(by=sort_by_col, ascending=False).reset_index(drop=True)
-        display_df.index = display_df.index + 1
-        st.dataframe(display_df, use_container_width=True)
+        # Ensure all columns to show actually exist in the dataframe before trying to select them
+        existing_cols = [col for col in cols_to_show if col in df_processed.columns]
+        if not existing_cols:
+             st.warning(f"None of the required columns for this metric are in the data file.")
+        else:
+            display_df = df_processed[existing_cols]
+            display_df = display_df.sort_values(by=sort_by_col, ascending=False).reset_index(drop=True)
+            display_df.index = display_df.index + 1
+            st.dataframe(display_df, use_container_width=True)
     elif not df_processed.empty:
         st.warning(f"The metric '{sort_by_col}' is not available in the loaded data file.")
     else:
