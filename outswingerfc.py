@@ -59,7 +59,7 @@ def main():
     
     st.sidebar.info(
         """
-        This app displays player stats loaded from the local `data/test.csv` file.
+        This app displays player stats by loading a dedicated CSV for the selected league.
         """
     )
 
@@ -83,18 +83,29 @@ def main():
             st.rerun()
 
     # --- Data Loading and Processing ---
-    local_csv_path = "data/2025-09-05_Chelsea FC Women - Manchester City WFC.csv"
+    # Map leagues to their respective CSV files
+    league_data_paths = {
+        "WSL": "data/2025-09-05_Chelsea FC Women - Manchester City WFC.csv",
+        "WSL 2": "data/2025-09-05_Sheffield United WFC - Sunderland WFC.csv",  # Add the path to your WSL2 csv file
+        "Frauen-Bundesliga": "data/2025-09-05_Eintracht Frankfurt - SGS Essen 1968.csv", # Add the path to your Frauen-Bundesliga csv
+        "NWSL": "data/nwsl_data.csv" # Add the path to your NWSL csv
+    }
+    
+    # Get the path for the currently selected league
+    local_csv_path = league_data_paths.get(st.session_state.selected_league)
     df_raw = pd.DataFrame() # Start with an empty DataFrame
 
-    try:
-        # Load the data from the local CSV
-        df_raw = pd.read_csv(local_csv_path)
-        st.success(f"Successfully loaded data from `{local_csv_path}`.")
-
-    except FileNotFoundError:
-        st.error(f"Error: The file `{local_csv_path}` was not found. Please make sure it's in the correct directory.")
-    except Exception as e:
-        st.error(f"An error occurred while processing `{local_csv_path}`: {e}.")
+    if local_csv_path:
+        try:
+            # Load the data from the local CSV
+            df_raw = pd.read_csv(local_csv_path)
+            st.success(f"Successfully loaded data for {st.session_state.selected_league} from `{local_csv_path}`.")
+        except FileNotFoundError:
+            st.error(f"Error: The file `{local_csv_path}` was not found. Please make sure it's in the correct directory.")
+        except Exception as e:
+            st.error(f"An error occurred while processing `{local_csv_path}`: {e}.")
+    else:
+        st.error(f"No data file specified for the selected league: {st.session_state.selected_league}")
 
 
     df_processed = calculate_derived_metrics(df_raw)
