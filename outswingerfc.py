@@ -5,6 +5,8 @@ import os
 import sys
 from datetime import datetime
 import altair as alt
+import matplotlib.pyplot as plt
+from mplsoccer import VerticalPitch
 
 # --- Configuration & Setup ---
 
@@ -16,8 +18,6 @@ st.set_page_config(
 )
 
 # --- Caching ---
-# Cache the data loading to prevent re-reading files on every interaction.
-# TTL (time-to-live) set to 1 hour to allow for data updates.
 @st.cache_data(ttl=3600)
 def load_data(file_path):
     """Loads a CSV file into a pandas DataFrame."""
@@ -58,34 +58,11 @@ def calculate_derived_metrics(df):
             df['xG per Shot'] = (df['xG'] / df['Shots']).round(2)
     return df
 
-# --- Main App Logic ---
+# --- Page Display Functions ---
 
-def main():
-    """Main function to run the Streamlit app."""
-    metric_info = get_metric_info()
-    metric_pages = list(metric_info.keys())
-
-    # --- Session State Initialization ---
-    if 'selected_league' not in st.session_state:
-        st.session_state.selected_league = "WSL"
-    if 'selected_metric' not in st.session_state:
-        st.session_state.selected_metric = metric_pages[0]
-
-    # --- Sidebar ---
-    st.sidebar.title("Outswinger FC")
-    st.sidebar.image("https://placehold.co/400x200/2d3748/e2e8f0?text=Outswinger+FC", use_container_width=True)
-    st.sidebar.info("This app displays player stats for the WSL, WSL 2, Frauen-Bundesliga, Liga F, and NWSL.")
-    st.sidebar.header("Metric Leaderboards")
-
-    for metric in metric_pages:
-        if st.sidebar.button(metric, use_container_width=True, disabled=(st.session_state.selected_metric == metric)):
-            st.session_state.selected_metric = metric
-            st.rerun()
-
-    # --- Main Page ---
-    st.title(f"📊 {st.session_state.selected_league} Advanced Metrics Leaderboard")
-
-    # --- League Selection Buttons (Two Rows) ---
+def display_metrics_page(data_config, metric_info):
+    """Renders the main metrics leaderboard page."""
+    # --- League Selection ---
     leagues_row1 = ["WSL", "WSL 2", "Frauen-Bundesliga"]
     leagues_row2 = ["Liga F", "NWSL"]
     
@@ -95,12 +72,11 @@ def main():
             st.session_state.selected_league = league
             st.rerun()
 
-    cols_row2 = st.columns(len(leagues_row2) + 1) # Add an extra column for spacing
+    cols_row2 = st.columns(len(leagues_row2) + 1)
     for i, league in enumerate(leagues_row2):
         if cols_row2[i].button(league, use_container_width=True, disabled=(st.session_state.selected_league == league)):
             st.session_state.selected_league = league
             st.rerun()
-
 
     selected_league = st.session_state.selected_league
     selected_metric_key = st.session_state.selected_metric
@@ -111,45 +87,6 @@ def main():
     if selected_league == "Frauen-Bundesliga":
         st.info("Note: Data of FC Köln - RB Leipzig is not present as of 06-09-2025")
 
-    # --- Data Configuration ---
-    data_config = {
-        "WSL": {
-            'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
-        },
-        "WSL 2": {
-            'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
-        },
-        "Frauen-Bundesliga": {
-            'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
-        },
-        "Liga F": {
-            'xG (Expected Goals)': {"file": "LigaF.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "LigaF_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
-        },
-        "NWSL": {
-            'xG (Expected Goals)': {"file": "NWSL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "NWSL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
-        }
-    }
-    
     metric_config = data_config.get(selected_league, {}).get(selected_metric_key)
 
     if metric_config:
@@ -157,78 +94,156 @@ def main():
             file_path = resource_path(os.path.join("data", metric_config["file"]))
             df_raw = load_data(file_path)
 
-            rename_map = {
-                'playerName': 'Player', 
-                'ActualDisruptions': 'Actual disruption', 
-                'ExpectedDisruptions': 'expected disruptions'
-            }
+            rename_map = {'playerName': 'Player', 'ActualDisruptions': 'Actual disruption', 'ExpectedDisruptions': 'expected disruptions'}
             df_raw.rename(columns=rename_map, inplace=True)
             
             df_processed = calculate_derived_metrics(df_raw)
             sort_by_col = metric_config["sort"]
             
-            # --- Dynamic Search Placeholder ---
-            search_placeholders = {
-                "WSL": "e.g., Sam Kerr",
-                "WSL 2": "e.g., Melissa Johnson",
-                "Frauen-Bundesliga": "e.g., Alexandra Popp",
-                "Liga F": "e.g., Alexia Putellas",
-                "NWSL": "e.g., Sophia Smith"
-            }
+            search_placeholders = {"WSL": "e.g., Sam Kerr", "WSL 2": "e.g., Melissa Johnson", "Frauen-Bundesliga": "e.g., Alexandra Popp", "Liga F": "e.g., Alexia Putellas", "NWSL": "e.g., Sophia Smith"}
             placeholder = search_placeholders.get(selected_league, "Search for a player...")
 
-            # --- Interactive Controls ---
             st.markdown("---")
             col1, col2 = st.columns([2, 1.5])
             with col1:
                 search_term = st.text_input("Search for a player:", placeholder=placeholder)
             with col2:
-                top_n = st.slider("Number of players to display:", min_value=5, max_value=50, value=15, step=5)
+                top_n = st.slider("Number of players to display:", 5, 50, 15, 5)
             
-            display_option = st.radio(
-                "Select display format:",
-                ("📄 Data Table", "📊 Visualization"),
-                horizontal=True,
-                label_visibility="collapsed"
-            )
+            display_option = st.radio("Display format:", ("📄 Data Table", "📊 Visualization"), horizontal=True, label_visibility="collapsed")
 
             if search_term:
                 df_processed = df_processed[df_processed['Player'].str.contains(search_term, case=False, na=False)]
 
-            # --- Data Display ---
             if not df_processed.empty and sort_by_col in df_processed.columns:
                 display_df = df_processed.sort_values(by=sort_by_col, ascending=False).head(top_n).reset_index(drop=True)
                 display_df.index = display_df.index + 1
 
                 if display_option == "📊 Visualization":
                     st.subheader("Top Performers Chart")
-                    
                     max_val = display_df[sort_by_col].max()
                     x_domain = [0, max_val]
-                    
-                    chart = alt.Chart(display_df).mark_bar().encode(
-                        x=alt.X(f'{sort_by_col}:Q', title=selected_metric_key, scale=alt.Scale(domain=x_domain)),
-                        y=alt.Y('Player:N', sort='-x', title="Player")
-                    ).interactive()
-
+                    chart = alt.Chart(display_df).mark_bar().encode(x=alt.X(f'{sort_by_col}:Q', title=selected_metric_key, scale=alt.Scale(domain=x_domain)), y=alt.Y('Player:N', sort='-x', title="Player")).interactive()
                     st.altair_chart(chart, use_container_width=True)
-
-                else: # "📄 Data Table"
+                else:
                     st.subheader("Detailed Data Table")
                     existing_cols = [col for col in metric_config["cols"] if col in display_df.columns]
                     st.dataframe(display_df[existing_cols], use_container_width=True)
-            
             elif not df_processed.empty:
-                st.warning(f"The required metric '{sort_by_col}' is not available in the loaded data file.")
+                st.warning(f"The metric '{sort_by_col}' is not available in the loaded data file.")
             else:
                  st.info("No matching players found.")
-
         except FileNotFoundError:
             st.error(f"Error: The data file `{metric_config['file']}` was not found.")
         except Exception as e:
             st.error(f"An error occurred: {e}")
     else:
-        st.warning("No data configuration found for the selected league and metric.")
+        st.warning("No data configuration found.")
+
+def display_corners_page(data_config):
+    """Renders the corner analysis page."""
+    selected_league = st.session_state.selected_league
+    st.header(f"Corner Analysis for {selected_league}")
+    
+    # Use the xG config to get the base filename for the league
+    metric_config = data_config.get(selected_league, {}).get('xG (Expected Goals)')
+    if not metric_config:
+        st.error(f"Base data file configuration not found for {selected_league}.")
+        return
+
+    try:
+        file_path = resource_path(os.path.join("data", metric_config["file"]))
+        df_full = load_data(file_path)
+    except FileNotFoundError:
+        st.error(f"Error: The data file `{metric_config['file']}` was not found.")
+        return
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        return
+
+    if 'Type_of_play' in df_full.columns and not df_full[df_full['Type_of_play'] == 'FromCorner'].empty:
+        df_corners = df_full[df_full['Type_of_play'] == 'FromCorner'].copy()
+    else:
+        st.warning("No corner data ('Type_of_play' == 'FromCorner') found in the dataset.")
+        return
+
+    # --- Sidebar Filters for Corners ---
+    st.sidebar.header("Corner Filters")
+    teams = ["All"] + sorted(df_corners['TeamId'].unique().tolist())
+    players = ["All"] + sorted(df_corners['PlayerId'].unique().tolist())
+    game_states = ["All"] + sorted(df_corners['GameState'].unique().tolist())
+    is_goal_options = ["All", True, False]
+    min_time, max_time = int(df_corners['timeMin'].min()), int(df_corners['timeMin'].max())
+
+    selected_team = st.sidebar.selectbox("Filter by Team:", teams)
+    selected_player = st.sidebar.selectbox("Filter by Player:", players)
+    selected_state = st.sidebar.selectbox("Filter by Game State:", game_states)
+    selected_goal = st.sidebar.selectbox("Filter by Goal:", is_goal_options, format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
+    selected_time = st.sidebar.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time))
+
+    # --- Apply Filters ---
+    df_filtered = df_corners.copy()
+    if selected_team != "All": df_filtered = df_filtered[df_filtered['TeamId'] == selected_team]
+    if selected_player != "All": df_filtered = df_filtered[df_filtered['PlayerId'] == selected_player]
+    if selected_state != "All": df_filtered = df_filtered[df_filtered['GameState'] == selected_state]
+    if selected_goal != "All": df_filtered = df_filtered[df_filtered['isGoal'] == selected_goal]
+    df_filtered = df_filtered[df_filtered['timeMin'].between(selected_time[0], selected_time[1])]
+
+    st.markdown("---")
+    st.write(f"#### Displaying `{len(df_filtered)}` corner events based on filters.")
+
+    # --- Plotting ---
+    if not df_filtered.empty and all(c in df_filtered.columns for c in ['X', 'Y', 'xG']):
+        pitch = VerticalPitch(half=True, pitch_type='opta', pitch_color='#22312b', line_color='#c7d5cc')
+        fig, ax = pitch.draw(figsize=(8, 6))
+        fig.set_facecolor('#22312b')
+        
+        sizes = df_filtered['xG'] * 1000
+        pitch.scatter(df_filtered.X, df_filtered.Y, s=sizes, ax=ax, alpha=0.7, ec='white', c='#e789e7')
+        st.pyplot(fig)
+    elif not df_filtered.empty:
+        st.warning("Required columns ('X', 'Y', 'xG') not found for plotting.")
+    else:
+        st.info("No data available for the selected filters.")
+
+
+# --- Main App Logic ---
+def main():
+    metric_info = get_metric_info()
+    metric_pages = list(metric_info.keys())
+
+    if 'selected_league' not in st.session_state: st.session_state.selected_league = "WSL"
+    if 'selected_metric' not in st.session_state: st.session_state.selected_metric = metric_pages[0]
+
+    # --- Sidebar ---
+    st.sidebar.title("Outswinger FC")
+    st.sidebar.image("https://placehold.co/400x200/2d3748/e2e8f0?text=Outswinger+FC", use_container_width=True)
+    
+    page_view = st.sidebar.radio("Select a view:", ["Metrics Leaderboard", "Corners Analysis"])
+    st.sidebar.markdown("---")
+
+    data_config = {
+        "WSL": {'xG (Expected Goals)': {"file": "WSL.csv"},'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv"}, 'xT (Expected Threat)': {"file": "WSL_xT.csv"}, 'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv"}, 'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv"}},
+        "WSL 2": {'xG (Expected Goals)': {"file": "WSL2.csv"}, 'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv"}, 'xT (Expected Threat)': {"file": "WSL2_xT.csv"}, 'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv"}, 'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv"}},
+        "Frauen-Bundesliga": {'xG (Expected Goals)': {"file": "FBL.csv"}, 'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv"}, 'xT (Expected Threat)': {"file": "FBL_xT.csv"}, 'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv"},'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv"}},
+        "Liga F": {'xG (Expected Goals)': {"file": "LigaF.csv"}, 'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv"}, 'xT (Expected Threat)': {"file": "LigaF_xT.csv"}, 'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv"}, 'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv"}},
+        "NWSL": {'xG (Expected Goals)': {"file": "NWSL.csv"}, 'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv"}, 'xT (Expected Threat)': {"file": "NWSL_xT.csv"}, 'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv"}, 'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv"}}
+    }
+
+    if page_view == "Metrics Leaderboard":
+        st.title(f"📊 {st.session_state.selected_league} Advanced Metrics Leaderboard")
+        st.sidebar.header("Metric Leaderboards")
+        for metric in metric_pages:
+            if st.sidebar.button(metric, use_container_width=True, disabled=(st.session_state.selected_metric == metric)):
+                st.session_state.selected_metric = metric
+                st.rerun()
+        display_metrics_page(data_config, metric_info)
+    
+    elif page_view == "Corners Analysis":
+        st.title(f"⛳️ {st.session_state.selected_league} Corner Analysis")
+        leagues = ["WSL", "WSL 2", "Frauen-Bundesliga", "Liga F", "NWSL"]
+        st.session_state.selected_league = st.selectbox("Select a league to analyze:", leagues, index=leagues.index(st.session_state.selected_league))
+        display_corners_page(data_config)
 
     # --- Footer ---
     st.markdown("---")
