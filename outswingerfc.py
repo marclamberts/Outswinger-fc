@@ -49,7 +49,7 @@ def calculate_derived_metrics(df):
 
 def main():
     """Main function to run the Streamlit app."""
-    st.set_page_config(page_title="Soccer Analytics Dashboard", layout="wide", initial_sidebar_state="expanded")
+    st.set_page_config(page_title="Data Analytics Dashboard", layout="wide", initial_sidebar_state="expanded")
 
     metric_info = get_metric_info()
     metric_pages = list(metric_info.keys())
@@ -62,7 +62,7 @@ def main():
 
     # --- Sidebar Navigation ---
     st.sidebar.title("Women's Footy Data")
-    st.sidebar.image("https://placehold.co/400x200/2d3748/ffffff?text=SOCCER+ANALYSIS", use_container_width=True)
+    st.sidebar.image("https://placehold.co/400x200/2d3748/ffffff?text=DATA+ANALYSIS", use_container_width=True)
     
     st.sidebar.info(
         """
