@@ -1,161 +1,142 @@
-import streamlit as st
+import os
+import json
 import pandas as pd
 import numpy as np
-import os
+import joblib
 
-def get_metric_info():
-    """Returns a dictionary of metric explanations."""
-    return {
-        'xG (Expected Goals)': 'Estimates the probability of a shot resulting in a goal based on factors like shot angle, distance, and type of assist. A higher xG suggests a player is getting into high-quality scoring positions.',
-        'xAG (Expected Assisted Goals)': 'Measures the likelihood that a given pass will become a goal assist. It credits creative players for setting up scoring chances, even if the shot is missed.',
-        'xT (Expected Threat)': 'Quantifies the increase in the probability of scoring a goal by moving the ball between two points on the pitch. It rewards players for advancing the ball into dangerous areas.',
-        'Expected Disruption (xDisruption)': 'Measures a defensive player\'s ability to break up opposition plays. It values tackles and interceptions that prevent high-probability scoring chances for the opponent.'
-    }
+# ===========================
+# Paths
+# ===========================
+json_folder = "/Users/user/XG/WSL/"           # JSON files
+xT_path = "/Users/user/XT_grid.csv"           # xT grid
+team_mapping_file = "/Users/user/XG/WSL Matches.csv"  # team mapping
+output_csv = "/Users/user/Documents/GitHub/Outswinger-fc/data/WSL_xDisruption.csv"
+model_path = "/Users/user/disruption_model.pkl"
 
-def calculate_derived_metrics(df):
-    """Calculates per 90, per shot, and other derived metrics."""
-    # Ensure a copy is made to avoid SettingWithCopyWarning
-    df = df.copy()
+os.makedirs(os.path.dirname(output_csv), exist_ok=True)
 
-    # Check if essential columns exist before calculations
-    if 'Minutes Played' not in df.columns or 'Shots' not in df.columns:
-        st.warning("'Minutes Played' and/or 'Shots' columns not found in the data. Cannot calculate per 90 or per shot metrics.")
-        return df
+# ===========================
+# Load model
+# ===========================
+model = joblib.load(model_path)
+print("✅ Loaded disruption model")
 
-    # Avoid division by zero
-    df['Minutes Played'] = df['Minutes Played'].replace(0, np.nan)
-    df['Shots'] = df['Shots'].replace(0, np.nan)
+# ===========================
+# Load xT grid
+# ===========================
+xT = pd.read_csv(xT_path, header=None).to_numpy()
+xT_rows, xT_cols = xT.shape
+print(f"xT grid loaded: {xT_rows} rows × {xT_cols} cols")
 
-    # Calculate per 90 metrics for the remaining core metrics
-    for col in ['xG', 'xAG', 'xT', 'xDisruption']:
-        if col in df.columns:
-            df.loc[:, f'{col} per 90'] = (df[col] / df['Minutes Played']) * 90
+# ===========================
+# Load team mapping
+# ===========================
+team_mapping_df = pd.read_csv(team_mapping_file)
+home_teams = team_mapping_df[["matchInfo/contestant/0/id", "matchInfo/contestant/0/name"]].copy()
+home_teams.columns = ["contestantId", "Team"]
+away_teams = team_mapping_df[["matchInfo/contestant/1/id", "matchInfo/contestant/1/name"]].copy()
+away_teams.columns = ["contestantId", "Team"]
+team_map = pd.concat([home_teams, away_teams]).drop_duplicates()
+id_to_team = dict(zip(team_map["contestantId"], team_map["Team"]))
 
-    # Calculate xG per Shot
-    if 'xG' in df.columns and 'Shots' in df.columns:
-        df.loc[:, 'xG per Shot'] = df['xG'] / df['Shots']
-        
-    return df
+# ===========================
+# Helper to convert numeric safely
+# ===========================
+def safe_float(val):
+    try:
+        return float(val)
+    except:
+        return np.nan
 
-def main():
-    """Main function to run the Streamlit app."""
-    st.set_page_config(page_title="Soccer Analytics Dashboard", layout="wide", initial_sidebar_state="expanded")
+# ===========================
+# Aggregate all JSON files
+# ===========================
+all_data = []
 
-    metric_info = get_metric_info()
-    metric_pages = list(metric_info.keys())
+for f in os.listdir(json_folder):
+    if f.endswith(".json"):
+        file_path = os.path.join(json_folder, f)
+        with open(file_path, "r", encoding="utf-8") as jf:
+            data = json.load(jf)
+        events = data.get("event", data.get("events", []))
+        rows = []
+        for e in events:
+            row = {
+                "id": e.get("id"),
+                "typeId": e.get("typeId"),
+                "contestantId": str(e.get("contestantId")),
+                "playerId": str(e.get("playerId")),
+                "playerName": e.get("playerName"),
+                "x": safe_float(e.get("x")),
+                "y": safe_float(e.get("y")),
+                "endX": np.nan,
+                "endY": np.nan
+            }
+            for q in e.get("qualifier", []):
+                qid = q.get("qualifierId")
+                val = q.get("value", 1)
+                if qid == 140: row["endX"] = safe_float(val)
+                if qid == 141: row["endY"] = safe_float(val)
+            rows.append(row)
+        all_data.extend(rows)
 
-    # --- Initialize Session State ---
-    if 'selected_metric' not in st.session_state:
-        st.session_state.selected_metric = metric_pages[0] # Default to the first metric
+df = pd.DataFrame(all_data)
 
-    # --- Sidebar Navigation ---
-    st.sidebar.title("Women's Footy Data")
-    st.sidebar.image("https://placehold.co/400x200/2d3748/ffffff?text=SOCCER+ANALYSIS", use_container_width=True)
-    
-    st.sidebar.info(
-        """
-        This app displays player stats for the WSL.
-        """
-    )
+# Fill missing coordinates
+df[["x","y","endX","endY"]] = df[["x","y","endX","endY"]].fillna(0)
 
-    st.sidebar.header("Metric Leaderboards")
-    for metric in metric_pages:
-        if st.sidebar.button(metric, use_container_width=True):
-            st.session_state.selected_metric = metric
-            # No rerun needed here, button click handles it
+# --- Recipient, Passer, Receiver ---
+df["recipientId"] = np.nan
+for i in range(len(df)-1):
+    if df.loc[i,"typeId"] == 1:
+        next_row = df.loc[i+1]
+        if next_row["contestantId"] == df.loc[i,"contestantId"]:
+            df.at[i,"recipientId"] = next_row["playerId"]
+df["recipientId"] = df["recipientId"].fillna(-1)
+df["passer"] = df["playerId"]
+df["receiver"] = df["recipientId"]
 
-    # --- Main Page ---
-    st.title("📊 WSL Advanced Metrics Leaderboard")
+# --- Numeric features ---
+df["distance"] = np.sqrt((df["endX"]-df["x"])**2 + (df["endY"]-df["y"])**2)
+df["angle"] = np.abs(np.arctan2(df["endY"]-df["y"], df["endX"]-df["x"]))
+df["xT"] = 0
+df["xPass"] = 1 - (0.02*df["distance"] + 0.1*df["angle"])
+df["xPass"] = df["xPass"].clip(0,1)
+df["Pressures"] = 0
+df["PP90"] = 0
 
-    # --- Display Selected Metric Page ---
-    selected_metric_key = st.session_state.selected_metric
-    
-    st.header(f"📈 WSL - {selected_metric_key}")
-    st.markdown(f"**Definition:** {metric_info[selected_metric_key]}")
+# --- Preserve for stats ---
+df_typeId = df["typeId"]
+df_playerName = df["playerName"]
+df_team = df["contestantId"].map(id_to_team)
 
-    df_processed = pd.DataFrame() # Initialize an empty dataframe
-    sort_by_col = '' # Initialize sort_by_col to avoid reference before assignment error
+# --- Dummies for model ---
+df = pd.get_dummies(df, columns=["passer","receiver"], drop_first=True)
 
-    # --- Data Loading and Logic based on selected metric ---
-    if selected_metric_key == 'xG (Expected Goals)':
-        local_csv_path = os.path.join("data", "WSL.csv")
-        try:
-            df_raw = pd.read_csv(local_csv_path)
-            st.success(f"Successfully loaded data from `{local_csv_path}`.")
-            df_processed = calculate_derived_metrics(df_raw)
-        except FileNotFoundError:
-            st.error(f"Error: The file `{local_csv_path}` was not found.")
-        except Exception as e:
-            st.error(f"An error occurred: {e}.")
-            
-        cols_to_show = ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG']
-        sort_by_col = 'xG'
+# --- Keep model features ---
+model_features = model.feature_names_in_
+for col in model_features:
+    if col not in df.columns:
+        df[col]=0
+df_model = df[model_features]
 
-    elif selected_metric_key == 'xAG (Expected Assisted Goals)':
-        local_csv_path = os.path.join("data", "WSL_assists.csv")
-        try:
-            df_raw = pd.read_csv(local_csv_path)
-            st.success(f"Successfully loaded data from `{local_csv_path}`.")
-            df_processed = calculate_derived_metrics(df_raw) # Process for per 90 stats
-        except FileNotFoundError:
-            st.error(f"Error: The file `{local_csv_path}` was not found.")
-        except Exception as e:
-            st.error(f"An error occurred: {e}.")
+# --- Predict ---
+df_model["disruption_probability"] = model.predict_proba(df_model)[:,1]
 
-        base_metric_name = 'xAG'
-        cols_to_show = ['Player', 'Team', 'Assists', 'ShotAssists', base_metric_name]
-        if f'{base_metric_name} per 90' in df_processed.columns:
-            cols_to_show.append(f'{base_metric_name} per 90')
-        sort_by_col = base_metric_name
-        
-    elif selected_metric_key == 'xT (Expected Threat)':
-        local_csv_path = os.path.join("data", "WSL_xt.csv")
-        try:
-            df_raw = pd.read_csv(local_csv_path)
-            st.success(f"Successfully loaded data from `{local_csv_path}`.")
-            df_processed = calculate_derived_metrics(df_raw) # Process for per 90 stats
-        except FileNotFoundError:
-            st.error(f"Error: The file `{local_csv_path}` was not found.")
-        except Exception as e:
-            st.error(f"An error occurred: {e}.")
+# --- Aggregate player defensive ability ---
+df_model["typeId"] = df_typeId
+df_model["playerName"] = df_playerName
+df_model["Team"] = df_team
 
-        base_metric_name = 'xT'
-        cols_to_show = ['Player', 'Team', base_metric_name]
-        if f'{base_metric_name} per 90' in df_processed.columns:
-            cols_to_show.append(f'{base_metric_name} per 90')
-        sort_by_col = base_metric_name
+player_stats = df_model.groupby(["playerName","Team"]).agg(
+    TotalActions=("typeId","count"),
+    ActualDisruptions=("typeId", lambda x: x.astype(str).isin(["7","8"]).sum()),
+    ExpectedDisruptions=("disruption_probability","sum")
+).reset_index()
 
-    elif selected_metric_key == 'Expected Disruption (xDisruption)':
-        local_csv_path = os.path.join("data", "WSL_xDisruption.csv")
-        try:
-            df_raw = pd.read_csv(local_csv_path)
-            st.success(f"Successfully loaded data from `{local_csv_path}`.")
-            df_processed = calculate_derived_metrics(df_raw)
-        except FileNotFoundError:
-            st.error(f"Error: The file `{local_csv_path}` was not found.")
-        except Exception as e:
-            st.error(f"An error occurred: {e}.")
+# Scale ExpectedDisruptions by total actions
+player_stats["ExpectedDisruptions"] = player_stats["ExpectedDisruptions"] * player_stats["TotalActions"]
 
-        cols_to_show = ['playerName', 'Team', 'Actual disruption', 'expected disruptions']
-        sort_by_col = 'expected disruptions'
-
-    # --- Filter for necessary columns, sort, and display ---
-    if not df_processed.empty and sort_by_col in df_processed.columns:
-        # Ensure all columns to show actually exist in the dataframe before trying to select them
-        existing_cols = [col for col in cols_to_show if col in df_processed.columns]
-        if not existing_cols:
-             st.warning(f"None of the required columns for this metric are in the data file.")
-        else:
-            display_df = df_processed[existing_cols]
-            display_df = display_df.sort_values(by=sort_by_col, ascending=False).reset_index(drop=True)
-            display_df.index = display_df.index + 1
-            st.dataframe(display_df, use_container_width=True)
-    elif not df_processed.empty:
-        st.warning(f"The metric '{sort_by_col}' is not available in the loaded data file.")
-    else:
-        st.warning("No data to display. Please check the data source.")
-
-
-if __name__ == "__main__":
-    main()
-
+# --- Save CSV with only defensive ability ---
+player_stats[["playerName","Team","ActualDisruptions","ExpectedDisruptions"]].to_csv(output_csv, index=False)
+print(f"✅ Saved defensive ability CSV to {output_csv}")
