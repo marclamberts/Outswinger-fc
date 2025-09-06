@@ -70,9 +70,6 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     total_goals = int(df['isGoal'].sum())
     total_xg = df['xG'].sum()
     xg_per_shot = total_xg / total_shots if total_shots > 0 else 0
-    # For corners, all shots are non-penalty
-    non_penalty_goals = total_goals
-    total_xg_minus_penalties = total_xg
     
     # Define colors
     colors = {"missed": "#003f5c", "goal": "#bc5090"}
@@ -115,7 +112,7 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     ax.text(0.75, -0.18, "Low → High", transform=ax.transAxes, fontsize=10, color='black', ha='center', va='center')
 
     # --- Branding ---
-    ax.text(0.75, -0.25, "OUTSWINGER FC", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
+    ax.text(0.75, -0.25, "OUTSWINGERFC.COM", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
 
     return fig, None
 
@@ -283,8 +280,6 @@ def display_corners_page(data_config):
     else:
         plot_title = f"{selected_league_corners} Corners"
 
-    st.header(f"Corner Analysis for {plot_title}")
-    
     st.markdown("---")
 
     if not df_filtered.empty and all(c in df_filtered.columns for c in ['x', 'y', 'xG', 'isGoal']):
@@ -305,13 +300,26 @@ def main():
     metric_info = get_metric_info()
     metric_pages = list(metric_info.keys())
 
+    # Initialize session state
     if 'selected_league' not in st.session_state: st.session_state.selected_league = "WSL"
     if 'selected_metric' not in st.session_state: st.session_state.selected_metric = metric_pages[0]
+    if 'page_view' not in st.session_state: st.session_state.page_view = "Metrics Leaderboard"
 
     st.sidebar.title("Outswinger FC")
     st.sidebar.image("https://placehold.co/400x200/2d3748/e2e8f0?text=Outswinger+FC", use_container_width=True)
     
-    page_view = st.sidebar.radio("Select a view:", ["Metrics Leaderboard", "Corners Analysis"])
+    # --- View Selection Buttons ---
+    st.sidebar.write("Select a view:")
+    view_cols = st.sidebar.columns(2)
+    with view_cols[0]:
+        if st.button("📈 Leaderboard", use_container_width=True, disabled=(st.session_state.page_view == "Metrics Leaderboard")):
+            st.session_state.page_view = "Metrics Leaderboard"
+            st.rerun()
+    with view_cols[1]:
+        if st.button("⛳ Corners", use_container_width=True, disabled=(st.session_state.page_view == "Corners Analysis")):
+            st.session_state.page_view = "Corners Analysis"
+            st.rerun()
+    
     st.sidebar.markdown("---")
 
     data_config = {
@@ -357,7 +365,7 @@ def main():
         }
     }
 
-    if page_view == "Metrics Leaderboard":
+    if st.session_state.page_view == "Metrics Leaderboard":
         st.title(f"📊 {st.session_state.selected_league} Advanced Metrics Leaderboard")
         st.sidebar.header("Metric Leaderboards")
         for metric in metric_pages:
@@ -366,7 +374,7 @@ def main():
                 st.rerun()
         display_metrics_page(data_config, metric_info)
     
-    elif page_view == "Corners Analysis":
+    elif st.session_state.page_view == "Corners Analysis":
         display_corners_page(data_config)
 
     st.markdown("---")
