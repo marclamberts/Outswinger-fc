@@ -2,50 +2,49 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-def generate_mock_data(league):
-    """Generates mock player data for a given league."""
+def generate_detailed_mock_data(league):
+    """Generates detailed mock player data for a given league."""
+    # Player and team data remains the same based on the league
     if league == "NWSL":
-        teams = ["Angel City FC", "Chicago Red Stars", "Houston Dash", "KC Current", "NJ/NY Gotham FC", 
-                 "NC Courage", "Orlando Pride", "Portland Thorns", "OL Reign", "Racing Louisville", 
-                 "San Diego Wave", "Washington Spirit"]
-        players = [
-            "Sophia Smith", "Alex Morgan", "Mallory Pugh", "Rose Lavelle", "Trinity Rodman", 
-            "Megan Rapinoe", "Lynn Williams", "Crystal Dunn", "Naomi Girma", "Alyssa Thompson",
-            "Debinha", "Kerolin Nicoli", "Sam Staab", "Ashley Sanchez", "Diana Ordóñez"
-        ]
+        teams = ["Angel City FC", "Chicago Red Stars", "Houston Dash", "KC Current", "NJ/NY Gotham FC", "NC Courage", "Orlando Pride", "Portland Thorns", "OL Reign", "Racing Louisville", "San Diego Wave", "Washington Spirit"]
+        players = ["Sophia Smith", "Alex Morgan", "Mallory Pugh", "Rose Lavelle", "Trinity Rodman", "Megan Rapinoe", "Lynn Williams", "Crystal Dunn", "Naomi Girma", "Alyssa Thompson", "Debinha", "Kerolin Nicoli", "Sam Staab", "Ashley Sanchez", "Diana Ordóñez"]
     elif league == "WSL":
-        teams = ["Arsenal", "Aston Villa", "Brighton & Hove Albion", "Chelsea", "Everton", 
-                 "Leicester City", "Liverpool", "Manchester City", "Manchester United", 
-                 "Reading", "Tottenham Hotspur", "West Ham United"]
-        players = [
-            "Sam Kerr", "Beth Mead", "Vivianne Miedema", "Lauren Hemp", "Chloe Kelly",
-            "Khadija Shaw", "Fridolina Rolfö", "Guro Reiten", "Ella Toone", "Alessia Russo",
-            "Leah Williamson", "Millie Bright", "Mary Earps", "Rachel Daly", "Ona Batlle"
-        ]
+        teams = ["Arsenal", "Aston Villa", "Brighton & Hove Albion", "Chelsea", "Everton", "Leicester City", "Liverpool", "Manchester City", "Manchester United", "Reading", "Tottenham Hotspur", "West Ham United"]
+        players = ["Sam Kerr", "Beth Mead", "Vivianne Miedema", "Lauren Hemp", "Chloe Kelly", "Khadija Shaw", "Fridolina Rolfö", "Guro Reiten", "Ella Toone", "Alessia Russo", "Leah Williamson", "Millie Bright", "Mary Earps", "Rachel Daly", "Ona Batlle"]
     elif league == "Frauen-Bundesliga":
-        teams = ["VfL Wolfsburg", "Bayern Munich", "Eintracht Frankfurt", "TSG Hoffenheim", "SC Freiburg", 
-                 "SGS Essen", "Bayer 04 Leverkusen", "1. FC Köln", "Werder Bremen", "MSV Duisburg"]
-        players = [
-            "Alexandra Popp", "Lina Magull", "Lea Schüller", "Laura Freigang", "Jule Brand",
-            "Lena Oberdorf", "Klara Bühl", "Linda Dallmann", "Nicole Billa", "Tabea Waßmuth",
-            "Merle Frohms", "Giulia Gwinn", "Sydney Lohmann", "Lara Prašnikar", "Ewa Pajor"
-        ]
-    else: # WSL 2 (FA Women's Championship)
-        teams = ["London City Lionesses", "Bristol City", "Southampton", "Birmingham City", "Durham",
-                 "Crystal Palace", "Sheffield United", "Charlton Athletic", "Lewes", "Sunderland"]
-        players = [
-            "Melissa Johnson", "Katie Wilkinson", "Jasmine Matthews", "Charlie Wellings", "Rio Hardy",
-            "Molly Pike", "Ava Kuyken", "Mia Ross", "Lucy Quinn", "Beth Hepple",
-            "Emily Kraft", "Sarah Ewens", "Abigail Harrison", "Jade Pennock", "Courtney Sweetman-Kirk"
-        ]
+        teams = ["VfL Wolfsburg", "Bayern Munich", "Eintracht Frankfurt", "TSG Hoffenheim", "SC Freiburg", "SGS Essen", "Bayer 04 Leverkusen", "1. FC Köln", "Werder Bremen", "MSV Duisburg"]
+        players = ["Alexandra Popp", "Lina Magull", "Lea Schüller", "Laura Freigang", "Jule Brand", "Lena Oberdorf", "Klara Bühl", "Linda Dallmann", "Nicole Billa", "Tabea Waßmuth", "Merle Frohms", "Giulia Gwinn", "Sydney Lohmann", "Lara Prašnikar", "Ewa Pajor"]
+    else: # WSL 2
+        teams = ["London City Lionesses", "Bristol City", "Southampton", "Birmingham City", "Durham", "Crystal Palace", "Sheffield United", "Charlton Athletic", "Lewes", "Sunderland"]
+        players = ["Melissa Johnson", "Katie Wilkinson", "Jasmine Matthews", "Charlie Wellings", "Rio Hardy", "Molly Pike", "Ava Kuyken", "Mia Ross", "Lucy Quinn", "Beth Hepple", "Emily Kraft", "Sarah Ewens", "Abigail Harrison", "Jade Pennock", "Courtney Sweetman-Kirk"]
     
     num_players = len(players)
+    
+    # Base stats
+    minutes = np.random.randint(500, 2000, size=num_players)
+    shots = np.random.randint(10, 80, size=num_players)
+    
+    # Generate detailed xG
+    xg_total = np.round(np.random.uniform(0.5, 9.5, size=num_players), 2)
+    xg_set_piece_ratio = np.random.uniform(0.1, 0.4, size=num_players)
+    xg_set_piece = np.round(xg_total * xg_set_piece_ratio, 2)
+    xg_open_play = np.round(xg_total - xg_set_piece, 2)
+    xg_buildup = np.round(np.random.uniform(0.5, 5.0, size=num_players), 2)
+
     data = {
         'Player': players,
         'Team': np.random.choice(teams, size=num_players),
-        'Minutes Played': np.random.randint(500, 2000, size=num_players),
-        'xG': np.round(np.random.uniform(0.1, 0.9, size=num_players), 2),
-        'xAG': np.round(np.random.uniform(0.1, 0.8, size=num_players), 2),
+        'Minutes Played': minutes,
+        'Shots': shots,
+        
+        # Detailed xG Metrics
+        'xG': xg_total,
+        'xG Open Play': xg_open_play,
+        'xG Set Piece': xg_set_piece,
+        'xG Build-up': xg_buildup,
+
+        # Other base metrics for expansion
+        'xAG': np.round(np.random.uniform(0.5, 8.0, size=num_players), 2),
         'xT': np.round(np.random.uniform(0.2, 1.5, size=num_players), 2),
         'VAEP': np.round(np.random.uniform(0.3, 1.8, size=num_players), 2),
         'Expected Shot Danger': np.round(np.random.uniform(0.05, 0.4, size=num_players), 2),
@@ -68,66 +67,91 @@ def get_metric_info():
         'Dribble Success Rate (%)': 'The percentage of attempted dribbles that successfully beat an opponent. A key indicator of a player\'s one-on-one offensive ability.'
     }
 
+def calculate_derived_metrics(df):
+    """Calculates per 90, per shot, and other derived metrics."""
+    # Avoid division by zero
+    df['Minutes Played'] = df['Minutes Played'].replace(0, np.nan)
+    df['Shots'] = df['Shots'].replace(0, np.nan)
+
+    # Calculate per 90 metrics
+    for col in ['xG', 'xG Open Play', 'xG Set Piece', 'xG Build-up', 'xAG', 'xT', 'VAEP']:
+        if col in df.columns:
+            df[f'{col} per 90'] = (df[col] / df['Minutes Played']) * 90
+
+    # Calculate xG per Shot
+    if 'xG' in df.columns and 'Shots' in df.columns:
+        df['xG per Shot'] = df['xG'] / df['Shots']
+        
+    return df
+
 def main():
     """Main function to run the Streamlit app."""
     st.set_page_config(page_title="Soccer Analytics Dashboard", layout="wide", initial_sidebar_state="expanded")
 
-    # --- Sidebar ---
+    metric_info = get_metric_info()
+    metric_pages = list(metric_info.keys())
+
+    # --- Initialize Session State ---
+    if 'selected_league' not in st.session_state:
+        st.session_state.selected_league = "WSL"
+    if 'selected_metric' not in st.session_state:
+        st.session_state.selected_metric = metric_pages[0] # Default to the first metric
+
+    # --- Sidebar Navigation ---
     st.sidebar.title("🎙️ The Analyst's Booth")
     st.sidebar.image("https://placehold.co/400x200/2d3748/ffffff?text=SOCCER+ANALYSIS", use_column_width=True)
+    st.sidebar.header("Metric Leaderboards")
     
-    leagues = ["NWSL", "WSL", "Frauen-Bundesliga", "WSL 2"]
-    selected_league = st.sidebar.selectbox("Select a League", leagues)
-    
-    st.sidebar.header("Metric Definitions")
-    metric_info = get_metric_info()
-    for metric, desc in metric_info.items():
-        with st.sidebar.expander(metric):
-            st.write(desc)
+    for metric in metric_pages:
+        if st.sidebar.button(metric, use_container_width=True):
+            st.session_state.selected_metric = metric
+            # No rerun needed here, button click handles it
 
     # --- Main Page ---
-    st.title(f"📊 {selected_league} - Advanced Metrics Leaderboard")
-    st.markdown("### Deep Dive into Player Performance")
-    st.markdown("Welcome to the film room! Here's the inside scoop on the league's top performers. We're breaking down the advanced numbers to see who's really making an impact on the field. All stats are normalized per 90 minutes.")
+    st.title("📊 Advanced Metrics Leaderboard")
 
-    # Generate data for the selected league
-    df = generate_mock_data(selected_league)
+    # --- League Selection Buttons ---
+    leagues = ["WSL", "WSL 2", "Frauen-Bundesliga", "NWSL"]
+    cols = st.columns(len(leagues))
+    for i, league in enumerate(leagues):
+        # Change league and reset to xG page of that league
+        if cols[i].button(league, use_container_width=True):
+            st.session_state.selected_league = league
+            st.session_state.selected_metric = metric_pages[0]
+            st.rerun()
 
-    # --- Metrics Display ---
-    metrics_to_display = {
-        'Top Offensive Threats': ['xG', 'xAG', 'VAEP'],
-        'Playmakers & Progression': ['xT', 'Expected Cross', 'Dribble Success Rate (%)'],
-        'Defensive Impact': ['Expected Disruption', 'Expected Shot Danger']
-    }
+    # --- Data Loading and Processing ---
+    df_raw = generate_detailed_mock_data(st.session_state.selected_league)
+    df_processed = calculate_derived_metrics(df_raw)
 
-    for category, metrics in metrics_to_display.items():
-        st.header(f"📈 {category}")
-        
-        # Create columns for each metric in the category
-        cols = st.columns(len(metrics))
-        
-        for i, metric in enumerate(metrics):
-            with cols[i]:
-                # Find the full metric name from the info dictionary for a better title
-                display_name = [name for name in metric_info.keys() if name.startswith(metric.split(' ')[0])][0]
-                
-                st.subheader(display_name)
-                
-                # Sort dataframe by the current metric
-                sorted_df = df[['Player', 'Team', metric]].sort_values(by=metric, ascending=False).reset_index(drop=True)
-                sorted_df.index = sorted_df.index + 1 # Start index from 1 for ranking
-                
-                # Display the dataframe, highlighting the max value
-                st.dataframe(
-                    sorted_df.head(10),
-                    use_container_width=True,
-                    # Apply styling to highlight the top player in the table
-                    column_config={
-                        metric: st.column_config.NumberColumn(
-                            format="%.2f",
-                        )
-                    }
-                )
+    # --- Display Selected Metric Page ---
+    selected_metric_key = st.session_state.selected_metric
+    
+    st.header(f"📈 {st.session_state.selected_league} - {selected_metric_key}")
+    st.markdown(f"**Definition:** {metric_info[selected_metric_key]}")
+
+    # Define which columns to show for each metric page
+    # For now, only xG is fully detailed as per the request. Others can be expanded similarly.
+    if selected_metric_key == 'xG (Expected Goals)':
+        cols_to_show = [
+            'Player', 'Team', 'xG', 'xG per 90', 'xG Open Play', 'xG Open Play per 90', 
+            'xG Set Piece', 'xG Set Piece per 90', 'xG per Shot', 'xG Build-up', 'xG Build-up per 90'
+        ]
+        sort_by_col = 'xG'
+    else:
+        # Fallback for other metrics to show their base and per 90 values
+        base_metric_name = selected_metric_key.split(' ')[0]
+        cols_to_show = ['Player', 'Team', base_metric_name]
+        if f'{base_metric_name} per 90' in df_processed.columns:
+            cols_to_show.append(f'{base_metric_name} per 90')
+        sort_by_col = base_metric_name
+
+    # Filter, sort, and display the data
+    display_df = df_processed[cols_to_show].sort_values(by=sort_by_col, ascending=False).reset_index(drop=True)
+    display_df.index = display_df.index + 1 # Rank players from 1
+
+    st.dataframe(display_df, use_container_width=True)
 
 if __name__ == "__main__":
     main()
+
