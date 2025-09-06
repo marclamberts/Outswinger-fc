@@ -99,13 +99,13 @@ def main():
         "WSL": {
             'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
             'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "WSL_xt.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
             'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['playerName', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'}
         },
         "WSL 2": {
             'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
             'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "WSL2_xt.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
             'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['playerName', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'}
         }
     }
