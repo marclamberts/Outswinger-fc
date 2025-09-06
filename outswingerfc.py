@@ -194,20 +194,27 @@ def display_corners_page(data_config):
     st.sidebar.header("Corner Filters")
     teams = ["All"] + sorted(df_corners['TeamId'].unique().tolist())
     players = ["All"] + sorted(df_corners['PlayerId'].unique().tolist())
-    game_states = ["All"] + sorted(df_corners['GameState'].unique().tolist())
     is_goal_options = ["All", True, False]
     min_time, max_time = int(df_corners['timeMin'].min()), int(df_corners['timeMin'].max())
 
     selected_team = st.sidebar.selectbox("Filter by Team:", teams)
     selected_player = st.sidebar.selectbox("Filter by Player:", players)
-    selected_state = st.sidebar.selectbox("Filter by Game State:", game_states)
+
+    # Safely add GameState filter only if the column exists
+    if 'GameState' in df_corners.columns:
+        game_states = ["All"] + sorted(df_corners['GameState'].unique().tolist())
+        selected_state = st.sidebar.selectbox("Filter by Game State:", game_states)
+    else:
+        selected_state = "All" # Default to "All" if column is missing
+
     selected_goal = st.sidebar.selectbox("Filter by Goal:", is_goal_options, format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
     selected_time = st.sidebar.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time))
 
     df_filtered = df_corners.copy()
     if selected_team != "All": df_filtered = df_filtered[df_filtered['TeamId'] == selected_team]
     if selected_player != "All": df_filtered = df_filtered[df_filtered['PlayerId'] == selected_player]
-    if selected_state != "All": df_filtered = df_filtered[df_filtered['GameState'] == selected_state]
+    if selected_state != "All" and 'GameState' in df_filtered.columns:
+        df_filtered = df_filtered[df_filtered['GameState'] == selected_state]
     if selected_goal != "All": df_filtered = df_filtered[df_filtered['isGoal'] == selected_goal]
     df_filtered = df_filtered[df_filtered['timeMin'].between(selected_time[0], selected_time[1])]
 
