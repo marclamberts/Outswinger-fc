@@ -142,32 +142,53 @@ def display_metrics_page(data_config, metric_info):
 
 def display_corners_page(data_config):
     """Renders the corner analysis page."""
-    selected_league = st.session_state.selected_league
-    st.header(f"Corner Analysis for {selected_league}")
+    leagues = list(data_config.keys())
+    leagues_with_total = ["Total"] + leagues
     
-    metric_config = data_config.get(selected_league, {}).get('xG (Expected Goals)')
-    if not metric_config:
-        st.error(f"Base data file configuration not found for {selected_league}.")
-        return
-
+    selected_league_corners = st.selectbox("Select a league to analyze:", leagues_with_total)
+    
+    st.header(f"Corner Analysis for {selected_league_corners}")
+    
+    df_full = pd.DataFrame()
+    
     try:
-        file_path = resource_path(os.path.join("data", metric_config["file"]))
-        df_full = load_data(file_path)
+        if selected_league_corners == "Total":
+            all_dfs = []
+            for league in leagues:
+                corner_config = data_config.get(league, {}).get('Corners')
+                if corner_config:
+                    try:
+                        file_path = resource_path(os.path.join("data", corner_config["file"]))
+                        df_league = load_data(file_path)
+                        all_dfs.append(df_league)
+                    except FileNotFoundError:
+                        st.warning(f"Corner data for {league} not found. Skipping.")
+            if all_dfs:
+                df_full = pd.concat(all_dfs, ignore_index=True)
+        else:
+            corner_config = data_config.get(selected_league_corners, {}).get('Corners')
+            if corner_config:
+                file_path = resource_path(os.path.join("data", corner_config["file"]))
+                df_full = load_data(file_path)
+            else:
+                st.error(f"Corner data configuration not found for {selected_league_corners}.")
+                return
+
     except FileNotFoundError:
-        st.error(f"Error: The data file `{metric_config['file']}` was not found.")
+        st.error(f"Error: The specified corner data file was not found.")
         return
     except Exception as e:
         st.error(f"An error occurred: {e}")
         return
 
-    if 'Type_of_play' in df_full.columns:
-        # Robustly filter for corners, ignoring case and whitespace
-        df_corners = df_full[df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
-        if df_corners.empty:
-            st.warning("No corner data ('Type_of_play' == 'FromCorner') found in the dataset.")
-            return
-    else:
-        st.warning("The column 'Type_of_play' is required for corner analysis but was not found in the dataset.")
+    if df_full.empty:
+        st.warning("No corner data could be loaded for the selected league(s).")
+        return
+
+    # Filter for corners just in case the source file contains other data types
+    df_corners = df_full[df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
+    if df_corners.empty:
+        st.warning("No events of type 'FromCorner' found in the dataset.")
         return
 
     st.sidebar.header("Corner Filters")
@@ -227,35 +248,40 @@ def main():
             'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
             'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
             'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+            'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'Corners': {"file": "WSL_corners.csv"}
         },
         "WSL 2": {
             'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
             'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
             'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
             'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+            'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'Corners': {"file": "WSL2_corners.csv"}
         },
         "Frauen-Bundesliga": {
             'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
             'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
             'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
             'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+            'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'Corners': {"file": "FBL_corners.csv"}
         },
         "Liga F": {
             'xG (Expected Goals)': {"file": "LigaF.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
             'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
             'xT (Expected Threat)': {"file": "LigaF_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
             'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+            'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'Corners': {"file": "LigaF_corners.csv"}
         },
         "NWSL": {
             'xG (Expected Goals)': {"file": "NWSL.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
             'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
             'xT (Expected Threat)': {"file": "NWSL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
             'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+            'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'Corners': {"file": "NWSL_corners.csv"}
         }
     }
 
@@ -269,9 +295,7 @@ def main():
         display_metrics_page(data_config, metric_info)
     
     elif page_view == "Corners Analysis":
-        st.title(f"⛳️ {st.session_state.selected_league} Corner Analysis")
-        leagues = ["WSL", "WSL 2", "Frauen-Bundesliga", "Liga F", "NWSL"]
-        st.session_state.selected_league = st.selectbox("Select a league to analyze:", leagues, index=leagues.index(st.session_state.selected_league))
+        st.title("⛳️ Corner Analysis")
         display_corners_page(data_config)
 
     st.markdown("---")
