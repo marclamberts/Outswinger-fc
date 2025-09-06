@@ -4,6 +4,7 @@ import numpy as np
 import os
 import sys
 from datetime import datetime
+import altair as alt
 
 # --- Configuration & Setup ---
 
@@ -167,8 +168,17 @@ def main():
 
                 if display_option == "📊 Visualization":
                     st.subheader("Top Performers Chart")
-                    chart_df = display_df.sort_values(by=sort_by_col, ascending=True)
-                    st.bar_chart(chart_df, x=sort_by_col, y='Player')
+                    
+                    # Calculate axis limits and create a custom altair chart
+                    max_val = display_df[sort_by_col].max()
+                    x_domain = [0, max_val]
+                    
+                    chart = alt.Chart(display_df).mark_bar().encode(
+                        x=alt.X(f'{sort_by_col}:Q', title=selected_metric_key, scale=alt.Scale(domain=x_domain)),
+                        y=alt.Y('Player:N', sort='-x', title="Player")
+                    ).interactive()
+
+                    st.altair_chart(chart, use_container_width=True)
 
                 else: # "📄 Data Table"
                     st.subheader("Detailed Data Table")
