@@ -7,8 +7,7 @@ def get_metric_info():
     """Returns a dictionary of metric explanations."""
     return {
         'xG (Expected Goals)': 'Estimates the probability of a shot resulting in a goal based on factors like shot angle, distance, and type of assist. A higher xG suggests a player is getting into high-quality scoring positions.',
-        'xAG (Expected Assisted Goals)': 'Measures the likelihood that a given pass will become a goal assist. It credits creative players for setting up scoring chances, even if the shot is missed.',
-        'Assists': 'The total number of passes that directly lead to a shot and a goal.'
+        'xAG (Expected Assisted Goals)': 'Measures the likelihood that a given pass will become a goal assist. It credits creative players for setting up scoring chances, even if the shot is missed.'
     }
 
 def calculate_derived_metrics(df):
@@ -102,11 +101,10 @@ def main():
             st.error(f"An error occurred: {e}.")
 
         base_metric_name = 'xAG'
-        cols_to_show = ['Player', 'Team','Assists','ShotAssists', base_metric_name]
+        cols_to_show = ['Player', 'Team', 'Assists', 'ShotAssists', base_metric_name]
         if f'{base_metric_name} per 90' in df_processed.columns:
             cols_to_show.append(f'{base_metric_name} per 90')
         sort_by_col = base_metric_name
-
 
     # --- Filter for necessary columns, sort, and display ---
     if not df_processed.empty and sort_by_col in df_processed.columns:
