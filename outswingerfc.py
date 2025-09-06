@@ -7,6 +7,7 @@ from datetime import datetime
 import altair as alt
 import matplotlib.pyplot as plt
 from mplsoccer import VerticalPitch
+from matplotlib.patches import Circle
 
 # --- Configuration & Setup ---
 
@@ -57,6 +58,66 @@ def calculate_derived_metrics(df):
         if 'xG' in df.columns:
             df['xG per Shot'] = (df['xG'] / df['Shots']).round(2)
     return df
+
+def create_detailed_shot_map(df, title_text="Corner Shots"):
+    """Creates a detailed shot map using mplsoccer."""
+    
+    # Calculate summary statistics
+    total_shots = df.shape[0]
+    if total_shots == 0:
+        return None, "No shots to plot."
+
+    total_goals = int(df['isGoal'].sum())
+    total_xg = df['xG'].sum()
+    xg_per_shot = total_xg / total_shots if total_shots > 0 else 0
+    # For corners, all shots are non-penalty
+    non_penalty_goals = total_goals
+    total_xg_minus_penalties = total_xg
+    
+    # Define colors
+    colors = {"missed": "#003f5c", "goal": "#bc5090"}
+
+    # Create the pitch
+    pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=False, line_zorder=2, linewidth=0.5)
+    fig, ax = pitch.draw(figsize=(14, 10))
+    fig.set_facecolor("white")
+    ax.set_ylim(49.8, 105) # Cut pitch at halfway line
+
+    # Plot the shots
+    for i in range(len(df['x'])):
+        row = df.iloc[i]
+        color = colors["goal"] if row['isGoal'] else colors["missed"]
+        size = row['xG'] * 500
+        ax.scatter(row['y'], row['x'], color=color, s=size, alpha=0.7, zorder=3)
+
+    # Add title and subtitle
+    ax.text(50, 108, title_text, fontsize=30, weight='bold', color='black', ha='center', va='top')
+    ax.text(50, 104, "Shot Map from Corners", fontsize=15, style='italic', color='black', ha='center', va='top')
+    
+    # Adjust plot for additional space at the bottom
+    plt.subplots_adjust(bottom=0.3)
+
+    # --- Circles for Stats ---
+    circle_positions = [(0.2, -0.10), (0.2, -0.2), (0.35, -0.10), (0.35, -0.2)]
+    circle_texts = ["Shots", "xG/Shot", "Goals", "xG"]
+    values = [total_shots, round(xg_per_shot, 2), total_goals, round(total_xg, 2)]
+    circle_colors = [colors["missed"], colors["missed"], colors["goal"], colors["goal"]]
+
+    for pos, text, value, color in zip(circle_positions, circle_texts, values, circle_colors):
+        circle = Circle(pos, 0.04, transform=ax.transAxes, color=color, zorder=5, clip_on=False)
+        ax.add_artist(circle)
+        ax.text(pos[0], pos[1] + 0.06, text, transform=ax.transAxes, color='black', fontsize=12, ha='center', va='center', zorder=6)
+        ax.text(pos[0], pos[1], value, transform=ax.transAxes, color='white', fontsize=12, weight='bold', ha='center', va='center', zorder=6)
+
+    # --- xG Size Legend ---
+    ax.text(0.75, -0.05, "xG Size", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
+    ax.scatter([0.72, 0.75, 0.78], [-0.12, -0.12, -0.12], s=[0.1*500, 0.4*500, 0.7*500], color=colors['missed'], transform=ax.transAxes, clip_on=False)
+    ax.text(0.75, -0.18, "Low → High", transform=ax.transAxes, fontsize=10, color='black', ha='center', va='center')
+
+    # --- Branding ---
+    ax.text(0.75, -0.25, "OUTSWINGERFC.COM", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
+
+    return fig, None
 
 # --- Page Display Functions ---
 
@@ -148,8 +209,6 @@ def display_corners_page(data_config):
     
     selected_league_corners = st.sidebar.selectbox("Select League:", leagues_with_total)
     
-    st.header(f"Corner Analysis for {selected_league_corners}")
-    
     df_full = pd.DataFrame()
     
     try:
@@ -215,35 +274,28 @@ def display_corners_page(data_config):
         df_filtered = df_filtered[df_filtered['GameState'] == selected_state]
     if selected_goal != "All": df_filtered = df_filtered[df_filtered['isGoal'] == selected_goal]
     df_filtered = df_filtered[df_filtered['timeMin'].between(selected_time[0], selected_time[1])]
+    
+    # Determine the title for the shot map
+    if selected_team != "All":
+        plot_title = selected_team
+    elif selected_player != "All":
+        plot_title = selected_player
+    else:
+        plot_title = f"{selected_league_corners} Corners"
 
-    st.markdown("---")
-
-    # --- Summary Metrics ---
-    total_shots = len(df_filtered)
-    total_goals = int(df_filtered['isGoal'].sum())
-    total_xg = df_filtered['xG'].sum()
-    xg_per_shot = (total_xg / total_shots) if total_shots > 0 else 0
-
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Shots from Corners", f"{total_shots}")
-    col2.metric("Total Goals", f"{total_goals}")
-    col3.metric("Total xG", f"{total_xg:.2f}")
-    col4.metric("xG per Shot", f"{xg_per_shot:.2f}")
+    st.header(f"Corner Analysis for {plot_title}")
     
     st.markdown("---")
 
-    st.write(f"#### Displaying `{total_shots}` corner events on the pitch.")
-
-    if not df_filtered.empty and all(c in df_filtered.columns for c in ['x', 'y', 'xG']):
-        pitch = VerticalPitch(half=True, pitch_type='opta', pitch_color='#22312b', line_color='#c7d5cc')
-        fig, ax = pitch.draw(figsize=(8, 6))
-        fig.set_facecolor('#22312b')
-        
-        sizes = df_filtered['xG'] * 1000
-        pitch.scatter(df_filtered.x, df_filtered.y, s=sizes, ax=ax, alpha=0.7, ec='white', c='#e789e7')
-        st.pyplot(fig)
+    if not df_filtered.empty and all(c in df_filtered.columns for c in ['X', 'Y', 'xG', 'isGoal']):
+        fig, error_message = create_detailed_shot_map(df_filtered, title_text=plot_title)
+        if fig:
+            st.pyplot(fig)
+        else:
+            st.info(error_message)
+            
     elif not df_filtered.empty:
-        st.warning("Required columns ('X', 'Y', 'xG') not found for plotting.")
+        st.warning("Required columns ('X', 'Y', 'xG', 'isGoal') not found for plotting.")
     else:
         st.info("No data available for the selected filters.")
 
@@ -315,7 +367,6 @@ def main():
         display_metrics_page(data_config, metric_info)
     
     elif page_view == "Corners Analysis":
-        st.title("⛳️ Corner Analysis")
         display_corners_page(data_config)
 
     st.markdown("---")
