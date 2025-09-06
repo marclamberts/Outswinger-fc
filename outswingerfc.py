@@ -74,7 +74,7 @@ def main():
     # --- Sidebar ---
     st.sidebar.title("Outswinger FC")
     st.sidebar.image("https://placehold.co/400x200/2d3748/e2e8f0?text=Outswinger+FC", use_container_width=True)
-    st.sidebar.info("This app displays player stats for the WSL, WSL 2, and Frauen-Bundesliga.")
+    st.sidebar.info("This app displays player stats for the WSL, WSL 2, Frauen-Bundesliga, and Liga F.")
     st.sidebar.header("Metric Leaderboards")
 
     for metric in metric_pages:
@@ -85,7 +85,7 @@ def main():
     # --- Main Page ---
     st.title(f"📊 {st.session_state.selected_league} Advanced Metrics Leaderboard")
 
-    leagues = ["WSL", "WSL 2", "Frauen-Bundesliga"]
+    leagues = ["WSL", "WSL 2", "Frauen-Bundesliga", "Liga F"]
     cols = st.columns(len(leagues))
     for i, league in enumerate(leagues):
         if cols[i].button(league, use_container_width=True, disabled=(st.session_state.selected_league == league)):
@@ -123,6 +123,13 @@ def main():
             'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
             'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
             'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
+        },
+        "Liga F": {
+            'xG (Expected Goals)': {"file": "LigaF.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "LigaF_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
+            'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}
         }
     }
     
@@ -147,7 +154,7 @@ def main():
             st.markdown("---")
             col1, col2 = st.columns([2, 1.5])
             with col1:
-                search_term = st.text_input("Search for a player:", placeholder="e.g., Sam Kerr")
+                search_term = st.text_input("Search for a player:", placeholder="e.g., Alexia Putellas")
             with col2:
                 top_n = st.slider("Number of players to display:", min_value=5, max_value=50, value=15, step=5)
             
