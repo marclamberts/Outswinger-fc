@@ -8,6 +8,7 @@ import altair as alt
 import matplotlib.pyplot as plt
 from mplsoccer import VerticalPitch
 from matplotlib.patches import Circle
+import io
 
 # --- Configuration & Setup ---
 
@@ -286,6 +287,30 @@ def display_corners_page(data_config):
         fig, error_message = create_detailed_shot_map(df_filtered, title_text=plot_title)
         if fig:
             st.pyplot(fig)
+            
+            # --- Download Buttons ---
+            buf = io.BytesIO()
+            fig.savefig(buf, format="png", bbox_inches='tight', facecolor='white')
+            
+            csv = df_filtered.to_csv(index=False).encode('utf-8')
+            
+            dl_col1, dl_col2 = st.columns(2)
+            with dl_col1:
+                st.download_button(
+                    label="📥 Download Image",
+                    data=buf,
+                    file_name=f"{plot_title.replace(' ', '_')}_shot_map.png",
+                    mime="image/png",
+                    use_container_width=True
+                )
+            with dl_col2:
+                st.download_button(
+                    label="📥 Download Data",
+                    data=csv,
+                    file_name=f"{plot_title.replace(' ', '_')}_corner_data.csv",
+                    mime="text/csv",
+                    use_container_width=True
+                )
         else:
             st.info(error_message)
             
