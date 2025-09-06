@@ -2,58 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-def generate_detailed_mock_data(league):
-    """Generates detailed mock player data for a given league."""
-    # Player and team data remains the same based on the league
-    if league == "NWSL":
-        teams = ["Angel City FC", "Chicago Red Stars", "Houston Dash", "KC Current", "NJ/NY Gotham FC", "NC Courage", "Orlando Pride", "Portland Thorns", "OL Reign", "Racing Louisville", "San Diego Wave", "Washington Spirit"]
-        players = ["Sophia Smith", "Alex Morgan", "Mallory Pugh", "Rose Lavelle", "Trinity Rodman", "Megan Rapinoe", "Lynn Williams", "Crystal Dunn", "Naomi Girma", "Alyssa Thompson", "Debinha", "Kerolin Nicoli", "Sam Staab", "Ashley Sanchez", "Diana Ordóñez"]
-    elif league == "WSL":
-        teams = ["Arsenal", "Aston Villa", "Brighton & Hove Albion", "Chelsea", "Everton", "Leicester City", "Liverpool", "Manchester City", "Manchester United", "Reading", "Tottenham Hotspur", "West Ham United"]
-        players = ["Sam Kerr", "Beth Mead", "Vivianne Miedema", "Lauren Hemp", "Chloe Kelly", "Khadija Shaw", "Fridolina Rolfö", "Guro Reiten", "Ella Toone", "Alessia Russo", "Leah Williamson", "Millie Bright", "Mary Earps", "Rachel Daly", "Ona Batlle"]
-    elif league == "Frauen-Bundesliga":
-        teams = ["VfL Wolfsburg", "Bayern Munich", "Eintracht Frankfurt", "TSG Hoffenheim", "SC Freiburg", "SGS Essen", "Bayer 04 Leverkusen", "1. FC Köln", "Werder Bremen", "MSV Duisburg"]
-        players = ["Alexandra Popp", "Lina Magull", "Lea Schüller", "Laura Freigang", "Jule Brand", "Lena Oberdorf", "Klara Bühl", "Linda Dallmann", "Nicole Billa", "Tabea Waßmuth", "Merle Frohms", "Giulia Gwinn", "Sydney Lohmann", "Lara Prašnikar", "Ewa Pajor"]
-    else: # WSL 2
-        teams = ["London City Lionesses", "Bristol City", "Southampton", "Birmingham City", "Durham", "Crystal Palace", "Sheffield United", "Charlton Athletic", "Lewes", "Sunderland"]
-        players = ["Melissa Johnson", "Katie Wilkinson", "Jasmine Matthews", "Charlie Wellings", "Rio Hardy", "Molly Pike", "Ava Kuyken", "Mia Ross", "Lucy Quinn", "Beth Hepple", "Emily Kraft", "Sarah Ewens", "Abigail Harrison", "Jade Pennock", "Courtney Sweetman-Kirk"]
-    
-    num_players = len(players)
-    
-    # Base stats
-    minutes = np.random.randint(500, 2000, size=num_players)
-    shots = np.random.randint(10, 80, size=num_players)
-    
-    # Generate detailed xG
-    xg_total = np.round(np.random.uniform(0.5, 9.5, size=num_players), 2)
-    xg_set_piece_ratio = np.random.uniform(0.1, 0.4, size=num_players)
-    xg_set_piece = np.round(xg_total * xg_set_piece_ratio, 2)
-    xg_open_play = np.round(xg_total - xg_set_piece, 2)
-    xg_buildup = np.round(np.random.uniform(0.5, 5.0, size=num_players), 2)
-
-    data = {
-        'Player': players,
-        'Team': np.random.choice(teams, size=num_players),
-        'Minutes Played': minutes,
-        'Shots': shots,
-        
-        # Detailed xG Metrics
-        'xG': xg_total,
-        'xG Open Play': xg_open_play,
-        'xG Set Piece': xg_set_piece,
-        'xG Build-up': xg_buildup,
-
-        # Other base metrics for expansion
-        'xAG': np.round(np.random.uniform(0.5, 8.0, size=num_players), 2),
-        'xT': np.round(np.random.uniform(0.2, 1.5, size=num_players), 2),
-        'VAEP': np.round(np.random.uniform(0.3, 1.8, size=num_players), 2),
-        'Expected Shot Danger': np.round(np.random.uniform(0.05, 0.4, size=num_players), 2),
-        'Expected Cross': np.round(np.random.uniform(0.1, 0.6, size=num_players), 2),
-        'Expected Disruption': np.round(np.random.uniform(0.05, 0.3, size=num_players), 2),
-        'Dribble Success Rate (%)': np.round(np.random.uniform(40, 90, size=num_players), 1),
-    }
-    return pd.DataFrame(data)
-
 def get_metric_info():
     """Returns a dictionary of metric explanations."""
     return {
@@ -71,6 +19,11 @@ def calculate_derived_metrics(df):
     """Calculates per 90, per shot, and other derived metrics."""
     # Ensure a copy is made to avoid SettingWithCopyWarning
     df = df.copy()
+
+    # Check if essential columns exist before calculations
+    if 'Minutes Played' not in df.columns or 'Shots' not in df.columns:
+        st.warning("'Minutes Played' and/or 'Shots' columns not found in the data. Cannot calculate per 90 or per shot metrics.")
+        return df
 
     # Avoid division by zero
     df['Minutes Played'] = df['Minutes Played'].replace(0, np.nan)
@@ -106,9 +59,7 @@ def main():
     
     st.sidebar.info(
         """
-        This app loads Expected Goals (xG) data directly from a GitHub source.
-        
-        Other metrics are generated for demonstration purposes.
+        This app displays player stats loaded from the local `data/test.csv` file.
         """
     )
 
@@ -132,40 +83,18 @@ def main():
             st.rerun()
 
     # --- Data Loading and Processing ---
-    # !!! IMPORTANT: Replace this URL with the raw GitHub URL of your CSV file !!!
-    github_csv_url = "data/2025-09-05_Chelsea FC Women - Manchester City WFC.csv" # Example URL
-    st.info(f"Loading xG data from a public source. To use your own, edit the `github_csv_url` in `app.py`.")
+    local_csv_path = "data/2025-09-05_Chelsea FC Women - Manchester City WFC.csv"
+    df_raw = pd.DataFrame() # Start with an empty DataFrame
 
-    df_raw = None
     try:
-        # For this example, we'll just pretend the loaded CSV has the right format.
-        # In a real scenario, you would need to process the CSV to get the xG stats per player.
-        # This part is highly dependent on your CSV's structure.
-        # For now, we will simulate this by falling back to mock data but show a success message.
-        
-        # This is where you would load and process your file:
-        # user_xg_df = pd.read_csv(github_csv_url)
-        # ... processing logic to aggregate stats per player ...
+        # Load the data from the local CSV
+        df_raw = pd.read_csv(local_csv_path)
+        st.success(f"Successfully loaded data from `{local_csv_path}`.")
 
-        st.success("Successfully connected to the GitHub source. Displaying mock data as a placeholder for processed stats.")
-        # Since the example URL doesn't have the required player xG format, we'll use mock data.
-        # If your URL has the correct format, the merge logic below would be used.
-        df_raw = generate_detailed_mock_data(st.session_state.selected_league)
-
-        # --- MERGE LOGIC (if your CSV is ready) ---
-        # 1. Load your processed data:
-        #    user_xg_df = your_processing_function(github_csv_url)
-        # 2. Generate mock data for other stats:
-        #    mock_data = generate_detailed_mock_data(st.session_state.selected_league)
-        # 3. Drop mock xG columns:
-        #    xg_cols = ['xG', 'xG Open Play', 'xG Set Piece', 'xG Build-up']
-        #    base_mock_data = mock_data.drop(columns=xg_cols, errors='ignore')
-        # 4. Merge dataframes:
-        #    df_raw = pd.merge(base_mock_data, user_xg_df, on="Player", how="inner")
-
+    except FileNotFoundError:
+        st.error(f"Error: The file `{local_csv_path}` was not found. Please make sure it's in the correct directory.")
     except Exception as e:
-        st.error(f"Error loading or processing data from the source: {e}. Displaying mock data.")
-        df_raw = generate_detailed_mock_data(st.session_state.selected_league)
+        st.error(f"An error occurred while processing `{local_csv_path}`: {e}.")
 
 
     df_processed = calculate_derived_metrics(df_raw)
@@ -183,20 +112,25 @@ def main():
         ]
         sort_by_col = 'xG'
     else:
+        # Handle other metrics dynamically
         base_metric_name = selected_metric_key.split(' (')[0]
         cols_to_show = ['Player', 'Team', base_metric_name]
         if f'{base_metric_name} per 90' in df_processed.columns:
             cols_to_show.append(f'{base_metric_name} per 90')
         sort_by_col = base_metric_name
 
-    # Filter for necessary columns, sort, and display
-    display_df = df_processed[[col for col in cols_to_show if col in df_processed.columns]]
-    display_df = display_df.sort_values(by=sort_by_col, ascending=False).reset_index(drop=True)
-    display_df.index = display_df.index + 1
+    # --- Filter for necessary columns, sort, and display ---
+    if not df_processed.empty and sort_by_col in df_processed.columns:
+        display_df = df_processed[[col for col in cols_to_show if col in df_processed.columns]]
+        display_df = display_df.sort_values(by=sort_by_col, ascending=False).reset_index(drop=True)
+        display_df.index = display_df.index + 1
+        st.dataframe(display_df, use_container_width=True)
+    elif not df_processed.empty:
+        st.warning(f"The metric '{sort_by_col}' is not available in the loaded data file.")
+    else:
+        st.warning("No data to display. Please check the data source.")
 
-    st.dataframe(display_df, use_container_width=True)
 
 if __name__ == "__main__":
     main()
-
 
