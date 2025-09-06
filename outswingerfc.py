@@ -144,26 +144,36 @@ def main():
 
             # --- Interactive Controls ---
             st.markdown("---")
-            col1, col2 = st.columns([2, 1])
+            col1, col2 = st.columns([2, 1.5])
             with col1:
                 search_term = st.text_input("Search for a player:", placeholder="e.g., Sam Kerr")
             with col2:
-                top_n = st.slider("Select number of players to display:", min_value=5, max_value=50, value=15, step=5)
+                top_n = st.slider("Number of players to display:", min_value=5, max_value=50, value=15, step=5)
+            
+            display_option = st.radio(
+                "Select display format:",
+                ("📊 Visualization", "📄 Data Table"),
+                horizontal=True,
+                label_visibility="collapsed"
+            )
 
             if search_term:
-                df_processed = df_processed[df_processed['Player'].str.contains(search_term, case=False)]
+                df_processed = df_processed[df_processed['Player'].str.contains(search_term, case=False, na=False)]
 
             # --- Data Display ---
             if not df_processed.empty and sort_by_col in df_processed.columns:
                 display_df = df_processed.sort_values(by=sort_by_col, ascending=False).head(top_n).reset_index(drop=True)
                 display_df.index = display_df.index + 1
 
-                # --- Visualization & Data Table ---
-                st.subheader("Top Performers Chart")
-                st.bar_chart(data=display_df, x='Player', y=sort_by_col)
+                if display_option == "📊 Visualization":
+                    st.subheader("Top Performers Chart")
+                    chart_df = display_df.sort_values(by=sort_by_col, ascending=True)
+                    st.bar_chart(chart_df, x=sort_by_col, y='Player')
 
-                st.subheader("Detailed Data Table")
-                st.dataframe(display_df[metric_config["cols"]], use_container_width=True)
+                else: # "📄 Data Table"
+                    st.subheader("Detailed Data Table")
+                    existing_cols = [col for col in metric_config["cols"] if col in display_df.columns]
+                    st.dataframe(display_df[existing_cols], use_container_width=True)
             
             elif not df_processed.empty:
                 st.warning(f"The required metric '{sort_by_col}' is not available in the loaded data file.")
