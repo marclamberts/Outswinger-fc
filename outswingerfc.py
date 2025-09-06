@@ -8,7 +8,8 @@ def get_metric_info():
     return {
         'xG (Expected Goals)': 'Estimates the probability of a shot resulting in a goal based on factors like shot angle, distance, and type of assist. A higher xG suggests a player is getting into high-quality scoring positions.',
         'xAG (Expected Assisted Goals)': 'Measures the likelihood that a given pass will become a goal assist. It credits creative players for setting up scoring chances, even if the shot is missed.',
-        'xT (Expected Threat)': 'Quantifies the increase in the probability of scoring a goal by moving the ball between two points on the pitch. It rewards players for advancing the ball into dangerous areas.'
+        'xT (Expected Threat)': 'Quantifies the increase in the probability of scoring a goal by moving the ball between two points on the pitch. It rewards players for advancing the ball into dangerous areas.',
+        'Expected Disruption (xDisruption)': 'Measures a defensive player\'s ability to break up opposition plays. It values tackles and interceptions that prevent high-probability scoring chances for the opponent.'
     }
 
 def calculate_derived_metrics(df):
@@ -26,7 +27,7 @@ def calculate_derived_metrics(df):
     df['Shots'] = df['Shots'].replace(0, np.nan)
 
     # Calculate per 90 metrics for the remaining core metrics
-    for col in ['xG', 'xAG', 'xT']:
+    for col in ['xG', 'xAG', 'xT', 'xDisruption']:
         if col in df.columns:
             df.loc[:, f'{col} per 90'] = (df[col] / df['Minutes Played']) * 90
 
@@ -108,7 +109,7 @@ def main():
         sort_by_col = base_metric_name
         
     elif selected_metric_key == 'xT (Expected Threat)':
-        local_csv_path = os.path.join("data", "WSL_xT.csv")
+        local_csv_path = os.path.join("data", "WSL_xt.csv")
         try:
             df_raw = pd.read_csv(local_csv_path)
             st.success(f"Successfully loaded data from `{local_csv_path}`.")
@@ -123,6 +124,20 @@ def main():
         if f'{base_metric_name} per 90' in df_processed.columns:
             cols_to_show.append(f'{base_metric_name} per 90')
         sort_by_col = base_metric_name
+
+    elif selected_metric_key == 'Expected Disruption (xDisruption)':
+        local_csv_path = os.path.join("data", "WSL_xDisruption.csv")
+        try:
+            df_raw = pd.read_csv(local_csv_path)
+            st.success(f"Successfully loaded data from `{local_csv_path}`.")
+            df_processed = calculate_derived_metrics(df_raw)
+        except FileNotFoundError:
+            st.error(f"Error: The file `{local_csv_path}` was not found.")
+        except Exception as e:
+            st.error(f"An error occurred: {e}.")
+
+        cols_to_show = ['playerName', 'Team', 'Actual disruption', 'expected disruptions']
+        sort_by_col = 'expected disruptions'
 
     # --- Filter for necessary columns, sort, and display ---
     if not df_processed.empty and sort_by_col in df_processed.columns:
