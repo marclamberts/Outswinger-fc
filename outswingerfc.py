@@ -287,7 +287,7 @@ def display_corners_page(data_config):
     
     st.markdown("---")
 
-    if not df_filtered.empty and all(c in df_filtered.columns for c in ['X', 'Y', 'xG', 'isGoal']):
+    if not df_filtered.empty and all(c in df_filtered.columns for c in ['x', 'y', 'xG', 'isGoal']):
         fig, error_message = create_detailed_shot_map(df_filtered, title_text=plot_title)
         if fig:
             st.pyplot(fig)
@@ -295,7 +295,7 @@ def display_corners_page(data_config):
             st.info(error_message)
             
     elif not df_filtered.empty:
-        st.warning("Required columns ('X', 'Y', 'xG', 'isGoal') not found for plotting.")
+        st.warning("Required columns ('x', 'y', 'xG', 'isGoal') not found for plotting.")
     else:
         st.info("No data available for the selected filters.")
 
