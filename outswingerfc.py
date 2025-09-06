@@ -107,14 +107,14 @@ def main():
 
     if selected_metric_key == 'xG (Expected Goals)':
         cols_to_show = [
-            'Player', 'Team', 'xG', 'xG per 90', 'xG Open Play', 'xG Open Play per 90', 
+            'PlayerId', 'TeamId', 'xG', 'xG per 90', 'xG Open Play', 'xG Open Play per 90', 
             'xG Set Piece', 'xG Set Piece per 90', 'xG per Shot', 'xG Build-up', 'xG Build-up per 90'
         ]
         sort_by_col = 'xG'
     else:
         # Handle other metrics dynamically
         base_metric_name = selected_metric_key.split(' (')[0]
-        cols_to_show = ['Player', 'Team', base_metric_name]
+        cols_to_show = ['PlayerId', 'TeamId', base_metric_name]
         if f'{base_metric_name} per 90' in df_processed.columns:
             cols_to_show.append(f'{base_metric_name} per 90')
         sort_by_col = base_metric_name
