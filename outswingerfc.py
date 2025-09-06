@@ -8,6 +8,7 @@ def get_metric_info():
     return {
         'xG (Expected Goals)': 'Estimates the probability of a shot resulting in a goal based on factors like shot angle, distance, and type of assist. A higher xG suggests a player is getting into high-quality scoring positions.',
         'xAG (Expected Assisted Goals)': 'Measures the likelihood that a given pass will become a goal assist. It credits creative players for setting up scoring chances, even if the shot is missed.',
+        'Assists': 'The total number of passes that directly lead to a shot and a goal.'
     }
 
 def calculate_derived_metrics(df):
@@ -65,39 +66,48 @@ def main():
     # --- Main Page ---
     st.title("📊 WSL Advanced Metrics Leaderboard")
 
-    # --- Data Loading and Processing ---
-    local_csv_path = os.path.join("data", "WSL.csv")
-    df_raw = pd.DataFrame() # Start with an empty DataFrame
-
-    try:
-        # Load the data from the local CSV
-        df_raw = pd.read_csv(local_csv_path)
-        st.success(f"Successfully loaded data from `{local_csv_path}`.")
-    except FileNotFoundError:
-        st.error(f"Error: The file `{local_csv_path}` was not found. Please make sure the file exists in your 'data' directory.")
-    except Exception as e:
-        st.error(f"An error occurred while processing `{local_csv_path}`: {e}.")
-
-
-    df_processed = calculate_derived_metrics(df_raw)
-
     # --- Display Selected Metric Page ---
     selected_metric_key = st.session_state.selected_metric
     
     st.header(f"📈 WSL - {selected_metric_key}")
     st.markdown(f"**Definition:** {metric_info[selected_metric_key]}")
 
-    if selected_metric_key == 'xG (Expected Goals)':
-        cols_to_show = [
-            'Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'
-        ]
-        sort_by_col = 'xG'
-    else: # Handles xAG
-        base_metric_name = 'xAG'
-        cols_to_show = ['Player', 'Team', base_metric_name]
-        if f'{base_metric_name} per 90' in df_processed.columns:
-            cols_to_show.append(f'{base_metric_name} per 90')
-        sort_by_col = base_metric_name
+    df_processed = pd.DataFrame() # Initialize an empty dataframe
+    
+    # --- Data Loading and Logic based on selected metric ---
+    if selected_metric_key == 'xG (Expected Goals)' or selected_metric_key == 'xAG (Expected Assisted Goals)':
+        local_csv_path = os.path.join("data", "WSL.csv")
+        try:
+            df_raw = pd.read_csv(local_csv_path)
+            st.success(f"Successfully loaded data from `{local_csv_path}`.")
+            df_processed = calculate_derived_metrics(df_raw)
+        except FileNotFoundError:
+            st.error(f"Error: The file `{local_csv_path}` was not found.")
+        except Exception as e:
+            st.error(f"An error occurred: {e}.")
+
+        if selected_metric_key == 'xG (Expected Goals)':
+            cols_to_show = ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG']
+            sort_by_col = 'xG'
+        else: # Handles xAG
+            base_metric_name = 'xAG'
+            cols_to_show = ['Player', 'Team', base_metric_name]
+            if f'{base_metric_name} per 90' in df_processed.columns:
+                cols_to_show.append(f'{base_metric_name} per 90')
+            sort_by_col = base_metric_name
+
+    elif selected_metric_key == 'Assists':
+        local_csv_path = os.path.join("data", "WSL_assists.csv")
+        try:
+            df_processed = pd.read_csv(local_csv_path) # No derived metrics needed
+            st.success(f"Successfully loaded data from `{local_csv_path}`.")
+        except FileNotFoundError:
+            st.error(f"Error: The file `{local_csv_path}` was not found.")
+        except Exception as e:
+            st.error(f"An error occurred: {e}.")
+        
+        cols_to_show = ['Player', 'Team', 'Assists']
+        sort_by_col = 'Assists'
 
     # --- Filter for necessary columns, sort, and display ---
     if not df_processed.empty and sort_by_col in df_processed.columns:
