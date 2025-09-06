@@ -221,7 +221,7 @@ def display_corners_page(data_config):
     st.markdown("---")
     st.write(f"#### Displaying `{len(df_filtered)}` corner events based on filters.")
 
-    if not df_filtered.empty and all(c in df_filtered.columns for c in ['X', 'Y', 'xG']):
+    if not df_filtered.empty and all(c in df_filtered.columns for c in ['x', 'y', 'xG']):
         pitch = VerticalPitch(half=True, pitch_type='opta', pitch_color='#22312b', line_color='#c7d5cc')
         fig, ax = pitch.draw(figsize=(8, 6))
         fig.set_facecolor('#22312b')
