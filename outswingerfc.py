@@ -120,7 +120,7 @@ def main():
         sort_by_col = base_metric_name
         
     elif selected_metric_key == 'xT (Expected Threat)':
-        local_csv_path = resource_path(os.path.join("data", "WSL_xt.csv"))
+        local_csv_path = resource_path(os.path.join("data", "WSL_xT.csv"))
         try:
             df_raw = pd.read_csv(local_csv_path)
             st.success(f"Successfully loaded data from `{local_csv_path}`.")
