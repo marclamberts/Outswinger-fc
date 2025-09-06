@@ -153,7 +153,7 @@ def main():
             
             display_option = st.radio(
                 "Select display format:",
-                ("📊 Visualization", "📄 Data Table"),
+                ("📄 Data Table", "📊 Visualization"),
                 horizontal=True,
                 label_visibility="collapsed"
             )
