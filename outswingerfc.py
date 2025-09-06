@@ -160,10 +160,14 @@ def display_corners_page(data_config):
         st.error(f"An error occurred: {e}")
         return
 
-    if 'Type_of_play' in df_full.columns and not df_full[df_full['Type_of_play'] == 'FromCorner'].empty:
-        df_corners = df_full[df_full['Type_of_play'] == 'FromCorner'].copy()
+    if 'Type_of_play' in df_full.columns:
+        # Robustly filter for corners, ignoring case and whitespace
+        df_corners = df_full[df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
+        if df_corners.empty:
+            st.warning("No corner data ('Type_of_play' == 'FromCorner') found in the dataset.")
+            return
     else:
-        st.warning("No corner data ('Type_of_play' == 'FromCorner') found in the dataset.")
+        st.warning("The column 'Type_of_play' is required for corner analysis but was not found in the dataset.")
         return
 
     st.sidebar.header("Corner Filters")
