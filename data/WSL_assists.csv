@@ -1,6 +1,24 @@
-Player,Team,Assists,xAG
-A. Russo,Arsenal WFC,1,0.34
-B. Mead,Arsenal WFC,2,0.92
-E. Carpenter,Chelsea FC Women,1,0.43
-S. Catley,Arsenal WFC,1,0.04
-W. Kaptein,Chelsea FC Women,1,0.41
+Player,Team,Assists,xAG,ShotAssists,ShotAssist_xG
+A. Greenwood,Manchester City WFC,0.0,0.0,2.0,0.1
+A. Russo,Arsenal WFC,1.0,0.34,3.0,0.19
+B. Mead,Arsenal WFC,2.0,0.92,1.0,0.09
+C. Foord,Arsenal WFC,0.0,0.0,1.0,0.09
+E. Carpenter,Chelsea FC Women,1.0,0.43,1.0,0.1
+E. Fox,Arsenal WFC,0.0,0.0,1.0,0.04
+Jana Fernández,London City Lionesses LFC,0.0,0.0,1.0,0.03
+K. Asllani,London City Lionesses LFC,0.0,0.0,2.0,0.13
+K. Casparij,Manchester City WFC,0.0,0.0,1.0,0.03
+K. Little,Arsenal WFC,0.0,0.0,1.0,0.04
+K. McCabe,Arsenal WFC,0.0,0.0,1.0,0.06
+K. Shaw,Manchester City WFC,0.0,0.0,1.0,0.1
+L. Hemp,Manchester City WFC,0.0,0.0,3.0,0.49
+Mariona Caldentey,Arsenal WFC,0.0,0.0,4.0,0.23
+N. Björn,Chelsea FC Women,0.0,0.0,1.0,0.1
+O. Smith,Arsenal WFC,0.0,0.0,1.0,0.09
+S. Baltimore,Chelsea FC Women,0.0,0.0,1.0,0.09
+S. Catley,Arsenal WFC,1.0,0.04,0.0,0.0
+S. Jakobsson,London City Lionesses LFC,0.0,0.0,1.0,0.08
+V. Miedema,Manchester City WFC,0.0,0.0,2.0,0.12
+V. Pelova,Arsenal WFC,0.0,0.0,2.0,0.17
+W. Kaptein,Chelsea FC Women,1.0,0.41,0.0,0.0
+Y. Hasegawa,Manchester City WFC,0.0,0.0,2.0,0.1
