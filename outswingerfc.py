@@ -123,7 +123,7 @@ def display_metrics_page(data_config, metric_info):
     """Renders the main metrics leaderboard page."""
     # --- League Selection ---
     leagues_row1 = ["WSL", "WSL 2", "Frauen-Bundesliga"]
-    leagues_row2 = ["Liga F", "NWSL"]
+    leagues_row2 = ["Liga F", "NWSL", "Premiere Ligue"]
     
     cols_row1 = st.columns(len(leagues_row1))
     for i, league in enumerate(leagues_row1):
@@ -131,7 +131,7 @@ def display_metrics_page(data_config, metric_info):
             st.session_state.selected_league = league
             st.rerun()
 
-    cols_row2 = st.columns(len(leagues_row2) + 1)
+    cols_row2 = st.columns(len(leagues_row2))
     for i, league in enumerate(leagues_row2):
         if cols_row2[i].button(league, use_container_width=True, disabled=(st.session_state.selected_league == league)):
             st.session_state.selected_league = league
@@ -159,7 +159,7 @@ def display_metrics_page(data_config, metric_info):
             df_processed = calculate_derived_metrics(df_raw)
             sort_by_col = metric_config["sort"]
             
-            search_placeholders = {"WSL": "e.g., Sam Kerr", "WSL 2": "e.g., Melissa Johnson", "Frauen-Bundesliga": "e.g., Alexandra Popp", "Liga F": "e.g., Alexia Putellas", "NWSL": "e.g., Sophia Smith"}
+            search_placeholders = {"WSL": "e.g., Sam Kerr", "WSL 2": "e.g., Melissa Johnson", "Frauen-Bundesliga": "e.g., Alexandra Popp", "Liga F": "e.g., Alexia Putellas", "NWSL": "e.g., Sophia Smith", "Premiere Ligue": "e.g., Ada Hegerberg"}
             placeholder = search_placeholders.get(selected_league, "Search for a player...")
 
             st.markdown("---")
@@ -346,6 +346,7 @@ def main():
             st.rerun()
     
     st.sidebar.markdown("---")
+    st.sidebar.info("This app displays player stats for the WSL, WSL 2, Frauen-Bundesliga, Liga F, NWSL, and Premiere Ligue.")
 
     data_config = {
         "WSL": {
@@ -387,6 +388,14 @@ def main():
             'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
             'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
             'Corners': {"file": "NWSL_corners.csv"}
+        },
+        "Premiere Ligue": {
+            'xG (Expected Goals)': {"file": "Premiere Ligue.csv", "cols": ['Player', 'Team', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "Premiere_Ligue_assists.csv", "cols": ['Player', 'Team', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "Premiere_Ligue_xT.csv", "cols": ['Player', 'Team', 'xT'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "Premiere_Ligue_xDisruption.csv", "cols": ['Player', 'Team', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
+            'Goal Probability Added (GPA/G+)': {"file": "Premiere_Ligue_gpa.csv", "cols": ['Player', 'Team', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'Corners': {"file": "Premiere_Ligue_corners.csv"}
         }
     }
 
