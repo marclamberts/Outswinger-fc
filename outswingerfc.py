@@ -416,7 +416,7 @@ def main():
             'xT (Expected Threat)': {"file": "PremiereLigue_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
             'Expected Disruption (xDisruption)': {"file": "PremiereLigue_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
             'Goal Probability Added (GPA/G+)': {"file": "PremiereLigue_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
-            'Corners': {"file": "PremiereLigue_corners.csv"}
+            'Corners': {"file": "Premiere_Ligue_corners.csv"}
         }
     }
 
