@@ -48,8 +48,8 @@ def resource_path(relative_path):
 def calculate_derived_metrics(df):
     """Calculates per 90 and per shot metrics if applicable."""
     df = df.copy()
-    if 'Minutes Played' in df.columns and 'Shots' in df.columns:
-        df['Minutes Played'] = pd.to_numeric(df['Minutes Played'], errors='coerce').replace(0, np.nan)
+    if 'Minutes' in df.columns and 'Shots' in df.columns:
+        df['Minutes'] = pd.to_numeric(df['Minutes'], errors='coerce').replace(0, np.nan)
         df['Shots'] = pd.to_numeric(df['Shots'], errors='coerce').replace(0, np.nan)
         
         for col in ['xG', 'xAG', 'xT', 'xDisruption', 'GPA']:
