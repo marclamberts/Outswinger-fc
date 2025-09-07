@@ -54,7 +54,7 @@ def calculate_derived_metrics(df):
         
         for col in ['xG', 'xAG', 'xT', 'xDisruption', 'GPA']:
             if col in df.columns:
-                df[f'{col} per 90'] = (df[col] / df['Minutes Played'] * 90).round(2)
+                df[f'{col} per 90'] = (df[col] / df['Minutes'] * 90).round(2)
         
         if 'xG' in df.columns:
             df['xG per Shot'] = (df['xG'] / df['Shots']).round(2)
@@ -163,7 +163,7 @@ def display_metrics_page(data_config, metric_info):
             df_metric.rename(columns=rename_map, inplace=True)
             
             # Merge the two dataframes
-            df_raw = pd.merge(df_metric, df_minutes[['Player', 'Minutes Played']], on='Player', how='left')
+            df_raw = pd.merge(df_metric, df_minutes[['Player', 'Minutes']], on='Player', how='left')
             
             df_processed = calculate_derived_metrics(df_raw)
             sort_by_col = metric_config["sort"]
