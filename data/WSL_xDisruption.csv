@@ -1,64 +1,184 @@
 playerName,Team,ActualDisruptions,ExpectedDisruptions
-A. Beever-Jones,Chelsea,1,0.5740000000000001
-A. Greenwood,Manchester City,3,1.74
-A. Kennedy,London City Lionesses,5,0.9500000000000001
-A. Russo,Arsenal,0,0.45099999999999996
-A. Yamashita,Manchester City,0,0.043000000000000003
-B. Mead,Arsenal,2,0.504
-C. Foord,Arsenal,2,0.38499999999999995
-C. Kelly,Arsenal,3,0.812
-C. Macário,Chelsea,1,0.12
-D. van Domselaar,Arsenal,0,0.09
-E. Carpenter,Chelsea,8,1.938
-E. Cuthbert,Chelsea,4,0.666
-E. Fox,Arsenal,3,2.02
-E. Linari,London City Lionesses,6,0.312
-Elene Lete,London City Lionesses,0,0.052000000000000005
-F. Maanum,Arsenal,1,0.132
-G. Prior,Manchester City,0,0.294
-H. Hampton,Chelsea,0,0.224
-I. Beney,Manchester City,1,0.009000000000000001
-I. Goodwin,London City Lionesses,0,0.612
-J. Roddar,London City Lionesses,2,0.084
-J. Rose,Manchester City,4,0.9019999999999999
-J. Rytting Kaneryd,Chelsea,2,0.024
-Jana Fernández,London City Lionesses,3,1.5120000000000002
-K. Asllani,London City Lionesses,3,0.27
-K. Casparij,Manchester City,3,2.125
-K. Little,Arsenal,1,1.8
-K. McCabe,Arsenal,2,0.98
-K. Reid,Arsenal,5,0.365
-K. Shaw,Manchester City,1,0.935
-K. Walsh,Chelsea,3,0.581
-K. Zelem,London City Lionesses,1,0.36000000000000004
-L. Blindkilde Brown,Manchester City,1,0.018000000000000002
-L. Hemp,Manchester City,3,2.2199999999999998
-L. Murphy,Manchester City,2,1.4949999999999999
+A. Ale,Leicester City,4,0.0632
+A. Beever-Jones,Chelsea,1,0.05740000000000001
+A. Dennis,Tottenham Hotspur,0,0.018
+A. Denton,West Ham United,0,0.17099999999999999
+A. Greenwood,Manchester City,3,0.174
+A. Kennedy,London City Lionesses,5,0.095
+A. Nildén,Tottenham Hotspur,7,0.0648
+A. Patten,Aston Villa,1,0.032
+A. Russo,Arsenal,0,0.047299999999999995
+A. Sandberg,Manchester United,4,0.047400000000000005
+A. Yamashita,Manchester City,0,0.0043
+B. England,Tottenham Hotspur,1,0.0638
+B. Mead,Arsenal,2,0.0504
+B. Olsson,Liverpool,3,0.0152
+B. Rayner,Brighton & Hove Albion,0,0.0126
+C. Bizet,Manchester United,3,0.0988
+C. Boureille,Leicester City,2,0.06120000000000001
+C. Brosnan,Everton,0,0.0056
+C. Foord,Arsenal,2,0.039599999999999996
+C. Grant,Aston Villa,0,0.08320000000000001
+C. Grant,Tottenham Hotspur,0,0.0
+C. Holland,Liverpool,4,0.11040000000000001
+C. Hunt,Tottenham Hotspur,4,0.11500000000000002
+C. Kapocs,Liverpool,0,0.0308
+C. Kelly,Arsenal,2,0.078
+C. Macário,Chelsea,1,0.012
+C. Nnadozie,Brighton & Hove Albion,0,0.0
+C. Rule,Brighton & Hove Albion,5,0.018
+C. Tandberg,Tottenham Hotspur,1,0.027600000000000003
+C. Wheeler,Everton,2,0.0405
+Carla Camacho,Brighton & Hove Albion,0,0.0056
+D. Janssen,Manchester United,1,0.0777
+D. Spence,Tottenham Hotspur,4,0.09
+D. van Domselaar,Arsenal,0,0.009
+E. Carpenter,Chelsea,8,0.1938
+E. Cuthbert,Chelsea,4,0.0666
+E. Fox,Arsenal,4,0.18720000000000003
+E. Linari,London City Lionesses,4,0.0324
+E. Nyström,West Ham United,3,0.0392
+E. Roebuck,Aston Villa,0,0.0
+E. Salmon,Aston Villa,0,0.041999999999999996
+E. Summanen,Tottenham Hotspur,1,0.067
+E. Terland,Manchester United,1,0.0492
+E. Toone,Manchester United,1,0.2484
+E. van Egmond,Leicester City,4,0.034
+Elene Lete,London City Lionesses,0,0.005200000000000001
+F. Kirby,Brighton & Hove Albion,0,0.10980000000000001
+F. Kirby,Liverpool,0,0.0
+F. Maanum,Arsenal,1,0.0132
+F. Morgan,West Ham United,1,0.0392
+F. Nagano,Liverpool,2,0.065
+G. Bonner,Liverpool,5,0.1034
+G. Evans,Liverpool,0,0.11300000000000002
+G. Fisk,Liverpool,2,0.16799999999999998
+G. Mullett,Aston Villa,0,0.0054
+G. Prior,Manchester City,0,0.0294
+H. Cain,Leicester City,1,0.0663
+H. Eiríksdóttir,Leicester City,0,0.012
+H. Hampton,Chelsea,0,0.0224
+H. Hayashi,Everton,1,0.005
+H. Ladd,Everton,0,0.0112
+H. Miyazawa,Manchester United,5,0.147
+H. Payne,Leicester City,0,0.004200000000000001
+I. Beney,Manchester City,1,0.0009000000000000001
+I. Goodwin,London City Lionesses,0,0.05499999999999999
+J. Baijings,Aston Villa,2,0.032400000000000005
+J. Cayman,Leicester City,1,0.016
+J. Leitzig,Leicester City,0,0.0
+J. Naz,Tottenham Hotspur,1,0.07020000000000001
+J. Park,Manchester United,1,0.05600000000000001
+J. Rantala,Leicester City,0,0.003
+J. Riviere,Manchester United,4,0.266
+J. Roddar,London City Lionesses,0,0.009600000000000001
+J. Rose,Manchester City,4,0.09019999999999999
+J. Rybrink,Tottenham Hotspur,2,0.0924
+J. Rytting Kaneryd,Chelsea,2,0.0024000000000000002
+J. Thibaud,Leicester City,5,0.0316
+J. Zigiotti Olme,Manchester United,2,0.078
+J. Čanković,Brighton & Hove Albion,6,0.0847
+Jana Fernández,London City Lionesses,3,0.1479
+K. Asllani,London City Lionesses,2,0.028999999999999998
+K. Casparij,Manchester City,3,0.2125
+K. Gago,Everton,0,0.0028
+K. Gorry,West Ham United,4,0.07919999999999999
+K. Graham,Tottenham Hotspur,1,0.0363
+K. Hanson,Aston Villa,2,0.0322
+K. Holmgaard,Everton,3,0.0816
+K. Little,Arsenal,1,0.1824
+K. MacLean,Liverpool,0,0.013600000000000001
+K. McCabe,Arsenal,2,0.099
+K. Reid,Arsenal,5,0.037
+K. Robinson,Everton,1,0.06
+K. Seike,Brighton & Hove Albion,0,0.05600000000000001
+K. Shaw,Manchester City,1,0.0935
+K. Snoeijs,Everton,0,0.054000000000000006
+K. Szemik,West Ham United,0,0.0025
+K. Walsh,Chelsea,3,0.0581
+K. Zelem,London City Lionesses,1,0.0462
+L. Blindkilde Brown,Manchester City,1,0.0018000000000000002
+L. Gunning-Williams,Tottenham Hotspur,0,0.0
+L. Hemp,Manchester City,3,0.22199999999999998
+L. Kop,Tottenham Hotspur,0,0.007299999999999999
+L. Murphy,Manchester City,2,0.1495
+L. Naalsund,Manchester United,0,0.030600000000000006
+L. Wilms,Aston Villa,3,0.1292
+L. Woodham,Liverpool,3,0.22860000000000005
 Leila Ouahabi,Manchester City,0,0.0
-Lucía Corrales,London City Lionesses,0,0.004
-M. Bright,Chelsea,2,0.325
-M. Hamano,Chelsea,4,2.808
-Mariona Caldentey,Arsenal,3,3.2760000000000002
-María Pérez,London City Lionesses,4,0.09
-N. Björn,Chelsea,1,0.54
-N. Charles,Chelsea,6,0.957
-N. Parris,London City Lionesses,0,0.34400000000000003
-O. Jean-François,Chelsea,0,0.07200000000000001
-O. Smith,Arsenal,2,0.765
-R. Imuran,London City Lionesses,5,0.6210000000000001
-S. Baltimore,Chelsea,2,0.76
-S. Blackstenius,Arsenal,0,0.11900000000000001
-S. Catley,Arsenal,3,0.28
+Lucía Corrales,London City Lionesses,1,0.0
+M. Agyemang,Brighton & Hove Albion,3,0.1292
+M. Bright,Chelsea,2,0.0325
+M. Enderby,Liverpool,0,0.05720000000000001
+M. Haley,Brighton & Hove Albion,3,0.11200000000000002
+M. Hamano,Chelsea,4,0.2808
+M. Höbinger,Liverpool,0,0.08580000000000002
+M. Kearns,Aston Villa,1,0.039
+M. Le Tissier,Manchester United,1,0.22240000000000001
+M. Malard,Manchester United,2,0.171
+M. Minami,Brighton & Hove Albion,3,0.014400000000000001
+M. Olislagers,Brighton & Hove Albion,2,0.0784
+M. Pacheco,Everton,7,0.16
+M. Paví,West Ham United,0,0.0024000000000000002
+M. Symonds,Brighton & Hove Albion,4,0.0852
+M. Taylor,Aston Villa,2,0.008400000000000001
+M. Turner,Manchester United,0,0.003
+M. Walsh,West Ham United,1,0.0032
+Mariona Caldentey,Arsenal,4,0.403
+Martina Fernández,Everton,1,0.07680000000000001
+María Pérez,London City Lionesses,3,0.0086
+N. Björn,Chelsea,1,0.054000000000000006
+N. Charles,Chelsea,6,0.0957
+N. Las,Leicester City,0,0.0015
+N. Maritz,Aston Villa,1,0.129
+N. Noordam,Brighton & Hove Albion,0,0.0184
+N. Parris,London City Lionesses,0,0.044
+O. Ahtinen,Tottenham Hotspur,0,0.0
+O. Deslandes,Aston Villa,0,0.028800000000000003
+O. Holdt,Tottenham Hotspur,1,0.0279
+O. Jean-François,Chelsea,0,0.007200000000000001
+O. McLoughlin,Leicester City,3,0.0132
+O. Siren,West Ham United,7,0.1216
+O. Smith,Arsenal,3,0.0893
+Ornella Vignola,Everton,1,0.0256
+P. Tullis-Joyce,Manchester United,0,0.0033
+R. Daly,Aston Villa,4,0.024
+R. Imuran,London City Lionesses,6,0.06570000000000001
+R. Ishikawa,Everton,2,0.053000000000000005
+R. Mace,Everton,6,0.06210000000000001
+R. Maltby,Aston Villa,2,0.012
+R. McLauchlan,Brighton & Hove Albion,6,0.20580000000000004
+R. Shimizu,Liverpool,0,0.0
+R. Ueki,West Ham United,2,0.0225
+R. van Gool,Everton,6,0.1958
+S. Baltimore,Chelsea,2,0.076
+S. Blackstenius,Arsenal,0,0.013300000000000001
+S. Catley,Arsenal,3,0.0204
+S. D'Angelo,Aston Villa,0,0.0051
 S. Franssi,London City Lionesses,0,0.0
-S. Jakobsson,London City Lionesses,1,0.14400000000000002
-S. Kumagai,London City Lionesses,1,0.228
-S. Lohmann,Manchester City,7,1.008
-S. Nüsken,Chelsea,1,0.009000000000000001
-T. Goldie,London City Lionesses,3,0.023
-T. Hinds,Arsenal,1,0.015
+S. Haug,Liverpool,0,0.0
+S. Jakobsson,London City Lionesses,1,0.014400000000000001
+S. Kees,Leicester City,0,0.0456
+S. Kerr,Liverpool,3,0.059399999999999994
+S. Kumagai,London City Lionesses,1,0.0304
+S. Lohmann,Manchester City,7,0.1008
+S. Martinez,West Ham United,0,0.0516
+S. Mayling,Aston Villa,2,0.012
+S. Nüsken,Chelsea,1,0.0009000000000000001
+S. O’Brien,Leicester City,0,0.0017000000000000001
+S. Piubel,West Ham United,2,0.0484
+S. Tierney,Leicester City,5,0.0063
+S. Zadorsky,West Ham United,3,0.0332
+T. Goldie,London City Lionesses,3,0.0023
+T. Hinds,Arsenal,1,0.0015
+T. Koga,Tottenham Hotspur,5,0.0882
+T. Payne,Everton,0,0.0
+V. Asseyi,West Ham United,6,0.172
 V. Buurman,Chelsea,0,0.0
-V. Miedema,Manchester City,1,0.901
-V. Pelova,Arsenal,0,0.248
-W. Kaptein,Chelsea,2,1.008
+V. Hanshaw,West Ham United,3,0.0864
+V. Miedema,Manchester City,1,0.0901
+V. Pelova,Arsenal,0,0.0238
+W. Kaptein,Chelsea,2,0.1008
 W. Sangaré,London City Lionesses,0,0.0
-Y. Hasegawa,Manchester City,5,2.037
+Y. Hasegawa,Manchester City,5,0.2037
+Y. Momiki,Everton,1,0.07980000000000001
