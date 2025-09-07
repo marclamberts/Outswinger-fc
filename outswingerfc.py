@@ -48,15 +48,15 @@ def resource_path(relative_path):
 def calculate_derived_metrics(df):
     """Calculates per 90 and per shot metrics if applicable."""
     df = df.copy()
-    if 'Minutes' in df.columns and 'Shots' in df.columns:
+    if 'Minutes' in df.columns:
         df['Minutes'] = pd.to_numeric(df['Minutes'], errors='coerce').replace(0, np.nan)
-        df['Shots'] = pd.to_numeric(df['Shots'], errors='coerce').replace(0, np.nan)
         
         for col in ['xG', 'xAG', 'xT', 'xDisruption', 'GPA']:
             if col in df.columns:
                 df[f'{col} per 90'] = (df[col] / df['Minutes'] * 90).round(2)
         
-        if 'xG' in df.columns:
+        if 'Shots' in df.columns and 'xG' in df.columns:
+            df['Shots'] = pd.to_numeric(df['Shots'], errors='coerce').replace(0, np.nan)
             df['xG per Shot'] = (df['xG'] / df['Shots']).round(2)
     return df
 
@@ -159,13 +159,17 @@ def display_metrics_page(data_config, metric_info):
             minutes_file_path = resource_path(os.path.join("data", league_config["minutes_file"]))
             df_minutes = load_data(minutes_file_path)
 
-            rename_map = {'playerName': 'Player', 'ActualDisruptions': 'Actual disruption', 'ExpectedDisruptions': 'expected disruptions'}
+            rename_map = {
+                'playerName': 'Player', 
+                'ActualDisruptions': 'Actual disruption', 
+                'ExpectedDisruptions': 'xDisruption',
+                'expected disruptions': 'xDisruption' # Adding lowercase version for safety
+            }
             df_metric.rename(columns=rename_map, inplace=True)
             
             # Merge the two dataframes
-            df_raw = pd.merge(df_metric, df_minutes[['Player', 'Minutes']], on='Player', how='left')
-            # Standardize the minutes column name
-            df_raw.rename(columns={'Minutes': 'Minutes'}, inplace=True)
+            df_raw = pd.merge(df_metric, df_minutes[['Player', 'Minutes Played']], on='Player', how='left')
+            df_raw.rename(columns={'Minutes Played': 'Minutes'}, inplace=True)
             
             df_processed = calculate_derived_metrics(df_raw)
             sort_by_col = metric_config["sort"]
@@ -362,57 +366,57 @@ def main():
     data_config = {
         "WSL": {
             "minutes_file": "WSL_minutes.csv",
-            'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
+            'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
             'Corners': {"file": "WSL_corners.csv"}
         },
         "WSL 2": {
             "minutes_file": "WSL2_minutes.csv",
-            'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
+            'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
             'Corners': {"file": "WSL2_corners.csv"}
         },
         "Frauen-Bundesliga": {
             "minutes_file": "FBL_minutes.csv",
-            'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
+            'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
             'Corners': {"file": "FBL_corners.csv"}
         },
         "Liga F": {
             "minutes_file": "LigaF_minutes.csv",
-            'xG (Expected Goals)': {"file": "LigaF.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "LigaF_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'xG (Expected Goals)': {"file": "LigaF.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "LigaF_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
+            'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
             'Corners': {"file": "LigaF_corners.csv"}
         },
         "NWSL": {
             "minutes_file": "NWSL_minutes.csv",
-            'xG (Expected Goals)': {"file": "NWSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "NWSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'xG (Expected Goals)': {"file": "NWSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "NWSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
+            'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
             'Corners': {"file": "NWSL_corners.csv"}
         },
         "Premiere Ligue": {
             "minutes_file": "PremiereLigue_minutes.csv",
-            'xG (Expected Goals)': {"file": "Premiere Ligue.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "Premiere_Ligue_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "Premiere_Ligue_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "Premiere_Ligue_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'expected disruptions'], "sort": 'expected disruptions'},
-            'Goal Probability Added (GPA/G+)': {"file": "Premiere_Ligue_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
-            'Corners': {"file": "Premiere_Ligue_corners.csv"}
+            'xG (Expected Goals)': {"file": "PremiereLigue.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "PremiereLigue_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "PremiereLigue_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "PremiereLigue_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
+            'Goal Probability Added (GPA/G+)': {"file": "PremiereLigue_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'Corners': {"file": "PremiereLigue_corners.csv"}
         }
     }
 
