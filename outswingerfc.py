@@ -117,50 +117,6 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
 
     return fig, None
 
-def style_fivethirtyeight_table(df, bar_col):
-    """Applies a FiveThirtyEight-style to a pandas DataFrame."""
-    
-    numeric_cols = df.select_dtypes(include=np.number).columns.tolist()
-    
-    styler = df.style
-    styler.hide(axis='index')
-    
-    # Format numeric columns, skipping 'Rank'
-    format_dict = {col: '{:.2f}' for col in numeric_cols if col in df.columns and col != 'Rank'}
-    styler.format(format_dict)
-    
-    # Apply bar chart to the primary metric column
-    if bar_col in df.columns:
-        styler.bar(subset=[bar_col], align='left', color=['#d6d6d6'], vmin=0)
-
-    # Apply CSS styles for the FiveThirtyEight look
-    fte_styles = [
-        {'selector': '', 'props': [('font-family', 'sans-serif'), ('border-collapse', 'collapse')]},
-        {'selector': 'thead', 'props': [('border-bottom', '2px solid #333')]},
-        {'selector': 'th', 'props': [
-            ('text-align', 'right'), 
-            ('font-size', '14px'), 
-            ('font-weight', 'bold'), 
-            ('padding', '8px 5px'), 
-            ('border-bottom', '2px solid #333')
-        ]},
-        {'selector': 'td', 'props': [
-            ('text-align', 'right'), 
-            ('padding', '8px 5px'), 
-            ('border-bottom', '1px solid #ddd')
-        ]},
-        # Left-align headers for Rank and Player
-        {'selector': 'th:nth-child(1), th:nth-child(2)', 'props': [('text-align', 'left')]},
-        # Left-align and bold body cells for Player Name
-        {'selector': 'td:nth-child(2)', 'props': [('text-align', 'left'), ('font-weight', 'bold')]},
-        # Remove border from the last row for a cleaner finish
-        {'selector': 'tbody tr:last-child td', 'props': [('border-bottom', 'none')]}
-    ]
-    
-    styler.set_table_styles(fte_styles, overwrite=False)
-    
-    return styler
-
 # --- Page Display Functions ---
 
 def display_metrics_page(data_config, metric_info):
@@ -207,13 +163,13 @@ def display_metrics_page(data_config, metric_info):
                 'playerName': 'Player', 
                 'ActualDisruptions': 'Actual disruption', 
                 'ExpectedDisruptions': 'xDisruption',
-                'expected disruptions': 'xDisruption'
+                'expected disruptions': 'xDisruption' # Adding lowercase version for safety
             }
             df_metric.rename(columns=rename_map, inplace=True)
             
             # Merge the two dataframes
             df_raw = pd.merge(df_metric, df_minutes[['Player', 'Minutes']], on='Player', how='left')
-            df_raw.rename(columns={'Minutes': 'Minutes'}, inplace=True)
+            df_raw.rename(columns={'Minutes ': 'Minutes'}, inplace=True)
             
             df_processed = calculate_derived_metrics(df_raw)
             sort_by_col = metric_config["sort"]
@@ -245,23 +201,12 @@ def display_metrics_page(data_config, metric_info):
                     st.altair_chart(chart, use_container_width=True)
                 else:
                     st.subheader("Detailed Data Table")
-                    # Prepare DF for styling
-                    table_df = display_df.copy()
-                    table_df.reset_index(inplace=True)
-                    table_df.rename(columns={'index': 'Rank'}, inplace=True)
-                    
-                    # Define columns to show, including 'Rank'
-                    table_cols = ['Rank'] + [col for col in metric_config["cols"] if col in table_df.columns]
-                    
-                    # Apply the FiveThirtyEight styling and render as HTML
-                    styled_df = style_fivethirtyeight_table(table_df[table_cols], sort_by_col)
-                    st.markdown(styled_df.to_html(), unsafe_allow_html=True)
-                    st.text("") # Add some space below the table
-
+                    existing_cols = [col for col in metric_config["cols"] if col in display_df.columns]
+                    st.dataframe(display_df[existing_cols], use_container_width=True)
             elif not df_processed.empty:
                 st.warning(f"The metric '{sort_by_col}' is not available in the loaded data file.")
             else:
-                st.info("No matching players found.")
+                 st.info("No matching players found.")
         except FileNotFoundError as e:
             st.error(f"Error: A required data file was not found. Details: {e}")
         except Exception as e:
@@ -466,12 +411,12 @@ def main():
         },
         "Premiere Ligue": {
             "minutes_file": "PremiereLigue_minutes.csv",
-            'xG (Expected Goals)': {"file": "Premiere Ligue.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "Premiere_Ligue_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "Premiere_Ligue_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "Premiere_Ligue_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
-            'Goal Probability Added (GPA/G+)': {"file": "Premiere_Ligue_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
-            'Corners': {"file": "Premiere_Ligue_corners.csv"}
+            'xG (Expected Goals)': {"file": "PremiereLigue.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
+            'xAG (Expected Assisted Goals)': {"file": "PremiereLigue_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
+            'xT (Expected Threat)': {"file": "PremiereLigue_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
+            'Expected Disruption (xDisruption)': {"file": "PremiereLigue_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
+            'Goal Probability Added (GPA/G+)': {"file": "PremiereLigue_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
+            'Corners': {"file": "PremiereLigue_corners.csv"}
         }
     }
 
@@ -492,3 +437,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
