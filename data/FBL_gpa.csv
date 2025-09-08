@@ -1,65 +1,187 @@
 Player,Team,GPA,Avg,GPA Rating
-B. Sterner,SGS Essen,0.016,0.016,36.66
-J. Debitzki,SGS Essen,0.195,0.195,41.84
-J. Feldkamp,SGS Essen,0.531,0.531,51.56
-J. Meißner,SGS Essen,0.548,0.548,52.05
-K. Sindermann,SGS Essen,0.734,0.734,57.44
-L. Bäcker,SGS Essen,0.13599999999999998,0.13599999999999998,40.14
-L. Elmazi,SGS Essen,0.323,0.323,45.55
-L. Köpp,SGS Essen,0.399,0.399,47.74
-L. Ostermeier,SGS Essen,0.9720000000000001,0.9720000000000001,64.32
-L. Pucks,SGS Essen,0.852,0.852,60.85
+B. Sterner,SGS Essen,0.016,0.016,36.32
+J. Debitzki,SGS Essen,0.195,0.195,42.12
+J. Feldkamp,SGS Essen,0.531,0.531,52.99
+J. Meißner,SGS Essen,0.548,0.548,53.54
+K. Sindermann,SGS Essen,0.734,0.734,59.57
+L. Bäcker,SGS Essen,0.13599999999999998,0.13599999999999998,40.21
+L. Elmazi,SGS Essen,0.323,0.323,46.26
+L. Köpp,SGS Essen,0.399,0.399,48.72
+L. Ostermeier,SGS Essen,0.9720000000000001,0.9720000000000001,67.27
+L. Pucks,SGS Essen,0.852,0.852,63.38
 M. Berentzen,SGS Essen,0.11400000000000002,0.11400000000000002,39.5
-N. Kowalski,SGS Essen,0.23700000000000002,0.23700000000000002,43.06
-P. Flach,SGS Essen,0.825,0.825,60.07
-R. Maier,SGS Essen,0.476,0.476,49.97
-S. Van Belle,SGS Essen,0.179,0.179,41.38
-V. Fürst,SGS Essen,0.6980000000000001,0.6980000000000001,56.39
-A. Caruso,Bayern München,0.06999999999999999,0.06999999999999999,38.23
-A. Şehitler,Bayern München,0.152,0.152,40.6
-C. Simon,Bayern München,0.9970000000000001,0.9970000000000001,65.04
-E. Mahmutovic,Bayern München,0.859,0.859,61.05
-F. Kett,Bayern München,0.8400000000000001,0.8400000000000001,60.5
-G. Stanway,Bayern München,0.667,0.667,55.5
-J. Damnjanović,Bayern München,0.546,0.546,52.0
-K. Bühl,Bayern München,0.335,0.335,45.89
-L. Dallmann,Bayern München,0.274,0.274,44.13
-L. Oberdorf,Bayern München,0.158,0.158,40.77
-L. Schüller,Bayern München,0.09,0.09,38.81
-M. Eriksson,Bayern München,1.217,1.217,71.41
-M. Tanikawa,Bayern München,0.34700000000000003,0.34700000000000003,46.24
-P. Harder,Bayern München,0.1,0.1,39.09
-S. Zadrazil,Bayern München,0.714,0.714,56.86
-V. Gilles,Bayern München,1.335,1.335,74.82
-C. Kramer,Bayer Leverkusen,0.28600000000000003,0.28600000000000003,44.48
-C. Wamser,Bayer Leverkusen,0.785,0.785,58.91
-C. Wenger,Bayer Leverkusen,0.47700000000000004,0.47700000000000004,50.0
-E. Gonzalez,Bayer Leverkusen,0.038,0.038,37.3
-F. Repohl,Bayer Leverkusen,0.713,0.713,56.83
-J. Mickenhagen,Bayer Leverkusen,0.35,0.35,46.33
-J. Vidal,Bayer Leverkusen,0.129,0.129,39.93
-K. Kögel,Bayer Leverkusen,0.438,0.438,48.87
-K. Piljić,Bayer Leverkusen,0.339,0.339,46.01
-L. Turányi,Bayer Leverkusen,0.584,0.584,53.1
-P. Bartz,Bayer Leverkusen,0.069,0.069,38.2
-R. Grant,Bayer Leverkusen,0.272,0.272,44.07
-S. Zdebel,Bayer Leverkusen,0.471,0.471,49.83
-V. Fudalla,Bayer Leverkusen,0.128,0.128,39.9
-V. Haim,Bayer Leverkusen,0.072,0.072,38.28
-V. Mädl,Bayer Leverkusen,0.031,0.031,37.1
-A. Ilestedt,Eintracht Frankfurt,0.991,0.991,64.87
-E. Memeti,Eintracht Frankfurt,0.79,0.79,59.06
-E. Senß,Eintracht Frankfurt,0.788,0.788,59.0
-G. Reuteler,Eintracht Frankfurt,0.64,0.64,54.72
-H. Raso,Eintracht Frankfurt,0.098,0.098,39.04
-J. Teulings,Eintracht Frankfurt,0.197,0.197,41.9
-J. Veit,Eintracht Frankfurt,0.884,0.884,61.77
-L. Altenburg,Eintracht Frankfurt,0.607,0.607,53.76
-L. Freigang,Eintracht Frankfurt,0.343,0.343,46.12
-L. Gräwe,Eintracht Frankfurt,0.925,0.925,62.96
-N. Anyomi,Eintracht Frankfurt,0.309,0.309,45.14
-N. Ivelj,Eintracht Frankfurt,0.284,0.284,44.42
-N. Lührßen,Eintracht Frankfurt,0.9869999999999999,0.9869999999999999,64.75
-N. Riesen,Eintracht Frankfurt,1.2630000000000001,1.2630000000000001,72.74
-R. Chiba,Eintracht Frankfurt,0.191,0.191,41.73
-İ. Açıkgöz,Eintracht Frankfurt,0.11100000000000002,0.11100000000000002,39.41
+N. Kowalski,SGS Essen,0.23700000000000002,0.23700000000000002,43.48
+P. Flach,SGS Essen,0.825,0.825,62.51
+R. Maier,SGS Essen,0.476,0.476,51.21
+S. Van Belle,SGS Essen,0.179,0.179,41.6
+V. Fürst,SGS Essen,0.6980000000000001,0.6980000000000001,58.4
+A. Gambone,Nürnberg,0.11000000000000001,0.11000000000000001,39.37
+A. Polášková,Nürnberg,0.41900000000000004,0.41900000000000004,49.37
+B. Fördős,Nürnberg,0.362,0.362,47.52
+C. Fröhlich,Nürnberg,0.172,0.172,41.37
+F. Mai,Nürnberg,0.201,0.201,42.31
+J. Baumgärtel,Nürnberg,0.11700000000000002,0.11700000000000002,39.59
+J. Brengel,Nürnberg,0.43499999999999994,0.43499999999999994,49.89
+J. Pollak,Nürnberg,0.568,0.568,54.19
+L. Guttenberger,Nürnberg,0.306,0.306,45.71
+L. Rusek,Nürnberg,0.517,0.517,52.54
+N. Lein,Nürnberg,0.425,0.425,49.56
+O. Woś,Nürnberg,0.5980000000000001,0.5980000000000001,55.16
+S. Homann,Nürnberg,0.43900000000000006,0.43900000000000006,50.02
+S. Ličina,Nürnberg,0.22000000000000003,0.22000000000000003,42.93
+A. Norheim,RB Leipzig,0.704,0.704,58.59
+A. Schasching,RB Leipzig,0.359,0.359,47.43
+D. Boboy,RB Leipzig,0.173,0.173,41.41
+E. Herzog,RB Leipzig,0.49000000000000005,0.49000000000000005,51.67
+E. Ásgeirsdóttir,RB Leipzig,0.085,0.085,38.56
+G. Chmielinski,RB Leipzig,0.32,0.32,46.16
+J. Landenberger,RB Leipzig,0.589,0.589,54.87
+L. Baum,RB Leipzig,0.332,0.332,46.55
+L. Joly,RB Leipzig,0.146,0.146,40.53
+M. Kadowaki,RB Leipzig,0.10400000000000001,0.10400000000000001,39.17
+M. Müller,RB Leipzig,0.181,0.181,41.67
+M. Schimmer,RB Leipzig,0.526,0.526,52.83
+N. Dudek,RB Leipzig,0.09,0.09,38.72
+P. Oteng,RB Leipzig,0.052000000000000005,0.052000000000000005,37.49
+S. Starke,RB Leipzig,0.587,0.587,54.81
+V. Krug,RB Leipzig,0.683,0.683,57.91
+A. Achcińska,Köln,0.42400000000000004,0.42400000000000004,49.53
+A. Gerhardt,Köln,0.541,0.541,53.32
+C. Degen,Köln,0.575,0.575,54.42
+C. Imping,Köln,0.47400000000000003,0.47400000000000003,51.15
+L. Andrade,Köln,0.128,0.128,39.95
+L. Donhauser,Köln,0.389,0.389,48.4
+L. Feiersinger,Köln,0.5309999999999999,0.5309999999999999,52.99
+L. Schmitz,Köln,0.437,0.437,49.95
+L. Vogt,Köln,0.44699999999999995,0.44699999999999995,50.28
+S. Agrež,Köln,0.729,0.729,59.4
+S. Jessen,Köln,0.248,0.248,43.83
+S. Matysik,Köln,0.152,0.152,40.73
+V. Leimenstoll,Köln,0.052000000000000005,0.052000000000000005,37.49
+W. Zawistowska,Köln,0.078,0.078,38.33
+A. Arfaoui,Werder Bremen,0.30100000000000005,0.30100000000000005,45.55
+C. D'Angelo,Werder Bremen,1.059,1.059,70.09
+E. Pápai,Werder Bremen,0.05800000000000001,0.05800000000000001,37.68
+H. Németh,Werder Bremen,0.8640000000000001,0.8640000000000001,63.77
+L. Hausicke,Werder Bremen,0.615,0.615,55.71
+L. Mühlhaus,Werder Bremen,0.738,0.738,59.69
+M. Dešić,Werder Bremen,0.154,0.154,40.79
+M. El Sherif,Werder Bremen,1.277,1.277,77.14
+M. Sternad,Werder Bremen,0.036,0.036,36.97
+M. Ulbrich,Werder Bremen,0.8019999999999999,0.8019999999999999,61.77
+M. Weiß,Werder Bremen,0.616,0.616,55.75
+R. Walkling,Werder Bremen,0.084,0.084,38.53
+S. Beck,Werder Bremen,0.41900000000000004,0.41900000000000004,49.37
+T. Mahmoud,Werder Bremen,0.19,0.19,41.96
+V. Wieder,Werder Bremen,0.292,0.292,45.26
+A. Aehling,Union Berlin,0.937,0.937,66.14
+A. Moraitou,Union Berlin,0.186,0.186,41.83
+A. Weiß,Union Berlin,0.7070000000000001,0.7070000000000001,58.69
+C. Bösl,Union Berlin,0.608,0.608,55.49
+D. Orschmann,Union Berlin,0.607,0.607,55.45
+E. Campbell,Union Berlin,0.163,0.163,41.08
+I. Heikkinen,Union Berlin,0.027000000000000003,0.027000000000000003,36.68
+J. Hipp,Union Berlin,0.526,0.526,52.83
+J. Steinert,Union Berlin,0.229,0.229,43.22
+L. Heiseler,Union Berlin,0.255,0.255,44.06
+N. Reissner,Union Berlin,0.413,0.413,49.17
+S. Steuerwald,Union Berlin,0.984,0.984,67.66
+S. Weidauer,Union Berlin,0.256,0.256,44.09
+T. Pawollek,Union Berlin,0.564,0.564,54.06
+T. Schneider,Union Berlin,0.9480000000000001,0.9480000000000001,66.49
+A. Popp,Wolfsburg,0.5660000000000001,0.5660000000000001,54.13
+C. Dijkstra,Wolfsburg,1.157,1.157,73.26
+C. Zicai,Wolfsburg,0.726,0.726,59.31
+E. Peddemors,Wolfsburg,0.666,0.666,57.36
+J. Kielland,Wolfsburg,0.083,0.083,38.49
+J. Levels,Wolfsburg,0.597,0.597,55.13
+J. Minge,Wolfsburg,1.3130000000000002,1.3130000000000002,78.31
+J. Wedemeyer,Wolfsburg,1.1640000000000001,1.1640000000000001,73.48
+Judit Pujols,Wolfsburg,0.008,0.008,36.07
+K. Bussy,Wolfsburg,0.136,0.136,40.21
+L. Beerensteyn,Wolfsburg,0.163,0.163,41.08
+S. Huth,Wolfsburg,0.545,0.545,53.45
+S. Johannes,Wolfsburg,0.386,0.386,48.3
+S. Vallotto,Wolfsburg,0.14300000000000002,0.14300000000000002,40.43
+T. Bjelde,Wolfsburg,0.211,0.211,42.64
+V. Endemann,Wolfsburg,0.352,0.352,47.2
+A. Bienz,Freiburg,0.24,0.24,43.57
+A. Csillag,Freiburg,0.174,0.174,41.44
+G. Stegemann,Freiburg,0.11000000000000001,0.11000000000000001,39.37
+I. Sigurðardóttir,Freiburg,0.45099999999999996,0.45099999999999996,50.4
+J. Stierli,Freiburg,0.701,0.701,58.5
+L. Benkarth,Freiburg,0.9269999999999999,0.9269999999999999,65.81
+L. Birkholz,Freiburg,0.227,0.227,43.15
+L. Karl,Freiburg,0.777,0.777,60.96
+L. Kolb,Freiburg,0.309,0.309,45.81
+M. Felde,Freiburg,0.572,0.572,54.32
+M. Schneider,Freiburg,0.152,0.152,40.73
+N. Szenk,Freiburg,0.818,0.818,62.28
+S. Fölmli,Freiburg,0.13799999999999998,0.13799999999999998,40.27
+S. Nachtigall,Freiburg,0.749,0.749,60.05
+S. Vobian,Freiburg,0.325,0.325,46.33
+T. Blumenberg,Freiburg,0.196,0.196,42.15
+A. Caruso,Bayern München,0.06999999999999999,0.06999999999999999,38.07
+A. Şehitler,Bayern München,0.152,0.152,40.73
+C. Simon,Bayern München,0.9970000000000001,0.9970000000000001,68.08
+E. Mahmutovic,Bayern München,0.859,0.859,63.61
+F. Kett,Bayern München,0.8400000000000001,0.8400000000000001,63.0
+G. Stanway,Bayern München,0.667,0.667,57.4
+J. Damnjanović,Bayern München,0.546,0.546,53.48
+K. Bühl,Bayern München,0.335,0.335,46.65
+L. Dallmann,Bayern München,0.274,0.274,44.68
+L. Oberdorf,Bayern München,0.158,0.158,40.92
+L. Schüller,Bayern München,0.09,0.09,38.72
+M. Eriksson,Bayern München,1.217,1.217,75.2
+M. Tanikawa,Bayern München,0.34700000000000003,0.34700000000000003,47.04
+P. Harder,Bayern München,0.1,0.1,39.04
+S. Zadrazil,Bayern München,0.714,0.714,58.92
+V. Gilles,Bayern München,1.335,1.335,79.02
+C. Kramer,Bayer Leverkusen,0.28600000000000003,0.28600000000000003,45.06
+C. Wamser,Bayer Leverkusen,0.785,0.785,61.22
+C. Wenger,Bayer Leverkusen,0.47700000000000004,0.47700000000000004,51.25
+E. Gonzalez,Bayer Leverkusen,0.038,0.038,37.04
+F. Repohl,Bayer Leverkusen,0.713,0.713,58.89
+J. Mickenhagen,Bayer Leverkusen,0.35,0.35,47.14
+J. Vidal,Bayer Leverkusen,0.129,0.129,39.98
+K. Kögel,Bayer Leverkusen,0.438,0.438,49.98
+K. Piljić,Bayer Leverkusen,0.339,0.339,46.78
+L. Turányi,Bayer Leverkusen,0.584,0.584,54.71
+P. Bartz,Bayer Leverkusen,0.069,0.069,38.04
+R. Grant,Bayer Leverkusen,0.272,0.272,44.61
+S. Zdebel,Bayer Leverkusen,0.471,0.471,51.05
+V. Fudalla,Bayer Leverkusen,0.128,0.128,39.95
+V. Haim,Bayer Leverkusen,0.072,0.072,38.14
+V. Mädl,Bayer Leverkusen,0.031,0.031,36.81
+A. Ilestedt,Eintracht Frankfurt,0.991,0.991,67.88
+E. Memeti,Eintracht Frankfurt,0.79,0.79,61.38
+E. Senß,Eintracht Frankfurt,0.788,0.788,61.31
+G. Reuteler,Eintracht Frankfurt,0.64,0.64,56.52
+H. Raso,Eintracht Frankfurt,0.098,0.098,38.98
+J. Teulings,Eintracht Frankfurt,0.197,0.197,42.18
+J. Veit,Eintracht Frankfurt,0.884,0.884,64.42
+L. Altenburg,Eintracht Frankfurt,0.607,0.607,55.45
+L. Freigang,Eintracht Frankfurt,0.343,0.343,46.91
+L. Gräwe,Eintracht Frankfurt,0.925,0.925,65.75
+N. Anyomi,Eintracht Frankfurt,0.309,0.309,45.81
+N. Ivelj,Eintracht Frankfurt,0.284,0.284,45.0
+N. Lührßen,Eintracht Frankfurt,0.9869999999999999,0.9869999999999999,67.75
+N. Riesen,Eintracht Frankfurt,1.2630000000000001,1.2630000000000001,76.69
+R. Chiba,Eintracht Frankfurt,0.191,0.191,41.99
+İ. Açıkgöz,Eintracht Frankfurt,0.11100000000000002,0.11100000000000002,39.4
+A. Wucher,Hamburger SV,0.215,0.215,42.77
+C. Meyer,Hamburger SV,0.10900000000000001,0.10900000000000001,39.33
+J. Dönges,Hamburger SV,0.529,0.529,52.93
+J. Lahr,Hamburger SV,0.35,0.35,47.14
+L. Eggert,Hamburger SV,0.5980000000000001,0.5980000000000001,55.16
+L. Sieger,Hamburger SV,0.522,0.522,52.7
+L. Wrede,Hamburger SV,0.571,0.571,54.29
+M. Brunnthaler,Hamburger SV,0.417,0.417,49.3
+M. Büchele,Hamburger SV,0.157,0.157,40.89
+M. Mikolajová,Hamburger SV,0.438,0.438,49.98
+N. Räcke,Hamburger SV,0.389,0.389,48.4
+P. Machtens,Hamburger SV,0.29500000000000004,0.29500000000000004,45.36
+S. Hillebrand,Hamburger SV,0.24100000000000002,0.24100000000000002,43.61
+S. Profé,Hamburger SV,0.078,0.078,38.33
+S. Stoldt,Hamburger SV,0.532,0.532,53.03
+V. Schulz,Hamburger SV,0.08099999999999999,0.08099999999999999,38.43
