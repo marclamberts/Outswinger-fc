@@ -1,69 +1,199 @@
 Player,Team,Minutes
+A. Achcińska,Köln,90.0
+A. Aehling,Union Berlin,90.0
+A. Arfaoui,Werder Bremen,45.0
+A. Bienz,Freiburg,28.0
 A. Caruso,Bayern München,7.0
+A. Csillag,Freiburg,28.0
+A. Gambone,Nürnberg,6.0
+A. Gerhardt,Köln,90.0
 A. Ilestedt,Eintracht Frankfurt,69.0
+A. Moraitou,Union Berlin,31.0
+A. Norheim,RB Leipzig,90.0
+A. Polášková,Nürnberg,90.0
+A. Popp,Wolfsburg,90.0
+A. Schasching,RB Leipzig,90.0
+A. Weiß,Union Berlin,91.0
+A. Wucher,Hamburger SV,24.0
 A. Şehitler,Bayern München,22.0
+B. Fördős,Nürnberg,90.0
 B. Sterner,SGS Essen,13.0
+C. Bösl,Union Berlin,90.0
+C. D'Angelo,Werder Bremen,90.0
+C. Degen,Köln,90.0
+C. Dijkstra,Wolfsburg,90.0
+C. Fröhlich,Nürnberg,35.0
+C. Imping,Köln,76.0
 C. Kramer,Bayer Leverkusen,65.0
+C. Meyer,Hamburger SV,35.0
 C. Simon,Bayern München,90.0
 C. Wamser,Bayer Leverkusen,90.0
 C. Wenger,Bayer Leverkusen,90.0
+C. Zicai,Wolfsburg,89.0
+D. Boboy,RB Leipzig,65.0
+D. Orschmann,Union Berlin,90.0
+E. Campbell,Union Berlin,31.0
 E. Gonzalez,Bayer Leverkusen,25.0
+E. Herzog,RB Leipzig,90.0
 E. Mahmutovic,Bayern München,90.0
 E. Memeti,Eintracht Frankfurt,90.0
+E. Peddemors,Wolfsburg,76.0
+E. Pápai,Werder Bremen,21.0
 E. Senß,Eintracht Frankfurt,90.0
+E. Ásgeirsdóttir,RB Leipzig,14.0
 F. Kett,Bayern München,90.0
+F. Mai,Nürnberg,55.0
 F. Repohl,Bayer Leverkusen,90.0
+G. Chmielinski,RB Leipzig,65.0
 G. Reuteler,Eintracht Frankfurt,76.0
 G. Stanway,Bayern München,80.0
+G. Stegemann,Freiburg,7.0
+H. Németh,Werder Bremen,90.0
 H. Raso,Eintracht Frankfurt,14.0
+I. Heikkinen,Union Berlin,-1.0
+I. Sigurðardóttir,Freiburg,90.0
+J. Baumgärtel,Nürnberg,61.0
+J. Brengel,Nürnberg,90.0
 J. Damnjanović,Bayern München,83.0
 J. Debitzki,SGS Essen,14.0
+J. Dönges,Hamburger SV,90.0
 J. Feldkamp,SGS Essen,76.0
+J. Hipp,Union Berlin,76.0
+J. Kielland,Wolfsburg,14.0
+J. Lahr,Hamburger SV,66.0
+J. Landenberger,RB Leipzig,90.0
+J. Levels,Wolfsburg,90.0
 J. Meißner,SGS Essen,51.0
 J. Mickenhagen,Bayer Leverkusen,90.0
+J. Minge,Wolfsburg,90.0
+J. Pollak,Nürnberg,84.0
+J. Steinert,Union Berlin,14.0
+J. Stierli,Freiburg,90.0
 J. Teulings,Eintracht Frankfurt,21.0
 J. Veit,Eintracht Frankfurt,90.0
 J. Vidal,Bayer Leverkusen,32.0
+J. Wedemeyer,Wolfsburg,76.0
+Judit Pujols,Wolfsburg,1.0
+K. Bussy,Wolfsburg,26.0
 K. Bühl,Bayern München,45.0
 K. Kögel,Bayer Leverkusen,80.0
 K. Piljić,Bayer Leverkusen,58.0
 K. Sindermann,SGS Essen,90.0
 L. Altenburg,Eintracht Frankfurt,90.0
+L. Andrade,Köln,59.0
+L. Baum,RB Leipzig,76.0
+L. Beerensteyn,Wolfsburg,64.0
+L. Benkarth,Freiburg,90.0
+L. Birkholz,Freiburg,76.0
 L. Bäcker,SGS Essen,14.0
 L. Dallmann,Bayern München,67.0
+L. Donhauser,Köln,90.0
+L. Eggert,Hamburger SV,89.0
 L. Elmazi,SGS Essen,90.0
+L. Feiersinger,Köln,90.0
 L. Freigang,Eintracht Frankfurt,69.0
 L. Gräwe,Eintracht Frankfurt,81.0
+L. Guttenberger,Nürnberg,90.0
+L. Hausicke,Werder Bremen,90.0
+L. Heiseler,Union Berlin,59.0
+L. Joly,RB Leipzig,25.0
+L. Karl,Freiburg,90.0
+L. Kolb,Freiburg,62.0
 L. Köpp,SGS Essen,77.0
+L. Mühlhaus,Werder Bremen,90.0
 L. Oberdorf,Bayern München,10.0
 L. Ostermeier,SGS Essen,90.0
 L. Pucks,SGS Essen,90.0
+L. Rusek,Nürnberg,90.0
+L. Schmitz,Köln,90.0
 L. Schüller,Bayern München,45.0
+L. Sieger,Hamburger SV,90.0
 L. Turányi,Bayer Leverkusen,90.0
+L. Vogt,Köln,90.0
+L. Wrede,Hamburger SV,55.0
 M. Berentzen,SGS Essen,14.0
+M. Brunnthaler,Hamburger SV,90.0
+M. Büchele,Hamburger SV,24.0
+M. Dešić,Werder Bremen,69.0
+M. El Sherif,Werder Bremen,90.0
 M. Eriksson,Bayern München,90.0
+M. Felde,Freiburg,90.0
+M. Kadowaki,RB Leipzig,45.0
+M. Mikolajová,Hamburger SV,66.0
+M. Müller,RB Leipzig,45.0
+M. Schimmer,RB Leipzig,83.0
+M. Schneider,Freiburg,14.0
+M. Sternad,Werder Bremen,7.0
 M. Tanikawa,Bayern München,68.0
+M. Ulbrich,Werder Bremen,90.0
+M. Weiß,Werder Bremen,90.0
 N. Anyomi,Eintracht Frankfurt,69.0
+N. Dudek,RB Leipzig,7.0
 N. Ivelj,Eintracht Frankfurt,21.0
 N. Kowalski,SGS Essen,39.0
+N. Lein,Nürnberg,90.0
 N. Lührßen,Eintracht Frankfurt,90.0
+N. Reissner,Union Berlin,90.0
 N. Riesen,Eintracht Frankfurt,90.0
+N. Räcke,Hamburger SV,90.0
+N. Szenk,Freiburg,90.0
 None,SGS Essen,90.0
+None,Nürnberg,90.0
+None,RB Leipzig,90.0
+None,Köln,90.0
+None,Werder Bremen,90.0
+None,Union Berlin,90.0
+None,Wolfsburg,90.0
+None,Freiburg,90.0
 None,Bayern München,90.0
 None,Bayer Leverkusen,90.0
 None,Eintracht Frankfurt,90.0
+None,Hamburger SV,90.0
+O. Woś,Nürnberg,90.0
 P. Bartz,Bayer Leverkusen,25.0
 P. Flach,SGS Essen,90.0
 P. Harder,Bayern München,23.0
+P. Machtens,Hamburger SV,90.0
+P. Oteng,RB Leipzig,25.0
 R. Chiba,Eintracht Frankfurt,21.0
 R. Grant,Bayer Leverkusen,65.0
 R. Maier,SGS Essen,76.0
+R. Walkling,Werder Bremen,27.0
+S. Agrež,Köln,90.0
+S. Beck,Werder Bremen,63.0
+S. Fölmli,Freiburg,14.0
+S. Hillebrand,Hamburger SV,66.0
+S. Homann,Nürnberg,90.0
+S. Huth,Wolfsburg,90.0
+S. Jessen,Köln,76.0
+S. Johannes,Wolfsburg,90.0
+S. Ličina,Nürnberg,29.0
+S. Matysik,Köln,14.0
+S. Nachtigall,Freiburg,76.0
+S. Profé,Hamburger SV,1.0
+S. Starke,RB Leipzig,90.0
+S. Steuerwald,Union Berlin,90.0
+S. Stoldt,Hamburger SV,90.0
+S. Vallotto,Wolfsburg,26.0
 S. Van Belle,SGS Essen,76.0
+S. Vobian,Freiburg,83.0
+S. Weidauer,Union Berlin,59.0
 S. Zadrazil,Bayern München,90.0
 S. Zdebel,Bayer Leverkusen,90.0
+T. Bjelde,Wolfsburg,14.0
+T. Blumenberg,Freiburg,62.0
+T. Mahmoud,Werder Bremen,45.0
+T. Pawollek,Union Berlin,90.0
+T. Schneider,Union Berlin,90.0
+V. Endemann,Wolfsburg,64.0
 V. Fudalla,Bayer Leverkusen,65.0
 V. Fürst,SGS Essen,90.0
 V. Gilles,Bayern München,90.0
 V. Haim,Bayer Leverkusen,25.0
+V. Krug,RB Leipzig,90.0
+V. Leimenstoll,Köln,14.0
 V. Mädl,Bayer Leverkusen,10.0
+V. Schulz,Hamburger SV,24.0
+V. Wieder,Werder Bremen,83.0
+W. Zawistowska,Köln,31.0
 İ. Açıkgöz,Eintracht Frankfurt,9.0

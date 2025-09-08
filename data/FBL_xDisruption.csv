@@ -1,65 +1,187 @@
 playerName,Team,ActualDisruptions,ExpectedDisruptions
+A. Achcińska,Köln,4,0.975
+A. Aehling,Union Berlin,3,1.512
+A. Arfaoui,Werder Bremen,1,0.31500000000000006
+A. Bienz,Freiburg,0,0.264
 A. Caruso,Bayern München,0,0.027
+A. Csillag,Freiburg,0,0.36400000000000005
+A. Gambone,Nürnberg,1,0.052000000000000005
+A. Gerhardt,Köln,4,1.0010000000000001
 A. Ilestedt,Eintracht Frankfurt,0,0.6480000000000001
+A. Moraitou,Union Berlin,1,0.038
+A. Norheim,RB Leipzig,1,0.41000000000000003
+A. Polášková,Nürnberg,2,0.78
+A. Popp,Wolfsburg,3,1.349
+A. Schasching,RB Leipzig,1,0.399
+A. Weiß,Union Berlin,1,1.106
+A. Wucher,Hamburger SV,1,0.18
 A. Şehitler,Bayern München,0,0.14
+B. Fördős,Nürnberg,0,0.042
 B. Sterner,SGS Essen,0,0.0
+C. Bösl,Union Berlin,0,0.0
+C. D'Angelo,Werder Bremen,2,1.712
+C. Degen,Köln,3,0.20700000000000002
+C. Dijkstra,Wolfsburg,1,1.06
+C. Fröhlich,Nürnberg,1,0.02
+C. Imping,Köln,0,0.975
 C. Kramer,Bayer Leverkusen,0,0.36900000000000005
+C. Meyer,Hamburger SV,1,0.068
 C. Simon,Bayern München,2,1.1300000000000001
 C. Wamser,Bayer Leverkusen,11,1.8720000000000003
 C. Wenger,Bayer Leverkusen,4,0.342
+C. Zicai,Wolfsburg,3,1.9
+D. Boboy,RB Leipzig,0,0.561
+D. Orschmann,Union Berlin,2,2.1750000000000003
+E. Campbell,Union Berlin,0,0.338
 E. Gonzalez,Bayer Leverkusen,0,0.016
+E. Herzog,RB Leipzig,0,0.0
 E. Mahmutovic,Bayern München,0,0.24
 E. Memeti,Eintracht Frankfurt,4,2.325
+E. Peddemors,Wolfsburg,6,0.869
+E. Pápai,Werder Bremen,0,0.036000000000000004
 E. Senß,Eintracht Frankfurt,1,1.4280000000000002
+E. Ásgeirsdóttir,RB Leipzig,0,0.085
 F. Kett,Bayern München,2,3.36
+F. Mai,Nürnberg,1,0.10400000000000001
 F. Repohl,Bayer Leverkusen,0,0.41400000000000003
+G. Chmielinski,RB Leipzig,0,0.4590000000000001
 G. Reuteler,Eintracht Frankfurt,1,1.4000000000000001
 G. Stanway,Bayern München,0,1.387
+G. Stegemann,Freiburg,0,0.0
+H. Németh,Werder Bremen,1,0.468
 H. Raso,Eintracht Frankfurt,1,0.056
+I. Heikkinen,Union Berlin,0,0.0
+I. Sigurðardóttir,Freiburg,0,0.092
+J. Baumgärtel,Nürnberg,0,0.02
+J. Brengel,Nürnberg,4,0.28500000000000003
 J. Damnjanović,Bayern München,4,1.312
 J. Debitzki,SGS Essen,0,0.14400000000000002
+J. Dönges,Hamburger SV,1,0.165
 J. Feldkamp,SGS Essen,2,0.371
+J. Hipp,Union Berlin,2,1.3800000000000001
+J. Kielland,Wolfsburg,0,0.048
+J. Lahr,Hamburger SV,4,0.23500000000000001
+J. Landenberger,RB Leipzig,3,0.5760000000000001
+J. Levels,Wolfsburg,3,0.9480000000000001
 J. Meißner,SGS Essen,6,0.312
 J. Mickenhagen,Bayer Leverkusen,2,0.15
+J. Minge,Wolfsburg,3,1.5
+J. Pollak,Nürnberg,1,0.198
+J. Steinert,Union Berlin,2,0.1
+J. Stierli,Freiburg,1,0.13
 J. Teulings,Eintracht Frankfurt,0,0.0
 J. Veit,Eintracht Frankfurt,4,0.272
 J. Vidal,Bayer Leverkusen,1,0.018000000000000002
+J. Wedemeyer,Wolfsburg,4,2.46
+Judit Pujols,Wolfsburg,0,0.006
+K. Bussy,Wolfsburg,0,0.24
 K. Bühl,Bayern München,0,0.294
 K. Kögel,Bayer Leverkusen,3,0.55
 K. Piljić,Bayer Leverkusen,4,0.16
 K. Sindermann,SGS Essen,0,0.128
 L. Altenburg,Eintracht Frankfurt,0,0.05
+L. Andrade,Köln,1,0.391
+L. Baum,RB Leipzig,1,0.84
+L. Beerensteyn,Wolfsburg,1,0.115
+L. Benkarth,Freiburg,0,0.083
+L. Birkholz,Freiburg,0,0.26
 L. Bäcker,SGS Essen,0,0.042
 L. Dallmann,Bayern München,0,0.507
+L. Donhauser,Köln,3,0.6709999999999999
+L. Eggert,Hamburger SV,3,0.8
 L. Elmazi,SGS Essen,0,0.28
+L. Feiersinger,Köln,1,0.5670000000000001
 L. Freigang,Eintracht Frankfurt,1,0.672
 L. Gräwe,Eintracht Frankfurt,4,0.99
+L. Guttenberger,Nürnberg,3,0.152
+L. Hausicke,Werder Bremen,2,0.9
+L. Heiseler,Union Berlin,0,0.18
+L. Joly,RB Leipzig,3,0.046
+L. Karl,Freiburg,1,0.9880000000000001
+L. Kolb,Freiburg,3,0.407
 L. Köpp,SGS Essen,3,1.121
+L. Mühlhaus,Werder Bremen,0,1.52
 L. Oberdorf,Bayern München,0,0.14
 L. Ostermeier,SGS Essen,7,1.067
 L. Pucks,SGS Essen,7,1.1050000000000002
+L. Rusek,Nürnberg,0,0.114
+L. Schmitz,Köln,0,0.0
 L. Schüller,Bayern München,0,0.14400000000000002
+L. Sieger,Hamburger SV,0,0.177
 L. Turányi,Bayer Leverkusen,5,0.504
+L. Vogt,Köln,4,0.33
+L. Wrede,Hamburger SV,6,1.36
 M. Berentzen,SGS Essen,0,0.013000000000000001
+M. Brunnthaler,Hamburger SV,0,1.02
+M. Büchele,Hamburger SV,2,0.21600000000000003
+M. Dešić,Werder Bremen,0,0.176
+M. El Sherif,Werder Bremen,1,0.101
 M. Eriksson,Bayern München,0,1.61
+M. Felde,Freiburg,3,0.248
+M. Kadowaki,RB Leipzig,0,0.133
+M. Mikolajová,Hamburger SV,1,0.51
+M. Müller,RB Leipzig,4,0.27
+M. Schimmer,RB Leipzig,2,0.5760000000000001
+M. Schneider,Freiburg,2,0.036000000000000004
+M. Sternad,Werder Bremen,0,0.007
 M. Tanikawa,Bayern München,1,0.258
+M. Ulbrich,Werder Bremen,1,0.28800000000000003
+M. Weiß,Werder Bremen,6,1.2060000000000002
 N. Anyomi,Eintracht Frankfurt,0,0.533
+N. Dudek,RB Leipzig,1,0.096
 N. Ivelj,Eintracht Frankfurt,1,0.05
 N. Kowalski,SGS Essen,1,0.203
+N. Lein,Nürnberg,3,0.52
 N. Lührßen,Eintracht Frankfurt,6,1.2
+N. Reissner,Union Berlin,1,1.22
 N. Riesen,Eintracht Frankfurt,4,3.6830000000000003
+N. Räcke,Hamburger SV,0,0.16
+N. Szenk,Freiburg,6,1.395
+O. Woś,Nürnberg,3,0.355
 P. Bartz,Bayer Leverkusen,1,0.0
 P. Flach,SGS Essen,6,0.0
 P. Harder,Bayern München,0,0.039
+P. Machtens,Hamburger SV,1,0.216
+P. Oteng,RB Leipzig,1,0.018000000000000002
 R. Chiba,Eintracht Frankfurt,0,0.084
 R. Grant,Bayer Leverkusen,3,0.57
 R. Maier,SGS Essen,2,0.7699999999999999
+R. Walkling,Werder Bremen,0,0.022
+S. Agrež,Köln,2,0.784
+S. Beck,Werder Bremen,1,0.55
+S. Fölmli,Freiburg,0,0.06
+S. Hillebrand,Hamburger SV,0,0.256
+S. Homann,Nürnberg,5,0.496
+S. Huth,Wolfsburg,0,1.9760000000000002
+S. Jessen,Köln,0,0.5850000000000001
+S. Johannes,Wolfsburg,0,0.035
+S. Ličina,Nürnberg,1,0.27
+S. Matysik,Köln,1,0.105
+S. Nachtigall,Freiburg,1,0.946
+S. Profé,Hamburger SV,1,0.009000000000000001
+S. Starke,RB Leipzig,2,1.3499999999999999
+S. Steuerwald,Union Berlin,3,0.6
+S. Stoldt,Hamburger SV,2,0.108
+S. Vallotto,Wolfsburg,0,0.138
 S. Van Belle,SGS Essen,0,0.044
+S. Vobian,Freiburg,0,0.583
+S. Weidauer,Union Berlin,0,0.363
 S. Zadrazil,Bayern München,3,0.7020000000000001
 S. Zdebel,Bayer Leverkusen,5,0.23600000000000002
+T. Bjelde,Wolfsburg,3,0.13
+T. Blumenberg,Freiburg,0,0.1
+T. Mahmoud,Werder Bremen,1,0.252
+T. Pawollek,Union Berlin,2,0.8190000000000001
+T. Schneider,Union Berlin,2,1.3860000000000001
+V. Endemann,Wolfsburg,2,0.969
 V. Fudalla,Bayer Leverkusen,0,0.076
 V. Fürst,SGS Essen,3,0.49
 V. Gilles,Bayern München,3,2.8819999999999997
 V. Haim,Bayer Leverkusen,0,0.012
+V. Krug,RB Leipzig,2,1.424
+V. Leimenstoll,Köln,0,0.022
 V. Mädl,Bayer Leverkusen,0,0.0
+V. Schulz,Hamburger SV,1,0.011
+V. Wieder,Werder Bremen,0,0.352
+W. Zawistowska,Köln,0,0.056
 İ. Açıkgöz,Eintracht Frankfurt,2,0.0

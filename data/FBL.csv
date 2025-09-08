@@ -1,31 +1,87 @@
 Player,Team,Shots,xG,OpenPlay_xG,SetPiece_xG
+A. Achcińska,1. FC Köln,2,0.11,0.07,0.04
+A. Bienz,SC Freiburg,1,0.05,0.05,0.0
 A. Caruso,FC Bayern München,1,0.05,0.05,0.0
+A. Csillag,SC Freiburg,1,0.05,0.05,0.0
+A. Gerhardt,1. FC Köln,2,0.16,0.16,0.0
 A. Ilestedt,Eintracht Frankfurt,1,0.2,0.0,0.2
+A. Moraitou,1. FC Union Berlin,2,0.11,0.0,0.11
+A. Polášková,1. FC Nürnberg,2,0.15,0.11,0.03
+A. Popp,VfL Wolfsburg,4,0.53,0.53,0.0
+A. Schasching,RasenBallsport Leipzig,1,0.03,0.0,0.03
+A. Weiß,1. FC Union Berlin,1,0.05,0.0,0.05
 A. Şehitler,FC Bayern München,1,0.05,0.0,0.05
+C. D'Angelo,SV Werder Bremen,1,0.05,0.05,0.0
 C. Kramer,TSV Bayer 04 Leverkusen,1,0.05,0.05,0.0
 C. Simon,FC Bayern München,1,0.05,0.0,0.05
+C. Zicai,VfL Wolfsburg,4,0.27,0.27,0.0
+D. Boboy,RasenBallsport Leipzig,2,0.14,0.14,0.0
+D. Orschmann,1. FC Union Berlin,4,0.23,0.07,0.16
 E. Memeti,Eintracht Frankfurt,2,0.14,0.06,0.08
+E. Peddemors,VfL Wolfsburg,1,0.03,0.03,0.0
 E. Senß,Eintracht Frankfurt,3,0.2,0.11,0.09
+E. Ásgeirsdóttir,RasenBallsport Leipzig,1,0.1,0.1,0.0
 F. Kett,FC Bayern München,1,0.09,0.09,0.0
+G. Chmielinski,RasenBallsport Leipzig,3,0.16,0.11,0.05
 G. Reuteler,Eintracht Frankfurt,2,1.03,1.03,0.0
 H. Raso,Eintracht Frankfurt,1,0.08,0.08,0.0
+J. Baumgärtel,1. FC Nürnberg,1,0.05,0.05,0.0
 J. Damnjanović,FC Bayern München,2,0.77,0.77,0.0
 J. Debitzki,SGS Essen 1968,1,0.05,0.05,0.0
+J. Hipp,1. FC Union Berlin,1,0.04,0.04,0.0
+J. Landenberger,RasenBallsport Leipzig,1,0.03,0.03,0.0
 J. Mickenhagen,TSV Bayer 04 Leverkusen,1,0.03,0.03,0.0
+J. Minge,VfL Wolfsburg,2,0.86,0.0,0.86
 K. Bühl,FC Bayern München,1,0.46,0.46,0.0
 K. Kögel,TSV Bayer 04 Leverkusen,1,0.1,0.1,0.0
+L. Baum,RasenBallsport Leipzig,2,0.12,0.09,0.03
+L. Beerensteyn,VfL Wolfsburg,1,0.39,0.39,0.0
+L. Birkholz,SC Freiburg,2,0.16,0.16,0.0
 L. Bäcker,SGS Essen 1968,1,0.03,0.03,0.0
+L. Donhauser,1. FC Köln,2,0.19,0.09,0.1
 L. Elmazi,SGS Essen 1968,1,0.08,0.08,0.0
+L. Feiersinger,1. FC Köln,1,0.05,0.05,0.0
 L. Freigang,Eintracht Frankfurt,1,0.4,0.4,0.0
+L. Hausicke,SV Werder Bremen,2,0.15,0.0,0.15
+L. Heiseler,1. FC Union Berlin,5,1.08,0.29,0.79
+L. Joly,RasenBallsport Leipzig,1,0.03,0.0,0.03
+L. Karl,SC Freiburg,1,0.09,0.09,0.0
+L. Kolb,SC Freiburg,1,0.05,0.0,0.05
 L. Köpp,SGS Essen 1968,1,0.03,0.03,0.0
+L. Mühlhaus,SV Werder Bremen,3,0.91,0.12,0.79
 L. Schüller,FC Bayern München,2,0.19,0.19,0.0
+L. Wrede,Hamburger SV,1,0.03,0.03,0.0
+M. Brunnthaler,Hamburger SV,2,0.13,0.13,0.0
+M. Dešić,SV Werder Bremen,1,0.05,0.05,0.0
+M. Felde,SC Freiburg,1,0.09,0.0,0.09
+M. Mikolajová,Hamburger SV,2,0.15,0.15,0.0
+M. Müller,RasenBallsport Leipzig,1,0.1,0.1,0.0
+M. Schimmer,RasenBallsport Leipzig,2,0.07,0.07,0.0
 N. Anyomi,Eintracht Frankfurt,2,0.39,0.29,0.1
 N. Kowalski,SGS Essen 1968,1,0.1,0.1,0.0
+N. Reissner,1. FC Union Berlin,1,0.63,0.0,0.63
 N. Riesen,Eintracht Frankfurt,1,0.03,0.03,0.0
 R. Chiba,Eintracht Frankfurt,3,1.2,0.41,0.79
 R. Grant,TSV Bayer 04 Leverkusen,2,0.51,0.51,0.0
+S. Beck,SV Werder Bremen,1,0.05,0.05,0.0
+S. Fölmli,SC Freiburg,2,0.23,0.23,0.0
+S. Hillebrand,Hamburger SV,1,0.71,0.71,0.0
+S. Homann,1. FC Nürnberg,1,0.07,0.07,0.0
+S. Huth,VfL Wolfsburg,1,0.05,0.05,0.0
+S. Jessen,1. FC Köln,2,0.15,0.05,0.1
+S. Ličina,1. FC Nürnberg,1,0.43,0.43,0.0
+S. Matysik,1. FC Köln,1,0.07,0.0,0.07
+S. Starke,RasenBallsport Leipzig,2,0.11,0.04,0.07
+S. Steuerwald,1. FC Union Berlin,1,0.03,0.03,0.0
+S. Stoldt,Hamburger SV,1,0.03,0.0,0.03
+S. Vallotto,VfL Wolfsburg,1,0.36,0.0,0.36
 S. Van Belle,SGS Essen 1968,1,0.07,0.0,0.07
+S. Weidauer,1. FC Union Berlin,4,0.33,0.1,0.23
 S. Zdebel,TSV Bayer 04 Leverkusen,1,0.03,0.03,0.0
+T. Blumenberg,SC Freiburg,2,0.14,0.06,0.08
+T. Pawollek,1. FC Union Berlin,4,0.52,0.43,0.08
+T. Schneider,1. FC Union Berlin,3,0.41,0.04,0.37
 V. Fudalla,TSV Bayer 04 Leverkusen,2,0.15,0.15,0.0
 V. Gilles,FC Bayern München,4,0.59,0.0,0.59
+V. Wieder,SV Werder Bremen,2,0.37,0.37,0.0
 İ. Açıkgöz,Eintracht Frankfurt,1,0.03,0.03,0.0
