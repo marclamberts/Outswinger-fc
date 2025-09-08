@@ -2,50 +2,62 @@ Player,Team,Shots,xG,OpenPlay_xG,SetPiece_xG
 A. Bélem,SD Eibar,1,0.09,0.09,0.0
 A. Leitner,DUX Logroño,2,0.18,0.18,0.0
 A. Poljak,Madrid CFF,4,0.31,0.31,0.0
+A. Quintero,Alhama CF,1,0.05,0.05,0.0
 A. Zaremba,CD Tenerife,2,0.08,0.08,0.0
+Adriana Nanclares,FC Barcelona,1,0.0,0.0,0.0
 Aiara Agirrezabala,Real Sociedad de Fútbol,5,0.53,0.44,0.09
 Ainhoa Marín,RC Deportivo de La Coruña,6,0.74,0.68,0.06
 Ainoa Campo,Reial Club Deportiu Espanyol,1,0.62,0.0,0.62
-Aitana Bonmatí,FC Barcelona,1,0.4,0.4,0.0
+Aitana Bonmatí,FC Barcelona,6,0.85,0.77,0.08
+Aitana Zumárraga,Alhama CF,1,0.05,0.05,0.0
 Aithiara Carballo,CD Tenerife,4,0.83,0.8,0.03
 Alba Cerrato,Sevilla FC,4,0.54,0.54,0.0
 Alba Redondo,Real Madrid CF,1,0.28,0.28,0.0
 Alba Ruiz,Madrid CFF,1,0.03,0.03,0.0
 Alexia Putellas,FC Barcelona,1,0.1,0.1,0.0
+Alharilla Casado,Levante UD,1,0.06,0.06,0.0
 Amaiur Sarriegi,Club Atlético de Madrid Féminas,1,0.09,0.09,0.0
+Ana Franco,Levante UD,3,0.2,0.2,0.0
 Ana González,FC Badalona Women,1,0.05,0.0,0.05
+Ana Velázquez,Alhama CF,1,0.05,0.0,0.05
+Andrea Gómez,Granada CF,1,0.03,0.03,0.0
 Andreia Jacinto,Real Sociedad de Fútbol,5,0.38,0.33,0.05
 Ane Campos,Athletic Club Bilbao,1,0.06,0.0,0.06
 Ane Elexpuru,Athletic Club Bilbao,1,0.03,0.03,0.0
 Ane Etxezarreta,SD Eibar,2,0.15,0.0,0.15
 Anita Marcos,Madrid CFF,2,0.11,0.11,0.0
+Ariadna Mingueza,Granada CF,3,0.19,0.13,0.07
 Ariana Arias,CD Tenerife,1,0.05,0.05,0.0
 Arola Aparicio,Real Sociedad de Fútbol,5,0.81,0.81,0.0
+Astrid Álvarez,Alhama CF,1,0.07,0.0,0.07
 Athenea del Castillo,Real Madrid CF,2,0.12,0.04,0.08
 B. Amani,CD Tenerife,6,1.0,0.12,0.88
-Belén Martínez,Alhama CF,1,0.08,0.08,0.0
+Belén Martínez,Alhama CF,5,1.52,0.73,0.79
+Berta Doltra,FC Badalona Women,1,0.08,0.08,0.0
 Bárbara Latorre,RC Deportivo de La Coruña,2,0.15,0.15,0.0
 C. Graham Hansen,FC Barcelona,9,1.55,1.35,0.2
 C. Hagel,Sevilla FC,2,0.12,0.12,0.0
 C. Weir,Real Madrid CF,3,0.59,0.56,0.04
 Carlota Suárez,CD Tenerife,4,0.89,0.45,0.44
 Carmen Menayo,Club Atlético de Madrid Féminas,1,0.03,0.0,0.03
-Carol Marín,Levante UD,1,0.03,0.03,0.0
+Carol Marín,Levante UD,3,0.5,0.4,0.09
 Clara Serrajordi,FC Barcelona,2,0.14,0.08,0.06
-Clàudia Pina,FC Barcelona,3,1.07,0.29,0.78
+Clàudia Pina,FC Barcelona,7,1.37,0.55,0.81
 Cristina Baudet,Reial Club Deportiu Espanyol,1,0.08,0.0,0.08
-Cristina Postigo,Granada CF,1,0.05,0.0,0.05
+Cristina Postigo,Granada CF,2,0.14,0.0,0.14
+Daniela Agote,Athletic Club Bilbao,1,0.09,0.09,0.0
 Dolores Silva,Levante UD,1,0.05,0.0,0.05
 Débora García,Sevilla FC,1,0.05,0.05,0.0
-E. Banini,FC Badalona Women,3,0.13,0.08,0.06
+E. Banini,FC Badalona Women,6,0.51,0.42,0.09
 E. Botero,Reial Club Deportiu Espanyol,1,0.1,0.1,0.0
-E. Brugts,FC Barcelona,4,0.29,0.29,0.0
+E. Brugts,FC Barcelona,5,0.67,0.29,0.38
 E. Nautnes,Madrid CFF,5,0.8,0.8,0.0
-E. Pajor,FC Barcelona,2,0.58,0.58,0.0
+E. Pajor,FC Barcelona,4,1.33,1.33,0.0
 E. Pizarro,RC Deportivo de La Coruña,1,0.05,0.05,0.0
 Elba Vergés,CD Tenerife,3,0.16,0.0,0.16
 Elene Guridi,Real Sociedad de Fútbol,2,0.2,0.1,0.1
 Emma Ramírez,Real Sociedad de Fútbol,1,0.47,0.47,0.0
+Encarni,Alhama CF,1,0.1,0.1,0.0
 Esther Laborde,Madrid CFF,2,0.06,0.06,0.0
 Eva Alonso,Levante UD,1,0.36,0.0,0.36
 Eva Navarro,Real Madrid CF,4,0.67,0.67,0.0
@@ -55,24 +67,28 @@ Fiamma Benítez,Club Atlético de Madrid Féminas,3,1.22,1.22,0.0
 G. García,Club Atlético de Madrid Féminas,5,0.32,0.15,0.17
 Gemma Gili,Sevilla FC,1,0.03,0.03,0.0
 Gio Garbelini,Club Atlético de Madrid Féminas,4,0.57,0.57,0.0
-Gonzi,Levante UD,1,0.08,0.08,0.0
+Gonzi,Levante UD,2,0.15,0.15,0.0
 Guereñu,SD Eibar,1,0.04,0.04,0.0
 Iara,SD Eibar,3,0.29,0.0,0.29
-Inés Rizo,Levante UD,1,0.04,0.04,0.0
+Inés Rizo,Levante UD,3,0.19,0.1,0.1
 Iratxe Pérez,CD Tenerife,1,0.05,0.05,0.0
+Irene Paredes,FC Barcelona,1,0.07,0.0,0.07
 Iris Arnaiz,Sevilla FC,1,0.03,0.03,0.0
 Irune Dorado,Real Madrid CF,1,0.15,0.15,0.0
 Isabel Álvarez,Sevilla FC,1,0.06,0.06,0.0
 Isina,DUX Logroño,2,0.09,0.03,0.05
+Itziar Pinillos,FC Badalona Women,1,0.03,0.03,0.0
 Jujuba Cardozo,Granada CF,1,0.05,0.0,0.05
 K. Cahynová,Real Sociedad de Fútbol,3,0.23,0.09,0.14
+Kika Nazareth,FC Barcelona,1,0.15,0.15,0.0
 L. Ballesté,Reial Club Deportiu Espanyol,1,0.1,0.0,0.1
 L. Caicedo,Real Madrid CF,1,0.03,0.03,0.0
-L. Kullashi,FC Badalona Women,1,0.1,0.1,0.0
-L. Solvoll,Granada CF,1,0.11,0.11,0.0
+L. Chamorro,FC Badalona Women,3,0.45,0.45,0.0
+L. Kullashi,FC Badalona Women,2,0.18,0.18,0.0
+L. Solvoll,Granada CF,2,0.15,0.11,0.04
 Laura Camino,SD Eibar,5,0.27,0.2,0.07
 Laura Martínez,Reial Club Deportiu Espanyol,1,0.37,0.37,0.0
-Laura Pérez,Granada CF,1,0.1,0.1,0.0
+Laura Pérez,Granada CF,2,0.16,0.16,0.0
 Lauren Leal,Club Atlético de Madrid Féminas,1,0.51,0.0,0.51
 Lauri,Granada CF,2,0.2,0.1,0.09
 Lorena Navarro,FC Badalona Women,1,0.07,0.07,0.0
@@ -82,14 +98,16 @@ Lucía Martínez,RC Deportivo de La Coruña,1,0.03,0.03,0.0
 Lucía Moral,Sevilla FC,3,0.13,0.13,0.0
 Lucía Vallejo,Reial Club Deportiu Espanyol,1,0.03,0.0,0.03
 M. Asenjo,DUX Logroño,2,0.14,0.14,0.0
-M. Baquerizo,Granada CF,1,0.03,0.0,0.03
+M. Baquerizo,Granada CF,3,0.12,0.09,0.03
+M. Díaz Leal,Alhama CF,3,0.17,0.17,0.0
 M. Frohms,DUX Logroño,1,0.0,0.0,0.0
-M. Kojima,Granada CF,1,0.05,0.05,0.0
+M. Kojima,Granada CF,4,0.2,0.14,0.06
 M. Lakrar,Real Madrid CF,1,0.03,0.03,0.0
 M. Marcetto,Madrid CFF,3,0.91,0.91,0.0
 Macarena Portales,Club Atlético de Madrid Féminas,3,0.18,0.18,0.0
-Maite Zubieta,Athletic Club Bilbao,1,0.03,0.0,0.03
-Mapi León,FC Barcelona,2,0.14,0.0,0.14
+Maite Zubieta,Athletic Club Bilbao,2,0.06,0.03,0.03
+Mapi León,FC Barcelona,3,0.19,0.05,0.14
+Maria Barquero,Granada CF,1,0.05,0.05,0.0
 Maria Gabaldón,Levante UD,1,0.34,0.34,0.0
 Marina Artero,RC Deportivo de La Coruña,2,0.12,0.0,0.12
 Marisa García,RC Deportivo de La Coruña,3,0.14,0.14,0.0
@@ -103,28 +121,35 @@ Nerea Eizagirre,Real Sociedad de Fútbol,4,0.97,0.18,0.79
 O. Fergusson,Reial Club Deportiu Espanyol,1,0.05,0.05,0.0
 Olaya Rodríguez,RC Deportivo de La Coruña,1,0.03,0.0,0.03
 Ona Baradad,Reial Club Deportiu Espanyol,2,0.69,0.69,0.0
-Ona Batlle,FC Barcelona,2,0.1,0.07,0.03
+Ona Batlle,FC Barcelona,3,0.21,0.17,0.03
+P. Ali,Levante UD,1,0.05,0.0,0.05
 Paola Hernández,CD Tenerife,1,0.03,0.03,0.0
+Patri Guijarro,FC Barcelona,2,0.13,0.13,0.0
 Paula Arana,Reial Club Deportiu Espanyol,4,0.25,0.25,0.0
 Paula Comendador,Real Madrid CF,2,0.08,0.08,0.0
 Paula Fernández,Real Sociedad de Fútbol,4,0.21,0.12,0.09
 Paula Monteagudo,RC Deportivo de La Coruña,2,0.17,0.0,0.17
 Paula Rubio,DUX Logroño,1,0.07,0.0,0.07
+R. Carrasco,Levante UD,1,0.1,0.1,0.0
 Redru,RC Deportivo de La Coruña,1,0.03,0.0,0.03
 Rosa Márquez,Sevilla FC,1,0.33,0.33,0.0
 S. Bruun,Real Madrid CF,2,0.13,0.0,0.13
 S. Däbritz,Real Madrid CF,3,0.12,0.06,0.06
 S. Holmgaard,Real Madrid CF,1,0.05,0.05,0.0
 S. Jensen,Club Atlético de Madrid Féminas,3,0.52,0.52,0.0
-S. Keefe,Granada CF,3,0.94,0.1,0.84
+S. Keefe,Granada CF,7,1.27,0.43,0.84
 S. Ortíz,RC Deportivo de La Coruña,2,0.13,0.13,0.0
 S. Ouzraoui Diki,CD Tenerife,10,1.08,1.0,0.08
-Salma Paralluelo,FC Barcelona,4,0.64,0.5,0.14
+Salma Paralluelo,FC Barcelona,7,0.9,0.77,0.14
 Sara Martín,SD Eibar,1,0.03,0.03,0.0
-Sara Ortega,Athletic Club Bilbao,1,0.1,0.1,0.0
+Sara Ortega,Athletic Club Bilbao,2,0.14,0.14,0.0
 Silvia Lloris,Club Atlético de Madrid Féminas,1,0.03,0.03,0.0
 V. Bøe Risa,Club Atlético de Madrid Féminas,1,0.08,0.08,0.0
+Vega Montesinos,Alhama CF,1,0.05,0.05,0.0
+Vera Molina,Granada CF,2,0.14,0.05,0.09
+Vicky López,FC Barcelona,4,1.03,1.03,0.0
 Vilariño,Athletic Club Bilbao,1,0.06,0.06,0.0
+Y. Relea,Alhama CF,4,0.17,0.11,0.06
 Z. Matthews,DUX Logroño,1,0.05,0.05,0.0
 Ángela Sosa,Madrid CFF,2,0.06,0.03,0.03
-Érika González,Levante UD,2,0.09,0.09,0.0
+Érika González,Levante UD,4,0.16,0.16,0.0
