@@ -1,0 +1,181 @@
+playerName,Team,ActualDisruptions,ExpectedDisruptions
+A. Béché,Strasbourg,6,3.84
+A. Chaney,Strasbourg,0,1.131
+A. Claire,Fleury 91,0,0.002
+A. Cometti,Fleury 91,3,0.098
+A. Connesson,Saint-Étienne,4,0.714
+A. Ebayilin,PSG,1,0.012
+A. Felden,Montpellier,1,1.001
+A. Fontaine,Dijon,0,0.14400000000000002
+A. Gajić,Saint-Étienne,1,0.372
+A. Gbedjissi,Lens,2,0.44100000000000006
+A. Hegerberg,OL Lyonnes,4,0.648
+A. Lawrence,OL Lyonnes,2,3.15
+A. Le Moguédec,Paris FC,4,0.5980000000000001
+A. Pierre-Louis,Saint-Étienne,0,0.018000000000000002
+A. Pinguet,Saint-Étienne,0,0.166
+A. Traoré,Fleury 91,3,1.207
+A. Yeboah,Strasbourg,1,0.007
+B. Joly,Lens,0,0.0
+Bruna Lourenço,Strasbourg,4,1.045
+C. Bertrand,Lens,1,0.096
+C. Blanc,Montpellier,6,0.498
+C. Boisard,Le Havre,8,0.21
+C. Caputo,Fleury 91,0,0.0
+C. Chabod,Montpellier,0,0.032
+C. Cosme,Nantes,3,0.864
+C. Dunn,PSG,0,0.14
+C. Effa Effa,Le Havre,0,0.882
+C. Endler,OL Lyonnes,0,0.052000000000000005
+C. Fernandes,Fleury 91,2,0.5760000000000001
+C. Gavory,Le Havre,4,0.39
+C. Matéo,Paris FC,1,1.656
+C. Meffometou,Fleury 91,3,0.372
+C. N'Gazi,Olympique Marseille,0,0.146
+C. Ndzana,Dijon,11,0.728
+C. Ould Hocine,Paris FC,7,1.296
+C. Picaud,Fleury 91,1,0.0
+C. Robillard,Nantes,1,0.036000000000000004
+C. Tapia,Saint-Étienne,1,0.462
+D. Bien-Aimé,Saint-Étienne,0,0.015
+D. Corboz,Paris FC,8,0.72
+D. Davis,Paris FC,4,0.402
+D. Pierre-Louis,Lens,7,0.924
+E. Aigbogun,Strasbourg,3,0.728
+E. Burns,Nantes,0,0.129
+E. Gaetino,PSG,3,0.868
+E. Kamczyk,Fleury 91,3,0.10400000000000001
+E. Laurent,Fleury 91,1,0.5760000000000001
+E. Palis,Montpellier,1,0.492
+E. Paljevic,Nantes,0,0.756
+E. Siren,Dijon,11,1.8239999999999998
+F. Bataillard,Saint-Étienne,3,0.23500000000000001
+F. Jourde,PSG,0,0.5640000000000001
+F. Proniez,Lens,4,1.2420000000000002
+Fátima Pinto,Strasbourg,2,2.232
+G. Grzybowska,Dijon,0,0.0
+G. Mbock,PSG,3,0.595
+H. Diaz,Fleury 91,1,0.27
+I. Adjabi,Le Havre,2,0.6489999999999999
+I. Benyahia,OL Lyonnes,0,0.011
+I. Engen,OL Lyonnes,1,2.025
+I. Kbida,Olympique Marseille,1,0.039
+I. Konan,Strasbourg,1,1.008
+I. Kristoffersen,Saint-Étienne,2,0.312
+I. Saoud,Nantes,1,0.12
+Izarne Sarasola,Nantes,3,0.8
+J. Brand,OL Lyonnes,3,0.648
+J. Brown,Olympique Marseille,1,0.084
+J. Coquet,Montpellier,4,0.58
+J. Denizot,Dijon,0,0.005
+J. Echegini,PSG,1,1.065
+J. Groenen,PSG,1,0.385
+J. Lerond,Montpellier,0,0.14200000000000002
+J. Limage,Lens,5,0.32
+J. Mossard,Nantes,0,0.308
+J. Nassi,Le Havre,1,0.06
+J. Pasquereau,Nantes,3,0.20400000000000001
+J. Perret,Olympique Marseille,4,0.216
+J. Rastocle,Montpellier,4,1.936
+J. Rouquet,Montpellier,1,0.893
+K. Diani,OL Lyonnes,1,0.052000000000000005
+K. El Koumir,Lens,1,0.056
+K. Jedlińska,Paris FC,0,0.038
+K. Korošec,Paris FC,4,0.224
+K. Louis,Montpellier,2,0.672
+K. Roche-Dufour,Paris FC,2,0.058
+K. Talaslahti,Dijon,0,0.064
+K. Taylor,Dijon,2,0.441
+L. Archier,Lens,0,0.363
+L. Azzaro,Paris FC,2,1.168
+L. Bogaert,Paris FC,1,0.98
+L. Cance,Fleury 91,1,1.1520000000000001
+L. Declercq,Dijon,1,0.333
+L. Fleury,Nantes,4,0.627
+L. Gay,Dijon,2,0.066
+L. Goetsch,Fleury 91,4,0.672
+L. Gstalter,Montpellier,0,0.217
+L. Hannequin,Strasbourg,2,0.792
+L. Heaps,OL Lyonnes,2,1.8870000000000002
+L. Hermann,Saint-Étienne,1,0.036000000000000004
+L. Joseph,OL Lyonnes,3,0.976
+L. Khelifi,Nantes,0,1.185
+L. Morissaint,PSG,0,0.098
+L. Oillic,Lens,4,0.448
+L. Philippe,Le Havre,0,0.036000000000000004
+L. Pinot,Lens,4,0.315
+L. Storti,Nantes,3,0.013000000000000001
+L. Yohannes,OL Lyonnes,5,2.938
+M. Babou,Strasbourg,0,0.033
+M. Bethi,Nantes,5,0.234
+M. Boucly,Le Havre,3,2.205
+M. Bourdieu,Olympique Marseille,0,0.6599999999999999
+M. Chavas,Paris FC,0,0.128
+M. Cosson,Nantes,1,0.675
+M. Diop,Strasbourg,0,0.54
+M. Earps,PSG,0,0.0
+M. Fathallah,OL Lyonnes,3,0.5740000000000001
+M. Garbino,Paris FC,1,0.8450000000000001
+M. Herrera,Olympique Marseille,8,0.657
+M. Hoeltzel,Strasbourg,1,0.37800000000000006
+M. Kanjinga,PSG,2,1.7999999999999998
+M. Katoto,OL Lyonnes,1,0.406
+M. Le Mouël,Olympique Marseille,4,0.25
+M. Mendy,Le Havre,2,0.232
+M. Moryl,Olympique Marseille,1,0.115
+M. N'Dongala,Paris FC,3,0.252
+M. Ngock,Fleury 91,4,0.726
+M. Revelli,Lens,2,0.32
+M. Romanelli,Saint-Étienne,1,0.8320000000000001
+M. Roth,Le Havre,1,0.9860000000000001
+M. Terchoun,Dijon,2,0.279
+M. Toloba,Nantes,1,0.162
+M. Traoré,Strasbourg,1,0.406
+M. Wahl,Strasbourg,0,0.296
+Morgane Martins,Fleury 91,7,0.56
+N. Ali Nadjim,Saint-Étienne,0,0.004
+N. Bamenga,Olympique Marseille,0,0.0
+N. Blanchard,Olympique Marseille,4,0.276
+N. Carage,Dijon,5,0.434
+N. Istocki,Saint-Étienne,0,0.13
+N. Krezyman,Dijon,1,2.0540000000000003
+N. Ngueleu,Montpellier,3,0.5720000000000001
+N. Vagre,Lens,4,0.185
+Nelly Rodrigues,Nantes,2,0.7699999999999999
+O. Domin,Dijon,1,0.49500000000000005
+O. Picard,Paris FC,3,0.111
+R. Ajibade,PSG,0,0.645
+R. Corboz,Saint-Étienne,0,0.32
+R. Couasnon,Olympique Marseille,0,0.02
+R. Enguehard,Le Havre,6,1.512
+R. Khezami,Olympique Marseille,3,0.657
+R. Lejeune,Lens,3,0.054
+R. Éloissaint,Nantes,1,0.09
+S. Bacha,OL Lyonnes,1,3.108
+S. Cambot,Saint-Étienne,2,1.125
+S. Elisor,Olympique Marseille,6,0.28
+S. Enge,Strasbourg,0,2.912
+S. Hornemann,Saint-Étienne,2,1.357
+S. Jeudy,Lens,0,0.033
+S. Karchaoui,PSG,2,1.74
+S. Kassi,Le Havre,0,0.0
+S. Magalhães,Olympique Marseille,2,0.0
+S. Ouchene,Montpellier,2,0.8160000000000001
+S. Scott,Paris FC,1,0.09
+S. Svava,OL Lyonnes,0,0.319
+T. David,Lens,1,0.0
+T. Elimbi Gilbert,PSG,0,1.5300000000000002
+T. Gallais,Le Havre,1,0.014
+T. Joseph,Olympique Marseille,7,0.176
+T. Laplacette,Olympique Marseille,4,0.672
+T. Sissoko,Paris FC,1,0.371
+V. Bècho,OL Lyonnes,3,1.4000000000000001
+W. Fon,Saint-Étienne,3,0.507
+W. Renard,OL Lyonnes,2,3.102
+Wang Yanwen,Dijon,0,0.7410000000000001
+Wu Chengshu,Dijon,1,0.715
+Z. Stiévenart,Le Havre,0,1.408
+É. De Almeida,PSG,5,2.73
+É. Kouache,Le Havre,6,2.415
+É. Rambaud,Montpellier,0,0.022
+É. Tsé,Le Havre,5,0.79
