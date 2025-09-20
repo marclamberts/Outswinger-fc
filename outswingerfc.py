@@ -12,10 +12,10 @@ import io
 
 # --- App Configuration ---
 st.set_page_config(
-    page_title="Outswinger FC | Women's Football Analytics",
+    page_title="She Plots FC x Outswinger FC | Analytics",
     page_icon="⚽",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # --- Caching ---
@@ -116,10 +116,11 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
 
     return fig, None
 
-# --- Component Rendering Functions for Data Scouting Page ---
+# --- Main Page Display Functions ---
 
-def render_metrics_leaderboard(data_config, metric_info):
-    """Renders the player metrics leaderboard component."""
+def display_data_scouting_page(data_config, metric_info):
+    """Renders the player metrics leaderboard page."""
+    st.title("📊 Data Scouting")
     
     # --- League Selection ---
     leagues_row1 = ["WSL", "WSL 2", "Frauen-Bundesliga"]
@@ -143,7 +144,6 @@ def render_metrics_leaderboard(data_config, metric_info):
     st.header(f"📈 {selected_league} - {selected_metric_key}")
     st.markdown(f"**Definition:** {metric_info.get(selected_metric_key, '')}")
     
-    # Specific note for a league based on current date
     if selected_league == "Frauen-Bundesliga" and datetime.now() < datetime(2025, 9, 6):
         st.info("Note: Data of FC Köln - RB Leipzig is not present as of 06-09-2025")
 
@@ -173,14 +173,15 @@ def render_metrics_leaderboard(data_config, metric_info):
             search_placeholders = {"WSL": "e.g., Sam Kerr", "WSL 2": "e.g., Melissa Johnson", "Frauen-Bundesliga": "e.g., Alexandra Popp", "Liga F": "e.g., Alexia Putellas", "NWSL": "e.g., Sophia Smith", "Premiere Ligue": "e.g., Ada Hegerberg"}
             placeholder = search_placeholders.get(selected_league, "Search for a player...")
 
-            st.markdown("---")
-            col1, col2 = st.columns([2, 1.5])
-            with col1:
-                search_term = st.text_input("Search for a player:", placeholder=placeholder)
-            with col2:
-                top_n = st.slider("Number of players to display:", 5, 50, 15, 5)
-            
-            display_option = st.radio("Display format:", ("📄 Data Table", "📊 Visualization"), horizontal=True, label_visibility="collapsed")
+            # --- Search and Display Options ---
+            with st.container():
+                col1, col2 = st.columns([2, 1.5])
+                with col1:
+                    search_term = st.text_input("Search for a player:", placeholder=placeholder)
+                with col2:
+                    top_n = st.slider("Number of players to display:", 5, 50, 15, 5)
+                
+                display_option = st.radio("Display format:", ("📄 Data Table", "📊 Visualization"), horizontal=True, label_visibility="collapsed")
 
             if search_term:
                 df_processed = df_processed[df_processed['Player'].str.contains(search_term, case=False, na=False)]
@@ -210,17 +211,18 @@ def render_metrics_leaderboard(data_config, metric_info):
     else:
         st.warning("No data configuration found.")
 
-def render_corner_analysis(data_config):
-    """Renders the corner analysis component."""
+def display_corners_page(data_config):
+    """Renders the corner analysis page."""
+    st.title("⛳ Corners")
+    
     leagues = list(data_config.keys())
     leagues_with_total = ["Total"] + leagues
     
     selected_league_corners = st.session_state.get('corner_league_selection', 'Total')
-    st.selectbox("Select League:", leagues_with_total, key='corner_league_selection')
     
     df_full = pd.DataFrame()
     try:
-        if st.session_state.corner_league_selection == "Total":
+        if selected_league_corners == "Total":
             all_dfs = []
             for league in leagues:
                 corner_config = data_config.get(league, {}).get('Corners')
@@ -234,12 +236,12 @@ def render_corner_analysis(data_config):
             if all_dfs:
                 df_full = pd.concat(all_dfs, ignore_index=True)
         else:
-            corner_config = data_config.get(st.session_state.corner_league_selection, {}).get('Corners')
+            corner_config = data_config.get(selected_league_corners, {}).get('Corners')
             if corner_config:
                 file_path = resource_path(os.path.join("data", corner_config["file"]))
                 df_full = load_data(file_path)
             else:
-                st.error(f"Corner data configuration not found for {st.session_state.corner_league_selection}.")
+                st.error(f"Corner data configuration not found for {selected_league_corners}.")
                 return
 
     except FileNotFoundError:
@@ -258,7 +260,7 @@ def render_corner_analysis(data_config):
         st.warning("No events of type 'FromCorner' found in the dataset.")
         return
 
-    # Sidebar Filters (managed by the session state from the sidebar)
+    # Read filter values from session state (set by the main filter area)
     selected_team = st.session_state.get('corner_team', 'All')
     selected_player = st.session_state.get('corner_player', 'All')
     selected_state = st.session_state.get('corner_gamestate', 'All')
@@ -273,9 +275,8 @@ def render_corner_analysis(data_config):
     if selected_goal != "All": df_filtered = df_filtered[df_filtered['isGoal'] == selected_goal]
     df_filtered = df_filtered[df_filtered['timeMin'].between(selected_time[0], selected_time[1])]
     
-    plot_title = selected_team if selected_team != "All" else selected_player if selected_player != "All" else f"{st.session_state.corner_league_selection} Corners"
+    plot_title = selected_team if selected_team != "All" else selected_player if selected_player != "All" else f"{selected_league_corners} Corners"
 
-    st.markdown("---")
     if not df_filtered.empty and all(c in df_filtered.columns for c in ['x', 'y', 'xG', 'isGoal']):
         fig, error_message = create_detailed_shot_map(df_filtered, title_text=plot_title)
         if fig:
@@ -295,65 +296,30 @@ def render_corner_analysis(data_config):
     else:
         st.info("No data available for the selected filters.")
 
-
-# --- Main Page Display Functions ---
-
-def display_landing_page():
-    """Renders the initial landing page."""
-    st.markdown("""
-        <style>
-            .block-container { max-width: 750px; }
-            div[data-testid="stSidebar"] { display: none; }
-        </style>
-    """, unsafe_allow_html=True)
-    
-    st.title("She Plots FC - Analytics")
-    st.markdown("---")
-
-    col1, col2, col3 = st.columns([2, 1, 2])
-    with col1:
-        st.image("sheplotsfc2.png", use_container_width=True)
-    with col2:
-        st.markdown("<h1 style='text-align: center; margin-top: 150px;'>X</h1>", unsafe_allow_html=True)
-    with col3:
-        st.image("Outswinger FC.png", use_container_width=True)
-
-    st.markdown("---")
-    st.subheader("Opening the world of WoSo data")
-
-    if st.button("Enter Analytics Platform", use_container_width=True, type="primary"):
-        st.session_state.app_mode = "MainApp"
-        st.rerun()
-
-def display_data_scouting_page(data_config, metric_info):
-    """Renders the data scouting page with tabs for different tools."""
-    st.title("📊 Data Scouting")
-
-    tab1, tab2 = st.tabs(["Player Metrics Leaderboard", "Corner Analysis"])
-
-    with tab1:
-        render_metrics_leaderboard(data_config, metric_info)
-    
-    with tab2:
-        render_corner_analysis(data_config)
-
 def display_match_analysis_page():
     """Placeholder for the Match Analysis page."""
     st.title("🎯 Match Analysis")
-    st.markdown("---")
     st.info("This section is currently under development. Tools for in-depth match analysis will be available here soon.")
     st.image("https://placehold.co/800x400/4a5568/e2e8f0?text=Match+Breakdown+Tools+Coming+Soon", use_container_width=True)
 
-def display_player_profiles_page():
-    """Placeholder for the Player Profiles page."""
-    st.title("👤 Player Profiles")
-    st.markdown("---")
+def display_player_profiling_page():
+    """Placeholder for the Player Profiling page."""
+    st.title("👤 Player Profiling")
     st.info("This section is currently under development. Soon you'll be able to search for individual players and view their detailed statistical profiles.")
     st.image("https://placehold.co/800x400/2d3748/e2e8f0?text=Player+Profile+Dashboard+Coming+Soon", use_container_width=True)
 
 # --- Main App Logic ---
 def main():
     """Main function to run the Streamlit app."""
+    # Hide the default sidebar
+    st.markdown("""
+        <style>
+            div[data-testid="stSidebar"] {
+                display: none;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+    
     # --- Data and Config Initialization ---
     metric_info = get_metric_info()
     data_config = {
@@ -366,48 +332,44 @@ def main():
     }
     
     # --- Session State Initialization ---
-    if 'app_mode' not in st.session_state: st.session_state.app_mode = "Landing"
+    if 'page_view' not in st.session_state: st.session_state.page_view = "Data Scouting"
     if 'selected_league' not in st.session_state: st.session_state.selected_league = "WSL"
     if 'selected_metric' not in st.session_state: st.session_state.selected_metric = list(metric_info.keys())[0]
-    if 'page_view' not in st.session_state: st.session_state.page_view = "Data Scouting"
 
-    # --- Page Routing ---
-    if st.session_state.app_mode == "Landing":
-        display_landing_page()
-    else:
-        # --- Main App Sidebar and Page Rendering ---
-        st.sidebar.title("Outswinger FC")
-        st.sidebar.image("https://placehold.co/400x200/2d3748/e2e8f0?text=Outswinger+FC", use_container_width=True)
-        
-        if st.sidebar.button("🏠 Home", use_container_width=True):
-            st.session_state.app_mode = "Landing"
-            st.rerun()
-        
-        st.sidebar.header("Main Menu")
-        if st.sidebar.button("📊 Data Scouting", use_container_width=True, type="primary" if st.session_state.page_view == "Data Scouting" else "secondary"):
+    # --- Main Page Navigation ---
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        if st.button("📊 Data Scouting", use_container_width=True, type="primary" if st.session_state.page_view == "Data Scouting" else "secondary"):
             st.session_state.page_view = "Data Scouting"
             st.rerun()
-        if st.sidebar.button("🎯 Match Analysis", use_container_width=True, type="primary" if st.session_state.page_view == "Match Analysis" else "secondary"):
+    with col2:
+        if st.button("🎯 Match Analysis", use_container_width=True, type="primary" if st.session_state.page_view == "Match Analysis" else "secondary"):
             st.session_state.page_view = "Match Analysis"
             st.rerun()
-        if st.sidebar.button("👤 Player Profiles", use_container_width=True, type="primary" if st.session_state.page_view == "Player Profiles" else "secondary"):
-            st.session_state.page_view = "Player Profiles"
+    with col3:
+        if st.button("👤 Player Profiling", use_container_width=True, type="primary" if st.session_state.page_view == "Player Profiling" else "secondary"):
+            st.session_state.page_view = "Player Profiling"
             st.rerun()
-        st.sidebar.markdown("---")
+    with col4:
+        if st.button("⛳ Corners", use_container_width=True, type="primary" if st.session_state.page_view == "Corners" else "secondary"):
+            st.session_state.page_view = "Corners"
+            st.rerun()
+    
+    st.markdown("---")
 
-        # --- Contextual Sidebar for Data Scouting ---
-        if st.session_state.page_view == "Data Scouting":
-            st.sidebar.header("Metric Leaderboard Filters")
+    # --- Contextual Filters Below Navigation ---
+    if st.session_state.page_view == "Data Scouting":
+        with st.expander("Show Metric Leaderboard Filters", expanded=True):
             metric_pages = list(metric_info.keys())
-            for metric in metric_pages:
-                if st.sidebar.button(metric, key=f"metric_btn_{metric}", use_container_width=True, disabled=(st.session_state.selected_metric == metric)):
-                    st.session_state.selected_metric = metric
-                    st.rerun()
-            
-            st.sidebar.markdown("---")
-            st.sidebar.header("Corner Analysis Filters")
+            st.selectbox("Select Metric:", metric_pages, key='selected_metric')
+
+    elif st.session_state.page_view == "Corners":
+        with st.expander("Show Corner Analysis Filters", expanded=True):
             try:
-                # This is a dummy load just to get filter options like team names
+                leagues = list(data_config.keys())
+                leagues_with_total = ["Total"] + leagues
+                
+                # Dummy load for filter options
                 temp_df_full = load_data(resource_path(os.path.join("data", "WSL_corners.csv")))
                 df_corners = temp_df_full[temp_df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
                 teams = ["All"] + sorted(df_corners['TeamId'].unique().tolist())
@@ -416,26 +378,34 @@ def main():
                 min_time, max_time = int(df_corners['timeMin'].min()), int(df_corners['timeMin'].max())
                 game_states = ["All"] + sorted(df_corners['GameState'].unique().tolist()) if 'GameState' in df_corners.columns else ["All"]
 
-                st.selectbox("Filter by Team:", teams, key='corner_team')
-                st.selectbox("Filter by Player:", players, key='corner_player')
-                st.selectbox("Filter by Game State:", game_states, key='corner_gamestate')
-                st.selectbox("Filter by Goal:", is_goal_options, key='corner_isgoal', format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
-                st.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time), key='corner_time')
+                c1, c2, c3 = st.columns(3)
+                with c1:
+                    st.selectbox("Select League:", leagues_with_total, key='corner_league_selection')
+                    st.selectbox("Filter by Team:", teams, key='corner_team')
+                    st.selectbox("Filter by Player:", players, key='corner_player')
+                with c2:
+                    st.selectbox("Filter by Game State:", game_states, key='corner_gamestate')
+                    st.selectbox("Filter by Goal:", is_goal_options, key='corner_isgoal', format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
+                with c3:
+                    st.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time), key='corner_time')
+
             except Exception:
-                 st.sidebar.warning("Could not load corner filter options.")
+                 st.warning("Could not load corner filter options.")
 
-        st.sidebar.info("This app displays player stats for the WSL, WSL 2, Frauen-Bundesliga, Liga F, NWSL, and Premiere Ligue.")
+    st.markdown("---")
 
-        # --- Display Selected Page ---
-        if st.session_state.page_view == "Data Scouting":
-            display_data_scouting_page(data_config, metric_info)
-        elif st.session_state.page_view == "Match Analysis":
-            display_match_analysis_page()
-        elif st.session_state.page_view == "Player Profiles":
-            display_player_profiles_page()
+    # --- Display Selected Page in Main Content Area ---
+    if st.session_state.page_view == "Data Scouting":
+        display_data_scouting_page(data_config, metric_info)
+    elif st.session_state.page_view == "Match Analysis":
+        display_match_analysis_page()
+    elif st.session_state.page_view == "Player Profiling":
+        display_player_profiling_page()
+    elif st.session_state.page_view == "Corners":
+        display_corners_page(data_config)
 
-        st.markdown("---")
-        st.markdown(f"© {datetime.now().year} Outswinger FC | All rights reserved.")
+    st.markdown("---")
+    st.markdown(f"© {datetime.now().year} She Plots FC x Outswinger FC | All rights reserved.")
 
 
 if __name__ == "__main__":
