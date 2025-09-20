@@ -20,7 +20,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
-# Suppress specific warnings for a cleaner output
+# Suppress specific matplotlib warnings for a cleaner output
 warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 
 
@@ -104,12 +104,9 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     return fig, None
 
 def create_player_profile_fig(df, player_name, position_group):
-    """
-    Generates a player profile visualization and returns the matplotlib figure.
-    """
+    """Generates a player profile visualization and returns the matplotlib figure."""
     df.rename(columns={"Nationality": "Passport country"}, inplace=True)
 
-    # Define positional groups, categories, and roles
     if position_group == 'Centre-back':
         positions, categories, roles = ['CB', 'RCB', 'LCB'], {"Security": ["Accurate passes, %", "Back passes per 90", "Accurate back passes, %", "Lateral passes per 90", "Accurate lateral passes, %"], "Progressive Passing": ["Progressive passes per 90", "Accurate progressive passes, %", "Forward passes per 90", "Accurate forward passes, %", "Passes to final third per 90", "Accurate passes to final third, %"], "Ball Carrying": ["Progressive runs per 90", "Dribbles per 90", "Successful dribbles, %", "Accelerations per 90"], "Creativity": ["Key passes per 90", "Shot assists per 90", "xA per 90", "Smart passes per 90", "Accurate smart passes, %"], "Proactive Defending": ["Interceptions per 90", "PAdj Interceptions", "Sliding tackles per 90", "PAdj Sliding tackles"], "Duelling": ["Duels per 90", "Duels won, %", "Aerial duels per 90", "Aerial duels won, %"], "Box Defending": ["Shots blocked per 90"], "Sweeping": []}, {"Ball Player": ["Progressive Passing", "Security"], "Libero": ["Progressive Passing", "Ball Carrying", "Creativity"], "Wide Creator": ["Creativity", "Ball Carrying"], "Aggressor": ["Proactive Defending", "Duelling"], "Physical Dominator": ["Duelling", "Box Defending"], "Box Defender": ["Box Defending", "Duelling"]}
     elif position_group == 'Full-back':
@@ -127,14 +124,12 @@ def create_player_profile_fig(df, player_name, position_group):
     data = position_df[["Player", "Team", "Age", "Position", "Minutes played", "Passport country"]].copy()
     for cat, metrics in categories.items():
         for metric in metrics:
-            if metric in position_df.columns:
-                data[f"{cat}_{metric}"] = position_df[metric]
+            if metric in position_df.columns: data[f"{cat}_{metric}"] = position_df[metric]
     data.fillna(data.mean(numeric_only=True), inplace=True)
     for cat, metrics in categories.items():
         for metric in metrics:
             col_name = f"{cat}_{metric}"
-            if col_name in data.columns and pd.api.types.is_numeric_dtype(data[col_name]):
-                data[f"{col_name}_z"] = zscore(data[col_name])
+            if col_name in data.columns and pd.api.types.is_numeric_dtype(data[col_name]): data[f"{col_name}_z"] = zscore(data[col_name])
     for cat in categories:
         z_cols = [col for col in data.columns if col.startswith(cat) and col.endswith('_z')]
         if z_cols:
@@ -157,7 +152,6 @@ def create_player_profile_fig(df, player_name, position_group):
     top_roles = sorted(role_scores.items(), key=lambda item: item[1], reverse=True)[:3]
     category_percentile_cols = [f"{cat}_percentile" for cat in categories if f"{cat}_percentile" in data.columns]
     avg_rating = player_row[category_percentile_cols].mean() if category_percentile_cols else np.nan
-    
     category_cols = [col for col in category_percentile_cols if col in data.columns]
     player_vector = player_row[category_cols].values.reshape(1, -1)
     all_vectors = data[category_cols].values
@@ -215,6 +209,33 @@ def create_player_profile_fig(df, player_name, position_group):
 
 
 # --- Page Display Functions ---
+
+def display_landing_page():
+    """Renders the initial landing page."""
+    st.markdown("""
+        <style>
+            .block-container { max-width: 750px; padding-top: 5rem; }
+            div[data-testid="stSidebar"] { display: none; }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    st.title("She Plots FC - Analytics")
+    st.markdown("---")
+
+    col1, col2, col3 = st.columns([2, 1, 2])
+    with col1:
+        st.image("sheplotsfc2.png", use_container_width=True)
+    with col2:
+        st.markdown("<h1 style='text-align: center; margin-top: 150px;'>X</h1>", unsafe_allow_html=True)
+    with col3:
+        st.image("Outswinger FC.png", use_container_width=True)
+
+    st.markdown("---")
+    st.subheader("Opening the world of WoSo data")
+
+    if st.button("Enter Analytics Platform", use_container_width=True, type="primary"):
+        st.session_state.app_mode = "MainApp"
+        st.rerun()
 
 def display_data_scouting_page(data_config, metric_info):
     st.title("📊 Data Scouting")
@@ -335,25 +356,15 @@ def display_player_profiling_page():
         st.error(f"Profile data directory not found at '{PROFILES_DIR}'. Please create 'data/profiles' and add your Excel files.")
         return
 
-    # --- UI for selections ---
     col1, col2 = st.columns(2)
-    with col1:
-        selected_league_name = st.selectbox("Select League", league_names)
-    with col2:
-        position_group = st.selectbox("Select Position Group", list(position_map.keys()))
+    with col1: selected_league_name = st.selectbox("Select League", league_names)
+    with col2: position_group = st.selectbox("Select Position Group", list(position_map.keys()))
 
     if selected_league_name:
         try:
-            file_name = f"{selected_league_name}.xlsx"
-            full_path = os.path.join(PROFILES_DIR, file_name)
+            file_name, full_path = f"{selected_league_name}.xlsx", os.path.join(PROFILES_DIR, f"{selected_league_name}.xlsx")
             df = load_profile_data(full_path)
-            
-            # Filter players based on selected position group
-            positions_to_check = position_map[position_group]
-            
-            # Ensure 'Position' column is string type to prevent errors
-            df['Position'] = df['Position'].astype(str)
-
+            positions_to_check, df['Position'] = position_map[position_group], df['Position'].astype(str)
             position_df = df[df['Position'].str.contains('|'.join(positions_to_check), na=False)]
             player_list = sorted(position_df['Player'].unique())
 
@@ -362,24 +373,18 @@ def display_player_profiling_page():
                 return
                 
             selected_player = st.selectbox("Select Player", player_list)
-
             if st.button("Generate Profile", use_container_width=True, type="primary"):
                 if selected_player:
                     with st.spinner("Generating profile..."):
                         fig, message = create_player_profile_fig(df, selected_player, position_group)
-                        if fig:
-                            st.pyplot(fig)
-                        else:
-                            st.error(message)
-        except FileNotFoundError:
-            st.error(f"Could not find the file: {file_name}")
-        except Exception as e:
-            st.error(f"An error occurred while processing the file: {e}")
+                        if fig: st.pyplot(fig)
+                        else: st.error(message)
+        except FileNotFoundError: st.error(f"Could not find the file: {file_name}")
+        except Exception as e: st.error(f"An error occurred while processing the file: {e}")
 
 # --- Main App Logic ---
 def main():
     """Main function to run the Streamlit app."""
-    # --- Data and Config Initialization ---
     metric_info = get_metric_info()
     data_config = {
         "WSL": { "minutes_file": "WSL_minutes.csv", 'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "WSL_corners.csv"} },
@@ -422,7 +427,7 @@ def main():
         elif st.session_state.page_view == "Corners":
             with st.expander("Show Corner Analysis Filters", expanded=True):
                 try:
-                    leagues, leagues_with_total = list(data_config.keys()), ["Total"] + list(data_config.keys())
+                    leagues_with_total = ["Total"] + list(data_config.keys())
                     temp_df_full = load_data(resource_path(os.path.join("data", "WSL_corners.csv")))
                     df_corners = temp_df_full[temp_df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
                     teams, players = ["All"] + sorted(df_corners['TeamId'].unique().tolist()), ["All"] + sorted(df_corners['PlayerId'].unique().tolist())
@@ -440,11 +445,8 @@ def main():
                         st.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time), key='corner_time')
                 except Exception: st.warning("Could not load corner filter options.")
         
-        if st.session_state.page_view not in ["Data Scouting", "Corners"]:
-            pass # No expander for other pages
-        else:
-            st.markdown("---")
-
+        if st.session_state.page_view not in ["Data Scouting", "Corners", "Player Profiling"]: st.markdown("---")
+        
         if st.session_state.page_view == "Data Scouting": display_data_scouting_page(data_config, metric_info)
         elif st.session_state.page_view == "Match Analysis": display_match_analysis_page()
         elif st.session_state.page_view == "Player Profiling": display_player_profiling_page()
