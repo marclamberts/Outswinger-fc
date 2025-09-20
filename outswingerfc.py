@@ -62,7 +62,6 @@ def calculate_derived_metrics(df):
 def create_detailed_shot_map(df, title_text="Corner Shots"):
     """Creates a detailed shot map using mplsoccer."""
     
-    # Calculate summary statistics
     total_shots = df.shape[0]
     if total_shots == 0:
         return None, "No shots to plot."
@@ -71,30 +70,24 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     total_xg = df['xG'].sum()
     xg_per_shot = total_xg / total_shots if total_shots > 0 else 0
     
-    # Define colors
     colors = {"missed": "#003f5c", "goal": "#bc5090"}
 
-    # Create the pitch
     pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=False, line_zorder=2, linewidth=0.5)
     fig, ax = pitch.draw(figsize=(10, 7))
     fig.set_facecolor("white")
-    ax.set_ylim(49.8, 105) # Cut pitch at halfway line
+    ax.set_ylim(49.8, 105)
 
-    # Plot the shots
     for i in range(len(df['x'])):
         row = df.iloc[i]
         color = colors["goal"] if row['isGoal'] else colors["missed"]
         size = row['xG'] * 500
         ax.scatter(row['y'], row['x'], color=color, s=size, alpha=0.7, zorder=3)
 
-    # Add title and subtitle
     ax.text(50, 108, title_text, fontsize=24, weight='bold', color='black', ha='center', va='top')
     ax.text(50, 104, "Shot Map from Corners", fontsize=12, style='italic', color='black', ha='center', va='top')
     
-    # Adjust plot for additional space at the bottom
     plt.subplots_adjust(bottom=0.3)
 
-    # --- Circles for Stats ---
     circle_positions = [(0.2, -0.10), (0.2, -0.25), (0.35, -0.10), (0.35, -0.25)]
     circle_texts = ["Shots", "xG/Shot", "Goals", "xG"]
     values = [total_shots, round(xg_per_shot, 2), total_goals, round(total_xg, 2)]
@@ -106,23 +99,46 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
         ax.text(pos[0], pos[1] + 0.06, text, transform=ax.transAxes, color='black', fontsize=12, ha='center', va='center', zorder=6)
         ax.text(pos[0], pos[1], value, transform=ax.transAxes, color='white', fontsize=12, weight='bold', ha='center', va='center', zorder=6)
 
-    # --- xG Size Legend ---
     ax.text(0.75, -0.05, "xG Size", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
     ax.scatter([0.72, 0.75, 0.78], [-0.12, -0.12, -0.12], s=[0.1*500, 0.4*500, 0.7*500], color=colors['missed'], transform=ax.transAxes, clip_on=False)
     ax.text(0.75, -0.18, "Low → High", transform=ax.transAxes, fontsize=10, color='black', ha='center', va='center')
-
-    # --- Branding ---
     ax.text(0.75, -0.25, "OUTSWINGERFC.COM", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
 
     return fig, None
 
-# --- Main Page Display Functions ---
+# --- Page Display Functions ---
+
+def display_landing_page():
+    """Renders the initial landing page."""
+    st.markdown("""
+        <style>
+            .block-container { max-width: 750px; padding-top: 5rem; }
+            div[data-testid="stSidebar"] { display: none; }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    st.title("She Plots FC - Analytics")
+    st.markdown("---")
+
+    col1, col2, col3 = st.columns([2, 1, 2])
+    with col1:
+        st.image("sheplotsfc2.png", use_container_width=True)
+    with col2:
+        st.markdown("<h1 style='text-align: center; margin-top: 150px;'>X</h1>", unsafe_allow_html=True)
+    with col3:
+        st.image("Outswinger FC.png", use_container_width=True)
+
+    st.markdown("---")
+    st.subheader("Opening the world of WoSo data")
+
+    if st.button("Enter Analytics Platform", use_container_width=True, type="primary"):
+        st.session_state.app_mode = "MainApp"
+        st.rerun()
 
 def display_data_scouting_page(data_config, metric_info):
     """Renders the player metrics leaderboard page."""
     st.title("📊 Data Scouting")
     
-    # --- League Selection ---
     leagues_row1 = ["WSL", "WSL 2", "Frauen-Bundesliga"]
     leagues_row2 = ["Liga F", "NWSL", "Premiere Ligue"]
     
@@ -145,7 +161,7 @@ def display_data_scouting_page(data_config, metric_info):
     st.markdown(f"**Definition:** {metric_info.get(selected_metric_key, '')}")
     
     if selected_league == "Frauen-Bundesliga" and datetime.now() < datetime(2025, 9, 6):
-        st.info("Note: Data of FC Köln - RB Leipzig is not present as of 06-09-2025")
+        st.info("Note: Data of FC Köln - RB Leipzig is not present.")
 
     metric_config = data_config.get(selected_league, {}).get(selected_metric_key)
     league_config = data_config.get(selected_league, {})
@@ -154,33 +170,23 @@ def display_data_scouting_page(data_config, metric_info):
         try:
             metric_file_path = resource_path(os.path.join("data", metric_config["file"]))
             df_metric = load_data(metric_file_path)
-
             minutes_file_path = resource_path(os.path.join("data", league_config["minutes_file"]))
             df_minutes = load_data(minutes_file_path)
-
-            rename_map = {
-                'playerName': 'Player', 'ActualDisruptions': 'Actual disruption', 
-                'ExpectedDisruptions': 'xDisruption', 'expected disruptions': 'xDisruption'
-            }
+            rename_map = {'playerName': 'Player', 'ActualDisruptions': 'Actual disruption', 'ExpectedDisruptions': 'xDisruption', 'expected disruptions': 'xDisruption'}
             df_metric.rename(columns=rename_map, inplace=True)
-            
             df_raw = pd.merge(df_metric, df_minutes[['Player', 'Minutes']], on='Player', how='left')
             df_raw.rename(columns={'Minutes ': 'Minutes'}, inplace=True)
-            
             df_processed = calculate_derived_metrics(df_raw)
             sort_by_col = metric_config["sort"]
-            
             search_placeholders = {"WSL": "e.g., Sam Kerr", "WSL 2": "e.g., Melissa Johnson", "Frauen-Bundesliga": "e.g., Alexandra Popp", "Liga F": "e.g., Alexia Putellas", "NWSL": "e.g., Sophia Smith", "Premiere Ligue": "e.g., Ada Hegerberg"}
             placeholder = search_placeholders.get(selected_league, "Search for a player...")
 
-            # --- Search and Display Options ---
             with st.container():
                 col1, col2 = st.columns([2, 1.5])
                 with col1:
                     search_term = st.text_input("Search for a player:", placeholder=placeholder)
                 with col2:
                     top_n = st.slider("Number of players to display:", 5, 50, 15, 5)
-                
                 display_option = st.radio("Display format:", ("📄 Data Table", "📊 Visualization"), horizontal=True, label_visibility="collapsed")
 
             if search_term:
@@ -216,11 +222,9 @@ def display_corners_page(data_config):
     st.title("⛳ Corners")
     
     leagues = list(data_config.keys())
-    leagues_with_total = ["Total"] + leagues
-    
     selected_league_corners = st.session_state.get('corner_league_selection', 'Total')
-    
     df_full = pd.DataFrame()
+
     try:
         if selected_league_corners == "Total":
             all_dfs = []
@@ -260,7 +264,6 @@ def display_corners_page(data_config):
         st.warning("No events of type 'FromCorner' found in the dataset.")
         return
 
-    # Read filter values from session state (set by the main filter area)
     selected_team = st.session_state.get('corner_team', 'All')
     selected_player = st.session_state.get('corner_player', 'All')
     selected_state = st.session_state.get('corner_gamestate', 'All')
@@ -311,15 +314,6 @@ def display_player_profiling_page():
 # --- Main App Logic ---
 def main():
     """Main function to run the Streamlit app."""
-    # Hide the default sidebar
-    st.markdown("""
-        <style>
-            div[data-testid="stSidebar"] {
-                display: none;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-    
     # --- Data and Config Initialization ---
     metric_info = get_metric_info()
     data_config = {
@@ -332,81 +326,82 @@ def main():
     }
     
     # --- Session State Initialization ---
+    if 'app_mode' not in st.session_state: st.session_state.app_mode = "Landing"
     if 'page_view' not in st.session_state: st.session_state.page_view = "Data Scouting"
     if 'selected_league' not in st.session_state: st.session_state.selected_league = "WSL"
     if 'selected_metric' not in st.session_state: st.session_state.selected_metric = list(metric_info.keys())[0]
 
-    # --- Main Page Navigation ---
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        if st.button("📊 Data Scouting", use_container_width=True, type="primary" if st.session_state.page_view == "Data Scouting" else "secondary"):
-            st.session_state.page_view = "Data Scouting"
-            st.rerun()
-    with col2:
-        if st.button("🎯 Match Analysis", use_container_width=True, type="primary" if st.session_state.page_view == "Match Analysis" else "secondary"):
-            st.session_state.page_view = "Match Analysis"
-            st.rerun()
-    with col3:
-        if st.button("👤 Player Profiling", use_container_width=True, type="primary" if st.session_state.page_view == "Player Profiling" else "secondary"):
-            st.session_state.page_view = "Player Profiling"
-            st.rerun()
-    with col4:
-        if st.button("⛳ Corners", use_container_width=True, type="primary" if st.session_state.page_view == "Corners" else "secondary"):
-            st.session_state.page_view = "Corners"
-            st.rerun()
-    
-    st.markdown("---")
+    # --- Page Routing ---
+    if st.session_state.app_mode == "Landing":
+        display_landing_page()
+    else:
+        # --- Main App Logic (No Sidebar) ---
+        st.markdown("""<style>div[data-testid="stSidebar"] {display: none;}</style>""", unsafe_allow_html=True)
 
-    # --- Contextual Filters Below Navigation ---
-    if st.session_state.page_view == "Data Scouting":
-        with st.expander("Show Metric Leaderboard Filters", expanded=True):
-            metric_pages = list(metric_info.keys())
-            st.selectbox("Select Metric:", metric_pages, key='selected_metric')
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            if st.button("📊 Data Scouting", use_container_width=True, type="primary" if st.session_state.page_view == "Data Scouting" else "secondary"):
+                st.session_state.page_view = "Data Scouting"
+                st.rerun()
+        with col2:
+            if st.button("🎯 Match Analysis", use_container_width=True, type="primary" if st.session_state.page_view == "Match Analysis" else "secondary"):
+                st.session_state.page_view = "Match Analysis"
+                st.rerun()
+        with col3:
+            if st.button("👤 Player Profiling", use_container_width=True, type="primary" if st.session_state.page_view == "Player Profiling" else "secondary"):
+                st.session_state.page_view = "Player Profiling"
+                st.rerun()
+        with col4:
+            if st.button("⛳ Corners", use_container_width=True, type="primary" if st.session_state.page_view == "Corners" else "secondary"):
+                st.session_state.page_view = "Corners"
+                st.rerun()
+        
+        st.markdown("---")
 
-    elif st.session_state.page_view == "Corners":
-        with st.expander("Show Corner Analysis Filters", expanded=True):
-            try:
-                leagues = list(data_config.keys())
-                leagues_with_total = ["Total"] + leagues
-                
-                # Dummy load for filter options
-                temp_df_full = load_data(resource_path(os.path.join("data", "WSL_corners.csv")))
-                df_corners = temp_df_full[temp_df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
-                teams = ["All"] + sorted(df_corners['TeamId'].unique().tolist())
-                players = ["All"] + sorted(df_corners['PlayerId'].unique().tolist())
-                is_goal_options = ["All", True, False]
-                min_time, max_time = int(df_corners['timeMin'].min()), int(df_corners['timeMin'].max())
-                game_states = ["All"] + sorted(df_corners['GameState'].unique().tolist()) if 'GameState' in df_corners.columns else ["All"]
+        if st.session_state.page_view == "Data Scouting":
+            with st.expander("Show Metric Leaderboard Filters", expanded=True):
+                metric_pages = list(metric_info.keys())
+                st.selectbox("Select Metric:", metric_pages, key='selected_metric')
 
-                c1, c2, c3 = st.columns(3)
-                with c1:
-                    st.selectbox("Select League:", leagues_with_total, key='corner_league_selection')
-                    st.selectbox("Filter by Team:", teams, key='corner_team')
-                    st.selectbox("Filter by Player:", players, key='corner_player')
-                with c2:
-                    st.selectbox("Filter by Game State:", game_states, key='corner_gamestate')
-                    st.selectbox("Filter by Goal:", is_goal_options, key='corner_isgoal', format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
-                with c3:
-                    st.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time), key='corner_time')
+        elif st.session_state.page_view == "Corners":
+            with st.expander("Show Corner Analysis Filters", expanded=True):
+                try:
+                    leagues = list(data_config.keys())
+                    leagues_with_total = ["Total"] + leagues
+                    temp_df_full = load_data(resource_path(os.path.join("data", "WSL_corners.csv")))
+                    df_corners = temp_df_full[temp_df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
+                    teams = ["All"] + sorted(df_corners['TeamId'].unique().tolist())
+                    players = ["All"] + sorted(df_corners['PlayerId'].unique().tolist())
+                    is_goal_options = ["All", True, False]
+                    min_time, max_time = int(df_corners['timeMin'].min()), int(df_corners['timeMin'].max())
+                    game_states = ["All"] + sorted(df_corners['GameState'].unique().tolist()) if 'GameState' in df_corners.columns else ["All"]
 
-            except Exception:
-                 st.warning("Could not load corner filter options.")
+                    c1, c2, c3 = st.columns(3)
+                    with c1:
+                        st.selectbox("Select League:", leagues_with_total, key='corner_league_selection')
+                        st.selectbox("Filter by Team:", teams, key='corner_team')
+                    with c2:
+                        st.selectbox("Filter by Player:", players, key='corner_player')
+                        st.selectbox("Filter by Game State:", game_states, key='corner_gamestate')
+                    with c3:
+                        st.selectbox("Filter by Goal:", is_goal_options, key='corner_isgoal', format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
+                        st.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time), key='corner_time')
+                except Exception:
+                     st.warning("Could not load corner filter options.")
+        
+        st.markdown("---")
 
-    st.markdown("---")
+        if st.session_state.page_view == "Data Scouting":
+            display_data_scouting_page(data_config, metric_info)
+        elif st.session_state.page_view == "Match Analysis":
+            display_match_analysis_page()
+        elif st.session_state.page_view == "Player Profiling":
+            display_player_profiling_page()
+        elif st.session_state.page_view == "Corners":
+            display_corners_page(data_config)
 
-    # --- Display Selected Page in Main Content Area ---
-    if st.session_state.page_view == "Data Scouting":
-        display_data_scouting_page(data_config, metric_info)
-    elif st.session_state.page_view == "Match Analysis":
-        display_match_analysis_page()
-    elif st.session_state.page_view == "Player Profiling":
-        display_player_profiling_page()
-    elif st.session_state.page_view == "Corners":
-        display_corners_page(data_config)
-
-    st.markdown("---")
-    st.markdown(f"© {datetime.now().year} She Plots FC x Outswinger FC | All rights reserved.")
-
+        st.markdown("---")
+        st.markdown(f"© {datetime.now().year} She Plots FC x Outswinger FC | All rights reserved.")
 
 if __name__ == "__main__":
     main()
