@@ -6,7 +6,10 @@ import sys
 from datetime import datetime
 import altair as alt
 import matplotlib.pyplot as plt
-from mplsoccer import VerticalPitch
+from mplsoccer.pitch import Pitch
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+import matplotlib.image as mpimg
+from mplsoccer.pitch import Pitch
 from matplotlib.patches import Circle
 import io
 from scipy.stats import zscore, norm
@@ -20,7 +23,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
-# Suppress specific matplotlib warnings for a cleaner output
 warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 
 
@@ -69,11 +71,10 @@ def calculate_derived_metrics(df):
     return df
 
 def create_detailed_shot_map(df, title_text="Corner Shots"):
-    """Creates a detailed shot map using mplsoccer."""
+    """Creates a detailed shot map for corners using mplsoccer."""
     total_shots = df.shape[0]
     if total_shots == 0: return None, "No shots to plot."
-    total_goals = int(df['isGoal'].sum())
-    total_xg = df['xG'].sum()
+    total_goals, total_xg = int(df['isGoal'].sum()), df['xG'].sum()
     xg_per_shot = total_xg / total_shots if total_shots > 0 else 0
     colors = {"missed": "#003f5c", "goal": "#bc5090"}
     pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=False, line_zorder=2, linewidth=0.5)
@@ -81,15 +82,13 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     fig.set_facecolor("white")
     ax.set_ylim(49.8, 105)
     for i in range(len(df['x'])):
-        row = df.iloc[i]
-        color = colors["goal"] if row['isGoal'] else colors["missed"]
+        row, color = df.iloc[i], colors["goal"] if df.iloc[i]['isGoal'] else colors["missed"]
         size = row['xG'] * 500
         ax.scatter(row['y'], row['x'], color=color, s=size, alpha=0.7, zorder=3)
     ax.text(50, 108, title_text, fontsize=24, weight='bold', color='black', ha='center', va='top')
     ax.text(50, 104, "Shot Map from Corners", fontsize=12, style='italic', color='black', ha='center', va='top')
     plt.subplots_adjust(bottom=0.3)
-    circle_positions = [(0.2, -0.10), (0.2, -0.25), (0.35, -0.10), (0.35, -0.25)]
-    circle_texts = ["Shots", "xG/Shot", "Goals", "xG"]
+    circle_positions, circle_texts = [(0.2, -0.10), (0.2, -0.25), (0.35, -0.10), (0.35, -0.25)], ["Shots", "xG/Shot", "Goals", "xG"]
     values = [total_shots, round(xg_per_shot, 2), total_goals, round(total_xg, 2)]
     circle_colors = [colors["missed"], colors["missed"], colors["goal"], colors["goal"]]
     for pos, text, value, color in zip(circle_positions, circle_texts, values, circle_colors):
@@ -106,7 +105,6 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
 def create_player_profile_fig(df, player_name, position_group):
     """Generates a player profile visualization and returns the matplotlib figure."""
     df.rename(columns={"Nationality": "Passport country"}, inplace=True)
-
     if position_group == 'Centre-back':
         positions, categories, roles = ['CB', 'RCB', 'LCB'], {"Security": ["Accurate passes, %", "Back passes per 90", "Accurate back passes, %", "Lateral passes per 90", "Accurate lateral passes, %"], "Progressive Passing": ["Progressive passes per 90", "Accurate progressive passes, %", "Forward passes per 90", "Accurate forward passes, %", "Passes to final third per 90", "Accurate passes to final third, %"], "Ball Carrying": ["Progressive runs per 90", "Dribbles per 90", "Successful dribbles, %", "Accelerations per 90"], "Creativity": ["Key passes per 90", "Shot assists per 90", "xA per 90", "Smart passes per 90", "Accurate smart passes, %"], "Proactive Defending": ["Interceptions per 90", "PAdj Interceptions", "Sliding tackles per 90", "PAdj Sliding tackles"], "Duelling": ["Duels per 90", "Duels won, %", "Aerial duels per 90", "Aerial duels won, %"], "Box Defending": ["Shots blocked per 90"], "Sweeping": []}, {"Ball Player": ["Progressive Passing", "Security"], "Libero": ["Progressive Passing", "Ball Carrying", "Creativity"], "Wide Creator": ["Creativity", "Ball Carrying"], "Aggressor": ["Proactive Defending", "Duelling"], "Physical Dominator": ["Duelling", "Box Defending"], "Box Defender": ["Box Defending", "Duelling"]}
     elif position_group == 'Full-back':
@@ -204,38 +202,91 @@ def create_player_profile_fig(df, player_name, position_group):
         fig.text(tile_x + 0.01, 0.075, f"{row['Player']}", fontsize=10, weight="bold", ha='left', va='top')
         fig.text(tile_x + 0.01, 0.055, f"{row['Team']}", fontsize=9, ha='left', va='top')
         fig.text(tile_x + 0.01, 0.035, f"{row['Similarity']*100:.1f}% Similarity", fontsize=9, ha='left', va='top')
-
     return fig, "Profile generated successfully."
+
+def create_match_shot_map_fig(df, file_path):
+    """Generates the xG shot map for a given match."""
+    df = df[~((df['timeMin'] >= 120) & (df['Type_of_play'] == 'Penalty'))]
+    file_name = os.path.basename(file_path)
+    teams = file_name.split('_')[-1].replace('.csv', '').split(' - ')
+    team1_name, team2_name = teams[0], teams[1]
+
+    team1 = df[df['TeamId'] == team1_name].reset_index(drop=True)
+    team2 = df[df['TeamId'] == team2_name].reset_index(drop=True)
+
+    team1_goals, team2_goals = team1['isGoal'].sum(), team2['isGoal'].sum()
+    team1_xg, team2_xg = team1['xG'].sum(), team2['xG'].sum()
+
+    pitch = Pitch(pitch_type='opta', pitch_width=68, pitch_length=105, pad_bottom=0.5, pad_top=5,
+                  pitch_color='#001f3f', line_color='white', half=False, goal_type='box', goal_alpha=0.8)
+    fig, ax = plt.subplots(figsize=(16, 10))
+    pitch.draw(ax=ax)
+    fig.set_facecolor('#001f3f')
+    ax.invert_xaxis()
+
+    team1_miss, team2_miss, goal_color, own_goal_color = '#7FDBFF', '#FFDC00', '#2ECC40', 'red'
+    def is_true(val):
+        if isinstance(val, str): return val.strip().lower() in ('1', 'true', 'yes', 'y', 't')
+        return bool(val)
+
+    def plot_team_shots(team_df, is_team1, color_miss, color_goal):
+        for _, row in team_df.iterrows():
+            x_raw, y_raw = row['x'], row['y']
+            x_plot, y_plot = (x_raw, 100 - y_raw) if is_team1 else (100 - x_raw, y_raw)
+            og = is_true(row.get('isOwnGoal', False))
+            if og:
+                x_plot, y_plot = 100 - x_plot, 100 - y_plot
+                color, size, z = own_goal_color, 300, 4
+            else:
+                size = row['xG'] * 800
+                color = color_goal if row['isGoal'] else color_miss
+                z = 3 if row['isGoal'] else 2
+            ax.scatter(x_plot, y_plot, color=color, s=size, alpha=0.9, zorder=z)
+
+    plot_team_shots(team1, True, team1_miss, goal_color)
+    plot_team_shots(team2, False, team2_miss, goal_color)
+    ax.text(80, 90, f"{team1_xg:.2f} xG", color=team1_miss, ha='center', fontsize=30, fontweight='bold')
+    ax.text(20, 90, f"{team2_xg:.2f} xG", color=team2_miss, ha='center', fontsize=30, fontweight='bold')
+    title = f"{team1_name} vs {team2_name} ({int(team1_goals)} - {int(team2_goals)})"
+    ax.text(0.5, 1.06, title, ha='center', va='bottom', fontsize=25, fontweight='bold', color='white', transform=ax.transAxes)
+    ax.text(0.5, 1.02, "xG Shot Map", ha='center', va='bottom', fontsize=17, color='white', transform=ax.transAxes)
+
+    LOGO_DIR = resource_path("data/logos")
+    badge1_path, badge2_path = os.path.join(LOGO_DIR, f"{team1_name}.png"), os.path.join(LOGO_DIR, f"{team2_name}.png")
+    if os.path.exists(badge1_path): ax.add_artist(AnnotationBbox(OffsetImage(mpimg.imread(badge1_path), zoom=0.12), (0.07, 1.1), xycoords='axes fraction', frameon=False))
+    if os.path.exists(badge2_path): ax.add_artist(AnnotationBbox(OffsetImage(mpimg.imread(badge2_path), zoom=0.07), (0.93, 1.1), xycoords='axes fraction', frameon=False))
+    logo_path = os.path.join(LOGO_DIR, 'sheplotsfc.png')
+    if os.path.exists(logo_path): ax.add_artist(AnnotationBbox(OffsetImage(mpimg.imread(logo_path), zoom=0.1), (0.9, 0.1), frameon=False, xycoords='axes fraction'))
+
+    total_xg = team1_xg + team2_xg
+    team1_win_prob = team1_xg / total_xg if total_xg != 0 else 0.5
+    team2_win_prob = 1 - team1_win_prob
+    ax.text(0.98, -0.03, "Data via Opta | FBL 2025-2026", ha='right', va='top', fontsize=12, color='white', weight='bold', transform=ax.transAxes)
+    win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.1f}%\n{team2_name}: {team2_win_prob*100:.1f}%"
+    ax.text(0.02, -0.03, win_text, ha='left', va='top', fontsize=12, color='white', weight='bold', transform=ax.transAxes)
+
+    ax.scatter([], [], color=goal_color, s=200, label='Goal')
+    ax.scatter([], [], color=team1_miss, s=200, label=f'{team1_name} Shot')
+    ax.scatter([], [], color=team2_miss, s=200, label=f'{team2_name} Shot')
+    ax.scatter([], [], color=own_goal_color, s=200, label='Own Goal')
+    ax.legend(frameon=False, fontsize=12, loc='lower center', bbox_to_anchor=(0.5, -0.15), labelcolor='white', handletextpad=0.5, ncol=4)
+    
+    return fig
 
 
 # --- Page Display Functions ---
-
 def display_landing_page():
-    """Renders the initial landing page."""
-    st.markdown("""
-        <style>
-            .block-container { max-width: 750px; padding-top: 5rem; }
-            div[data-testid="stSidebar"] { display: none; }
-        </style>
-    """, unsafe_allow_html=True)
-    
+    st.markdown("""<style>.block-container { max-width: 750px; padding-top: 5rem; } div[data-testid="stSidebar"] { display: none; }</style>""", unsafe_allow_html=True)
     st.title("She Plots FC - Analytics")
     st.markdown("---")
-
     col1, col2, col3 = st.columns([2, 1, 2])
-    with col1:
-        st.image("sheplotsfc2.png", use_container_width=True)
-    with col2:
-        st.markdown("<h1 style='text-align: center; margin-top: 150px;'>X</h1>", unsafe_allow_html=True)
-    with col3:
-        st.image("Outswinger FC.png", use_container_width=True)
-
+    with col1: st.image(resource_path("sheplotsfc2.png"), use_container_width=True)
+    with col2: st.markdown("<h1 style='text-align: center; margin-top: 150px;'>X</h1>", unsafe_allow_html=True)
+    with col3: st.image(resource_path("Outswinger FC.png"), use_container_width=True)
     st.markdown("---")
     st.subheader("Opening the world of WoSo data")
-
     if st.button("Enter Analytics Platform", use_container_width=True, type="primary"):
-        st.session_state.app_mode = "MainApp"
-        st.rerun()
+        st.session_state.app_mode = "MainApp"; st.rerun()
 
 def display_data_scouting_page(data_config, metric_info):
     st.title("📊 Data Scouting")
@@ -255,8 +306,7 @@ def display_data_scouting_page(data_config, metric_info):
     metric_config, league_config = data_config.get(selected_league, {}).get(selected_metric_key), data_config.get(selected_league, {})
     if metric_config and league_config.get("minutes_file"):
         try:
-            df_metric = load_data(resource_path(os.path.join("data", metric_config["file"])))
-            df_minutes = load_data(resource_path(os.path.join("data", league_config["minutes_file"])))
+            df_metric, df_minutes = load_data(resource_path(os.path.join("data", metric_config["file"]))), load_data(resource_path(os.path.join("data", league_config["minutes_file"])))
             df_metric.rename(columns={'playerName': 'Player', 'ActualDisruptions': 'Actual disruption', 'ExpectedDisruptions': 'xDisruption', 'expected disruptions': 'xDisruption'}, inplace=True)
             df_raw = pd.merge(df_metric, df_minutes[['Player', 'Minutes']], on='Player', how='left')
             df_raw.rename(columns={'Minutes ': 'Minutes'}, inplace=True)
@@ -288,8 +338,7 @@ def display_data_scouting_page(data_config, metric_info):
 
 def display_corners_page(data_config):
     st.title("⛳ Corners")
-    leagues = list(data_config.keys())
-    selected_league_corners = st.session_state.get('corner_league_selection', 'Total')
+    leagues, selected_league_corners = list(data_config.keys()), st.session_state.get('corner_league_selection', 'Total')
     df_full = pd.DataFrame()
     try:
         if selected_league_corners == "Total":
@@ -321,8 +370,8 @@ def display_corners_page(data_config):
         fig, error_message = create_detailed_shot_map(df_filtered, title_text=plot_title)
         if fig:
             st.pyplot(fig)
-            buf = io.BytesIO(); fig.savefig(buf, format="png", bbox_inches='tight', facecolor='white')
-            csv = df_filtered.to_csv(index=False).encode('utf-8')
+            buf, csv = io.BytesIO(), df_filtered.to_csv(index=False).encode('utf-8')
+            fig.savefig(buf, format="png", bbox_inches='tight', facecolor='white')
             dl_col1, dl_col2 = st.columns(2)
             with dl_col1: st.download_button("📥 Download Image", data=buf, file_name=f"{plot_title.replace(' ', '_')}_shot_map.png", mime="image/png", use_container_width=True)
             with dl_col2: st.download_button("📥 Download Data", data=csv, file_name=f"{plot_title.replace(' ', '_')}_corner_data.csv", mime="text/csv", use_container_width=True)
@@ -332,29 +381,44 @@ def display_corners_page(data_config):
 
 def display_match_analysis_page():
     st.title("🎯 Match Analysis")
-    st.info("This section is currently under development.")
-    st.image("https://placehold.co/800x400/4a5568/e2e8f0?text=Match+Breakdown+Tools+Coming+Soon", use_container_width=True)
+    MATCH_DIR = resource_path("data/matchxg")
+    try:
+        match_files = [f for f in os.listdir(MATCH_DIR) if f.endswith('.csv')]
+        if not match_files:
+            st.error(f"No match CSV files found in the '{MATCH_DIR}' directory. Please follow the setup instructions.")
+            return
+        
+        # Clean up names for display in selectbox
+        match_display_names = sorted([os.path.splitext(f)[0] for f in match_files])
+        selected_match_name = st.selectbox("Select a Match to Analyze", match_display_names)
+
+        if st.button("Generate Analysis", use_container_width=True, type="primary"):
+            if selected_match_name:
+                with st.spinner("Generating match analysis..."):
+                    file_path = os.path.join(MATCH_DIR, f"{selected_match_name}.csv")
+                    df = load_data(file_path)
+                    fig = create_match_shot_map_fig(df, file_path)
+                    if fig:
+                        st.pyplot(fig)
+                    else:
+                        st.error("Could not generate the match visualization.")
+
+    except FileNotFoundError:
+        st.error(f"Match data directory not found at '{MATCH_DIR}'. Please create 'data/matchxg' and add your match CSV files.")
+        return
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
 
 def display_player_profiling_page():
     st.title("👤 Player Profiling")
     PROFILES_DIR = resource_path("data/profiles")
-    position_map = {
-        'Centre-back': ['CB', 'RCB', 'LCB'],
-        'Full-back': ['LB', 'RB', 'LWB', 'RWB'],
-        'Midfielder': ['LCMF', 'RCMF', 'CFM', 'LDMF', 'RDMF', 'RAMF', 'LAMF', 'AMF', 'DMF'],
-        'Attacking Midfielder': ['AMF', 'RAMF', 'LAMF', 'LW', 'RW'],
-        'Attacker': ['CF', 'LW', 'RW']
-    }
+    position_map = { 'Centre-back': ['CB', 'RCB', 'LCB'], 'Full-back': ['LB', 'RB', 'LWB', 'RWB'], 'Midfielder': ['LCMF', 'RCMF', 'CFM', 'LDMF', 'RDMF', 'RAMF', 'LAMF', 'AMF', 'DMF'], 'Attacking Midfielder': ['AMF', 'RAMF', 'LAMF', 'LW', 'RW'], 'Attacker': ['CF', 'LW', 'RW'] }
 
     try:
         league_files = [f for f in os.listdir(PROFILES_DIR) if f.endswith('.xlsx')]
-        if not league_files:
-            st.error(f"No Excel files found in the '{PROFILES_DIR}' directory. Please follow the setup instructions.")
-            return
+        if not league_files: st.error(f"No Excel files found in '{PROFILES_DIR}'."); return
         league_names = sorted([os.path.splitext(f)[0] for f in league_files])
-    except FileNotFoundError:
-        st.error(f"Profile data directory not found at '{PROFILES_DIR}'. Please create 'data/profiles' and add your Excel files.")
-        return
+    except FileNotFoundError: st.error(f"Directory not found at '{PROFILES_DIR}'. Please create 'data/profiles' and add Excel files."); return
 
     col1, col2 = st.columns(2)
     with col1: selected_league_name = st.selectbox("Select League", league_names)
@@ -362,16 +426,12 @@ def display_player_profiling_page():
 
     if selected_league_name:
         try:
-            file_name, full_path = f"{selected_league_name}.xlsx", os.path.join(PROFILES_DIR, f"{selected_league_name}.xlsx")
+            full_path = os.path.join(PROFILES_DIR, f"{selected_league_name}.xlsx")
             df = load_profile_data(full_path)
             positions_to_check, df['Position'] = position_map[position_group], df['Position'].astype(str)
             position_df = df[df['Position'].str.contains('|'.join(positions_to_check), na=False)]
             player_list = sorted(position_df['Player'].unique())
-
-            if not player_list:
-                st.warning(f"No players found for the '{position_group}' position group in {selected_league_name}.")
-                return
-                
+            if not player_list: st.warning(f"No players found for '{position_group}' in {selected_league_name}."); return
             selected_player = st.selectbox("Select Player", player_list)
             if st.button("Generate Profile", use_container_width=True, type="primary"):
                 if selected_player:
@@ -379,21 +439,14 @@ def display_player_profiling_page():
                         fig, message = create_player_profile_fig(df, selected_player, position_group)
                         if fig: st.pyplot(fig)
                         else: st.error(message)
-        except FileNotFoundError: st.error(f"Could not find the file: {file_name}")
+        except FileNotFoundError: st.error(f"Could not find the file: {selected_league_name}.xlsx")
         except Exception as e: st.error(f"An error occurred while processing the file: {e}")
 
 # --- Main App Logic ---
 def main():
     """Main function to run the Streamlit app."""
     metric_info = get_metric_info()
-    data_config = {
-        "WSL": { "minutes_file": "WSL_minutes.csv", 'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "WSL_corners.csv"} },
-        "WSL 2": { "minutes_file": "WSL2_minutes.csv", 'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "WSL2_corners.csv"} },
-        "Frauen-Bundesliga": { "minutes_file": "FBL_minutes.csv", 'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "FBL_corners.csv"} },
-        "Liga F": { "minutes_file": "LigaF_minutes.csv", 'xG (Expected Goals)': {"file": "LigaF.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "LigaF_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "LigaF_corners.csv"} },
-        "NWSL": { "minutes_file": "NWSL_minutes.csv", 'xG (Expected Goals)': {"file": "NWSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "NWSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "NWSL_corners.csv"} },
-        "Premiere Ligue": { "minutes_file": "PremiereLigue_minutes.csv", 'xG (Expected Goals)': {"file": "PremiereLigue.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "PremiereLigue_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "PremiereLigue_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "PremiereLigue_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "PremiereLigue_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "Premiere_Ligue_corners.csv"} }
-    }
+    data_config = { "WSL": { "minutes_file": "WSL_minutes.csv", 'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "WSL_corners.csv"} }, "WSL 2": { "minutes_file": "WSL2_minutes.csv", 'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "WSL2_corners.csv"} }, "Frauen-Bundesliga": { "minutes_file": "FBL_minutes.csv", 'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "FBL_corners.csv"} }, "Liga F": { "minutes_file": "LigaF_minutes.csv", 'xG (Expected Goals)': {"file": "LigaF.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "LigaF_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "LigaF_corners.csv"} }, "NWSL": { "minutes_file": "NWSL_minutes.csv", 'xG (Expected Goals)': {"file": "NWSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "NWSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "NWSL_corners.csv"} }, "Premiere Ligue": { "minutes_file": "PremiereLigue_minutes.csv", 'xG (Expected Goals)': {"file": "PremiereLigue.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "PremiereLigue_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "PremiereLigue_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "PremiereLigue_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "PremiereLigue_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "Premiere_Ligue_corners.csv"} } }
     
     # --- Session State Initialization ---
     if 'app_mode' not in st.session_state: st.session_state.app_mode = "Landing"
