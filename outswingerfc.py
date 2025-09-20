@@ -307,7 +307,7 @@ def display_landing_page():
         </style>
     """, unsafe_allow_html=True)
     
-    st.title("Welcome to Outswinger FC Analytics")
+    st.title("She Plots FC - Analytics")
     st.markdown("---")
 
     col1, col2, col3 = st.columns([2, 1, 2])
@@ -319,7 +319,7 @@ def display_landing_page():
         st.image("Outswinger FC.png", use_container_width=True)
 
     st.markdown("---")
-    st.subheader("A collaboration in Women's Football Analytics")
+    st.subheader("Opening the world of WoSo data")
 
     if st.button("Enter Analytics Platform", use_container_width=True, type="primary"):
         st.session_state.app_mode = "MainApp"
