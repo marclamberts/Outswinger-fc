@@ -6,4 +6,4 @@ scipy
 matplotlib
 mplsoccer 
 Joblib
-Sklearn
+scikit-learn
