@@ -1,183 +1,209 @@
 Player,Team,GPA,Avg,GPA Rating
-B. Westrup,Sunderland,0.086,0.086,38.19
-E. Jones,Sunderland,0.119,0.119,39.44
-E. Scarr,Sunderland,0.504,0.504,54.0
-G. Moloney,Sunderland,0.5700000000000001,0.5700000000000001,56.49
-H. Greenwood,Sunderland,0.44400000000000006,0.44400000000000006,51.73
-I. Atkinson,Sunderland,0.329,0.329,47.38
-J. Brown,Sunderland,0.6849999999999999,0.6849999999999999,60.84
-J. Finn,Sunderland,0.037,0.037,36.34
-K. Barry,Sunderland,0.136,0.136,40.08
-K. Kitching,Sunderland,0.227,0.227,43.52
-K. Watson,Sunderland,0.332,0.332,47.49
-L. Griffiths,Sunderland,0.977,0.977,71.89
-M. Sheva,Sunderland,0.47000000000000003,0.47000000000000003,52.71
-N. Fenton,Sunderland,0.741,0.741,62.96
-R. Roberts,Sunderland,0.514,0.514,54.38
-A. Thestrup,Charlton Athletic,0.126,0.126,39.71
-C. Newsham,Charlton Athletic,0.678,0.678,60.58
-E. Bissell,Charlton Athletic,0.118,0.118,39.4
-E. Mason,Charlton Athletic,0.434,0.434,51.35
-E. N'Dow,Charlton Athletic,0.414,0.414,50.6
-G. Kenney,Charlton Athletic,0.203,0.203,42.62
-G. Pearse,Charlton Athletic,0.036,0.036,36.3
-J. Hutton,Charlton Athletic,0.47400000000000003,0.47400000000000003,52.86
-K. Bradley,Charlton Athletic,0.35500000000000004,0.35500000000000004,48.36
-K. Flannery,Charlton Athletic,0.24300000000000002,0.24300000000000002,44.13
-K. Muya,Charlton Athletic,0.184,0.184,41.9
-K. Skeels,Charlton Athletic,0.354,0.354,48.33
-L. Fitzgerald,Charlton Athletic,0.088,0.088,38.27
-M. McAteer,Charlton Athletic,0.277,0.277,45.42
-M. Ross,Charlton Athletic,0.20800000000000002,0.20800000000000002,42.81
-S. Whitehouse,Charlton Athletic,0.449,0.449,51.92
-A. Baker,Birmingham City,0.091,0.091,38.38
-B. Louis,Birmingham City,0.207,0.207,42.77
-C. Cornet,Birmingham City,0.5660000000000001,0.5660000000000001,56.34
-C. Harrison-Murray,Birmingham City,0.44299999999999995,0.44299999999999995,51.69
-L. Bance,Birmingham City,0.094,0.094,38.5
-L. Crosthwaite,Birmingham City,0.44800000000000006,0.44800000000000006,51.88
-L. Newell,Birmingham City,0.388,0.388,49.61
-L. Thomas,Birmingham City,0.629,0.629,58.73
-Lee Geum-Min,Birmingham City,0.368,0.368,48.86
-Lucy Quinn,Birmingham City,0.073,0.073,37.7
-N. Herron,Birmingham City,0.3,0.3,46.28
-R. Holloway,Birmingham City,0.8300000000000001,0.8300000000000001,66.33
-R. McKenna,Birmingham City,0.42300000000000004,0.42300000000000004,50.94
-S. Cooke,Birmingham City,0.527,0.527,54.87
-S. Magill,Birmingham City,0.495,0.495,53.66
-V. Sarri,Birmingham City,0.641,0.641,59.18
-A. Jones,Durham,0.005,0.005,35.13
-B. Hepple,Durham,0.383,0.383,49.42
-C. Sheppard,Durham,0.592,0.592,57.33
-G. Ayre,Durham,0.382,0.382,49.39
-G. Ede,Durham,0.217,0.217,43.15
-H. Blake,Durham,0.41100000000000003,0.41100000000000003,50.48
-L. Briggs,Durham,0.44400000000000006,0.44400000000000006,51.73
-L. McFarland,Durham,0.005,0.005,35.13
-M. Foster,Durham,0.663,0.663,60.01
-M. Lambert,Durham,0.192,0.192,42.2
-M. Speckmaier,Durham,0.252,0.252,44.47
-P. Pritchard,Durham,0.005,0.005,35.13
-S. Wilson,Durham,0.5810000000000001,0.5810000000000001,56.91
-T. Toland,Durham,0.389,0.389,49.65
-A. Blanchard,Crystal Palace,0.645,0.645,59.33
-A. Everett,Crystal Palace,1.2349999999999999,1.2349999999999999,81.64
-A. Larkin,Crystal Palace,0.358,0.358,48.48
-A. Weerden,Crystal Palace,0.27999999999999997,0.27999999999999997,45.53
-C. Arthur,Crystal Palace,0.21000000000000002,0.21000000000000002,42.88
-E. Hughes,Crystal Palace,0.013000000000000001,0.013000000000000001,35.43
-E. Watson,Crystal Palace,0.199,0.199,42.47
-H. Nolan,Crystal Palace,0.9289999999999999,0.9289999999999999,70.07
-J. Green,Crystal Palace,0.564,0.564,56.27
-J. Napier,Crystal Palace,0.44000000000000006,0.44000000000000006,51.58
-J. Vanhaevermaet,Crystal Palace,0.7889999999999999,0.7889999999999999,64.78
-K. Howat,Crystal Palace,0.30100000000000005,0.30100000000000005,46.32
-L. Brown,Crystal Palace,0.2,0.2,42.5
-M. Sharpe,Crystal Palace,0.05500000000000001,0.05500000000000001,37.02
-S. Yáñez,Crystal Palace,0.5509999999999999,0.5509999999999999,55.78
-A. Aherne,Sheffield United,0.175,0.175,41.56
-A. Andrews,Sheffield United,0.168,0.168,41.29
-A. Lafayette,Sheffield United,0.873,0.873,67.95
-C. Devlin,Sheffield United,0.383,0.383,49.42
-C. Parker-Smith,Sheffield United,0.473,0.473,52.83
-E. Butler,Sheffield United,0.091,0.091,38.38
-E. Kinzett,Sheffield United,0.5690000000000001,0.5690000000000001,56.46
-E. Taylor,Sheffield United,1.134,1.134,77.82
-J. Ralph,Sheffield United,0.039,0.039,36.42
-J. Reavill,Sheffield United,1.0470000000000002,1.0470000000000002,74.53
-L. Cowan,Sheffield United,0.682,0.682,60.73
-L. Thomas,Sheffield United,0.12,0.12,39.48
-S. O'Rourke,Sheffield United,0.308,0.308,46.59
-T. Bristow,Sheffield United,0.159,0.159,40.95
-T. George,Sheffield United,0.40099999999999997,0.40099999999999997,50.1
-A. Claypole,Nottingham Forest,0.166,0.166,41.22
-A. Rodgers,Nottingham Forest,0.558,0.558,56.04
-C. Boye-Hlorkah,Nottingham Forest,0.445,0.445,51.77
-C. Hamilton,Nottingham Forest,0.318,0.318,46.97
-C. Mustaki,Nottingham Forest,0.853,0.853,67.2
-D. Rose,Nottingham Forest,0.35300000000000004,0.35300000000000004,48.29
-E. Batty,Nottingham Forest,0.512,0.512,54.3
-F. Thomas,Nottingham Forest,0.394,0.394,49.84
-G. Brougham,Nottingham Forest,1.1380000000000001,1.1380000000000001,77.97
-H. Olding,Nottingham Forest,0.205,0.205,42.69
-J. Stapleton,Nottingham Forest,0.953,0.953,70.98
-K. Smith,Nottingham Forest,0.767,0.767,63.94
-M. Green,Nottingham Forest,0.15,0.15,40.61
-Nahikari García,Nottingham Forest,0.163,0.163,41.1
-R. Rowe,Nottingham Forest,0.154,0.154,40.76
-V. Lia,Nottingham Forest,0.151,0.151,40.65
-A. Nixon,Portsmouth,0.279,0.279,45.49
-A. Rowbotham,Portsmouth,0.02,0.02,35.7
-E. Jones,Portsmouth,0.242,0.242,44.09
-G. Freeland,Portsmouth,0.195,0.195,42.31
-G. Humphries,Portsmouth,0.335,0.335,47.61
-H. Coan,Portsmouth,0.614,0.614,58.16
-J. Bull,Portsmouth,0.41,0.41,50.44
-J. Dahou,Portsmouth,0.171,0.171,41.41
-J. Gale,Portsmouth,0.185,0.185,41.94
-J. Gray,Portsmouth,0.43099999999999994,0.43099999999999994,51.24
-L. Johnson,Portsmouth,0.38,0.38,49.31
-S. Barker,Portsmouth,0.043000000000000003,0.043000000000000003,36.57
-T. Primmer,Portsmouth,0.23199999999999998,0.23199999999999998,43.71
-C. Sáez,Bristol City,0.156,0.156,40.84
-E. Morgan,Bristol City,0.269,0.269,45.11
-E. Powell,Bristol City,0.794,0.794,64.97
-E. Syme,Bristol City,0.637,0.637,59.03
-F. Bentley,Bristol City,0.762,0.762,63.76
-G. Lawley,Bristol City,0.825,0.825,66.14
-H. Bennett,Bristol City,0.72,0.72,62.17
-I. Hebard,Bristol City,0.10400000000000001,0.10400000000000001,38.87
-L. Lloyd-Smith,Bristol City,0.409,0.409,50.41
-M. Farrugia,Bristol City,0.259,0.259,44.73
-M. Meena,Bristol City,0.229,0.229,43.6
-M. Ward,Bristol City,0.528,0.528,54.91
-O. Johnson,Bristol City,0.146,0.146,40.46
-R. Hardy,Bristol City,0.34900000000000003,0.34900000000000003,48.14
-S. Ingle,Bristol City,0.362,0.362,48.63
-Vicky Losada,Bristol City,0.636,0.636,58.99
-B. Roe,Ipswich Town,0.543,0.543,55.47
-G. Neville,Ipswich Town,0.6900000000000001,0.6900000000000001,61.03
-J. Dear,Ipswich Town,0.22400000000000003,0.22400000000000003,43.41
-K. Robertson,Ipswich Town,0.331,0.331,47.46
-L. Mitchell,Ipswich Town,0.579,0.579,56.84
-L. O'Brien,Ipswich Town,0.145,0.145,40.42
-M. Boswell,Ipswich Town,0.765,0.765,63.87
-M. Earl,Ipswich Town,0.039,0.039,36.42
-N. Negri,Ipswich Town,0.538,0.538,55.28
-N. Thomas,Ipswich Town,0.40099999999999997,0.40099999999999997,50.1
-P. Peake,Ipswich Town,0.5820000000000001,0.5820000000000001,56.95
-R. Dean,Ipswich Town,0.11400000000000002,0.11400000000000002,39.25
-R. Doe,Ipswich Town,0.339,0.339,47.76
-S. Peskett,Ipswich Town,0.487,0.487,53.36
-A. Akpan,Southampton,0.30100000000000005,0.30100000000000005,46.32
-A. Ferguson,Southampton,0.258,0.258,44.7
-A. Goddard,Southampton,0.662,0.662,59.97
-A. Primus,Southampton,0.314,0.314,46.81
-C. Peplow,Southampton,0.329,0.329,47.38
-E. Brazil,Southampton,0.189,0.189,42.09
-E. Roberts,Southampton,0.045,0.045,36.64
-F. Stenson,Southampton,0.693,0.693,61.15
-I. Watts,Southampton,0.038,0.038,36.38
-J. Simpson,Southampton,0.717,0.717,62.05
-K. Sena,Southampton,0.028000000000000004,0.028000000000000004,36.0
-M. Bashford,Southampton,0.591,0.591,57.29
-M. Collett,Southampton,0.6060000000000001,0.6060000000000001,57.86
-M. McAlonie,Southampton,0.43200000000000005,0.43200000000000005,51.28
-R. Tucker,Southampton,0.168,0.168,41.29
-T. Bourne,Southampton,0.9630000000000001,0.9630000000000001,71.36
-A. Mannion,Newcastle United,1.012,1.012,73.21
-B. Lumsden,Newcastle United,0.5770000000000001,0.5770000000000001,56.76
-C. Moan,Newcastle United,0.542,0.542,55.44
-C. Wardlaw,Newcastle United,0.819,0.819,65.91
-D. Cooper,Newcastle United,0.8,0.8,65.19
-D. Stokes,Newcastle United,0.195,0.195,42.31
-E. Kelly,Newcastle United,0.332,0.332,47.49
-E. Murphy,Newcastle United,0.544,0.544,55.51
-F. Gregory,Newcastle United,0.576,0.576,56.72
-J. McQuade,Newcastle United,0.201,0.201,42.54
-L. Cataldo,Newcastle United,0.05500000000000001,0.05500000000000001,37.02
-L. Joel,Newcastle United,0.11299999999999999,0.11299999999999999,39.21
-M. Gautrat,Newcastle United,0.67,0.67,60.28
-M. Pike,Newcastle United,0.28200000000000003,0.28200000000000003,45.6
-O. Sevenius,Newcastle United,0.178,0.178,41.67
-S. Hayles,Newcastle United,0.225,0.225,43.45
+B. Westrup,Sunderland,0.086,0.086,39.21
+E. Jones,Sunderland,0.152,0.076,40.34
+E. Scarr,Sunderland,1.206,0.402,58.29
+G. Moloney,Sunderland,1.7009999999999998,0.567,66.73
+H. Greenwood,Sunderland,1.453,0.4843333333333334,62.5
+I. Atkinson,Sunderland,1.024,0.3413333333333334,55.19
+J. Brown,Sunderland,2.0309999999999997,0.6769999999999999,72.35
+J. Finn,Sunderland,0.40199999999999997,0.13399999999999998,44.59
+K. Barry,Sunderland,0.251,0.1255,42.02
+K. Kitching,Sunderland,0.868,0.28933333333333333,52.53
+K. Watson,Sunderland,0.916,0.30533333333333335,53.35
+L. Griffiths,Sunderland,2.5669999999999997,0.8556666666666667,81.48
+M. Corbyn,Sunderland,0.11300000000000002,0.11300000000000002,39.67
+M. Sheva,Sunderland,0.47000000000000003,0.47000000000000003,45.75
+N. Dunbar,Sunderland,0.005,0.005,37.83
+N. Fenton,Sunderland,1.968,0.6559999999999999,71.28
+R. Blades,Sunderland,0.098,0.098,39.41
+R. Roberts,Sunderland,1.8009999999999997,0.6003333333333333,68.43
+A. Thestrup,Charlton Athletic,0.29100000000000004,0.14550000000000002,42.7
+C. Newsham,Charlton Athletic,1.607,0.8035,65.13
+E. Bissell,Charlton Athletic,0.32,0.16,43.2
+E. Mason,Charlton Athletic,1.174,0.587,57.75
+E. N'Dow,Charlton Athletic,1.012,0.506,54.99
+G. Kenney,Charlton Athletic,0.35,0.175,43.71
+G. Pearse,Charlton Athletic,0.036,0.036,38.36
+J. Chime,Charlton Athletic,0.185,0.185,40.9
+J. Hutton,Charlton Athletic,1.159,0.5795,57.49
+K. Bradley,Charlton Athletic,0.35500000000000004,0.35500000000000004,43.79
+K. Flannery,Charlton Athletic,0.742,0.371,50.39
+K. Muya,Charlton Athletic,0.429,0.2145,45.05
+K. Skeels,Charlton Athletic,1.08,0.54,56.15
+L. Fitzgerald,Charlton Athletic,0.367,0.1835,44.0
+M. McAteer,Charlton Athletic,0.42699999999999994,0.21349999999999997,45.02
+M. Ross,Charlton Athletic,0.5050000000000001,0.25250000000000006,46.35
+S. Whitehouse,Charlton Athletic,0.757,0.3785,50.64
+A. Baker,Birmingham City,0.091,0.091,39.3
+B. Louis,Birmingham City,0.394,0.197,44.46
+C. Cornet,Birmingham City,1.355,0.6775,60.83
+C. Harrison-Murray,Birmingham City,1.4709999999999999,0.7354999999999999,62.81
+Ji So-Yun,Birmingham City,0.37,0.37,44.05
+L. Bance,Birmingham City,0.094,0.094,39.35
+L. Crosthwaite,Birmingham City,1.392,0.696,61.46
+L. Newell,Birmingham City,0.651,0.3255,48.84
+L. Thomas,Birmingham City,1.27,0.635,59.38
+Lee Geum-Min,Birmingham City,0.368,0.368,44.02
+Lucy Quinn,Birmingham City,0.073,0.073,38.99
+N. Herron,Birmingham City,1.057,0.5285,55.75
+O. Hurtré,Birmingham City,0.318,0.318,43.16
+R. Holloway,Birmingham City,1.779,0.8895,68.06
+R. McKenna,Birmingham City,1.306,0.653,60.0
+S. Cooke,Birmingham City,1.902,0.951,70.15
+S. Magill,Birmingham City,0.9410000000000001,0.47050000000000003,53.78
+V. Sarri,Birmingham City,1.183,0.5915,57.9
+A. Jones,Durham,0.01,0.005,37.92
+A. Stobbs,Durham,0.43600000000000005,0.43600000000000005,45.17
+B. Hepple,Durham,1.389,0.46299999999999997,61.41
+B. Salicki,Durham,0.48100000000000004,0.48100000000000004,45.94
+C. Sheppard,Durham,1.9929999999999999,0.6643333333333333,71.7
+E. Wilson,Durham,0.324,0.324,43.27
+G. Ayre,Durham,1.5310000000000001,0.5103333333333333,63.83
+G. Ede,Durham,0.526,0.263,46.71
+H. Blake,Durham,0.852,0.284,52.26
+L. Briggs,Durham,1.7550000000000001,0.5850000000000001,67.65
+L. McFarland,Durham,0.32700000000000007,0.10900000000000001,43.32
+L. Watson,Durham,0.037,0.037,38.38
+M. Foster,Durham,2.693,0.8976666666666666,83.63
+M. Lambert,Durham,0.953,0.31766666666666665,53.98
+M. Speckmaier,Durham,0.44400000000000006,0.22200000000000003,45.31
+P. Pritchard,Durham,0.6060000000000001,0.202,48.07
+S. Robson,Durham,0.005,0.005,37.83
+S. Wilson,Durham,2.1559999999999997,0.7186666666666667,74.48
+T. Toland,Durham,1.4060000000000001,0.4686666666666667,61.7
+A. Blanchard,Crystal Palace,1.181,0.5905,57.87
+A. Everett,Crystal Palace,1.2349999999999999,1.2349999999999999,58.79
+A. Larkin,Crystal Palace,0.74,0.37,50.35
+A. Weerden,Crystal Palace,0.884,0.442,52.81
+C. Arthur,Crystal Palace,0.509,0.2545,46.42
+E. Hughes,Crystal Palace,0.187,0.0935,40.93
+E. Watson,Crystal Palace,0.20400000000000001,0.10200000000000001,41.22
+H. Nolan,Crystal Palace,1.7530000000000001,0.8765000000000001,67.61
+I. Riley,Crystal Palace,0.41100000000000003,0.41100000000000003,44.75
+J. Green,Crystal Palace,1.5260000000000002,0.7630000000000001,63.75
+J. Napier,Crystal Palace,1.062,0.531,55.84
+J. Vanhaevermaet,Crystal Palace,1.55,0.775,64.15
+K. Howat,Crystal Palace,0.6759999999999999,0.33799999999999997,49.26
+L. Brown,Crystal Palace,0.2,0.2,41.15
+M. Sharpe,Crystal Palace,0.05500000000000001,0.05500000000000001,38.68
+S. Hopcroft,Crystal Palace,0.198,0.198,41.12
+S. Yáñez,Crystal Palace,1.301,0.6505,59.91
+A. Aherne,Sheffield United,0.22400000000000003,0.11200000000000002,41.56
+A. Andrews,Sheffield United,0.35900000000000004,0.17950000000000002,43.86
+A. Lafayette,Sheffield United,1.629,0.8145,65.5
+C. Devlin,Sheffield United,0.8350000000000002,0.4175000000000001,51.97
+C. Parker-Smith,Sheffield United,0.8160000000000001,0.40800000000000003,51.65
+E. Butler,Sheffield United,0.091,0.091,39.3
+E. Kinzett,Sheffield United,0.9720000000000001,0.48600000000000004,54.31
+E. Taylor,Sheffield United,1.8059999999999998,0.9029999999999999,68.52
+J. Ralph,Sheffield United,0.194,0.097,41.05
+J. Reavill,Sheffield United,1.7149999999999999,0.8574999999999999,66.97
+L. Cowan,Sheffield United,1.084,0.542,56.21
+L. Thomas,Sheffield United,0.125,0.0625,39.88
+M. Rouse,Sheffield United,0.575,0.575,47.54
+S. O'Rourke,Sheffield United,0.621,0.3105,48.33
+T. Bristow,Sheffield United,0.29300000000000004,0.14650000000000002,42.74
+T. George,Sheffield United,0.746,0.373,50.46
+A. Claypole,Nottingham Forest,0.198,0.099,41.12
+A. Rodgers,Nottingham Forest,0.9390000000000001,0.46950000000000003,53.74
+C. Boye-Hlorkah,Nottingham Forest,0.8320000000000001,0.41600000000000004,51.92
+C. Hamilton,Nottingham Forest,1.0550000000000002,0.5275000000000001,55.72
+C. Mustaki,Nottingham Forest,2.162,1.081,74.58
+C. Wellings,Nottingham Forest,0.22800000000000004,0.22800000000000004,41.63
+D. Rose,Nottingham Forest,0.7130000000000001,0.35650000000000004,49.89
+E. Batty,Nottingham Forest,1.0230000000000001,0.5115000000000001,55.18
+E. Hed,Nottingham Forest,0.843,0.843,52.11
+F. Thomas,Nottingham Forest,0.394,0.394,44.46
+G. Brougham,Nottingham Forest,2.307,1.1535,77.05
+H. Olding,Nottingham Forest,0.265,0.1325,42.26
+J. Stapleton,Nottingham Forest,1.055,0.5275,55.72
+K. Smith,Nottingham Forest,0.767,0.767,50.81
+M. Green,Nottingham Forest,0.15,0.15,40.3
+Nahikari García,Nottingham Forest,0.48600000000000004,0.24300000000000002,46.03
+R. Rowe,Nottingham Forest,0.558,0.279,47.25
+T. Almqvist,Nottingham Forest,0.095,0.095,39.36
+V. Lia,Nottingham Forest,0.24500000000000002,0.12250000000000001,41.92
+A. Nixon,Portsmouth,0.279,0.279,42.5
+A. Rowbotham,Portsmouth,0.04,0.02,38.43
+E. Jones,Portsmouth,0.23900000000000002,0.11950000000000001,41.82
+G. Freeland,Portsmouth,0.20299999999999999,0.10149999999999999,41.2
+G. Humphries,Portsmouth,0.34500000000000003,0.17250000000000001,43.62
+H. Coan,Portsmouth,0.647,0.3235,48.77
+I. Collins,Portsmouth,0.042,0.042,38.46
+J. Bull,Portsmouth,0.4109999999999999,0.20549999999999996,44.75
+J. Dahou,Portsmouth,0.18400000000000002,0.09200000000000001,40.88
+J. Gale,Portsmouth,0.185,0.185,40.9
+J. Gray,Portsmouth,0.438,0.219,45.21
+L. Johnson,Portsmouth,0.38,0.38,44.22
+M. Hornby,Portsmouth,0.008,0.008,37.88
+S. Barker,Portsmouth,0.043000000000000003,0.043000000000000003,38.48
+T. Primmer,Portsmouth,0.256,0.128,42.11
+C. Sáez,Bristol City,0.179,0.0895,40.8
+E. Morgan,Bristol City,0.269,0.269,42.33
+E. Powell,Bristol City,0.866,0.433,52.5
+E. Syme,Bristol City,0.644,0.322,48.72
+F. Bentley,Bristol City,0.783,0.3915,51.09
+G. Lawley,Bristol City,0.8480000000000001,0.42400000000000004,52.19
+H. Bennett,Bristol City,0.777,0.3885,50.98
+I. Hebard,Bristol City,0.10400000000000001,0.10400000000000001,39.52
+L. Lloyd-Smith,Bristol City,0.409,0.409,44.71
+M. Dafeur,Bristol City,0.02,0.02,38.09
+M. Farrugia,Bristol City,0.259,0.259,42.16
+M. Meena,Bristol City,0.229,0.229,41.65
+M. Ward,Bristol City,0.538,0.269,46.91
+O. Johnson,Bristol City,0.146,0.146,40.23
+R. Hardy,Bristol City,0.342,0.171,43.57
+S. Ingle,Bristol City,0.41900000000000004,0.20950000000000002,44.88
+Vicky Losada,Bristol City,0.658,0.329,48.96
+B. Roe,Ipswich Town,1.134,0.567,57.07
+G. Neville,Ipswich Town,1.485,0.7425,63.05
+J. Dear,Ipswich Town,0.5870000000000001,0.29350000000000004,47.75
+K. Robertson,Ipswich Town,0.558,0.279,47.25
+L. Mitchell,Ipswich Town,0.9199999999999999,0.45999999999999996,53.42
+L. O'Brien,Ipswich Town,0.45999999999999996,0.22999999999999998,45.58
+M. Boswell,Ipswich Town,1.185,0.5925,57.94
+M. Earl,Ipswich Town,0.14500000000000002,0.07250000000000001,40.22
+M. Wearing,Ipswich Town,0.06999999999999999,0.06999999999999999,38.94
+N. Negri,Ipswich Town,1.112,0.556,56.69
+N. Thomas,Ipswich Town,0.499,0.2495,46.25
+P. Peake,Ipswich Town,0.9440000000000002,0.4720000000000001,53.83
+R. Dean,Ipswich Town,0.30700000000000005,0.15350000000000003,42.98
+R. Doe,Ipswich Town,0.339,0.339,43.52
+R. Seaby,Ipswich Town,0.029000000000000005,0.029000000000000005,38.24
+S. Hughes,Ipswich Town,0.168,0.168,40.61
+S. Peskett,Ipswich Town,0.74,0.37,50.35
+A. Akpan,Southampton,0.372,0.186,44.08
+A. Ferguson,Southampton,0.611,0.3055,48.16
+A. Goddard,Southampton,1.192,0.596,58.05
+A. Primus,Southampton,0.693,0.3465,49.55
+C. Peplow,Southampton,0.738,0.369,50.32
+E. Brazil,Southampton,0.6280000000000001,0.31400000000000006,48.45
+E. Hack,Southampton,0.018,0.018,38.05
+E. Roberts,Southampton,0.045,0.045,38.51
+F. Stenson,Southampton,1.222,0.611,58.57
+I. Watts,Southampton,0.095,0.0475,39.36
+J. Simpson,Southampton,1.326,0.663,60.34
+K. Sena,Southampton,0.028000000000000004,0.028000000000000004,38.22
+M. Bashford,Southampton,0.917,0.4585,53.37
+M. Collett,Southampton,1.33,0.665,60.41
+M. McAlonie,Southampton,0.959,0.4795,54.08
+M. Mott,Southampton,0.005,0.005,37.83
+R. Tucker,Southampton,0.229,0.1145,41.65
+T. Bourne,Southampton,1.5670000000000002,0.7835000000000001,64.44
+A. Mannion,Newcastle United,1.9769999999999999,0.9884999999999999,71.43
+B. Lumsden,Newcastle United,0.8200000000000001,0.41000000000000003,51.72
+C. Moan,Newcastle United,0.9650000000000001,0.48250000000000004,54.19
+C. Wardlaw,Newcastle United,1.784,0.892,68.14
+D. Cooper,Newcastle United,2.1380000000000003,1.0690000000000002,74.17
+D. Stokes,Newcastle United,0.329,0.1645,43.35
+E. Boddy,Newcastle United,0.066,0.066,38.87
+E. Kelly,Newcastle United,0.829,0.4145,51.87
+E. Murphy,Newcastle United,0.7550000000000001,0.37750000000000006,50.61
+F. Gregory,Newcastle United,0.866,0.433,52.5
+J. McQuade,Newcastle United,0.5,0.25,46.26
+L. Cataldo,Newcastle United,0.46799999999999997,0.23399999999999999,45.72
+L. Joel,Newcastle United,0.24699999999999997,0.12349999999999998,41.95
+M. Gautrat,Newcastle United,0.67,0.67,49.16
+M. Pike,Newcastle United,0.664,0.332,49.06
+O. Sevenius,Newcastle United,0.382,0.191,44.25
+S. Hayles,Newcastle United,0.378,0.189,44.19

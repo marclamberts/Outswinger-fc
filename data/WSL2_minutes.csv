@@ -1,195 +1,221 @@
 Player,Team,Minutes
-A. Aherne,Sheffield United,30.0
-A. Akpan,Southampton,45.0
-A. Andrews,Sheffield United,90.0
+A. Aherne,Sheffield United,42.0
+A. Akpan,Southampton,68.0
+A. Andrews,Sheffield United,178.0
 A. Baker,Birmingham City,11.0
-A. Blanchard,Crystal Palace,85.0
-A. Claypole,Nottingham Forest,61.0
+A. Blanchard,Crystal Palace,181.0
+A. Claypole,Nottingham Forest,63.0
 A. Everett,Crystal Palace,90.0
-A. Ferguson,Southampton,75.0
-A. Goddard,Southampton,90.0
-A. Jones,Durham,25.0
-A. Lafayette,Sheffield United,90.0
-A. Larkin,Crystal Palace,57.0
-A. Mannion,Newcastle United,90.0
+A. Ferguson,Southampton,157.0
+A. Goddard,Southampton,180.0
+A. Jones,Durham,34.0
+A. Lafayette,Sheffield United,180.0
+A. Larkin,Crystal Palace,147.0
+A. Mannion,Newcastle United,180.0
 A. Nixon,Portsmouth,90.0
-A. Primus,Southampton,89.0
-A. Rodgers,Nottingham Forest,90.0
-A. Rowbotham,Portsmouth,29.0
-A. Thestrup,Charlton Athletic,61.0
-A. Weerden,Crystal Palace,86.0
-B. Hepple,Durham,90.0
-B. Louis,Birmingham City,22.0
-B. Lumsden,Newcastle United,85.0
-B. Roe,Ipswich Town,90.0
+A. Primus,Southampton,171.0
+A. Rodgers,Nottingham Forest,180.0
+A. Rowbotham,Portsmouth,119.0
+A. Stobbs,Durham,63.0
+A. Thestrup,Charlton Athletic,129.0
+A. Weerden,Crystal Palace,176.0
+B. Hepple,Durham,270.0
+B. Louis,Birmingham City,79.0
+B. Lumsden,Newcastle United,130.0
+B. Roe,Ipswich Town,180.0
+B. Salicki,Durham,63.0
 B. Westrup,Sunderland,10.0
-C. Arthur,Crystal Palace,21.0
-C. Boye-Hlorkah,Nottingham Forest,90.0
-C. Cornet,Birmingham City,90.0
-C. Devlin,Sheffield United,60.0
-C. Hamilton,Nottingham Forest,23.0
-C. Harrison-Murray,Birmingham City,68.0
-C. Moan,Newcastle United,90.0
-C. Mustaki,Nottingham Forest,78.0
-C. Newsham,Charlton Athletic,90.0
-C. Parker-Smith,Sheffield United,90.0
-C. Peplow,Southampton,45.0
-C. Sheppard,Durham,90.0
-C. Sáez,Bristol City,14.0
-C. Wardlaw,Newcastle United,90.0
-D. Cooper,Newcastle United,90.0
-D. Rose,Nottingham Forest,67.0
-D. Stokes,Newcastle United,21.0
-E. Batty,Nottingham Forest,90.0
-E. Bissell,Charlton Athletic,61.0
-E. Brazil,Southampton,45.0
+C. Arthur,Crystal Palace,66.0
+C. Boye-Hlorkah,Nottingham Forest,180.0
+C. Cornet,Birmingham City,180.0
+C. Devlin,Sheffield United,130.0
+C. Hamilton,Nottingham Forest,113.0
+C. Harrison-Murray,Birmingham City,158.0
+C. Moan,Newcastle United,180.0
+C. Mustaki,Nottingham Forest,168.0
+C. Newsham,Charlton Athletic,180.0
+C. Parker-Smith,Sheffield United,180.0
+C. Peplow,Southampton,112.0
+C. Sheppard,Durham,270.0
+C. Sáez,Bristol City,104.0
+C. Wardlaw,Newcastle United,180.0
+C. Wellings,Nottingham Forest,79.0
+D. Cooper,Newcastle United,180.0
+D. Rose,Nottingham Forest,155.0
+D. Stokes,Newcastle United,48.0
+E. Batty,Nottingham Forest,180.0
+E. Bissell,Charlton Athletic,119.0
+E. Boddy,Newcastle United,8.0
+E. Brazil,Southampton,111.0
 E. Butler,Sheffield United,21.0
-E. Hughes,Crystal Palace,4.0
-E. Jones,Sunderland,26.0
-E. Jones,Portsmouth,90.0
-E. Kelly,Newcastle United,59.0
-E. Kinzett,Sheffield United,90.0
-E. Mason,Charlton Athletic,96.0
+E. Hack,Southampton,8.0
+E. Hed,Nottingham Forest,74.0
+E. Hughes,Crystal Palace,49.0
+E. Jones,Sunderland,44.0
+E. Jones,Portsmouth,180.0
+E. Kelly,Newcastle United,141.0
+E. Kinzett,Sheffield United,180.0
+E. Mason,Charlton Athletic,186.0
 E. Morgan,Bristol City,30.0
-E. Murphy,Newcastle United,90.0
-E. N'Dow,Charlton Athletic,90.0
-E. Powell,Bristol City,76.0
+E. Murphy,Newcastle United,135.0
+E. N'Dow,Charlton Athletic,180.0
+E. Powell,Bristol City,166.0
 E. Roberts,Southampton,1.0
-E. Scarr,Sunderland,90.0
-E. Syme,Bristol City,90.0
-E. Taylor,Sheffield United,90.0
-E. Watson,Crystal Palace,69.0
-F. Bentley,Bristol City,90.0
-F. Gregory,Newcastle United,69.0
-F. Stenson,Southampton,90.0
+E. Scarr,Sunderland,270.0
+E. Syme,Bristol City,180.0
+E. Taylor,Sheffield United,180.0
+E. Watson,Crystal Palace,63.0
+E. Wilson,Durham,63.0
+F. Bentley,Bristol City,180.0
+F. Gregory,Newcastle United,132.0
+F. Stenson,Southampton,180.0
 F. Thomas,Nottingham Forest,90.0
-G. Ayre,Durham,90.0
-G. Brougham,Nottingham Forest,90.0
-G. Ede,Durham,65.0
-G. Freeland,Portsmouth,90.0
-G. Humphries,Portsmouth,90.0
-G. Kenney,Charlton Athletic,29.0
-G. Lawley,Bristol City,90.0
-G. Moloney,Sunderland,90.0
-G. Neville,Ipswich Town,90.0
+G. Ayre,Durham,207.0
+G. Brougham,Nottingham Forest,180.0
+G. Ede,Durham,134.0
+G. Freeland,Portsmouth,180.0
+G. Humphries,Portsmouth,180.0
+G. Kenney,Charlton Athletic,51.0
+G. Lawley,Bristol City,180.0
+G. Moloney,Sunderland,270.0
+G. Neville,Ipswich Town,180.0
 G. Pearse,Charlton Athletic,-6.0
-H. Bennett,Bristol City,90.0
-H. Blake,Durham,65.0
-H. Coan,Portsmouth,90.0
-H. Greenwood,Sunderland,90.0
-H. Nolan,Crystal Palace,90.0
-H. Olding,Nottingham Forest,45.0
-I. Atkinson,Sunderland,64.0
+H. Bennett,Bristol City,180.0
+H. Blake,Durham,172.0
+H. Coan,Portsmouth,180.0
+H. Greenwood,Sunderland,270.0
+H. Nolan,Crystal Palace,180.0
+H. Olding,Nottingham Forest,47.0
+I. Atkinson,Sunderland,196.0
+I. Collins,Portsmouth,90.0
 I. Hebard,Bristol City,18.0
-I. Watts,Southampton,2.0
-J. Brown,Sunderland,90.0
-J. Bull,Portsmouth,90.0
-J. Dahou,Portsmouth,61.0
-J. Dear,Ipswich Town,36.0
-J. Finn,Sunderland,9.0
+I. Riley,Crystal Palace,74.0
+I. Watts,Southampton,10.0
+J. Brown,Sunderland,270.0
+J. Bull,Portsmouth,180.0
+J. Chime,Charlton Athletic,31.0
+J. Dahou,Portsmouth,151.0
+J. Dear,Ipswich Town,121.0
+J. Finn,Sunderland,189.0
 J. Gale,Portsmouth,79.0
-J. Gray,Portsmouth,90.0
-J. Green,Crystal Palace,90.0
-J. Hutton,Charlton Athletic,90.0
-J. McQuade,Newcastle United,31.0
-J. Napier,Crystal Palace,90.0
-J. Ralph,Sheffield United,9.0
-J. Reavill,Sheffield United,90.0
-J. Simpson,Southampton,90.0
-J. Stapleton,Nottingham Forest,90.0
-J. Vanhaevermaet,Crystal Palace,90.0
-K. Barry,Sunderland,20.0
+J. Gray,Portsmouth,180.0
+J. Green,Crystal Palace,180.0
+J. Hutton,Charlton Athletic,180.0
+J. McQuade,Newcastle United,76.0
+J. Napier,Crystal Palace,180.0
+J. Ralph,Sheffield United,21.0
+J. Reavill,Sheffield United,180.0
+J. Simpson,Southampton,180.0
+J. Stapleton,Nottingham Forest,106.0
+J. Vanhaevermaet,Crystal Palace,180.0
+Ji So-Yun,Birmingham City,33.0
+K. Barry,Sunderland,50.0
 K. Bradley,Charlton Athletic,90.0
-K. Flannery,Charlton Athletic,45.0
-K. Howat,Crystal Palace,90.0
-K. Kitching,Sunderland,80.0
-K. Muya,Charlton Athletic,45.0
-K. Robertson,Ipswich Town,54.0
+K. Flannery,Charlton Athletic,135.0
+K. Howat,Crystal Palace,180.0
+K. Kitching,Sunderland,261.0
+K. Muya,Charlton Athletic,104.0
+K. Robertson,Ipswich Town,121.0
 K. Sena,Southampton,15.0
-K. Skeels,Charlton Athletic,90.0
+K. Skeels,Charlton Athletic,180.0
 K. Smith,Nottingham Forest,67.0
-K. Watson,Sunderland,70.0
+K. Watson,Sunderland,202.0
 L. Bance,Birmingham City,11.0
-L. Briggs,Durham,90.0
+L. Briggs,Durham,272.0
 L. Brown,Crystal Palace,33.0
-L. Cataldo,Newcastle United,5.0
-L. Cowan,Sheffield United,90.0
-L. Crosthwaite,Birmingham City,79.0
-L. Fitzgerald,Charlton Athletic,29.0
-L. Griffiths,Sunderland,90.0
-L. Joel,Newcastle United,31.0
+L. Cataldo,Newcastle United,50.0
+L. Cowan,Sheffield United,180.0
+L. Crosthwaite,Birmingham City,169.0
+L. Fitzgerald,Charlton Athletic,61.0
+L. Griffiths,Sunderland,270.0
+L. Joel,Newcastle United,76.0
 L. Johnson,Portsmouth,90.0
 L. Lloyd-Smith,Bristol City,72.0
-L. McFarland,Durham,25.0
-L. Mitchell,Ipswich Town,90.0
-L. Newell,Birmingham City,45.0
-L. O'Brien,Ipswich Town,54.0
-L. Thomas,Birmingham City,90.0
-L. Thomas,Sheffield United,69.0
+L. McFarland,Durham,73.0
+L. Mitchell,Ipswich Town,180.0
+L. Newell,Birmingham City,67.0
+L. O'Brien,Ipswich Town,121.0
+L. Thomas,Birmingham City,180.0
+L. Thomas,Sheffield United,71.0
+L. Watson,Durham,10.0
 Lee Geum-Min,Birmingham City,79.0
 Lucy Quinn,Birmingham City,5.0
-M. Bashford,Southampton,90.0
-M. Boswell,Ipswich Town,90.0
-M. Collett,Southampton,90.0
-M. Earl,Ipswich Town,16.0
+M. Bashford,Southampton,180.0
+M. Boswell,Ipswich Town,179.0
+M. Collett,Southampton,180.0
+M. Corbyn,Sunderland,30.0
+M. Dafeur,Bristol City,90.0
+M. Earl,Ipswich Town,39.0
 M. Farrugia,Bristol City,72.0
-M. Foster,Durham,90.0
+M. Foster,Durham,270.0
 M. Gautrat,Newcastle United,90.0
 M. Green,Nottingham Forest,12.0
-M. Lambert,Durham,90.0
-M. McAlonie,Southampton,88.0
-M. McAteer,Charlton Athletic,45.0
+M. Hornby,Portsmouth,90.0
+M. Lambert,Durham,270.0
+M. McAlonie,Southampton,186.0
+M. McAteer,Charlton Athletic,76.0
 M. Meena,Bristol City,14.0
-M. Pike,Newcastle United,59.0
-M. Ross,Charlton Athletic,45.0
+M. Mott,Southampton,-8.0
+M. Pike,Newcastle United,149.0
+M. Ross,Charlton Athletic,104.0
+M. Rouse,Sheffield United,90.0
 M. Sharpe,Crystal Palace,5.0
 M. Sheva,Sunderland,90.0
-M. Speckmaier,Durham,65.0
-M. Ward,Bristol City,60.0
-N. Fenton,Sunderland,90.0
-N. Herron,Birmingham City,45.0
-N. Negri,Ipswich Town,90.0
-N. Thomas,Ipswich Town,90.0
-Nahikari García,Nottingham Forest,45.0
-None,Sunderland,90.0
-None,Charlton Athletic,90.0
-None,Birmingham City,90.0
-None,Durham,90.0
-None,Crystal Palace,90.0
-None,Sheffield United,90.0
-None,Nottingham Forest,90.0
-None,Portsmouth,90.0
-None,Bristol City,90.0
-None,Ipswich Town,90.0
-None,Southampton,90.0
-None,Newcastle United,90.0
+M. Speckmaier,Durham,128.0
+M. Ward,Bristol City,150.0
+M. Wearing,Ipswich Town,1.0
+N. Dunbar,Sunderland,-1.0
+N. Fenton,Sunderland,270.0
+N. Herron,Birmingham City,113.0
+N. Negri,Ipswich Town,180.0
+N. Thomas,Ipswich Town,113.0
+Nahikari García,Nottingham Forest,123.0
+None,Sunderland,270.0
+None,Charlton Athletic,180.0
+None,Birmingham City,180.0
+None,Durham,270.0
+None,Crystal Palace,180.0
+None,Sheffield United,180.0
+None,Nottingham Forest,180.0
+None,Portsmouth,180.0
+None,Bristol City,180.0
+None,Ipswich Town,180.0
+None,Southampton,180.0
+None,Newcastle United,180.0
+O. Hurtré,Birmingham City,22.0
 O. Johnson,Bristol City,18.0
-O. Sevenius,Newcastle United,21.0
-P. Peake,Ipswich Town,90.0
-P. Pritchard,Durham,25.0
-R. Dean,Ipswich Town,74.0
+O. Sevenius,Newcastle United,66.0
+P. Peake,Ipswich Town,180.0
+P. Pritchard,Durham,142.0
+R. Blades,Sunderland,18.0
+R. Dean,Ipswich Town,141.0
 R. Doe,Ipswich Town,36.0
-R. Hardy,Bristol City,90.0
-R. Holloway,Birmingham City,90.0
-R. McKenna,Birmingham City,90.0
-R. Roberts,Sunderland,81.0
-R. Rowe,Nottingham Forest,29.0
-R. Tucker,Southampton,45.0
+R. Hardy,Bristol City,180.0
+R. Holloway,Birmingham City,180.0
+R. McKenna,Birmingham City,180.0
+R. Roberts,Sunderland,261.0
+R. Rowe,Nottingham Forest,117.0
+R. Seaby,Ipswich Town,5.0
+R. Tucker,Southampton,69.0
 S. Barker,Portsmouth,11.0
-S. Cooke,Birmingham City,90.0
-S. Hayles,Newcastle United,69.0
-S. Ingle,Bristol City,76.0
-S. Magill,Birmingham City,90.0
-S. O'Rourke,Sheffield United,60.0
-S. Peskett,Ipswich Town,90.0
-S. Whitehouse,Charlton Athletic,90.0
-S. Wilson,Durham,90.0
-S. Yáñez,Crystal Palace,90.0
-T. Bourne,Southampton,90.0
-T. Bristow,Sheffield United,30.0
-T. George,Sheffield United,81.0
-T. Primmer,Portsmouth,90.0
-T. Toland,Durham,90.0
-V. Lia,Nottingham Forest,23.0
-V. Sarri,Birmingham City,85.0
-Vicky Losada,Bristol City,90.0
+S. Cooke,Birmingham City,180.0
+S. Hayles,Newcastle United,159.0
+S. Hopcroft,Crystal Palace,16.0
+S. Hughes,Ipswich Town,23.0
+S. Ingle,Bristol City,166.0
+S. Magill,Birmingham City,180.0
+S. O'Rourke,Sheffield United,138.0
+S. Peskett,Ipswich Town,180.0
+S. Robson,Durham,-2.0
+S. Whitehouse,Charlton Athletic,180.0
+S. Wilson,Durham,270.0
+S. Yáñez,Crystal Palace,180.0
+T. Almqvist,Nottingham Forest,12.0
+T. Bourne,Southampton,180.0
+T. Bristow,Sheffield United,50.0
+T. George,Sheffield United,159.0
+T. Primmer,Portsmouth,180.0
+T. Toland,Durham,261.0
+V. Lia,Nottingham Forest,34.0
+V. Sarri,Birmingham City,153.0
+Vicky Losada,Bristol City,180.0

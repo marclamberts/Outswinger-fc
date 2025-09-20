@@ -1,183 +1,209 @@
 playerName,Team,ActualDisruptions,ExpectedDisruptions
-A. Aherne,Sheffield United,3,0.182
-A. Akpan,Southampton,1,0.156
-A. Andrews,Sheffield United,0,0.196
-A. Baker,Birmingham City,1,0.077
-A. Blanchard,Crystal Palace,0,0.8399999999999999
-A. Claypole,Nottingham Forest,0,0.37700000000000006
-A. Everett,Crystal Palace,1,0.5760000000000001
-A. Ferguson,Southampton,1,0.6970000000000001
-A. Goddard,Southampton,2,0.20700000000000002
+A. Aherne,Sheffield United,3,0.028800000000000003
+A. Akpan,Southampton,1,0.035
+A. Andrews,Sheffield United,0,0.08099999999999999
+A. Baker,Birmingham City,1,0.0077
+A. Blanchard,Crystal Palace,1,0.28159999999999996
+A. Claypole,Nottingham Forest,0,0.0442
+A. Everett,Crystal Palace,1,0.057600000000000005
+A. Ferguson,Southampton,5,0.2666
+A. Goddard,Southampton,4,0.091
 A. Jones,Durham,0,0.0
-A. Lafayette,Sheffield United,4,2.1
-A. Larkin,Crystal Palace,1,0.4590000000000001
-A. Mannion,Newcastle United,3,1.2870000000000001
-A. Nixon,Portsmouth,2,0.6120000000000001
-A. Primus,Southampton,0,0.28700000000000003
-A. Rodgers,Nottingham Forest,8,0.315
+A. Lafayette,Sheffield United,8,0.7371
+A. Larkin,Crystal Palace,4,0.3317
+A. Mannion,Newcastle United,4,0.3546
+A. Nixon,Portsmouth,2,0.06120000000000001
+A. Primus,Southampton,2,0.15810000000000002
+A. Rodgers,Nottingham Forest,13,0.1521
 A. Rowbotham,Portsmouth,0,0.0
-A. Thestrup,Charlton Athletic,1,0.128
-A. Weerden,Crystal Palace,1,0.34
-B. Hepple,Durham,1,0.195
-B. Louis,Birmingham City,1,0.162
-B. Lumsden,Newcastle United,3,1.771
-B. Roe,Ipswich Town,7,1.52
+A. Stobbs,Durham,1,0.0528
+A. Thestrup,Charlton Athletic,1,0.10779999999999998
+A. Weerden,Crystal Palace,4,0.27840000000000004
+B. Hepple,Durham,4,0.4131
+B. Louis,Birmingham City,1,0.0689
+B. Lumsden,Newcastle United,3,0.3808
+B. Roe,Ipswich Town,15,0.5202
+B. Salicki,Durham,1,0.0371
 B. Westrup,Sunderland,0,0.0
-C. Arthur,Crystal Palace,0,0.161
-C. Boye-Hlorkah,Nottingham Forest,1,0.976
-C. Cornet,Birmingham City,1,1.3800000000000001
-C. Devlin,Sheffield United,1,0.66
-C. Hamilton,Nottingham Forest,3,0.328
-C. Harrison-Murray,Birmingham City,4,0.294
-C. Moan,Newcastle United,0,0.0
-C. Mustaki,Nottingham Forest,3,0.96
-C. Newsham,Charlton Athletic,2,0.888
-C. Parker-Smith,Sheffield United,0,0.0
-C. Peplow,Southampton,1,0.46199999999999997
-C. Sheppard,Durham,0,0.0
-C. Sáez,Bristol City,0,0.036000000000000004
-C. Wardlaw,Newcastle United,5,0.7380000000000001
-D. Cooper,Newcastle United,5,0.336
-D. Rose,Nottingham Forest,1,1.1
-D. Stokes,Newcastle United,1,0.046
-E. Batty,Nottingham Forest,0,0.054
-E. Bissell,Charlton Athletic,0,0.039
-E. Brazil,Southampton,0,0.203
-E. Butler,Sheffield United,0,0.045
-E. Hughes,Crystal Palace,0,0.0
-E. Jones,Portsmouth,0,0.189
-E. Jones,Sunderland,1,0.095
-E. Kelly,Newcastle United,4,0.315
-E. Kinzett,Sheffield United,7,0.39
-E. Mason,Charlton Athletic,1,0.336
-E. Morgan,Bristol City,2,0.35000000000000003
-E. Murphy,Newcastle United,1,1.4629999999999999
-E. N'Dow,Charlton Athletic,2,0.164
-E. Powell,Bristol City,7,2.472
-E. Roberts,Southampton,1,0.014
-E. Scarr,Sunderland,1,0.8970000000000001
-E. Syme,Bristol City,4,0.836
-E. Taylor,Sheffield United,2,0.6
-E. Watson,Crystal Palace,2,0.054
-F. Bentley,Bristol City,0,0.316
-F. Gregory,Newcastle United,3,0.511
-F. Stenson,Southampton,0,0.186
-F. Thomas,Nottingham Forest,5,0.7020000000000001
-G. Ayre,Durham,1,0.495
-G. Brougham,Nottingham Forest,2,0.833
-G. Ede,Durham,0,0.14400000000000002
-G. Freeland,Portsmouth,2,0.05
-G. Humphries,Portsmouth,0,0.066
-G. Kenney,Charlton Athletic,0,0.05
-G. Lawley,Bristol City,3,0.658
-G. Moloney,Sunderland,0,0.116
-G. Neville,Ipswich Town,3,1.0530000000000002
+C. Arthur,Crystal Palace,6,0.059
+C. Boye-Hlorkah,Nottingham Forest,3,0.29250000000000004
+C. Cornet,Birmingham City,2,0.6643999999999999
+C. Devlin,Sheffield United,2,0.29500000000000004
+C. Hamilton,Nottingham Forest,8,0.33
+C. Harrison-Murray,Birmingham City,5,0.24820000000000003
+C. Moan,Newcastle United,0,0.0186
+C. Mustaki,Nottingham Forest,7,0.5519999999999999
+C. Newsham,Charlton Athletic,9,1.0725
+C. Parker-Smith,Sheffield United,0,0.007000000000000001
+C. Peplow,Southampton,4,0.24000000000000005
+C. Sheppard,Durham,0,0.0186
+C. Sáez,Bristol City,0,0.0175
+C. Wardlaw,Newcastle United,11,0.37239999999999995
+C. Wellings,Nottingham Forest,0,0.0646
+D. Cooper,Newcastle United,7,0.3038
+D. Rose,Nottingham Forest,3,0.42560000000000003
+D. Stokes,Newcastle United,1,0.0152
+E. Batty,Nottingham Forest,0,0.04
+E. Bissell,Charlton Athletic,0,0.048
+E. Boddy,Newcastle United,0,0.003
+E. Brazil,Southampton,0,0.2088
+E. Butler,Sheffield United,0,0.0045
+E. Hack,Southampton,0,0.0
+E. Hed,Nottingham Forest,1,0.19190000000000002
+E. Hughes,Crystal Palace,1,0.0245
+E. Jones,Portsmouth,0,0.020300000000000002
+E. Jones,Sunderland,1,0.012
+E. Kelly,Newcastle United,6,0.18540000000000004
+E. Kinzett,Sheffield United,7,0.088
+E. Mason,Charlton Athletic,6,0.1815
+E. Morgan,Bristol City,2,0.035
+E. Murphy,Newcastle United,1,0.3648
+E. N'Dow,Charlton Athletic,5,0.1744
+E. Powell,Bristol City,7,0.351
+E. Roberts,Southampton,1,0.0014
+E. Scarr,Sunderland,3,0.6837000000000001
+E. Syme,Bristol City,4,0.11180000000000001
+E. Taylor,Sheffield United,3,0.24440000000000003
+E. Watson,Crystal Palace,2,0.0056
+E. Wilson,Durham,1,0.026600000000000002
+F. Bentley,Bristol City,0,0.034
+F. Gregory,Newcastle United,4,0.2242
+F. Stenson,Southampton,0,0.0333
+F. Thomas,Nottingham Forest,5,0.07020000000000001
+G. Ayre,Durham,5,0.6228
+G. Brougham,Nottingham Forest,6,0.5497
+G. Ede,Durham,3,0.1035
+G. Freeland,Portsmouth,2,0.0054
+G. Humphries,Portsmouth,0,0.0068000000000000005
+G. Kenney,Charlton Athletic,2,0.027600000000000003
+G. Lawley,Bristol City,3,0.06860000000000001
+G. Moloney,Sunderland,0,0.082
+G. Neville,Ipswich Town,7,0.2624
 G. Pearse,Charlton Athletic,0,0.0
-H. Bennett,Bristol City,4,0.51
-H. Blake,Durham,4,1.092
-H. Coan,Portsmouth,1,0.427
-H. Greenwood,Sunderland,0,0.108
-H. Nolan,Crystal Palace,2,0.946
-H. Olding,Nottingham Forest,0,0.156
-I. Atkinson,Sunderland,2,0.23
-I. Hebard,Bristol City,0,0.042
-I. Watts,Southampton,0,0.032
-J. Brown,Sunderland,2,0.504
-J. Bull,Portsmouth,1,0.14400000000000002
-J. Dahou,Portsmouth,2,0.161
-J. Dear,Ipswich Town,3,0.165
-J. Finn,Sunderland,0,0.0
-J. Gale,Portsmouth,0,0.406
-J. Gray,Portsmouth,0,0.034
-J. Green,Crystal Palace,2,0.59
-J. Hutton,Charlton Athletic,2,0.275
-J. McQuade,Newcastle United,3,0.027
-J. Napier,Crystal Palace,1,0.5700000000000001
-J. Ralph,Sheffield United,0,0.063
-J. Reavill,Sheffield United,2,0.912
-J. Simpson,Southampton,6,1.52
-J. Stapleton,Nottingham Forest,3,0.8550000000000001
-J. Vanhaevermaet,Crystal Palace,1,1.168
-K. Barry,Sunderland,1,0.11
-K. Bradley,Charlton Athletic,3,0.16
-K. Flannery,Charlton Athletic,1,0.075
-K. Howat,Crystal Palace,0,0.132
-K. Kitching,Sunderland,0,0.261
-K. Muya,Charlton Athletic,3,0.168
-K. Robertson,Ipswich Town,2,0.4
+H. Bennett,Bristol City,4,0.0855
+H. Blake,Durham,6,0.5216999999999999
+H. Coan,Portsmouth,1,0.046900000000000004
+H. Greenwood,Sunderland,6,0.22199999999999998
+H. Nolan,Crystal Palace,2,0.3078
+H. Olding,Nottingham Forest,0,0.027200000000000002
+I. Atkinson,Sunderland,6,0.5513
+I. Collins,Portsmouth,0,0.0012000000000000001
+I. Hebard,Bristol City,0,0.004200000000000001
+I. Riley,Crystal Palace,3,0.0638
+I. Watts,Southampton,0,0.009600000000000001
+J. Brown,Sunderland,6,0.48760000000000003
+J. Bull,Portsmouth,1,0.0164
+J. Chime,Charlton Athletic,1,0.0078
+J. Dahou,Portsmouth,2,0.0182
+J. Dear,Ipswich Town,4,0.16799999999999998
+J. Finn,Sunderland,2,0.0294
+J. Gale,Portsmouth,0,0.040600000000000004
+J. Gray,Portsmouth,0,0.0035000000000000005
+J. Green,Crystal Palace,9,0.3586
+J. Hutton,Charlton Athletic,6,0.2919
+J. McQuade,Newcastle United,3,0.0726
+J. Napier,Crystal Palace,4,0.2603
+J. Ralph,Sheffield United,1,0.0363
+J. Reavill,Sheffield United,7,0.3088
+J. Simpson,Southampton,9,0.3674
+J. Stapleton,Nottingham Forest,3,0.11989999999999998
+J. Vanhaevermaet,Crystal Palace,5,0.4
+Ji So-Yun,Birmingham City,0,0.0234
+K. Barry,Sunderland,1,0.0328
+K. Bradley,Charlton Athletic,3,0.016
+K. Flannery,Charlton Athletic,6,0.2484
+K. Howat,Crystal Palace,2,0.13440000000000002
+K. Kitching,Sunderland,5,0.24419999999999997
+K. Muya,Charlton Athletic,4,0.12979999999999997
+K. Robertson,Ipswich Town,7,0.07200000000000001
 K. Sena,Southampton,0,0.0
-K. Skeels,Charlton Athletic,2,0.029
-K. Smith,Nottingham Forest,2,1.558
-K. Watson,Sunderland,2,0.8670000000000001
-L. Bance,Birmingham City,1,0.105
-L. Briggs,Durham,2,0.34400000000000003
-L. Brown,Crystal Palace,2,0.052000000000000005
-L. Cataldo,Newcastle United,0,0.014
-L. Cowan,Sheffield United,0,1.978
-L. Crosthwaite,Birmingham City,3,0.885
-L. Fitzgerald,Charlton Athletic,0,0.045
-L. Griffiths,Sunderland,3,1.296
-L. Joel,Newcastle United,0,0.06
-L. Johnson,Portsmouth,2,0.105
-L. Lloyd-Smith,Bristol City,2,0.854
-L. McFarland,Durham,0,0.0
-L. Mitchell,Ipswich Town,6,0.9880000000000001
-L. Newell,Birmingham City,5,0.26
-L. O'Brien,Ipswich Town,2,0.297
-L. Thomas,Birmingham City,0,0.12
-L. Thomas,Sheffield United,0,0.152
-Lee Geum-Min,Birmingham City,0,0.39
-Lucy Quinn,Birmingham City,0,0.024
-M. Bashford,Southampton,4,1.207
-M. Boswell,Ipswich Town,2,0.48
-M. Collett,Southampton,1,0.825
-M. Earl,Ipswich Town,0,0.027
-M. Farrugia,Bristol City,0,0.198
-M. Foster,Durham,1,0.318
-M. Gautrat,Newcastle United,3,0.532
-M. Green,Nottingham Forest,1,0.068
-M. Lambert,Durham,1,0.20800000000000002
-M. McAlonie,Southampton,5,0.544
-M. McAteer,Charlton Athletic,2,0.304
-M. Meena,Bristol City,0,0.189
-M. Pike,Newcastle United,0,0.228
-M. Ross,Charlton Athletic,2,0.048
-M. Sharpe,Crystal Palace,0,0.012
-M. Sheva,Sunderland,3,0.8450000000000001
-M. Speckmaier,Durham,0,0.279
-M. Ward,Bristol City,5,0.427
-N. Fenton,Sunderland,2,0.957
-N. Herron,Birmingham City,1,0.216
-N. Negri,Ipswich Town,0,0.057
-N. Thomas,Ipswich Town,2,0.41300000000000003
-Nahikari García,Nottingham Forest,0,0.189
-O. Johnson,Bristol City,1,0.22500000000000003
-O. Sevenius,Newcastle United,0,0.1
-P. Peake,Ipswich Town,3,0.0
-P. Pritchard,Durham,0,0.0
-R. Dean,Ipswich Town,0,0.105
-R. Doe,Ipswich Town,2,0.225
-R. Hardy,Bristol City,0,0.605
-R. Holloway,Birmingham City,5,1.6
-R. McKenna,Birmingham City,5,0.4
-R. Roberts,Sunderland,2,0.22
-R. Rowe,Nottingham Forest,0,0.088
-R. Tucker,Southampton,1,0.17400000000000002
+K. Skeels,Charlton Athletic,2,0.24380000000000002
+K. Smith,Nottingham Forest,2,0.1558
+K. Watson,Sunderland,8,0.4953
+L. Bance,Birmingham City,1,0.010499999999999999
+L. Briggs,Durham,12,0.36479999999999996
+L. Brown,Crystal Palace,2,0.005200000000000001
+L. Cataldo,Newcastle United,3,0.078
+L. Cowan,Sheffield United,1,0.43200000000000005
+L. Crosthwaite,Birmingham City,6,1.1725
+L. Fitzgerald,Charlton Athletic,0,0.0848
+L. Griffiths,Sunderland,13,1.2187999999999999
+L. Joel,Newcastle United,0,0.0165
+L. Johnson,Portsmouth,2,0.010499999999999999
+L. Lloyd-Smith,Bristol City,2,0.0854
+L. McFarland,Durham,2,0.032
+L. Mitchell,Ipswich Town,13,0.275
+L. Newell,Birmingham City,5,0.059199999999999996
+L. O'Brien,Ipswich Town,5,0.15960000000000002
+L. Thomas,Birmingham City,0,0.0428
+L. Thomas,Sheffield United,0,0.016
+L. Watson,Durham,0,0.0008
+Lee Geum-Min,Birmingham City,0,0.039
+Lucy Quinn,Birmingham City,0,0.0024000000000000002
+M. Bashford,Southampton,7,0.24419999999999997
+M. Boswell,Ipswich Town,2,0.0992
+M. Collett,Southampton,5,0.434
+M. Corbyn,Sunderland,1,0.002
+M. Dafeur,Bristol City,0,0.0005
+M. Earl,Ipswich Town,0,0.0078
+M. Farrugia,Bristol City,0,0.0198
+M. Foster,Durham,9,0.7047
+M. Gautrat,Newcastle United,3,0.053200000000000004
+M. Green,Nottingham Forest,1,0.0068000000000000005
+M. Hornby,Portsmouth,0,0.0006000000000000001
+M. Lambert,Durham,8,0.4590000000000001
+M. McAlonie,Southampton,10,0.3744
+M. McAteer,Charlton Athletic,2,0.10370000000000001
+M. Meena,Bristol City,0,0.0189
+M. Mott,Southampton,0,0.0
+M. Pike,Newcastle United,5,0.27599999999999997
+M. Ross,Charlton Athletic,2,0.1152
+M. Rouse,Sheffield United,5,0.0975
+M. Sharpe,Crystal Palace,0,0.0012000000000000001
+M. Sheva,Sunderland,3,0.0845
+M. Speckmaier,Durham,2,0.059
+M. Ward,Bristol City,5,0.0448
+M. Wearing,Ipswich Town,1,0.0
+N. Dunbar,Sunderland,0,0.0
+N. Fenton,Sunderland,11,0.7854
+N. Herron,Birmingham City,2,0.21200000000000002
+N. Negri,Ipswich Town,0,0.058499999999999996
+N. Thomas,Ipswich Town,2,0.0912
+Nahikari García,Nottingham Forest,2,0.10880000000000001
+O. Hurtré,Birmingham City,2,0.037
+O. Johnson,Bristol City,1,0.022500000000000003
+O. Sevenius,Newcastle United,0,0.0627
+P. Peake,Ipswich Town,3,0.0432
+P. Pritchard,Durham,2,0.215
+R. Blades,Sunderland,3,0.019799999999999998
+R. Dean,Ipswich Town,3,0.0663
+R. Doe,Ipswich Town,2,0.0225
+R. Hardy,Bristol City,0,0.0767
+R. Holloway,Birmingham City,5,0.6895
+R. McKenna,Birmingham City,5,0.4464
+R. Roberts,Sunderland,9,0.4255
+R. Rowe,Nottingham Forest,2,0.1264
+R. Seaby,Ipswich Town,0,0.0018000000000000002
+R. Tucker,Southampton,1,0.04
 S. Barker,Portsmouth,0,0.0
-S. Cooke,Birmingham City,3,0.378
-S. Hayles,Newcastle United,2,0.12
-S. Ingle,Bristol City,2,0.0
-S. Magill,Birmingham City,0,1.472
-S. O'Rourke,Sheffield United,2,0.294
-S. Peskett,Ipswich Town,2,1.971
-S. Whitehouse,Charlton Athletic,0,0.098
-S. Wilson,Durham,0,0.28
-S. Yáñez,Crystal Palace,0,0.0
-T. Bourne,Southampton,7,0.66
-T. Bristow,Sheffield United,1,0.132
-T. George,Sheffield United,5,0.767
-T. Primmer,Portsmouth,2,0.44200000000000006
-T. Toland,Durham,0,0.111
-V. Lia,Nottingham Forest,1,0.126
-V. Sarri,Birmingham City,6,1.274
-Vicky Losada,Bristol City,3,1.118
+S. Cooke,Birmingham City,5,0.34009999999999996
+S. Hayles,Newcastle United,3,0.066
+S. Hopcroft,Crystal Palace,0,0.006900000000000001
+S. Hughes,Ipswich Town,2,0.0021000000000000003
+S. Ingle,Bristol City,3,0.0
+S. Magill,Birmingham City,1,0.484
+S. O'Rourke,Sheffield United,5,0.129
+S. Peskett,Ipswich Town,4,0.45200000000000007
+S. Robson,Durham,0,0.0
+S. Whitehouse,Charlton Athletic,0,0.016
+S. Wilson,Durham,8,0.5575
+S. Yáñez,Crystal Palace,0,0.013300000000000001
+T. Almqvist,Nottingham Forest,1,0.003
+T. Bourne,Southampton,7,0.31500000000000006
+T. Bristow,Sheffield United,2,0.0369
+T. George,Sheffield United,11,0.1836
+T. Primmer,Portsmouth,2,0.0588
+T. Toland,Durham,1,0.28440000000000004
+V. Lia,Nottingham Forest,3,0.039599999999999996
+V. Sarri,Birmingham City,8,0.4023
+Vicky Losada,Bristol City,3,0.12090000000000001
