@@ -208,8 +208,11 @@ def create_match_shot_map_fig(df, file_path):
     """Generates the xG shot map for a given match."""
     df = df[~((df['timeMin'] >= 120) & (df['Type_of_play'] == 'Penalty'))]
     file_name = os.path.basename(file_path)
-    teams = file_name.split('_')[-1].replace('.csv', '').split(' - ')
-    team1_name, team2_name = teams[0], teams[1]
+    try:
+        teams = file_name.split('_')[-1].replace('.csv', '').split(' - ')
+        team1_name, team2_name = teams[0].strip(), teams[1].strip()
+    except IndexError:
+        return None, "Filename format is incorrect. Expected 'Date_TeamA - TeamB.csv'"
 
     team1 = df[df['TeamId'] == team1_name].reset_index(drop=True)
     team2 = df[df['TeamId'] == team2_name].reset_index(drop=True)
@@ -271,7 +274,7 @@ def create_match_shot_map_fig(df, file_path):
     ax.scatter([], [], color=own_goal_color, s=200, label='Own Goal')
     ax.legend(frameon=False, fontsize=12, loc='lower center', bbox_to_anchor=(0.5, -0.15), labelcolor='white', handletextpad=0.5, ncol=4)
     
-    return fig
+    return fig, "Match analysis generated."
 
 
 # --- Page Display Functions ---
@@ -382,30 +385,64 @@ def display_corners_page(data_config):
 def display_match_analysis_page():
     st.title("🎯 Match Analysis")
     MATCH_DIR = resource_path("data/matchxg")
+    
     try:
-        match_files = [f for f in os.listdir(MATCH_DIR) if f.endswith('.csv')]
-        if not match_files:
-            st.error(f"No match CSV files found in the '{MATCH_DIR}' directory. Please follow the setup instructions.")
+        leagues = [name for name in os.listdir(MATCH_DIR) if os.path.isdir(os.path.join(MATCH_DIR, name))]
+        if not leagues:
+            st.error(f"No league folders found in '{MATCH_DIR}'. Please create subfolders for each league.")
             return
         
-        # Clean up names for display in selectbox
-        match_display_names = sorted([os.path.splitext(f)[0] for f in match_files])
+        col1, col2 = st.columns(2)
+        with col1:
+            selected_league = st.selectbox("Select League", sorted(leagues))
+
+        league_path = os.path.join(MATCH_DIR, selected_league)
+        match_files = [f for f in os.listdir(league_path) if f.endswith('.csv')]
+        
+        if not match_files:
+            st.warning(f"No match files found for {selected_league}.")
+            return
+
+        # Extract all unique team names from filenames in the selected league
+        all_teams = set()
+        for f in match_files:
+            try:
+                teams = os.path.splitext(f)[0].split('_')[-1].split(' - ')
+                all_teams.add(teams[0].strip())
+                all_teams.add(teams[1].strip())
+            except IndexError:
+                continue # Skip malformed filenames
+        
+        with col2:
+            team_filter = st.selectbox("Filter by Team (Optional)", ["All Teams"] + sorted(list(all_teams)))
+
+        # Filter match list based on team selection
+        if team_filter != "All Teams":
+            filtered_matches = [f for f in match_files if team_filter in f]
+        else:
+            filtered_matches = match_files
+            
+        if not filtered_matches:
+            st.warning(f"No matches found for {team_filter} in {selected_league}.")
+            return
+
+        # Clean names for display
+        match_display_names = sorted([os.path.splitext(f)[0] for f in filtered_matches])
         selected_match_name = st.selectbox("Select a Match to Analyze", match_display_names)
 
         if st.button("Generate Analysis", use_container_width=True, type="primary"):
             if selected_match_name:
                 with st.spinner("Generating match analysis..."):
-                    file_path = os.path.join(MATCH_DIR, f"{selected_match_name}.csv")
+                    file_path = os.path.join(league_path, f"{selected_match_name}.csv")
                     df = load_data(file_path)
-                    fig = create_match_shot_map_fig(df, file_path)
+                    fig, message = create_match_shot_map_fig(df, file_path)
                     if fig:
                         st.pyplot(fig)
                     else:
-                        st.error("Could not generate the match visualization.")
+                        st.error(f"Could not generate visualization: {message}")
 
     except FileNotFoundError:
-        st.error(f"Match data directory not found at '{MATCH_DIR}'. Please create 'data/matchxg' and add your match CSV files.")
-        return
+        st.error(f"Match data directory not found at '{MATCH_DIR}'. Please create 'data/matchxg' and league subfolders.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
 
@@ -498,7 +535,8 @@ def main():
                         st.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time), key='corner_time')
                 except Exception: st.warning("Could not load corner filter options.")
         
-        if st.session_state.page_view not in ["Data Scouting", "Corners", "Player Profiling"]: st.markdown("---")
+        if st.session_state.page_view not in ["Data Scouting", "Corners", "Player Profiling"]:
+            st.markdown("---")
         
         if st.session_state.page_view == "Data Scouting": display_data_scouting_page(data_config, metric_info)
         elif st.session_state.page_view == "Match Analysis": display_match_analysis_page()
