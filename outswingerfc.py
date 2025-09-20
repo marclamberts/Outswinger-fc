@@ -312,11 +312,11 @@ def display_landing_page():
 
     col1, col2, col3 = st.columns([2, 1, 2])
     with col1:
-        st.image("https://placehold.co/400x400/2d3748/e2e8f0?text=Partner+Logo+1", use_container_width=True)
+        st.image("sheplotsfc2.png", use_container_width=True)
     with col2:
         st.markdown("<h1 style='text-align: center; margin-top: 150px;'>X</h1>", unsafe_allow_html=True)
     with col3:
-        st.image("https://placehold.co/400x400/e2e8f0/2d3748?text=Partner+Logo+2", use_container_width=True)
+        st.image("Outswinger FC.png", use_container_width=True)
 
     st.markdown("---")
     st.subheader("A collaboration in Women's Football Analytics")
