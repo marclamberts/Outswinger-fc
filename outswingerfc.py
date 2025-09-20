@@ -10,8 +10,7 @@ from mplsoccer import VerticalPitch
 from matplotlib.patches import Circle
 import io
 
-# --- Configuration & Setup ---
-
+# --- App Configuration ---
 st.set_page_config(
     page_title="Outswinger FC | Women's Football Analytics",
     page_icon="⚽",
@@ -77,7 +76,7 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
 
     # Create the pitch
     pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=False, line_zorder=2, linewidth=0.5)
-    fig, ax = pitch.draw(figsize=(10, 7)) # Reduced figsize for a smaller plot
+    fig, ax = pitch.draw(figsize=(10, 7))
     fig.set_facecolor("white")
     ax.set_ylim(49.8, 105) # Cut pitch at halfway line
 
@@ -89,8 +88,8 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
         ax.scatter(row['y'], row['x'], color=color, s=size, alpha=0.7, zorder=3)
 
     # Add title and subtitle
-    ax.text(50, 108, title_text, fontsize=24, weight='bold', color='black', ha='center', va='top') # Adjusted font size
-    ax.text(50, 104, "Shot Map from Corners", fontsize=12, style='italic', color='black', ha='center', va='top') # Adjusted font size
+    ax.text(50, 108, title_text, fontsize=24, weight='bold', color='black', ha='center', va='top')
+    ax.text(50, 104, "Shot Map from Corners", fontsize=12, style='italic', color='black', ha='center', va='top')
     
     # Adjust plot for additional space at the bottom
     plt.subplots_adjust(bottom=0.3)
@@ -117,23 +116,24 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
 
     return fig, None
 
-# --- Page Display Functions ---
+# --- Component Rendering Functions for Data Scouting Page ---
 
-def display_metrics_page(data_config, metric_info):
-    """Renders the main metrics leaderboard page."""
+def render_metrics_leaderboard(data_config, metric_info):
+    """Renders the player metrics leaderboard component."""
+    
     # --- League Selection ---
     leagues_row1 = ["WSL", "WSL 2", "Frauen-Bundesliga"]
     leagues_row2 = ["Liga F", "NWSL", "Premiere Ligue"]
     
     cols_row1 = st.columns(len(leagues_row1))
     for i, league in enumerate(leagues_row1):
-        if cols_row1[i].button(league, use_container_width=True, disabled=(st.session_state.selected_league == league)):
+        if cols_row1[i].button(league, key=f"league_btn_1_{i}", use_container_width=True, disabled=(st.session_state.selected_league == league)):
             st.session_state.selected_league = league
             st.rerun()
 
     cols_row2 = st.columns(len(leagues_row2))
     for i, league in enumerate(leagues_row2):
-        if cols_row2[i].button(league, use_container_width=True, disabled=(st.session_state.selected_league == league)):
+        if cols_row2[i].button(league, key=f"league_btn_2_{i}", use_container_width=True, disabled=(st.session_state.selected_league == league)):
             st.session_state.selected_league = league
             st.rerun()
 
@@ -151,23 +151,18 @@ def display_metrics_page(data_config, metric_info):
 
     if metric_config and league_config.get("minutes_file"):
         try:
-            # Load primary metric data
             metric_file_path = resource_path(os.path.join("data", metric_config["file"]))
             df_metric = load_data(metric_file_path)
 
-            # Load minutes data
             minutes_file_path = resource_path(os.path.join("data", league_config["minutes_file"]))
             df_minutes = load_data(minutes_file_path)
 
             rename_map = {
-                'playerName': 'Player', 
-                'ActualDisruptions': 'Actual disruption', 
-                'ExpectedDisruptions': 'xDisruption',
-                'expected disruptions': 'xDisruption' # Adding lowercase version for safety
+                'playerName': 'Player', 'ActualDisruptions': 'Actual disruption', 
+                'ExpectedDisruptions': 'xDisruption', 'expected disruptions': 'xDisruption'
             }
             df_metric.rename(columns=rename_map, inplace=True)
             
-            # Merge the two dataframes
             df_raw = pd.merge(df_metric, df_minutes[['Player', 'Minutes']], on='Player', how='left')
             df_raw.rename(columns={'Minutes ': 'Minutes'}, inplace=True)
             
@@ -206,7 +201,7 @@ def display_metrics_page(data_config, metric_info):
             elif not df_processed.empty:
                 st.warning(f"The metric '{sort_by_col}' is not available in the loaded data file.")
             else:
-                 st.info("No matching players found.")
+               st.info("No matching players found.")
         except FileNotFoundError as e:
             st.error(f"Error: A required data file was not found. Details: {e}")
         except Exception as e:
@@ -214,18 +209,17 @@ def display_metrics_page(data_config, metric_info):
     else:
         st.warning("No data configuration found.")
 
-def display_corners_page(data_config):
-    """Renders the corner analysis page."""
-    st.sidebar.header("Corner Filters")
+def render_corner_analysis(data_config):
+    """Renders the corner analysis component."""
     leagues = list(data_config.keys())
     leagues_with_total = ["Total"] + leagues
     
-    selected_league_corners = st.sidebar.selectbox("Select League:", leagues_with_total)
+    selected_league_corners = st.session_state.get('corner_league_selection', 'Total')
+    st.selectbox("Select League:", leagues_with_total, key='corner_league_selection')
     
     df_full = pd.DataFrame()
-    
     try:
-        if selected_league_corners == "Total":
+        if st.session_state.corner_league_selection == "Total":
             all_dfs = []
             for league in leagues:
                 corner_config = data_config.get(league, {}).get('Corners')
@@ -239,12 +233,12 @@ def display_corners_page(data_config):
             if all_dfs:
                 df_full = pd.concat(all_dfs, ignore_index=True)
         else:
-            corner_config = data_config.get(selected_league_corners, {}).get('Corners')
+            corner_config = data_config.get(st.session_state.corner_league_selection, {}).get('Corners')
             if corner_config:
                 file_path = resource_path(os.path.join("data", corner_config["file"]))
                 df_full = load_data(file_path)
             else:
-                st.error(f"Corner data configuration not found for {selected_league_corners}.")
+                st.error(f"Corner data configuration not found for {st.session_state.corner_league_selection}.")
                 return
 
     except FileNotFoundError:
@@ -263,23 +257,13 @@ def display_corners_page(data_config):
         st.warning("No events of type 'FromCorner' found in the dataset.")
         return
 
-    teams = ["All"] + sorted(df_corners['TeamId'].unique().tolist())
-    players = ["All"] + sorted(df_corners['PlayerId'].unique().tolist())
-    is_goal_options = ["All", True, False]
-    min_time, max_time = int(df_corners['timeMin'].min()), int(df_corners['timeMin'].max())
-
-    selected_team = st.sidebar.selectbox("Filter by Team:", teams)
-    selected_player = st.sidebar.selectbox("Filter by Player:", players)
-
-    if 'GameState' in df_corners.columns:
-        game_states = ["All"] + sorted(df_corners['GameState'].unique().tolist())
-        selected_state = st.sidebar.selectbox("Filter by Game State:", game_states)
-    else:
-        selected_state = "All"
-
-    selected_goal = st.sidebar.selectbox("Filter by Goal:", is_goal_options, format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
-    selected_time = st.sidebar.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time))
-
+    # Sidebar Filters (managed by the session state from the sidebar)
+    selected_team = st.session_state.get('corner_team', 'All')
+    selected_player = st.session_state.get('corner_player', 'All')
+    selected_state = st.session_state.get('corner_gamestate', 'All')
+    selected_goal = st.session_state.get('corner_isgoal', 'All')
+    selected_time = st.session_state.get('corner_time', (int(df_corners['timeMin'].min()), int(df_corners['timeMin'].max())))
+    
     df_filtered = df_corners.copy()
     if selected_team != "All": df_filtered = df_filtered[df_filtered['TeamId'] == selected_team]
     if selected_player != "All": df_filtered = df_filtered[df_filtered['PlayerId'] == selected_player]
@@ -288,153 +272,189 @@ def display_corners_page(data_config):
     if selected_goal != "All": df_filtered = df_filtered[df_filtered['isGoal'] == selected_goal]
     df_filtered = df_filtered[df_filtered['timeMin'].between(selected_time[0], selected_time[1])]
     
-    # Determine the title for the shot map
-    if selected_team != "All":
-        plot_title = selected_team
-    elif selected_player != "All":
-        plot_title = selected_player
-    else:
-        plot_title = f"{selected_league_corners} Corners"
+    plot_title = selected_team if selected_team != "All" else selected_player if selected_player != "All" else f"{st.session_state.corner_league_selection} Corners"
 
     st.markdown("---")
-
     if not df_filtered.empty and all(c in df_filtered.columns for c in ['x', 'y', 'xG', 'isGoal']):
         fig, error_message = create_detailed_shot_map(df_filtered, title_text=plot_title)
         if fig:
             st.pyplot(fig)
-            
-            # --- Download Buttons ---
             buf = io.BytesIO()
             fig.savefig(buf, format="png", bbox_inches='tight', facecolor='white')
-            
             csv = df_filtered.to_csv(index=False).encode('utf-8')
-            
             dl_col1, dl_col2 = st.columns(2)
             with dl_col1:
-                st.download_button(
-                    label="📥 Download Image",
-                    data=buf,
-                    file_name=f"{plot_title.replace(' ', '_')}_shot_map.png",
-                    mime="image/png",
-                    use_container_width=True
-                )
+                st.download_button("📥 Download Image", data=buf, file_name=f"{plot_title.replace(' ', '_')}_shot_map.png", mime="image/png", use_container_width=True)
             with dl_col2:
-                st.download_button(
-                    label="📥 Download Data",
-                    data=csv,
-                    file_name=f"{plot_title.replace(' ', '_')}_corner_data.csv",
-                    mime="text/csv",
-                    use_container_width=True
-                )
+                st.download_button("📥 Download Data", data=csv, file_name=f"{plot_title.replace(' ', '_')}_corner_data.csv", mime="text/csv", use_container_width=True)
         else:
             st.info(error_message)
-            
     elif not df_filtered.empty:
         st.warning("Required columns ('x', 'y', 'xG', 'isGoal') not found for plotting.")
     else:
         st.info("No data available for the selected filters.")
 
 
+# --- Main Page Display Functions ---
+
+def display_landing_page():
+    """Renders the initial landing page."""
+    # This function should be called before any other Streamlit elements.
+    # To enforce a centered layout, this logic must run first.
+    
+    st.markdown("""
+        <style>
+            .block-container {
+                max-width: 750px;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    st.title("Welcome to Outswinger FC Analytics")
+    st.markdown("---")
+
+    col1, col2, col3 = st.columns([2, 1, 2])
+    with col1:
+        st.image("https://placehold.co/400x400/2d3748/e2e8f0?text=Partner+Logo+1", use_container_width=True)
+    with col2:
+        st.markdown("<h1 style='text-align: center; margin-top: 150px;'>X</h1>", unsafe_allow_html=True)
+    with col3:
+        st.image("https://placehold.co/400x400/e2e8f0/2d3748?text=Partner+Logo+2", use_container_width=True)
+
+    st.markdown("---")
+    st.subheader("A collaboration in Women's Football Analytics")
+
+    if st.button("Enter Analytics Platform", use_container_width=True, type="primary"):
+        st.session_state.app_mode = "MainApp"
+        st.rerun()
+
+def display_data_scouting_page(data_config, metric_info):
+    """Renders the data scouting page with tabs for different tools."""
+    st.title("📊 Data Scouting")
+
+    tab1, tab2 = st.tabs(["Player Metrics Leaderboard", "Corner Analysis"])
+
+    with tab1:
+        render_metrics_leaderboard(data_config, metric_info)
+    
+    with tab2:
+        render_corner_analysis(data_config)
+
+def display_match_analysis_page():
+    """Placeholder for the Match Analysis page."""
+    st.title("🎯 Match Analysis")
+    st.markdown("---")
+    st.info("This section is currently under development. Tools for in-depth match analysis will be available here soon.")
+    st.image("https://placehold.co/800x400/4a5568/e2e8f0?text=Match+Breakdown+Tools+Coming+Soon", use_container_width=True)
+
+def display_player_profiles_page():
+    """Placeholder for the Player Profiles page."""
+    st.title("👤 Player Profiles")
+    st.markdown("---")
+    st.info("This section is currently under development. Soon you'll be able to search for individual players and view their detailed statistical profiles.")
+    st.image("https://placehold.co/800x400/2d3748/e2e8f0?text=Player+Profile+Dashboard+Coming+Soon", use_container_width=True)
+
 # --- Main App Logic ---
 def main():
+    # --- Data and Config Initialization ---
     metric_info = get_metric_info()
-    metric_pages = list(metric_info.keys())
-
-    # Initialize session state
-    if 'selected_league' not in st.session_state: st.session_state.selected_league = "WSL"
-    if 'selected_metric' not in st.session_state: st.session_state.selected_metric = metric_pages[0]
-    if 'page_view' not in st.session_state: st.session_state.page_view = "Metrics Leaderboard"
-
-    st.sidebar.title("Outswinger FC")
-    st.sidebar.image("https://placehold.co/400x200/2d3748/e2e8f0?text=Outswinger+FC", use_container_width=True)
-    
-    # --- View Selection Buttons ---
-    st.sidebar.write("Select a view:")
-    view_cols = st.sidebar.columns(2)
-    with view_cols[0]:
-        if st.button("📈 Leaderboard", use_container_width=True, disabled=(st.session_state.page_view == "Metrics Leaderboard")):
-            st.session_state.page_view = "Metrics Leaderboard"
-            st.rerun()
-    with view_cols[1]:
-        if st.button("⛳ Corners", use_container_width=True, disabled=(st.session_state.page_view == "Corners Analysis")):
-            st.session_state.page_view = "Corners Analysis"
-            st.rerun()
-    
-    st.sidebar.markdown("---")
-    st.sidebar.info("This app displays player stats for the WSL, WSL 2, Frauen-Bundesliga, Liga F, NWSL, and Premiere Ligue.")
-
     data_config = {
         "WSL": {
             "minutes_file": "WSL_minutes.csv",
-            'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
-            'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
-            'Corners': {"file": "WSL_corners.csv"}
+            'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "WSL_corners.csv"}
         },
         "WSL 2": {
             "minutes_file": "WSL2_minutes.csv",
-            'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
-            'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
-            'Corners': {"file": "WSL2_corners.csv"}
+            'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "WSL2_corners.csv"}
         },
         "Frauen-Bundesliga": {
             "minutes_file": "FBL_minutes.csv",
-            'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
-            'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
-            'Corners': {"file": "FBL_corners.csv"}
+            'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "FBL_corners.csv"}
         },
         "Liga F": {
             "minutes_file": "LigaF_minutes.csv",
-            'xG (Expected Goals)': {"file": "LigaF.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "LigaF_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
-            'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
-            'Corners': {"file": "LigaF_corners.csv"}
+            'xG (Expected Goals)': {"file": "LigaF.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "LigaF_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "LigaF_corners.csv"}
         },
         "NWSL": {
             "minutes_file": "NWSL_minutes.csv",
-            'xG (Expected Goals)': {"file": "NWSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "NWSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
-            'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
-            'Corners': {"file": "NWSL_corners.csv"}
+            'xG (Expected Goals)': {"file": "NWSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "NWSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "NWSL_corners.csv"}
         },
         "Premiere Ligue": {
             "minutes_file": "PremiereLigue_minutes.csv",
-            'xG (Expected Goals)': {"file": "PremiereLigue.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'},
-            'xAG (Expected Assisted Goals)': {"file": "PremiereLigue_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'},
-            'xT (Expected Threat)': {"file": "PremiereLigue_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'},
-            'Expected Disruption (xDisruption)': {"file": "PremiereLigue_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'},
-            'Goal Probability Added (GPA/G+)': {"file": "PremiereLigue_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'},
-            'Corners': {"file": "Premiere_Ligue_corners.csv"}
+            'xG (Expected Goals)': {"file": "PremiereLigue.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "PremiereLigue_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "PremiereLigue_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "PremiereLigue_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "PremiereLigue_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "Premiere_Ligue_corners.csv"}
         }
     }
-
-    if st.session_state.page_view == "Metrics Leaderboard":
-        st.title(f"📊 {st.session_state.selected_league} Advanced Metrics Leaderboard")
-        st.sidebar.header("Metric Leaderboards")
-        for metric in metric_pages:
-            if st.sidebar.button(metric, use_container_width=True, disabled=(st.session_state.selected_metric == metric)):
-                st.session_state.selected_metric = metric
-                st.rerun()
-        display_metrics_page(data_config, metric_info)
     
-    elif st.session_state.page_view == "Corners Analysis":
-        display_corners_page(data_config)
+    # --- Session State Initialization ---
+    if 'app_mode' not in st.session_state: st.session_state.app_mode = "Landing"
+    if 'selected_league' not in st.session_state: st.session_state.selected_league = "WSL"
+    if 'selected_metric' not in st.session_state: st.session_state.selected_metric = list(metric_info.keys())[0]
+    if 'page_view' not in st.session_state: st.session_state.page_view = "Data Scouting"
 
-    st.markdown("---")
-    st.markdown(f"© {datetime.now().year} Outswinger FC | All rights reserved.")
+    # --- Page Routing ---
+    if st.session_state.app_mode == "Landing":
+        display_landing_page()
+    else:
+        # --- Main App Sidebar and Page Rendering ---
+        st.sidebar.title("Outswinger FC")
+        st.sidebar.image("https://placehold.co/400x200/2d3748/e2e8f0?text=Outswinger+FC", use_container_width=True)
+        
+        st.sidebar.header("Main Menu")
+        if st.sidebar.button("📊 Data Scouting", use_container_width=True, type="primary" if st.session_state.page_view == "Data Scouting" else "secondary"):
+            st.session_state.page_view = "Data Scouting"
+            st.rerun()
+        if st.sidebar.button("🎯 Match Analysis", use_container_width=True, type="primary" if st.session_state.page_view == "Match Analysis" else "secondary"):
+            st.session_state.page_view = "Match Analysis"
+            st.rerun()
+        if st.sidebar.button("👤 Player Profiles", use_container_width=True, type="primary" if st.session_state.page_view == "Player Profiles" else "secondary"):
+            st.session_state.page_view = "Player Profiles"
+            st.rerun()
+        st.sidebar.markdown("---")
+
+        # --- Contextual Sidebar for Data Scouting ---
+        if st.session_state.page_view == "Data Scouting":
+            st.sidebar.header("Metric Leaderboard Filters")
+            metric_pages = list(metric_info.keys())
+            for metric in metric_pages:
+                if st.sidebar.button(metric, key=f"metric_btn_{metric}", use_container_width=True, disabled=(st.session_state.selected_metric == metric)):
+                    st.session_state.selected_metric = metric
+                    st.rerun()
+            
+            st.sidebar.markdown("---")
+            st.sidebar.header("Corner Analysis Filters")
+            # These filters are controlled via session_state keys, which are read by the render_corner_analysis function
+            # This is a dummy load to get filter options
+            try:
+                temp_df_full = load_data(resource_path(os.path.join("data", "WSL_corners.csv")))
+                df_corners = temp_df_full[temp_df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
+                teams = ["All"] + sorted(df_corners['TeamId'].unique().tolist())
+                players = ["All"] + sorted(df_corners['PlayerId'].unique().tolist())
+                is_goal_options = ["All", True, False]
+                min_time, max_time = int(df_corners['timeMin'].min()), int(df_corners['timeMin'].max())
+                game_states = ["All"] + sorted(df_corners['GameState'].unique().tolist()) if 'GameState' in df_corners.columns else ["All"]
+
+                st.selectbox("Filter by Team:", teams, key='corner_team')
+                st.selectbox("Filter by Player:", players, key='corner_player')
+                st.selectbox("Filter by Game State:", game_states, key='corner_gamestate')
+                st.selectbox("Filter by Goal:", is_goal_options, key='corner_isgoal', format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
+                st.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time), key='corner_time')
+            except Exception:
+                 st.sidebar.warning("Could not load corner filter options.")
+
+
+        st.sidebar.info("This app displays player stats for the WSL, WSL 2, Frauen-Bundesliga, Liga F, NWSL, and Premiere Ligue.")
+
+        # --- Display Selected Page ---
+        if st.session_state.page_view == "Data Scouting":
+            display_data_scouting_page(data_config, metric_info)
+        elif st.session_state.page_view == "Match Analysis":
+            display_match_analysis_page()
+        elif st.session_state.page_view == "Player Profiles":
+            display_player_profiles_page()
+
+        st.markdown("---")
+        st.markdown(f"© {datetime.now().year} Outswinger FC | All rights reserved.")
+
 
 if __name__ == "__main__":
     main()
-
