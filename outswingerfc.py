@@ -27,7 +27,7 @@ warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 
 # --- Custom Styling ---
 def inject_custom_css():
-    """Injects custom CSS to style the Streamlit app with a softer, lighter theme."""
+    """Injects custom CSS to style the Streamlit app with a sidebar."""
     st.markdown("""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
@@ -46,6 +46,17 @@ def inject_custom_css():
                 color: #34495E; /* Darker grey for text */
             }
             
+            /* --- Sidebar Styling --- */
+            [data-testid="stSidebar"] {
+                background-color: #E8F6F9; /* Very light blue for sidebar */
+                border-right: 2px solid #D1D8DD;
+            }
+            [data-testid="stSidebar"] h1, 
+            [data-testid="stSidebar"] h2,
+            [data-testid="stSidebar"] h3 {
+                color: #34495E; /* Darker text for sidebar titles */
+            }
+
             /* --- Buttons --- */
             .stButton > button {
                 border-radius: 20px;
@@ -57,18 +68,18 @@ def inject_custom_css():
                 transition: all 0.3s ease-in-out;
             }
             .stButton > button:hover {
-                background-color: #EC7063; /* Soft pink/red hover */
-                color: #FFFFFF; /* White text on hover */
+                background-color: #EC7063;
+                color: #FFFFFF;
                 transform: scale(1.05);
                 box-shadow: 0 0 15px rgba(236, 112, 99, 0.4);
             }
             .stButton > button[kind="primary"] {
-                background-color: #5DADE2; /* Soft blue primary button */
+                background-color: #5DADE2;
                 color: #FFFFFF;
                 border-color: #5DADE2;
             }
             .stButton > button[kind="primary"]:hover {
-                background-color: #85C1E9; /* Lighter blue on hover for primary */
+                background-color: #85C1E9;
                 border-color: #85C1E9;
                 color: #FFFFFF;
             }
@@ -81,7 +92,7 @@ def inject_custom_css():
                 color: #34495E;
             }
             .stSlider [data-baseweb="slider"] {
-                color: #5DADE2; /* Soft blue for slider */
+                color: #5DADE2;
             }
             .stTextInput > div > div > input, .stTextArea > div > textarea {
                 background-color: #FFFFFF;
@@ -90,42 +101,15 @@ def inject_custom_css():
                 color: #34495E;
             }
 
-            /* --- Layout & Containers --- */
-            .block-container {
-                padding-top: 3rem;
-                padding-bottom: 3rem;
-            }
-            div[data-testid="stExpander"] {
-                background-color: #E8F6F9; /* Very light blue for expander */
-                border: none;
-                border-radius: 10px;
-                padding: 10px;
-            }
-            div[data-testid="stExpander"] > details > summary {
-                font-size: 1.1rem;
-                font-weight: 600;
-                color: #5DADE2; /* Soft blue for expander summary */
-            }
-
-            /* --- Fix for Expander Icon --- */
-            div[data-testid="stExpander"] > details > summary::before {
-                content: ""; /* Removes the unwanted icon */
-                display: none;
-            }
-
             /* --- Dataframes --- */
             .stDataFrame {
                 border: 1px solid #D1D8DD;
                 border-radius: 10px;
             }
-            .stDataFrame > div > div > .data-grid-container > .data-grid {
-                 background-color: #FFFFFF;
-            }
             .stDataFrame .data-grid-header {
-                background-color: #E8F6F9; /* Very light blue for header */
+                background-color: #E8F6F9;
                 color: #34495E;
             }
-
         </style>
     """, unsafe_allow_html=True)
 
@@ -184,7 +168,6 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     PITCH_COLOR = "#FFFFFF" # White pitch
     TEXT_COLOR = "#34495E" # Darker grey for text
     PRIMARY_ACCENT = "#EC7063" # Soft pink/red
-    SECONDARY_ACCENT = "#5DADE2" # Soft blue
     MISS_COLOR = "#85C1E9" # Lighter blue for miss
     GOAL_COLOR = "#EC7063" # Soft pink/red for goal
 
@@ -369,8 +352,6 @@ def create_match_shot_map_fig(df, file_path):
     BG_COLOR = "#F8F9FA"  # Light background
     PITCH_COLOR = "#FFFFFF" # White pitch
     TEXT_COLOR = "#34495E" # Darker grey for text
-    PRIMARY_ACCENT = "#EC7063" # Soft pink/red
-    SECONDARY_ACCENT = "#5DADE2" # Soft blue
     
     # Using distinct colors for teams and goals that stand out on a light background
     team1_color = "#5DADE2" # Soft Blue
@@ -535,14 +516,21 @@ def display_corners_page(data_config):
     if df_full.empty: st.warning("No corner data could be loaded for the selected league(s)."); return
     df_corners = df_full[df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
     if df_corners.empty: st.warning("No events of type 'FromCorner' found in the dataset."); return
-    selected_team, selected_player, selected_state, selected_goal, selected_time = st.session_state.get('corner_team', 'All'), st.session_state.get('corner_player', 'All'), st.session_state.get('corner_gamestate', 'All'), st.session_state.get('corner_isgoal', 'All'), st.session_state.get('corner_time', (int(df_corners['timeMin'].min()), int(df_corners['timeMin'].max())))
+    selected_team = st.session_state.get('corner_team', 'All')
+    selected_player = st.session_state.get('corner_player', 'All')
+    selected_state = st.session_state.get('corner_gamestate', 'All')
+    selected_goal = st.session_state.get('corner_isgoal', 'All')
+    selected_time = st.session_state.get('corner_time', (int(df_corners['timeMin'].min()), int(df_corners['timeMin'].max())))
+    
     df_filtered = df_corners.copy()
     if selected_team != "All": df_filtered = df_filtered[df_filtered['TeamId'] == selected_team]
     if selected_player != "All": df_filtered = df_filtered[df_filtered['PlayerId'] == selected_player]
     if selected_state != "All" and 'GameState' in df_filtered.columns: df_filtered = df_filtered[df_filtered['GameState'] == selected_state]
     if selected_goal != "All": df_filtered = df_filtered[df_filtered['isGoal'] == selected_goal]
     df_filtered = df_filtered[df_filtered['timeMin'].between(selected_time[0], selected_time[1])]
+    
     plot_title = selected_team if selected_team != "All" else selected_player if selected_player != "All" else f"{selected_league_corners} Corners"
+    
     if not df_filtered.empty and all(c in df_filtered.columns for c in ['x', 'y', 'xG', 'isGoal']):
         fig, error_message = create_detailed_shot_map(df_filtered, title_text=plot_title)
         if fig:
@@ -666,17 +654,18 @@ def main():
 
     # --- Page Routing ---
     if st.session_state.app_mode == "Landing":
+        # On landing, force sidebar to be collapsed and hidden
+        st.set_page_config(initial_sidebar_state="collapsed")
+        st.markdown("""<style>[data-testid="stSidebar"] {display: none;}</style>""", unsafe_allow_html=True)
         display_landing_page()
     else:
-        # --- Improved Navigation ---
-        st.image(resource_path("sheplotsfc2.png"), width=200) # Add a logo at the top
+        # For the main app, ensure the sidebar is visible
+        st.set_page_config(initial_sidebar_state="expanded")
+
+        # --- Top Navigation (Remains in main area) ---
+        st.image(resource_path("sheplotsfc2.png"), width=200)
         cols = st.columns(4)
-        nav_buttons = {
-            "Data Scouting": "📊",
-            "Match Analysis": "🎯",
-            "Player Profiling": "👤",
-            "Corners": "⛳"
-        }
+        nav_buttons = { "Data Scouting": "📊", "Match Analysis": "🎯", "Player Profiling": "👤", "Corners": "⛳" }
         page_keys = list(nav_buttons.keys())
         
         if cols[0].button(f"{nav_buttons[page_keys[0]]} {page_keys[0]}", use_container_width=True, type="primary" if st.session_state.page_view == page_keys[0] else "secondary"):
@@ -690,34 +679,38 @@ def main():
 
         st.markdown("---")
 
+        # --- Sidebar Filters ---
         if st.session_state.page_view == "Data Scouting":
-            with st.expander("Show Metric Leaderboard Filters", expanded=True):
+            with st.sidebar:
+                st.title("Filters")
+                st.header("Metric Leaderboard")
                 st.selectbox("Select Metric:", list(metric_info.keys()), key='selected_metric')
+
         elif st.session_state.page_view == "Corners":
-            with st.expander("Show Corner Analysis Filters", expanded=True):
+            with st.sidebar:
+                st.title("Filters")
+                st.header("Corner Analysis")
                 try:
                     leagues_with_total = ["Total"] + list(data_config.keys())
-                    # Load a sample file just to populate filters initially
+                    # Load a sample file to populate filters
                     temp_df_full = load_data(resource_path(os.path.join("data", "WSL_corners.csv")))
                     df_corners = temp_df_full[temp_df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
-                    teams, players = ["All"] + sorted(df_corners['TeamId'].unique().tolist()), ["All"] + sorted(df_corners['PlayerId'].unique().tolist())
-                    is_goal_options, (min_time, max_time) = ["All", True, False], (int(df_corners['timeMin'].min()), int(df_corners['timeMin'].max()))
+                    teams = ["All"] + sorted(df_corners['TeamId'].unique().tolist())
+                    players = ["All"] + sorted(df_corners['PlayerId'].unique().tolist())
+                    is_goal_options = ["All", True, False]
+                    min_time, max_time = int(df_corners['timeMin'].min()), int(df_corners['timeMin'].max())
                     game_states = ["All"] + sorted(df_corners['GameState'].unique().tolist()) if 'GameState' in df_corners.columns else ["All"]
-                    c1, c2, c3 = st.columns(3)
-                    with c1:
-                        st.selectbox("Select League:", leagues_with_total, key='corner_league_selection')
-                        st.selectbox("Filter by Team:", teams, key='corner_team')
-                    with c2:
-                        st.selectbox("Filter by Player:", players, key='corner_player')
-                        st.selectbox("Filter by Game State:", game_states, key='corner_gamestate')
-                    with c3:
-                        st.selectbox("Filter by Goal:", is_goal_options, key='corner_isgoal', format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
-                        st.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time), key='corner_time')
-                except Exception: st.warning("Could not load corner filter options.")
-        
-        if st.session_state.page_view not in ["Data Scouting", "Corners"]:
-            st.markdown("<br>", unsafe_allow_html=True)
+                    
+                    st.selectbox("Select League:", leagues_with_total, key='corner_league_selection')
+                    st.selectbox("Filter by Team:", teams, key='corner_team')
+                    st.selectbox("Filter by Player:", players, key='corner_player')
+                    st.selectbox("Filter by Game State:", game_states, key='corner_gamestate')
+                    st.selectbox("Filter by Goal:", is_goal_options, key='corner_isgoal', format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
+                    st.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time), key='corner_time')
+                except Exception: 
+                    st.warning("Could not load corner filter options.")
 
+        # --- Main Page Content ---
         if st.session_state.page_view == "Data Scouting": display_data_scouting_page(data_config, metric_info)
         elif st.session_state.page_view == "Match Analysis": display_match_analysis_page()
         elif st.session_state.page_view == "Player Profiling": display_player_profiling_page()
