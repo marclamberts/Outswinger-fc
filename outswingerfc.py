@@ -107,6 +107,12 @@ def inject_custom_css():
                 color: #5DADE2; /* Soft blue for expander summary */
             }
 
+            /* --- Fix for Expander Icon --- */
+            div[data-testid="stExpander"] > details > summary::before {
+                content: ""; /* Removes the unwanted icon */
+                display: none;
+            }
+
             /* --- Dataframes --- */
             .stDataFrame {
                 border: 1px solid #D1D8DD;
