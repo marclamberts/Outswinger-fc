@@ -99,7 +99,7 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     ax.text(0.75, -0.05, "xG Size", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
     ax.scatter([0.72, 0.75, 0.78], [-0.12, -0.12, -0.12], s=[0.1*500, 0.4*500, 0.7*500], color=colors['missed'], transform=ax.transAxes, clip_on=False)
     ax.text(0.75, -0.18, "Low → High", transform=ax.transAxes, fontsize=10, color='black', ha='center', va='center')
-    ax.text(0.75, -0.25, "OUTSWINGERFC.COM", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
+    ax.text(0.75, -0.25, "SHE PLOTS FC", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
     return fig, None
 
 def create_player_profile_fig(df, player_name, position_group):

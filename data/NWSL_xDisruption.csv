@@ -1,339 +1,356 @@
 playerName,Team,ActualDisruptions,ExpectedDisruptions
-A. Anderson,Angel City,0,2.0332
-A. Berger,Gotham FC,1,5.6196
-A. Chapman,Houston Dash,18,2.574
+A. Anderson,Angel City,0,2.7209999999999996
+A. Berger,Gotham FC,1,6.2952
+A. Chapman,Houston Dash,21,3.8340000000000005
 A. Cook,Chicago Stars,5,0.19720000000000001
 A. Cook,Kansas City Current,15,0.924
-A. Crnogorčević,Seattle Reign,7,1.3284
+A. Crnogorčević,Seattle Reign,7,1.542
 A. Dahlkemper,Bay,14,8.143
 A. Guzmán,Utah Royals,3,0.07039999999999999
 A. Hatch,Washington Spirit,8,7.637300000000001
-A. James-Turner,Seattle Reign,36,3.1902999999999997
+A. Heilferty,Houston Dash,1,0.0
+A. James-Turner,Seattle Reign,39,3.3914
 A. Kennedy,Angel City,30,19.2395
-A. Kingsbury,Washington Spirit,0,2.945
-A. Lemos,Orlando Pride,29,9.6159
-A. Leon,San Diego Wave,9,5.3759999999999994
+A. Kingsbury,Washington Spirit,0,3.5456000000000003
+A. Lemos,Orlando Pride,34,13.9202
+A. Leon,San Diego Wave,10,7.653800000000001
 A. Loera,Utah Royals,0,0.0092
-A. Malonson,Bay,72,18.5472
-A. McCammon,Seattle Reign,16,0.6104
-A. Moorhouse,Orlando Pride,0,1.5162
-A. Naeher,Chicago Stars,0,0.6392
+A. Malonson,Bay,75,22.9667
+A. McCammon,Seattle Reign,16,0.6355999999999999
+A. Moorhouse,Orlando Pride,1,1.8837
+A. Naeher,Chicago Stars,0,1.3454000000000002
 A. Nagai,Utah Royals,13,0.6102000000000001
 A. Oshoala,Bay,8,2.6062000000000003
-A. Patterson,Houston Dash,58,29.651600000000002
-A. Sanchez,North Carolina Courage,24,14.229500000000002
-A. Schlegel,Chicago Stars,26,20.379600000000003
-A. Sentnor,Kansas City Current,4,0.6020000000000001
+A. Patterson,Houston Dash,77,40.18300000000001
+A. Pfeiffer,Kansas City Current,0,0.0
+A. Sanchez,North Carolina Courage,25,16.4205
+A. Schlegel,Chicago Stars,32,26.527500000000003
+A. Sentnor,Kansas City Current,13,2.3256
 A. Sentnor,Utah Royals,17,12.104000000000001
-A. Smith,Houston Dash,0,0.20579999999999998
-A. Solórzano,Utah Royals,8,1.6957999999999998
-A. Spaanstra,Portland Thorns,4,0.4998
+A. Smith,Houston Dash,0,0.2415
+A. Solórzano,Utah Royals,10,3.9402
+A. Spaanstra,Portland Thorns,4,0.6498
 A. Thompson,Angel City,44,18.786
-A. Watt,Orlando Pride,37,18.119999999999997
-A. Wright,Racing Louisville,35,12.472600000000002
-Aline Gomes,North Carolina Courage,5,1.1032
-Ana Tejada,Utah Royals,30,6.4655000000000005
-Angelina,Orlando Pride,20,14.2142
-Ary Borges,Racing Louisville,38,6.7976
-B. Balcer,Racing Louisville,2,0.044
+A. Watt,Orlando Pride,39,21.506400000000003
+A. Wright,Racing Louisville,40,16.012999999999998
+Aline Gomes,North Carolina Courage,7,2.133
+Ana Tejada,Utah Royals,35,10.857600000000001
+Angelina,Orlando Pride,25,20.5073
+Ary Borges,Racing Louisville,44,12.5129
+B. Balcer,Racing Louisville,2,0.0901
 B. Banda,Orlando Pride,16,24.8738
 B. Bixby,Portland Thorns,0,0.3024
+B. Courtnall,Bay,0,0.0
 B. Courtnall,North Carolina Courage,5,0.048
 B. Feist,Kansas City Current,4,0.15810000000000002
-B. Franklin,Chicago Stars,47,8.099
+B. Franklin,Chicago Stars,58,12.899600000000001
 B. Martinez,Orlando Pride,1,0.0018000000000000002
-B. Mozingo,Utah Royals,23,8.36
+B. Mozingo,Utah Royals,27,9.8778
 B. Olivieri,Houston Dash,42,15.3846
-B. Pinto,North Carolina Courage,8,1.0464
+B. Pinto,North Carolina Courage,9,1.404
 B. Ratcliffe,Washington Spirit,6,1.5504000000000002
-B. St-Georges,Utah Royals,27,9.24
-Bia Zaneratto,Kansas City Current,24,15.322399999999998
-Bruninha,Gotham FC,21,9.7244
+B. St-Georges,Utah Royals,28,12.25
+Bia Zaneratto,Kansas City Current,28,20.6435
+Bruninha,Gotham FC,27,14.5595
 C. Barry,Chicago Stars,2,0.08320000000000001
-C. Bethune,Washington Spirit,20,7.9933000000000005
-C. Biegalski,Chicago Stars,56,15.352
-C. Brown,Washington Spirit,13,2.1186
-C. Conti,Bay,24,9.5604
+C. Bethune,Washington Spirit,24,11.190999999999999
+C. Biegalski,Chicago Stars,71,24.724800000000002
+C. Brown,Washington Spirit,13,2.5134000000000003
+C. Conti,Bay,25,11.34
 C. Curran,Chicago Stars,3,0.16
-C. Dickey,Seattle Reign,0,3.5343000000000004
-C. Dydasco,Bay,64,36.815999999999995
-C. Dyke,Orlando Pride,17,8.6595
+C. Dickey,Seattle Reign,0,5.3592
+C. Dydasco,Bay,72,53.513
+C. Dyke,Orlando Pride,20,10.2336
 C. Emslie,Angel City,13,4.0703000000000005
 C. Hanks,Portland Thorns,23,7.1295
-C. Hutton,Kansas City Current,62,16.058
+C. Hutton,Kansas City Current,79,22.1072
 C. Kizer,Gotham FC,0,0.0448
-C. Kizer,Utah Royals,10,1.4693999999999998
+C. Kizer,Utah Royals,10,1.6481999999999999
 C. Krueger,Washington Spirit,14,5.2242999999999995
-C. Lacasse,Utah Royals,3,0.1274
-C. Laris­ey,Houston Dash,0,0.0128
+C. Lacasse,Utah Royals,9,1.0215
+C. Laris­ey,Houston Dash,2,0.1944
 C. Murphy,North Carolina Courage,0,2.5542
 C. Okwuchukwu,San Diego Wave,1,0.24650000000000002
 C. Onwualu,Chicago Stars,35,4.3937
-C. Paulson,Bay,0,0.0016
-C. Petersen,Racing Louisville,34,16.058
-C. Pickett,Orlando Pride,17,8.7912
-C. Press,Angel City,11,2.2792
+C. Paulson,Bay,0,0.0518
+C. Petersen,Racing Louisville,36,22.0865
+C. Pickett,Orlando Pride,20,10.9224
+C. Press,Angel City,12,2.9750000000000005
 C. Ricketts,Washington Spirit,8,0.20790000000000003
-C. Vine,North Carolina Courage,8,1.4840000000000002
+C. Vine,North Carolina Courage,8,2.773
 C. Westphal,Houston Dash,21,3.4816000000000003
 Casey Phair,Angel City,0,0.0945
-Claudia Zornoza,Utah Royals,47,17.9545
-D. Abiodun,Washington Spirit,1,0.0068000000000000005
-D. Bailey,Bay,26,5.855200000000001
-D. Cascarino,San Diego Wave,55,53.840999999999994
-D. Castellanos,Portland Thorns,14,7.794500000000001
-D. Colaprico,Houston Dash,61,12.84
-D. Foederer,Utah Royals,33,7.191000000000001
+Claudia Zornoza,Utah Royals,59,28.9476
+D. Abiodun,Washington Spirit,23,1.0836000000000001
+D. Arias,San Diego Wave,0,0.0015
+D. Bailey,Bay,30,7.0680000000000005
+D. Cascarino,San Diego Wave,60,67.31660000000001
+D. Castellanos,Portland Thorns,14,8.0668
+D. Colaprico,Houston Dash,75,17.7576
+D. Foederer,Utah Royals,37,8.0784
+D. Haračić,San Diego Wave,0,0.009600000000000001
 D. O'Sullivan,North Carolina Courage,99,33.3882
 D. Ordoñez,Houston Dash,1,0.0816
-D. Sheehan,Houston Dash,37,25.080000000000002
-D. Weatherholt,North Carolina Courage,2,0.0868
-Daiane,Portland Thorns,3,0.011600000000000001
-Debinha,Kansas City Current,19,9.447000000000001
-Dudinha,San Diego Wave,0,0.0076
-E. Adames,Seattle Reign,9,6.1132
+D. Sheehan,Houston Dash,40,32.894400000000005
+D. Weatherholt,North Carolina Courage,9,0.8295
+Daiane,Portland Thorns,3,0.014000000000000002
+Debinha,Kansas City Current,25,14.203300000000002
+Dudinha,San Diego Wave,4,0.5032
+E. Adames,Seattle Reign,9,6.760000000000001
 E. Allen,Bay,0,0.0
-E. Ball,Kansas City Current,11,3.6659999999999995
-E. Duljan,Houston Dash,16,4.9532
+E. Ball,Kansas City Current,15,6.0676000000000005
+E. Duljan,Houston Dash,16,5.7456000000000005
 E. Favour,San Diego Wave,5,0.07420000000000002
-E. Hase,Racing Louisville,39,13.0849
-E. Jean,Racing Louisville,15,5.3774999999999995
-E. Mason,Seattle Reign,17,0.892
+E. Hase,Racing Louisville,45,19.9353
+E. Jean,Racing Louisville,20,8.1052
+E. Mason,Seattle Reign,17,0.9
 E. Menges,Bay,4,0.5184000000000001
-E. Morgan,Washington Spirit,38,18.592000000000002
+E. Morgan,Washington Spirit,45,26.878500000000003
 E. Pikkujämsä,Racing Louisville,0,0.0
-E. Sams,Orlando Pride,51,28.009800000000002
-E. Sears,Racing Louisville,26,28.983600000000003
-E. Shores,Angel City,19,0.7874
-E. Sonnett,Gotham FC,29,21.256999999999998
+E. Sams,Orlando Pride,57,36.2516
+E. Sears,Racing Louisville,28,38.6715
+E. Shores,Angel City,35,4.578
+E. Sonnett,Gotham FC,31,24.4416
 E. Stevens,Gotham FC,14,4.648000000000001
-E. Wheeler,Kansas City Current,24,10.607400000000002
-Esther González,Gotham FC,15,15.3657
+E. Wheeler,Kansas City Current,25,13.0572
+Esther González,Gotham FC,18,18.630000000000003
 F. Rauch,North Carolina Courage,18,4.717
 Flora Marta Lacho,Kansas City Current,3,0.592
-G. Carle,Washington Spirit,55,28.942500000000003
-G. Chanda,Orlando Pride,2,0.032400000000000005
-G. Corley,San Diego Wave,20,16.419
-G. Monday,Washington Spirit,20,13.4846
-G. Robinson,Kansas City Current,0,0.0
-G. Thompson,Angel City,44,13.416000000000002
-Gabi Portilho,Gotham FC,24,10.760000000000002
-Geyse,Gotham FC,17,10.673100000000002
-H. Anderson,Chicago Stars,12,0.915
-H. Bebar,Bay,29,4.924200000000001
-H. Betfort,North Carolina Courage,5,1.9028000000000003
+G. Carle,Washington Spirit,63,38.1508
+G. Chanda,Orlando Pride,2,0.0637
+G. Corley,San Diego Wave,22,21.436799999999998
+G. Monday,Washington Spirit,21,14.7392
+G. Robinson,Kansas City Current,0,0.0196
+G. Thompson,Angel City,53,20.822200000000002
+Gabi Portilho,Gotham FC,26,14.5935
+Geyse,Gotham FC,20,14.0224
+H. Anderson,Chicago Stars,12,1.1116
+H. Bebar,Bay,39,8.1
+H. Betfort,North Carolina Courage,5,2.0264
 H. Glas,Seattle Reign,0,0.0
-H. Hershfelt,Washington Spirit,27,6.087899999999999
-H. Hopkins,Kansas City Current,11,2.8213
+H. Hershfelt,Washington Spirit,34,9.0608
+H. Hopkins,Kansas City Current,14,3.7774
 H. Johnson,Angel City,1,0.019200000000000002
-H. Lundkvist,San Diego Wave,48,47.692800000000005
-H. Mace,Kansas City Current,52,22.4459
+H. Lundkvist,San Diego Wave,64,69.37
+H. MacNab,North Carolina Courage,0,0.0
+H. Mace,Kansas City Current,60,29.4774
 H. Mackiewicz,Chicago Stars,0,0.0
-H. McCutcheon,Orlando Pride,53,15.0007
-H. Seabert,Angel City,0,0.0402
+H. McCutcheon,Orlando Pride,61,23.3285
+H. Seabert,Angel City,1,0.11850000000000001
 H. Stainbrook,Washington Spirit,13,0.414
-H. Sugita,Portland Thorns,77,25.97
-I. Dorsey,Utah Royals,14,3.7968
-I. Obaze,Portland Thorns,35,9.4536
-I. Rodriguez,Kansas City Current,53,29.0088
-J. Anderson,Bay,27,11.6144
+H. Sugita,Portland Thorns,82,30.302
+I. Dorsey,Utah Royals,15,4.738
+I. Obaze,Portland Thorns,36,10.701600000000001
+I. Rodriguez,Kansas City Current,58,40.698
+J. Anderson,Bay,33,18.723
 J. Bike,Chicago Stars,8,1.3688
-J. Bloomer,Racing Louisville,1,1.3046
+J. Bloomer,Racing Louisville,1,2.2878
 J. Brewster,Bay,1,0.004200000000000001
-J. Bugg,Seattle Reign,49,25.125899999999998
-J. Campbell,Houston Dash,0,1.5732
-J. Carter,Gotham FC,37,10.2897
-J. Doyle,Orlando Pride,6,0.6156
+J. Bugg,Seattle Reign,62,34.376999999999995
+J. Campbell,Houston Dash,0,2.282
+J. Carter,Gotham FC,43,13.200800000000001
+J. Doyle,Orlando Pride,7,0.9151999999999999
 J. Dufour,Angel City,8,1.397
-J. Dufour,Portland Thorns,1,0.0048000000000000004
-J. Endō,Angel City,2,0.26
-J. Fishlock,Seattle Reign,16,1.968
-J. Fleming,Portland Thorns,36,12.580000000000002
+J. Dufour,Portland Thorns,4,0.09
+J. Endō,Angel City,6,0.5904
+J. Fishlock,Seattle Reign,21,3.2417000000000002
+J. Fleming,Portland Thorns,48,17.1666
 J. Fusco,San Diego Wave,3,0.002
 J. Gaynor,Chicago Stars,4,0.09
-J. Grosso,Chicago Stars,40,14.094
-J. Hasbo,Gotham FC,7,0.055200000000000006
-J. Howell,Gotham FC,70,28.885
-J. Huitema,Seattle Reign,15,7.1370000000000005
-J. Joseph,Chicago Stars,26,10.979400000000002
-J. Perry,Portland Thorns,17,7.925700000000001
-J. Shaw,North Carolina Courage,31,11.088
-J. Shepherd,Bay,3,0.21600000000000003
-J. Silkowitz,Bay,0,1.9775000000000003
-J. Sonis,Racing Louisville,50,23.0656
-J. Thomsen,Utah Royals,42,23.183500000000002
+J. Grosso,Chicago Stars,42,18.921100000000003
+J. Hasbo,Gotham FC,8,0.1016
+J. Howell,Gotham FC,80,38.8096
+J. Huitema,Seattle Reign,16,10.402000000000001
+J. Joseph,Chicago Stars,32,18.9924
+J. Ovalle,Orlando Pride,7,0.6327
+J. Perry,Portland Thorns,20,10.9901
+J. Shaw,Gotham FC,4,0.0442
+J. Shaw,North Carolina Courage,39,13.860000000000003
+J. Shepherd,Bay,5,0.36540000000000006
+J. Silkowitz,Bay,0,3.0442
+J. Sonis,Racing Louisville,65,37.10080000000001
+J. Thomsen,Utah Royals,48,34.6581
 Jereko,Kansas City Current,0,0.0
 Ji So-Yun,Seattle Reign,18,6.0895
 Jéssica Silva,Gotham FC,2,0.1452
-K. Abello,Orlando Pride,36,15.236600000000001
-K. Ascanio,San Diego Wave,29,7.8706000000000005
-K. Carusa,San Diego Wave,7,0.5066
-K. Dali,San Diego Wave,35,41.358
-K. Del Fava,Utah Royals,42,21.476000000000003
+K. Abello,Orlando Pride,41,18.9696
+K. Ascanio,San Diego Wave,33,11.026200000000001
+K. Carusa,San Diego Wave,9,0.8865000000000001
+K. Dali,San Diego Wave,42,53.5432
+K. Del Fava,Utah Royals,43,27.3024
 K. Dulaney,Washington Spirit,0,0.008
-K. Duran,Gotham FC,2,0.010499999999999999
-K. Fischer,Racing Louisville,17,13.065000000000001
-K. Fuller,Angel City,30,15.372900000000001
+K. Duran,Gotham FC,2,0.012
+K. Fischer,Racing Louisville,20,14.1493
+K. Fuller,Angel City,38,23.868000000000002
 K. Harper,Gotham FC,5,0.9016
-K. Hendrich,Chicago Stars,6,0.406
-K. Hubly,Bay,22,1.4541
-K. Kurtz,North Carolina Courage,45,19.4936
-K. Lema,Bay,22,6.969600000000002
-K. Lind,Houston Dash,22,11.225399999999999
+K. Hendrich,Chicago Stars,9,1.2096
+K. Hubly,Bay,25,2.187
+K. Kurtz,North Carolina Courage,52,31.160000000000004
+K. Lema,Bay,24,10.9956
+K. Lind,Houston Dash,23,12.0636
 K. Lund,Racing Louisville,0,0.24559999999999998
-K. McNabb,San Diego Wave,22,11.8655
+K. McNabb,San Diego Wave,22,14.2203
 K. Nadaner,Orlando Pride,46,23.117600000000003
-K. O'Kane,Racing Louisville,29,4.157400000000001
-K. Pickett,Bay,28,8.378
+K. O'Kane,Racing Louisville,40,6.864
+K. Pickett,Bay,28,8.9298
 K. Ream,Utah Royals,7,0.20580000000000004
-K. Riehl,Utah Royals,6,1.8699999999999999
-K. Sharples,Kansas City Current,29,16.6784
-K. Sheridan,San Diego Wave,1,5.812399999999999
-K. Stengel,Gotham FC,10,1.11
-K. Sylla,Washington Spirit,5,0.1397
-K. Torpey,Portland Thorns,24,8.9667
-K. Wesley,San Diego Wave,11,12.371500000000001
-K. Wiesner,Washington Spirit,15,0.5901000000000001
+K. Riehl,Utah Royals,7,3.9712000000000005
+K. Sharples,Kansas City Current,37,22.410999999999998
+K. Sheridan,San Diego Wave,1,6.7304
+K. Stengel,Gotham FC,12,1.56
+K. Sylla,Washington Spirit,7,0.21280000000000002
+K. Torpey,Portland Thorns,29,10.867500000000001
+K. Wesley,San Diego Wave,16,21.9101
+K. Wiesner,Washington Spirit,20,1.7157
 K. Zelem,Angel City,25,6.602300000000001
-K. van Zanten,Houston Dash,31,6.494400000000001
-L. Barnes,Seattle Reign,23,6.596500000000001
+K. van Zanten,Houston Dash,41,11.978399999999999
+L. Barnes,Seattle Reign,29,9.690000000000001
 L. Biyendolo,Seattle Reign,11,5.2884
-L. Fazer,San Diego Wave,1,0.1776
+L. Boattin,Houston Dash,1,0.0663
+L. Fazer,San Diego Wave,2,0.28500000000000003
 L. Flynn,Utah Royals,19,2.3782
 L. Ivory,Kansas City Current,0,0.0
-L. LaBonta,Kansas City Current,56,14.3148
-L. Milliet,Racing Louisville,37,15.995000000000001
-L. Nesbeth,Chicago Stars,6,0.161
-L. Reale,Gotham FC,68,37.076
-L. Santos,Washington Spirit,25,5.9072000000000005
-Lorena,Kansas City Current,0,1.9401
-Ludmila,Chicago Stars,27,18.1488
-M. A. Vignola,Angel City,56,21.780700000000003
-M. Alidou,Portland Thorns,11,2.7600000000000002
-M. Alozie,Houston Dash,7,2.1825
-M. Arnold,Portland Thorns,0,1.1540000000000001
+L. LaBonta,Kansas City Current,65,18.3533
+L. Milliet,Racing Louisville,38,16.589599999999997
+L. Nabet,Angel City,0,0.0
+L. Nesbeth,Chicago Stars,6,0.2048
+L. Reale,Gotham FC,82,43.1753
+L. Santos,Washington Spirit,28,10.7597
+Lorena,Kansas City Current,0,2.3327999999999998
+Luana,Orlando Pride,2,0.009
+Ludmila,Chicago Stars,30,24.670800000000003
+M. A. Vignola,Angel City,65,26.9235
+M. Alidou,Portland Thorns,14,3.8095
+M. Alozie,Houston Dash,10,3.0616000000000003
+M. Arnold,Portland Thorns,0,2.4928
 M. Barcenas,San Diego Wave,19,4.136
-M. Bell,North Carolina Courage,36,15.247800000000002
-M. Berkely,North Carolina Courage,22,8.395900000000001
+M. Bell,North Carolina Courage,38,19.396800000000002
+M. Berkely,Houston Dash,2,0.016
+M. Berkely,North Carolina Courage,23,9.6801
 M. Boade,Washington Spirit,5,0.2821
-M. Bright,Houston Dash,17,6.5646
+M. Bright,Houston Dash,20,9.982000000000001
 M. Cluff,Utah Royals,5,0.1638
-M. Cooper,Kansas City Current,21,9.4866
-M. Crone,Orlando Pride,0,0.0021999999999999997
-M. Curry,Seattle Reign,78,28.726100000000002
-M. Dahlien,Seattle Reign,37,14.578
+M. Cooper,Kansas City Current,24,13.455000000000002
+M. Crone,Orlando Pride,0,0.009600000000000001
+M. Curry,Seattle Reign,91,39.4887
+M. Dahlien,Seattle Reign,40,17.3
 M. Detrizio,Washington Spirit,1,0.003
-M. DiGrande,Racing Louisville,16,2.059
-M. Fishel,Seattle Reign,1,0.036
+M. DiGrande,Racing Louisville,18,2.72
+M. Fishel,Seattle Reign,4,0.2332
 M. Fraser,Utah Royals,6,0.39039999999999997
-M. Freeman,Gotham FC,13,6.777300000000001
+M. Freeman,Gotham FC,14,6.916799999999999
 M. Gautrat,Orlando Pride,19,5.6648000000000005
-M. Graham,Houston Dash,41,12.845100000000002
-M. Hammond,Angel City,26,5.3326
-M. Hayashi,Chicago Stars,21,2.1546
-M. Hodge,Angel City,32,3.0566
-M. Johnson,Chicago Stars,7,0.4064
+M. Graham,Houston Dash,45,14.2296
+M. Hammond,Angel City,33,8.218599999999999
+M. Hayashi,Chicago Stars,25,3.5423999999999998
+M. Hodge,Angel City,33,4.695600000000001
+M. Johnson,Chicago Stars,7,0.4096
+M. Jordan,North Carolina Courage,0,0.1086
 M. Justus,Utah Royals,0,0.015
 M. Long,Kansas City Current,2,0.2231
-M. Matsukubo,North Carolina Courage,30,21.6621
-M. McGlynn,Utah Royals,2,6.216
-M. McKenzie,Portland Thorns,16,4.0744
+M. Matsukubo,North Carolina Courage,38,31.513600000000004
+M. McGlynn,Utah Royals,3,8.850800000000001
+M. McKenzie,Portland Thorns,19,6.9664
 M. Mercado,Seattle Reign,9,1.6320000000000001
-M. Moreau,Bay,5,0.3912
-M. Moriya,Angel City,40,12.388
-M. Morris,Racing Louisville,3,0.05850000000000001
+M. Moreau,Bay,7,1.2753
+M. Moriya,Angel City,45,18.854400000000002
+M. Morris,Racing Louisville,5,0.264
 M. Morris,Washington Spirit,16,7.236
-M. Pogarch,Utah Royals,21,3.2207999999999997
-M. Purce,Gotham FC,18,4.329
-M. Reid,Angel City,13,5.7236
-M. Robbe,San Diego Wave,2,0.9823000000000001
-M. Speck,North Carolina Courage,6,0.6303
+M. Pogarch,Utah Royals,24,3.6649000000000003
+M. Purce,Gotham FC,22,6.672499999999999
+M. Reid,Angel City,18,7.895999999999999
+M. Robbe,San Diego Wave,4,1.5281
+M. Speck,North Carolina Courage,7,0.7700000000000001
 M. Sánchez,San Diego Wave,11,3.4800000000000004
-M. Tanaka,Utah Royals,30,10.572600000000001
+M. Tanaka,Utah Royals,35,17.8848
 M. Whitham,Gotham FC,0,0.09540000000000001
-Maiara Niehues,Angel City,4,0.0728
-Maitane López,Chicago Stars,59,7.792399999999999
-Marta,Orlando Pride,37,16.7817
-N. Jacobs,Houston Dash,47,17.6976
+Maiara Niehues,Angel City,8,0.8955
+Maitane López,Chicago Stars,68,11.017
+Marta,Orlando Pride,44,28.221000000000004
+N. Jacobs,Houston Dash,49,18.458499999999997
+N. Jacobs,North Carolina Courage,1,0.0
 N. Kuikka,Chicago Stars,13,1.8414000000000001
+N. Martin,Angel City,6,0.11989999999999998
 N. Martin,Gotham FC,30,11.985600000000002
-N. Miura,Washington Spirit,50,16.368000000000002
-N. Mondésir,Seattle Reign,9,4.173
-N. Prince,Kansas City Current,27,4.300800000000001
-N. Staude,North Carolina Courage,21,2.7097
-Nuria Rábano,Utah Royals,79,12.307400000000001
-Nádia Gomes,Chicago Stars,12,1.508
-O. Moultrie,Portland Thorns,42,32.5312
+N. Miura,Washington Spirit,55,18.0768
+N. Mondésir,Seattle Reign,17,6.615
+N. Prince,Kansas City Current,34,6.909000000000001
+N. Staude,North Carolina Courage,21,2.9835000000000003
+Nuria Rábano,Utah Royals,96,20.624100000000002
+Nádia Gomes,Chicago Stars,14,1.8915
+O. Moultrie,Portland Thorns,49,44.7764
 O. Van der Jagt,Seattle Reign,0,0.0038
-Oihane Hernández,Orlando Pride,22,6.2315
+Oihane Hernández,Orlando Pride,27,11.011
 P. Chilufya,Orlando Pride,8,4.984800000000001
 P. Hocking,Bay,19,3.7548000000000004
-P. Linnehan,North Carolina Courage,1,0.008
+P. Linnehan,North Carolina Courage,4,0.29900000000000004
 P. Linnehan,Portland Thorns,11,3.5152
-P. McClernon,Seattle Reign,47,19.678800000000003
-P. Metayer,Washington Spirit,7,0.198
-P. Monaghan,Utah Royals,13,1.6181999999999999
-P. Morroni,San Diego Wave,65,29.740699999999997
-P. Nielsen,Houston Dash,42,22.9768
-P. Tordin,Portland Thorns,5,3.4402
+P. McClernon,Seattle Reign,58,27.2734
+P. Metayer,Washington Spirit,11,1.8113
+P. Monaghan,Utah Royals,16,4.86
+P. Morroni,San Diego Wave,73,37.650600000000004
+P. Nielsen,Houston Dash,52,29.761599999999998
+P. Tordin,Portland Thorns,8,5.5304
 Q. McMahon,San Diego Wave,1,0.014499999999999999
 R. Bachmann,Houston Dash,1,0.010499999999999999
 R. Bernal,Washington Spirit,56,18.5912
 R. Campbell,Gotham FC,0,0.0
-R. Gareis,Houston Dash,10,6.6884999999999994
-R. Hill,Bay,27,10.501100000000001
-R. Jackson,North Carolina Courage,49,19.088
-R. Kouassi,Washington Spirit,19,12.0736
-R. Kundananji,Bay,36,33.4616
-R. Lavelle,Gotham FC,7,3.1003999999999996
-R. Reyes,Portland Thorns,55,24.969
-R. Rodríguez,Kansas City Current,31,4.008
-R. Tiernan,Angel City,21,15.035999999999998
-R. Turner,Portland Thorns,10,9.581000000000001
-R. Williams,North Carolina Courage,50,57.924800000000005
-Rafaelle,Orlando Pride,7,0.7536
-S. Cantore,Washington Spirit,3,0.639
-S. Cary,Chicago Stars,3,0.027000000000000003
-S. Charley,Orlando Pride,1,0.1026
-S. Coffey,Portland Thorns,64,26.840000000000003
+R. Gareis,Houston Dash,10,6.9015
+R. Hill,Bay,32,16.8826
+R. Jackson,North Carolina Courage,57,26.7973
+R. Kouassi,Washington Spirit,19,14.821100000000001
+R. Kundananji,Bay,44,47.843399999999995
+R. Lavelle,Gotham FC,10,5.3218000000000005
+R. Reyes,Portland Thorns,64,32.9581
+R. Rodríguez,Kansas City Current,37,6.17
+R. Tiernan,Angel City,24,21.6381
+R. Turner,Portland Thorns,17,14.8857
+R. Williams,North Carolina Courage,57,78.0192
+Rafaelle,Orlando Pride,12,1.6649999999999998
+S. Cantore,Washington Spirit,4,2.1497
+S. Cary,Chicago Stars,5,0.08399999999999999
+S. Charley,Orlando Pride,1,0.24000000000000005
+S. Coffey,Portland Thorns,74,35.180400000000006
+S. Collins,Bay,10,0.1809
 S. Cook,Gotham FC,5,0.2415
-S. DeMelo,Racing Louisville,49,28.2315
-S. Gorden,Angel City,30,13.662
+S. DeMelo,Racing Louisville,50,35.9242
+S. Doorsoun,Angel City,5,0.45120000000000005
+S. Gorden,Angel City,35,20.050800000000002
 S. Groom,Chicago Stars,20,5.7408
-S. Hiatt,Portland Thorns,17,10.199
+S. Hiatt,Portland Thorns,20,11.7018
 S. Hirst,Portland Thorns,0,0.0049
 S. Holmes,Seattle Reign,22,8.4
-S. Huerta,Seattle Reign,12,3.5149999999999997
+S. Huerta,Seattle Reign,18,6.5378
 S. Jackson,Orlando Pride,4,0.5536000000000001
 S. Jones,Utah Royals,0,0.0018000000000000002
-S. Jónsdóttir,Angel City,11,2.1111
+S. Jónsdóttir,Angel City,26,10.5056
 S. King,Angel City,16,3.9597
-S. Koyama,North Carolina Courage,18,4.5507
+S. Koyama,North Carolina Courage,23,7.6339
 S. MacIver,Washington Spirit,0,0.0046
 S. Mattice,Angel City,0,0.045
-S. McCaskill,San Diego Wave,33,28.027499999999996
-S. Menti,Seattle Reign,21,4.1877
-S. Meza,Seattle Reign,95,16.7762
+S. McCaskill,San Diego Wave,36,37.908
+S. Menti,Seattle Reign,25,6.6
+S. Meza,Seattle Reign,118,24.2188
 S. Nyamekye,Gotham FC,1,0.0115
-S. Puntigam,Houston Dash,5,0.4727
-S. Schmidt,Houston Dash,13,0.8385
-S. Schupansky,Gotham FC,20,13.505099999999999
-S. Staab,Chicago Stars,24,20.4048
-S. Weber,Racing Louisville,20,6.526999999999999
-S. Yates,Orlando Pride,10,2.3625
-T. Armstrong,San Diego Wave,27,15.282300000000001
-T. Boade,Bay,10,1.8228000000000002
-T. Chawinga,Kansas City Current,40,18.8062
+S. Puntigam,Houston Dash,8,1.1214
+S. Schmidt,Houston Dash,13,0.9324
+S. Schupansky,Gotham FC,21,14.6096
+S. Staab,Chicago Stars,26,27.700499999999998
+S. Weber,Racing Louisville,23,9.9484
+S. Yates,Orlando Pride,11,2.754
+T. Armstrong,San Diego Wave,31,24.3794
+T. Boade,Bay,11,4.1132
+T. Chawinga,Kansas City Current,43,21.973
 T. Davidson,Gotham FC,7,0.3008
-T. Flint,Racing Louisville,124,30.387999999999998
-T. Huff,Bay,40,21.5518
-T. Lussi,North Carolina Courage,31,7.8116
-T. Malham,Chicago Stars,68,27.501000000000005
-T. McKeown,Washington Spirit,63,30.517500000000002
-T. Rodman,Washington Spirit,10,3.1525000000000003
-T. Torres,Gotham FC,22,3.6139
+T. Flint,Racing Louisville,138,39.7296
+T. Huff,Bay,48,28.864800000000002
+T. Lussi,North Carolina Courage,38,12.261199999999999
+T. Malham,Chicago Stars,81,38.3514
+T. McKeown,Washington Spirit,74,41.009699999999995
+T. Rodman,Washington Spirit,12,7.7463
+T. Torres,Gotham FC,22,3.8924999999999996
 U. Kanu,Racing Louisville,0,0.1886
 V. DiBernardo,Kansas City Current,29,9.344
 V. Villacorta,Orlando Pride,5,0.0365
-Y. Ryan,Houston Dash,24,32.6032
-Z. Chavoshi,Orlando Pride,8,0.434
+Y. Ryan,Houston Dash,28,47.644000000000005
+Z. Chavoshi,Orlando Pride,11,1.0208
