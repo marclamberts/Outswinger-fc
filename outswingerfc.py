@@ -27,7 +27,7 @@ warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 
 # --- Custom Styling ---
 def inject_custom_css():
-    """Injects custom CSS to style the Streamlit app."""
+    """Injects custom CSS to style the Streamlit app with a softer, lighter theme."""
     st.markdown("""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
@@ -37,52 +37,57 @@ def inject_custom_css():
                 font-family: 'Poppins', sans-serif;
             }
             .stApp {
-                background-color: #0F1116; /* Dark background */
+                background-color: #F8F9FA; /* Light background */
             }
             h1, h2, h3 {
-                color: #FFC107; /* Gold accent for headers */
+                color: #5DADE2; /* Soft blue for headers */
             }
             .stMarkdown, p, .st-bk, label {
-                color: #FAFAFA; /* Off-white for text */
+                color: #34495E; /* Darker grey for text */
             }
             
             /* --- Buttons --- */
             .stButton > button {
                 border-radius: 20px;
-                border: 2px solid #FFC107;
+                border: 2px solid #EC7063; /* Soft pink/red border */
                 background-color: transparent;
-                color: #FFC107;
+                color: #EC7063;
                 padding: 10px 25px;
                 font-weight: 600;
                 transition: all 0.3s ease-in-out;
             }
             .stButton > button:hover {
-                background-color: #FFC107;
-                color: #0F1116;
+                background-color: #EC7063; /* Soft pink/red hover */
+                color: #FFFFFF; /* White text on hover */
                 transform: scale(1.05);
-                box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+                box-shadow: 0 0 15px rgba(236, 112, 99, 0.4);
             }
             .stButton > button[kind="primary"] {
-                background-color: #FFC107;
-                color: #0F1116;
-                border-color: #FFC107;
+                background-color: #5DADE2; /* Soft blue primary button */
+                color: #FFFFFF;
+                border-color: #5DADE2;
+            }
+            .stButton > button[kind="primary"]:hover {
+                background-color: #85C1E9; /* Lighter blue on hover for primary */
+                border-color: #85C1E9;
+                color: #FFFFFF;
             }
 
             /* --- Widgets --- */
             .stSelectbox div[data-baseweb="select"] > div {
-                background-color: #1A1C24;
+                background-color: #FFFFFF;
                 border-radius: 10px;
-                border: 1px solid #4A4A4A;
-                color: #FAFAFA;
+                border: 1px solid #D1D8DD;
+                color: #34495E;
             }
             .stSlider [data-baseweb="slider"] {
-                color: #FFC107;
+                color: #5DADE2; /* Soft blue for slider */
             }
             .stTextInput > div > div > input, .stTextArea > div > textarea {
-                background-color: #1A1C24;
+                background-color: #FFFFFF;
                 border-radius: 10px;
-                border: 1px solid #4A4A4A;
-                color: #FAFAFA;
+                border: 1px solid #D1D8DD;
+                color: #34495E;
             }
 
             /* --- Layout & Containers --- */
@@ -91,7 +96,7 @@ def inject_custom_css():
                 padding-bottom: 3rem;
             }
             div[data-testid="stExpander"] {
-                background-color: #1A1C24;
+                background-color: #E8F6F9; /* Very light blue for expander */
                 border: none;
                 border-radius: 10px;
                 padding: 10px;
@@ -99,20 +104,20 @@ def inject_custom_css():
             div[data-testid="stExpander"] > details > summary {
                 font-size: 1.1rem;
                 font-weight: 600;
-                color: #FFC107;
+                color: #5DADE2; /* Soft blue for expander summary */
             }
 
             /* --- Dataframes --- */
             .stDataFrame {
-                border: 1px solid #4A4A4A;
+                border: 1px solid #D1D8DD;
                 border-radius: 10px;
             }
             .stDataFrame > div > div > .data-grid-container > .data-grid {
-                 background-color: #1A1C24;
+                 background-color: #FFFFFF;
             }
             .stDataFrame .data-grid-header {
-                background-color: #0F1116;
-                color: #FFC107;
+                background-color: #E8F6F9; /* Very light blue for header */
+                color: #34495E;
             }
 
         </style>
@@ -164,21 +169,24 @@ def calculate_derived_metrics(df):
     return df
 
 def create_detailed_shot_map(df, title_text="Corner Shots"):
-    """Creates a detailed shot map for corners using mplsoccer."""
+    """Creates a detailed shot map for corners using mplsoccer with a light theme."""
     total_shots = df.shape[0]
     if total_shots == 0: return None, "No shots to plot."
     
-    # --- Style Colors ---
-    BG_COLOR = "#0F1116"
-    TEXT_COLOR = "#FAFAFA"
-    PRIMARY_ACCENT = "#FFC107" # Gold
-    SECONDARY_ACCENT = "#bc5090" # Retaining original goal color for contrast
+    # --- Style Colors (Light Theme) ---
+    BG_COLOR = "#F8F9FA"  # Light background
+    PITCH_COLOR = "#FFFFFF" # White pitch
+    TEXT_COLOR = "#34495E" # Darker grey for text
+    PRIMARY_ACCENT = "#EC7063" # Soft pink/red
+    SECONDARY_ACCENT = "#5DADE2" # Soft blue
+    MISS_COLOR = "#85C1E9" # Lighter blue for miss
+    GOAL_COLOR = "#EC7063" # Soft pink/red for goal
 
     total_goals, total_xg = int(df['isGoal'].sum()), df['xG'].sum()
     xg_per_shot = total_xg / total_shots if total_shots > 0 else 0
-    colors = {"missed": "#0077b6", "goal": SECONDARY_ACCENT} # Blue for miss, pink/purple for goal
+    colors = {"missed": MISS_COLOR, "goal": GOAL_COLOR}
 
-    pitch = VerticalPitch(pitch_type='opta', pitch_color=BG_COLOR, line_color='#A9A9A9', half=False, line_zorder=2, linewidth=0.5)
+    pitch = VerticalPitch(pitch_type='opta', pitch_color=PITCH_COLOR, line_color='#A9A9A9', half=False, line_zorder=2, linewidth=0.5)
     fig, ax = pitch.draw(figsize=(10, 7))
     fig.set_facecolor(BG_COLOR)
     
@@ -186,7 +194,7 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     for i in range(len(df['x'])):
         row, color = df.iloc[i], colors["goal"] if df.iloc[i]['isGoal'] else colors["missed"]
         size = row['xG'] * 500
-        ax.scatter(row['y'], row['x'], color=color, s=size, alpha=0.8, zorder=3, ec=BG_COLOR) # Added edge color
+        ax.scatter(row['y'], row['x'], color=color, s=size, alpha=0.8, zorder=3, ec=TEXT_COLOR) # Added darker edge color
         
     ax.text(50, 108, title_text, fontsize=24, weight='bold', color=TEXT_COLOR, ha='center', va='top')
     ax.text(50, 104, "Shot Map from Corners", fontsize=12, style='italic', color=TEXT_COLOR, ha='center', va='top')
@@ -211,7 +219,7 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     return fig, None
 
 def create_player_profile_fig(df, player_name, position_group):
-    """Generates a player profile visualization and returns the matplotlib figure."""
+    """Generates a player profile visualization with a light theme."""
     df.rename(columns={"Nationality": "Passport country"}, inplace=True)
     if position_group == 'Centre-back':
         positions, categories, roles = ['CB', 'RCB', 'LCB'], {"Security": ["Accurate passes, %", "Back passes per 90", "Accurate back passes, %", "Lateral passes per 90", "Accurate lateral passes, %"], "Progressive Passing": ["Progressive passes per 90", "Accurate progressive passes, %", "Forward passes per 90", "Accurate forward passes, %", "Passes to final third per 90", "Accurate passes to final third, %"], "Ball Carrying": ["Progressive runs per 90", "Dribbles per 90", "Successful dribbles, %", "Accelerations per 90"], "Creativity": ["Key passes per 90", "Shot assists per 90", "xA per 90", "Smart passes per 90", "Accurate smart passes, %"], "Proactive Defending": ["Interceptions per 90", "PAdj Interceptions", "Sliding tackles per 90", "PAdj Sliding tackles"], "Duelling": ["Duels per 90", "Duels won, %", "Aerial duels per 90", "Aerial duels won, %"], "Box Defending": ["Shots blocked per 90"], "Sweeping": []}, {"Ball Player": ["Progressive Passing", "Security"], "Libero": ["Progressive Passing", "Ball Carrying", "Creativity"], "Wide Creator": ["Creativity", "Ball Carrying"], "Aggressor": ["Proactive Defending", "Duelling"], "Physical Dominator": ["Duelling", "Box Defending"], "Box Defender": ["Box Defending", "Duelling"]}
@@ -250,12 +258,13 @@ def create_player_profile_fig(df, player_name, position_group):
     except IndexError:
         return None, f"Player '{player_name}' not found in the {position_group} dataset."
 
-    # --- Style Colors ---
-    BG_COLOR = "#1A1C24" # A slightly lighter dark for the card
-    TEXT_COLOR = "#FAFAFA"
-    PRIMARY_ACCENT = "#FFC107" # Gold
-    SECONDARY_ACCENT = "#00BFFF" # Deep Sky Blue for rating
-    SIMILAR_BG = "#008080" # Teal for similar players
+    # --- Style Colors (Light Theme) ---
+    BG_COLOR = "#F8F9FA"  # Light background
+    CARD_BG_COLOR = "#FFFFFF" # White card background
+    TEXT_COLOR = "#34495E" # Darker grey for text
+    PRIMARY_ACCENT = "#EC7063" # Soft pink/red
+    SECONDARY_ACCENT = "#5DADE2" # Soft blue for rating
+    SIMILAR_BG = "#AED6F1" # Lighter blue for similar players
     
     age, pos, team = player_row.get("Age", "N/A"), player_row.get("Position", "N/A"), player_row.get("Team", "N/A")
     nation, minutes = player_row.get("Passport country", "N/A"), player_row.get("Minutes played", 0)
@@ -287,27 +296,27 @@ def create_player_profile_fig(df, player_name, position_group):
     for i, (role, score) in enumerate(sorted_role_scores):
         fig.text(x0, y0 - i*0.045, role, fontsize=10, ha='left', color=TEXT_COLOR)
         for j in range(10):
-            color = PRIMARY_ACCENT if j < round(score/10) else "#333333"
+            color = PRIMARY_ACCENT if j < round(score/10) else "#D1D8DD" # Grey for inactive score
             rect = plt.Rectangle((x0+0.22 + j*0.022, y0 - i*0.045 - 0.005), box_size, box_size, transform=fig.transFigure, facecolor=color, edgecolor="black", lw=0.3)
             fig.add_artist(rect)
             
     if not pd.isna(avg_rating):
         rect = plt.Rectangle((0.33, 0.80), 0.10, 0.08, transform=fig.transFigure, facecolor=SECONDARY_ACCENT, edgecolor=TEXT_COLOR, lw=1)
         fig.add_artist(rect)
-        fig.text(0.335, 0.84, "Rating:", fontsize=10, weight="bold", ha='left', color='#0F1116')
-        fig.text(0.38, 0.82, f"{avg_rating:.2f}", fontsize=12, weight="bold", ha='center', color='#0F1116')
+        fig.text(0.335, 0.84, "Rating:", fontsize=10, weight="bold", ha='left', color='#FFFFFF') # White text on blue
+        fig.text(0.38, 0.82, f"{avg_rating:.2f}", fontsize=12, weight="bold", ha='center', color='#FFFFFF') # White text on blue
         
     for i, (role, score) in enumerate(top_roles):
         tile_x = 0.05 + i * (0.18 + 0.02)
         rect = plt.Rectangle((tile_x, 0.60), 0.18, 0.08, transform=fig.transFigure, facecolor=PRIMARY_ACCENT, edgecolor=TEXT_COLOR, lw=1)
         fig.add_artist(rect)
-        fig.text(tile_x + 0.02, 0.64, role, fontsize=11, weight="bold", ha='left', va='center', color='#0F1116')
-        fig.text(tile_x + 0.16, 0.64, f"{score:.0f}", fontsize=13, weight="bold", ha='right', va='center', color='#0F1116')
+        fig.text(tile_x + 0.02, 0.64, role, fontsize=11, weight="bold", ha='left', va='center', color='#FFFFFF') # White text on pink/red
+        fig.text(tile_x + 0.16, 0.64, f"{score:.0f}", fontsize=13, weight="bold", ha='right', va='center', color='#FFFFFF') # White text on pink/red
         
     ax_bar = fig.add_axes([0.05, 0.20, 0.9, 0.35])
-    ax_bar.set_facecolor(BG_COLOR)
+    ax_bar.set_facecolor(CARD_BG_COLOR) # White background for bar chart
     bar_data = dict(sorted(cat_percentiles.items(), key=lambda x: x[1]))
-    bars = ax_bar.barh(list(bar_data.keys()), list(bar_data.values()), color=PRIMARY_ACCENT, edgecolor=TEXT_COLOR)
+    bars = ax_bar.barh(list(bar_data.keys()), list(bar_data.values()), color=SECONDARY_ACCENT, edgecolor=TEXT_COLOR) # Blue bars
     ax_bar.set_xlim(0, 100)
     ax_bar.set_title("Positional Responsibilities", fontsize=12, weight='bold', loc='left', color=TEXT_COLOR)
     ax_bar.tick_params(axis='y', colors=TEXT_COLOR, labelsize=9)
@@ -316,7 +325,7 @@ def create_player_profile_fig(df, player_name, position_group):
     ax_bar.spines['top'].set_visible(False)
     ax_bar.spines['left'].set_color(TEXT_COLOR)
     ax_bar.spines['bottom'].set_color(TEXT_COLOR)
-    ax_bar.grid(axis='x', linestyle='--', alpha=0.3, color=TEXT_COLOR)
+    ax_bar.grid(axis='x', linestyle='--', alpha=0.3, color='#A9A9A9') # Lighter grid
     
     for bar in bars:
         width = bar.get_width()
@@ -335,7 +344,7 @@ def create_player_profile_fig(df, player_name, position_group):
     return fig, "Profile generated successfully."
 
 def create_match_shot_map_fig(df, file_path):
-    """Generates the xG shot map for a given match."""
+    """Generates the xG shot map for a given match with a light theme."""
     df = df[~((df['timeMin'] >= 120) & (df['Type_of_play'] == 'Penalty'))]
     file_name = os.path.basename(file_path)
     try:
@@ -350,39 +359,51 @@ def create_match_shot_map_fig(df, file_path):
     team1_goals, team2_goals = team1['isGoal'].sum(), team2['isGoal'].sum()
     team1_xg, team2_xg = team1['xG'].sum(), team2['xG'].sum()
 
+    # --- Style Colors (Light Theme) ---
+    BG_COLOR = "#F8F9FA"  # Light background
+    PITCH_COLOR = "#FFFFFF" # White pitch
+    TEXT_COLOR = "#34495E" # Darker grey for text
+    PRIMARY_ACCENT = "#EC7063" # Soft pink/red
+    SECONDARY_ACCENT = "#5DADE2" # Soft blue
+    
+    # Using distinct colors for teams and goals that stand out on a light background
+    team1_color = "#5DADE2" # Soft Blue
+    team2_color = "#EC7063" # Soft Pink/Red
+    goal_color = "#28A745" # Green for goal
+    own_goal_color = "#DC3545" # Red for own goal
+
     pitch = Pitch(pitch_type='opta', pitch_width=68, pitch_length=105, pad_bottom=0.5, pad_top=5,
-                  pitch_color='#0F1116', line_color='white', half=False, goal_type='box', goal_alpha=0.8) # Updated BG
+                  pitch_color=PITCH_COLOR, line_color='#A9A9A9', half=False, goal_type='box', goal_alpha=0.8) 
     fig, ax = plt.subplots(figsize=(16, 10))
     pitch.draw(ax=ax)
-    fig.set_facecolor('#0F1116') # Updated BG
+    fig.set_facecolor(BG_COLOR) 
     ax.invert_xaxis()
 
-    team1_miss, team2_miss, goal_color, own_goal_color = '#7FDBFF', '#FFDC00', '#2ECC40', 'red'
     def is_true(val):
         if isinstance(val, str): return val.strip().lower() in ('1', 'true', 'yes', 'y', 't')
         return bool(val)
 
-    def plot_team_shots(team_df, is_team1, color_miss, color_goal):
+    def plot_team_shots(team_df, is_team1, color_shot, color_goal):
         for _, row in team_df.iterrows():
             x_raw, y_raw = row['x'], row['y']
             x_plot, y_plot = (x_raw, 100 - y_raw) if is_team1 else (100 - x_raw, y_raw)
             og = is_true(row.get('isOwnGoal', False))
             if og:
-                x_plot, y_plot = 100 - x_plot, 100 - y_plot
+                x_plot, y_plot = 100 - x_plot, 100 - y_plot # Flip for own goal
                 color, size, z = own_goal_color, 300, 4
             else:
                 size = row['xG'] * 800
-                color = color_goal if row['isGoal'] else color_miss
+                color = color_goal if row['isGoal'] else color_shot
                 z = 3 if row['isGoal'] else 2
-            ax.scatter(x_plot, y_plot, color=color, s=size, alpha=0.9, zorder=z)
+            ax.scatter(x_plot, y_plot, color=color, s=size, alpha=0.9, zorder=z, edgecolor='black', linewidth=0.5)
 
-    plot_team_shots(team1, True, team1_miss, goal_color)
-    plot_team_shots(team2, False, team2_miss, goal_color)
-    ax.text(80, 90, f"{team1_xg:.2f} xG", color=team1_miss, ha='center', fontsize=30, fontweight='bold')
-    ax.text(20, 90, f"{team2_xg:.2f} xG", color=team2_miss, ha='center', fontsize=30, fontweight='bold')
+    plot_team_shots(team1, True, team1_color, goal_color)
+    plot_team_shots(team2, False, team2_color, goal_color)
+    ax.text(80, 90, f"{team1_xg:.2f} xG", color=team1_color, ha='center', fontsize=30, fontweight='bold')
+    ax.text(20, 90, f"{team2_xg:.2f} xG", color=team2_color, ha='center', fontsize=30, fontweight='bold')
     title = f"{team1_name} vs {team2_name} ({int(team1_goals)} - {int(team2_goals)})"
-    ax.text(0.5, 1.06, title, ha='center', va='bottom', fontsize=25, fontweight='bold', color='white', transform=ax.transAxes)
-    ax.text(0.5, 1.02, "xG Shot Map", ha='center', va='bottom', fontsize=17, color='white', transform=ax.transAxes)
+    ax.text(0.5, 1.06, title, ha='center', va='bottom', fontsize=25, fontweight='bold', color=TEXT_COLOR, transform=ax.transAxes)
+    ax.text(0.5, 1.02, "xG Shot Map", ha='center', va='bottom', fontsize=17, color=TEXT_COLOR, transform=ax.transAxes)
 
     LOGO_DIR = resource_path("data/logos")
     badge1_path, badge2_path = os.path.join(LOGO_DIR, f"{team1_name}.png"), os.path.join(LOGO_DIR, f"{team2_name}.png")
@@ -394,15 +415,15 @@ def create_match_shot_map_fig(df, file_path):
     total_xg = team1_xg + team2_xg
     team1_win_prob = team1_xg / total_xg if total_xg != 0 else 0.5
     team2_win_prob = 1 - team1_win_prob
-    ax.text(0.98, -0.03, "Data via Opta | FBL 2025-2026", ha='right', va='top', fontsize=12, color='white', weight='bold', transform=ax.transAxes)
+    ax.text(0.98, -0.03, "Data via Opta | FBL 2025-2026", ha='right', va='top', fontsize=12, color=TEXT_COLOR, weight='bold', transform=ax.transAxes)
     win_text = f"Win Probability:\n{team1_name}: {team1_win_prob*100:.1f}%\n{team2_name}: {team2_win_prob*100:.1f}%"
-    ax.text(0.02, -0.03, win_text, ha='left', va='top', fontsize=12, color='white', weight='bold', transform=ax.transAxes)
+    ax.text(0.02, -0.03, win_text, ha='left', va='top', fontsize=12, color=TEXT_COLOR, weight='bold', transform=ax.transAxes)
 
     ax.scatter([], [], color=goal_color, s=200, label='Goal')
-    ax.scatter([], [], color=team1_miss, s=200, label=f'{team1_name} Shot')
-    ax.scatter([], [], color=team2_miss, s=200, label=f'{team2_name} Shot')
+    ax.scatter([], [], color=team1_color, s=200, label=f'{team1_name} Shot')
+    ax.scatter([], [], color=team2_color, s=200, label=f'{team2_name} Shot')
     ax.scatter([], [], color=own_goal_color, s=200, label='Own Goal')
-    ax.legend(frameon=False, fontsize=12, loc='lower center', bbox_to_anchor=(0.5, -0.15), labelcolor='white', handletextpad=0.5, ncol=4)
+    ax.legend(frameon=False, fontsize=12, loc='lower center', bbox_to_anchor=(0.5, -0.15), labelcolor=TEXT_COLOR, handletextpad=0.5, ncol=4)
     
     return fig, "Match analysis generated."
 
@@ -416,7 +437,7 @@ def display_landing_page():
         with col1: 
             st.image(resource_path("sheplotsfc2.png"), use_container_width=True)
         with col2: 
-            st.markdown("<h1 style='text-align: center; margin-top: 150px; color: #FAFAFA;'>X</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='text-align: center; margin-top: 150px; color: #34495E;'>X</h1>", unsafe_allow_html=True) # Updated text color
         with col3: 
             st.image(resource_path("Outswinger FC.png"), use_container_width=True)
         
@@ -465,14 +486,14 @@ def display_data_scouting_page(data_config, metric_info):
                     st.subheader("Top Performers Chart")
                     max_val, x_domain = display_df[sort_by_col].max(), [0, display_df[sort_by_col].max()]
                     chart = alt.Chart(display_df).mark_bar(
-                        color="#FFC107", 
+                        color="#5DADE2", # Soft blue for bars
                         cornerRadius=5
                     ).encode(
                         x=alt.X(f'{sort_by_col}:Q', title=selected_metric_key, scale=alt.Scale(domain=x_domain)), 
                         y=alt.Y('Player:N', sort='-x', title="Player")
                     ).interactive().configure_axis(
-                        labelColor='#FAFAFA',
-                        titleColor='#FAFAFA'
+                        labelColor='#34495E', # Darker grey labels
+                        titleColor='#34495E' # Darker grey title
                     ).configure_view(
                         strokeWidth=0
                     )
