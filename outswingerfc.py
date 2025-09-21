@@ -415,7 +415,7 @@ def create_match_shot_map_fig(df, file_path):
     return fig, "Match analysis generated."
 
 
-# --- Page Display Functions ---
+# --- Page Display Functions (Simplified: Filters are now in `main`) ---
 def display_landing_page():
     st.markdown("""<style>.block-container { max-width: 850px; padding-top: 5rem; } div[data-testid="stSidebar"] { display: none; }</style>""", unsafe_allow_html=True)
     
@@ -516,6 +516,7 @@ def display_corners_page(data_config):
     if df_full.empty: st.warning("No corner data could be loaded for the selected league(s)."); return
     df_corners = df_full[df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
     if df_corners.empty: st.warning("No events of type 'FromCorner' found in the dataset."); return
+    
     selected_team = st.session_state.get('corner_team', 'All')
     selected_player = st.session_state.get('corner_player', 'All')
     selected_state = st.session_state.get('corner_gamestate', 'All')
@@ -536,7 +537,7 @@ def display_corners_page(data_config):
         if fig:
             st.pyplot(fig)
             buf, csv = io.BytesIO(), df_filtered.to_csv(index=False).encode('utf-8')
-            fig.savefig(buf, format="png", bbox_inches='tight', facecolor=fig.get_facecolor()) # Use fig facecolor
+            fig.savefig(buf, format="png", bbox_inches='tight', facecolor=fig.get_facecolor())
             dl_col1, dl_col2 = st.columns(2)
             with dl_col1: st.download_button("📥 Download Image", data=buf, file_name=f"{plot_title.replace(' ', '_')}_shot_map.png", mime="image/png", use_container_width=True)
             with dl_col2: st.download_button("📥 Download Data", data=csv, file_name=f"{plot_title.replace(' ', '_')}_corner_data.csv", mime="text/csv", use_container_width=True)
@@ -546,97 +547,54 @@ def display_corners_page(data_config):
 
 def display_match_analysis_page():
     st.title("Match Analysis")
-    MATCH_DIR = resource_path("data/matchxg")
-    
-    try:
-        leagues = [name for name in os.listdir(MATCH_DIR) if os.path.isdir(os.path.join(MATCH_DIR, name))]
-        if not leagues:
-            st.error(f"No league folders found in '{MATCH_DIR}'. Please create subfolders for each league.")
-            return
+    # This button is now the main action on the page, as filters are in the sidebar.
+    if st.button("Generate Analysis", use_container_width=True):
+        selected_match_name = st.session_state.get('ma_selected_match')
+        selected_league = st.session_state.get('ma_selected_league')
         
-        col1, col2 = st.columns(2)
-        with col1:
-            selected_league = st.selectbox("Select League", sorted(leagues))
-
-        league_path = os.path.join(MATCH_DIR, selected_league)
-        match_files = [f for f in os.listdir(league_path) if f.endswith('.csv')]
-        
-        if not match_files:
-            st.warning(f"No match files found for {selected_league}.")
-            return
-
-        all_teams = set()
-        for f in match_files:
-            try:
-                teams = os.path.splitext(f)[0].split('_')[-1].split(' - ')
-                all_teams.add(teams[0].strip())
-                all_teams.add(teams[1].strip())
-            except IndexError:
-                continue 
-        
-        with col2:
-            team_filter = st.selectbox("Filter by Team (Optional)", ["All Teams"] + sorted(list(all_teams)))
-
-        if team_filter != "All Teams":
-            filtered_matches = [f for f in match_files if team_filter in f]
-        else:
-            filtered_matches = match_files
-            
-        if not filtered_matches:
-            st.warning(f"No matches found for {team_filter} in {selected_league}.")
-            return
-
-        match_display_names = sorted([os.path.splitext(f)[0] for f in filtered_matches])
-        selected_match_name = st.selectbox("Select a Match to Analyze", match_display_names)
-
-        if st.button("Generate Analysis", use_container_width=True):
-            if selected_match_name:
-                with st.spinner("Generating match analysis..."):
-                    file_path = os.path.join(league_path, f"{selected_match_name}.csv")
+        if selected_match_name and selected_league:
+            with st.spinner("Generating match analysis..."):
+                MATCH_DIR = resource_path("data/matchxg")
+                file_path = os.path.join(MATCH_DIR, selected_league, f"{selected_match_name}.csv")
+                try:
                     df = load_data(file_path)
                     fig, message = create_match_shot_map_fig(df, file_path)
                     if fig:
                         st.pyplot(fig)
                     else:
                         st.error(f"Could not generate visualization: {message}")
-
-    except FileNotFoundError:
-        st.error(f"Match data directory not found at '{MATCH_DIR}'. Please create 'data/matchxg' and league subfolders.")
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
+                except FileNotFoundError:
+                    st.error(f"Could not find match file: {file_path}")
+                except Exception as e:
+                    st.error(f"An error occurred: {e}")
+        else:
+            st.warning("Please select a league and a match from the sidebar.")
 
 def display_player_profiling_page():
     st.title("Player Profiling")
-    PROFILES_DIR = resource_path("data/profiles")
-    position_map = { 'Centre-back': ['CB', 'RCB', 'LCB'], 'Full-back': ['LB', 'RB', 'LWB', 'RWB'], 'Midfielder': ['LCMF', 'RCMF', 'CFM', 'LDMF', 'RDMF', 'RAMF', 'LAMF', 'AMF', 'DMF'], 'Attacking Midfielder': ['AMF', 'RAMF', 'LAMF', 'LW', 'RW'], 'Attacker': ['CF', 'LW', 'RW'] }
+    # This button is now the main action on the page.
+    if st.button("Generate Profile", use_container_width=True):
+        selected_player = st.session_state.get('pp_selected_player')
+        selected_league_name = st.session_state.get('pp_selected_league')
+        position_group = st.session_state.get('pp_position_group')
 
-    try:
-        league_files = [f for f in os.listdir(PROFILES_DIR) if f.endswith('.xlsx')]
-        if not league_files: st.error(f"No Excel files found in '{PROFILES_DIR}'."); return
-        league_names = sorted([os.path.splitext(f)[0] for f in league_files])
-    except FileNotFoundError: st.error(f"Directory not found at '{PROFILES_DIR}'. Please create 'data/profiles' and add Excel files."); return
-
-    col1, col2 = st.columns(2)
-    with col1: selected_league_name = st.selectbox("Select League", league_names)
-    with col2: position_group = st.selectbox("Select Position Group", list(position_map.keys()))
-
-    if selected_league_name:
-        try:
-            full_path = os.path.join(PROFILES_DIR, f"{selected_league_name}.xlsx")
-            df = load_profile_data(full_path)
-            positions_to_check, df['Position'] = position_map[position_group], df['Position'].astype(str)
-            position_df = df[df['Position'].str.contains('|'.join(positions_to_check), na=False)]
-            player_list = sorted(position_df['Player'].unique())
-            if not player_list: st.warning(f"No players found for '{position_group}' in {selected_league_name}."); return
-            selected_player = st.selectbox("Select Player", player_list)
-            if st.button("Generate Profile", use_container_width=True):
-                if selected_player:
-                    with st.spinner("Generating profile..."):
-                        fig, message = create_player_profile_fig(df, selected_player, position_group)
-                        if fig: st.pyplot(fig)
-                        else: st.error(message)
-        except FileNotFoundError: st.error(f"Could not find the file: {selected_league_name}.xlsx")
-        except Exception as e: st.error(f"An error occurred while processing the file: {e}")
+        if selected_player and selected_league_name and position_group:
+            with st.spinner("Generating profile..."):
+                PROFILES_DIR = resource_path("data/profiles")
+                full_path = os.path.join(PROFILES_DIR, f"{selected_league_name}.xlsx")
+                try:
+                    df = load_profile_data(full_path)
+                    fig, message = create_player_profile_fig(df, selected_player, position_group)
+                    if fig:
+                        st.pyplot(fig)
+                    else:
+                        st.error(message)
+                except FileNotFoundError:
+                    st.error(f"Could not find profile file: {full_path}")
+                except Exception as e:
+                    st.error(f"An error occurred: {e}")
+        else:
+            st.warning("Please select a league, position, and player from the sidebar.")
 
 # --- Main App Logic ---
 def main():
@@ -654,15 +612,13 @@ def main():
 
     # --- Page Routing ---
     if st.session_state.app_mode == "Landing":
-        # On landing, force sidebar to be collapsed and hidden
         st.set_page_config(initial_sidebar_state="collapsed")
         st.markdown("""<style>[data-testid="stSidebar"] {display: none;}</style>""", unsafe_allow_html=True)
         display_landing_page()
     else:
-        # For the main app, ensure the sidebar is visible
         st.set_page_config(initial_sidebar_state="expanded")
 
-        # --- Top Navigation (Remains in main area) ---
+        # --- Top Navigation ---
         st.image(resource_path("sheplotsfc2.png"), width=200)
         cols = st.columns(4)
         nav_buttons = { "Data Scouting": "📊", "Match Analysis": "🎯", "Player Profiling": "👤", "Corners": "⛳" }
@@ -679,20 +635,18 @@ def main():
 
         st.markdown("---")
 
-        # --- Sidebar Filters ---
-        if st.session_state.page_view == "Data Scouting":
-            with st.sidebar:
-                st.title("Filters")
+        # --- Sidebar Filters (Centralized Logic) ---
+        with st.sidebar:
+            st.title("Filters")
+            
+            if st.session_state.page_view == "Data Scouting":
                 st.header("Metric Leaderboard")
                 st.selectbox("Select Metric:", list(metric_info.keys()), key='selected_metric')
 
-        elif st.session_state.page_view == "Corners":
-            with st.sidebar:
-                st.title("Filters")
+            elif st.session_state.page_view == "Corners":
                 st.header("Corner Analysis")
                 try:
                     leagues_with_total = ["Total"] + list(data_config.keys())
-                    # Load a sample file to populate filters
                     temp_df_full = load_data(resource_path(os.path.join("data", "WSL_corners.csv")))
                     df_corners = temp_df_full[temp_df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
                     teams = ["All"] + sorted(df_corners['TeamId'].unique().tolist())
@@ -707,8 +661,58 @@ def main():
                     st.selectbox("Filter by Game State:", game_states, key='corner_gamestate')
                     st.selectbox("Filter by Goal:", is_goal_options, key='corner_isgoal', format_func=lambda x: "All" if x=="All" else ("Yes" if x else "No"))
                     st.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time), key='corner_time')
-                except Exception: 
-                    st.warning("Could not load corner filter options.")
+                except Exception: st.warning("Could not load corner filter options.")
+
+            elif st.session_state.page_view == "Match Analysis":
+                st.header("Match Selection")
+                MATCH_DIR = resource_path("data/matchxg")
+                try:
+                    leagues = sorted([name for name in os.listdir(MATCH_DIR) if os.path.isdir(os.path.join(MATCH_DIR, name))])
+                    selected_league = st.selectbox("Select League", leagues, key='ma_selected_league')
+                    
+                    league_path = os.path.join(MATCH_DIR, selected_league)
+                    match_files = [f for f in os.listdir(league_path) if f.endswith('.csv')]
+                    
+                    all_teams = set()
+                    for f in match_files:
+                        try:
+                            teams_from_file = os.path.splitext(f)[0].split('_')[-1].split(' - ')
+                            all_teams.add(teams_from_file[0].strip())
+                            all_teams.add(teams_from_file[1].strip())
+                        except IndexError: continue
+                    
+                    team_filter = st.selectbox("Filter by Team (Optional)", ["All Teams"] + sorted(list(all_teams)), key='ma_team_filter')
+                    
+                    filtered_matches = [f for f in match_files if team_filter in f] if team_filter != "All Teams" else match_files
+                    match_display_names = sorted([os.path.splitext(f)[0] for f in filtered_matches])
+                    
+                    st.selectbox("Select a Match", match_display_names, key='ma_selected_match')
+                except FileNotFoundError: st.error(f"Directory not found: {MATCH_DIR}")
+                except Exception as e: st.error(f"Error loading match filters: {e}")
+
+            elif st.session_state.page_view == "Player Profiling":
+                st.header("Player Selection")
+                PROFILES_DIR = resource_path("data/profiles")
+                position_map = { 'Centre-back': ['CB', 'RCB', 'LCB'], 'Full-back': ['LB', 'RB', 'LWB', 'RWB'], 'Midfielder': ['LCMF', 'RCMF', 'CFM', 'LDMF', 'RDMF', 'RAMF', 'LAMF', 'AMF', 'DMF'], 'Attacking Midfielder': ['AMF', 'RAMF', 'LAMF', 'LW', 'RW'], 'Attacker': ['CF', 'LW', 'RW'] }
+                try:
+                    league_files = [f for f in os.listdir(PROFILES_DIR) if f.endswith('.xlsx')]
+                    league_names = sorted([os.path.splitext(f)[0] for f in league_files])
+                    
+                    selected_league_name = st.selectbox("Select League", league_names, key='pp_selected_league')
+                    position_group = st.selectbox("Select Position Group", list(position_map.keys()), key='pp_position_group')
+
+                    if selected_league_name and position_group:
+                        full_path = os.path.join(PROFILES_DIR, f"{selected_league_name}.xlsx")
+                        df = load_profile_data(full_path)
+                        positions_to_check = position_map[position_group]
+                        df['Position'] = df['Position'].astype(str)
+                        position_df = df[df['Position'].str.contains('|'.join(positions_to_check), na=False)]
+                        player_list = sorted(position_df['Player'].unique())
+                        st.selectbox("Select Player", player_list, key='pp_selected_player')
+
+                except FileNotFoundError: st.error(f"Directory not found: {PROFILES_DIR}")
+                except Exception as e: st.error(f"Error loading player filters: {e}")
+
 
         # --- Main Page Content ---
         if st.session_state.page_view == "Data Scouting": display_data_scouting_page(data_config, metric_info)
