@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from mplsoccer.pitch import Pitch
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import matplotlib.image as mpimg
-from mplsoccer.pitch import Pitch
+from mplsoccer.pitch import Pitch, VerticalPitch
 from matplotlib.patches import Circle
 import io
 from scipy.stats import zscore, norm
