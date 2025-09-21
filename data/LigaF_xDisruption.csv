@@ -1,280 +1,303 @@
 playerName,Team,ActualDisruptions,ExpectedDisruptions
-A. Bélem,Eibar,0,2.023
-A. Canales,Badalona,0,0.309
-A. Leitner,Logroño,10,4.4399999999999995
-A. Marques,Sevilla,12,2.688
-A. Poljak,Madrid,0,2.82
-A. Quintero,Alhama,11,0.636
-A. Zaremba,Tenerife,4,4.448
-A. Álvarez,Sevilla,4,1.056
-Adriana Nanclares,Athletic Club,1,0.725
-Aiara Agirrezabala,Real Sociedad,1,2.4840000000000004
-Ainhoa Marín,Deportivo La Coruña,5,4.109999999999999
-Ainhoa Moraza,Real Sociedad,6,3.1790000000000003
-Ainoa Campo,Espanyol,6,0.8
-Aitana Bonmatí,Barcelona,3,2.4480000000000004
-Aitana Zumárraga,Alhama,9,2.898
-Aithiara Carballo,Tenerife,0,2.688
-Alba Cerrato,Sevilla,0,0.266
-Alba López,Sevilla,0,0.009000000000000001
-Alba Pérez,Granada,6,1.086
-Alba Redondo,Real Madrid,1,0.032
-Alba Ruiz,Madrid,4,2.241
-Alexia Fernández,Atlético Madrid,2,1.056
-Alexia Putellas,Barcelona,0,0.8190000000000001
-Alharilla Casado,Levante,6,6.948
-Alicia Redondo,Sevilla,1,0.10200000000000001
-Amaia Iribarren,Eibar,5,0.488
-Amaia Martínez,Espanyol,4,0.5680000000000001
-Amaiur Sarriegi,Atlético Madrid,4,0.19
-Ana Franco,Levante,0,0.784
-Ana González,Badalona,6,0.456
-Ana Velázquez,Alhama,13,1.7550000000000001
-Ana Vitória,Atlético Madrid,0,0.008
-Andrea Colomina,Logroño,4,0.49
-Andrea Gómez,Granada,1,0.0
-Andrea Medina,Atlético Madrid,7,2.898
-Andrea Tarazona,Levante,0,0.07200000000000001
-Andreia Jacinto,Real Sociedad,3,4.077
-Ane Azkona,Athletic Club,0,0.02
-Ane Campos,Athletic Club,1,0.136
-Ane Elexpuru,Athletic Club,8,3.234
-Ane Etxezarreta,Eibar,2,1.968
-Anita Marcos,Madrid,1,1.22
-Anna Torrodà,Espanyol,4,0.752
-Arene Altonaga,Eibar,9,0.979
-Ariadna Mingueza,Granada,2,2.07
-Ariana Arias,Tenerife,2,0.901
-Arola Aparicio,Real Sociedad,2,1.207
-Astrid Álvarez,Alhama,6,0.73
-Athenea del Castillo,Real Madrid,3,1.936
-Aïcha Cámara,Barcelona,2,0.448
-B. Amani,Tenerife,5,4.02
-B. Schulze,Athletic Club,3,0.7380000000000001
-Bascu,Levante,1,0.552
-Belén Martínez,Alhama,0,2.04
-Belén de Gracia,Madrid,0,0.444
-Berta Doltra,Badalona,3,0.385
-Bicho,Tenerife,0,0.036000000000000004
-Blanca Muñoz,Granada,1,0.02
-Bárbara Latorre,Deportivo La Coruña,1,0.99
-Bárbara López,Madrid,0,0.018000000000000002
-C. Barclais,Badalona,1,0.0
-C. Cavanagh,Deportivo La Coruña,3,0.47000000000000003
-C. Graham Hansen,Barcelona,1,3.0709999999999997
-C. Hagel,Sevilla,3,1.212
-C. Hirao,Granada,0,0.196
-C. Weir,Real Madrid,1,1.71
-Carla Andrés,Eibar,5,2.2950000000000004
-Carla Castiñeyras,Alhama,6,0.424
-Carlota Suárez,Tenerife,1,0.492
-Carmen Menayo,Atlético Madrid,0,0.092
-Carol Marín,Levante,3,0.062
-Cata Coll,Barcelona,0,0.059000000000000004
-Cecilia Marcos,Real Sociedad,0,0.017
+A. Bélem,Eibar,3,1.008
+A. Canales,Badalona,0,0.099
+A. Leitner,Logroño,12,0.8729000000000001
+A. Marques,Sevilla,14,0.39
+A. Poljak,Madrid,0,0.559
+A. Quintero,Alhama,15,0.2016
+A. Zaremba,Tenerife,5,0.8712
+A. Álvarez,Sevilla,5,0.2057
+Adriana Folgado,Real Madrid,0,0.0
+Adriana Nanclares,Athletic Club,1,0.132
+Aiara Agirrezabala,Real Sociedad,6,1.4634
+Ainhoa Marín,Deportivo La Coruña,5,0.8323
+Ainhoa Moraza,Real Sociedad,15,1.1532
+Ainoa Campo,Espanyol,15,0.5037
+Aitana Bonmatí,Barcelona,4,0.7595
+Aitana Zumárraga,Alhama,14,0.8352
+Aithiara Carballo,Tenerife,2,0.6468
+Alba Cerrato,Sevilla,2,0.196
+Alba López,Sevilla,1,0.008
+Alba Pérez,Granada,8,1.0341
+Alba Redondo,Real Madrid,1,0.0624
+Alba Ruiz,Madrid,5,0.5244
+Alexia Fernández,Atlético Madrid,2,0.72
+Alexia Putellas,Barcelona,1,0.49560000000000004
+Alharilla Casado,Levante,21,2.4978000000000002
+Alicia Redondo,Sevilla,1,0.0102
+Amaia Iribarren,Eibar,5,0.088
+Amaia Martínez,Espanyol,10,0.5508
+Amaiur Sarriegi,Atlético Madrid,4,0.06599999999999999
+Ana Franco,Levante,1,0.16499999999999998
+Ana González,Badalona,11,0.24480000000000005
+Ana Velázquez,Alhama,20,0.32320000000000004
+Ana Vitória,Atlético Madrid,2,0.28440000000000004
+Andrea Colomina,Logroño,7,0.0752
+Andrea Gómez,Granada,3,0.06570000000000001
+Andrea Medina,Atlético Madrid,8,0.475
+Andrea Tarazona,Levante,0,0.018
+Andreia Jacinto,Real Sociedad,6,1.8502000000000003
+Ane Azkona,Athletic Club,1,0.128
+Ane Campos,Athletic Club,3,0.1764
+Ane Elexpuru,Athletic Club,11,1.458
+Ane Etxezarreta,Eibar,11,0.7412000000000001
+Anita Marcos,Madrid,1,0.1776
+Anna Torrodà,Espanyol,12,0.36900000000000005
+Arene Altonaga,Eibar,22,0.4324
+Ariadna Mingueza,Granada,2,0.8745
+Ariana Arias,Tenerife,2,0.0901
+Arola Aparicio,Real Sociedad,3,1.8122
+Astrid Álvarez,Alhama,6,0.10229999999999999
+Athenea del Castillo,Real Madrid,3,0.297
+Aïcha Cámara,Barcelona,3,0.13440000000000002
+B. Amani,Tenerife,10,0.788
+B. Schulze,Athletic Club,3,0.13
+Bascu,Levante,1,0.1176
+Belén Martínez,Alhama,0,0.35960000000000003
+Belén de Gracia,Madrid,0,0.05720000000000001
+Berta Doltra,Badalona,3,0.0385
+Bicho,Tenerife,0,0.0036000000000000003
+Blanca Muñoz,Granada,1,0.0492
+Bárbara Latorre,Deportivo La Coruña,1,0.1449
+Bárbara López,Madrid,0,0.0034000000000000002
+C. Barclais,Badalona,7,0.44279999999999997
+C. Cavanagh,Deportivo La Coruña,3,0.049
+C. Graham Hansen,Barcelona,1,0.3071
+C. Hagel,Sevilla,8,0.28620000000000007
+C. Hirao,Granada,0,0.1386
+C. Weir,Real Madrid,3,0.3402
+Carla Andrés,Eibar,14,1.116
+Carla Castiñeyras,Alhama,9,0.192
+Carlota Suárez,Tenerife,2,0.2088
+Carmen Menayo,Atlético Madrid,1,0.07110000000000001
+Carmen Álvarez,Eibar,0,0.0024000000000000002
+Carol Marín,Levante,6,0.201
+Cata Coll,Barcelona,0,0.0073999999999999995
+Cecilia Marcos,Real Sociedad,1,0.0064
 Cinta Rodríguez,Tenerife,1,0.0
-Clara Serrajordi,Barcelona,1,2.226
-Claudia Blanco,Tenerife,0,0.063
-Claudia Florentino,Real Sociedad,0,0.0
-Clàudia Pina,Barcelona,0,0.8260000000000001
-Cristina Baudet,Espanyol,0,0.042
-Cristina Cubedo,Badalona,4,1.2600000000000002
-Cristina Postigo,Granada,8,5.78
-D. Caracas,Espanyol,7,1.586
-D. Falfán,Logroño,7,1.312
-Daniela Agote,Athletic Club,4,1.311
-Daniela Luque,Levante,0,0.7560000000000001
-Dolores Silva,Levante,5,3.42
-Débora García,Sevilla,7,1.7999999999999998
-E. Banini,Badalona,5,4.968000000000001
-E. Botero,Espanyol,4,0.531
-E. Brugts,Barcelona,2,5.236
-E. Gómez,Alhama,3,0.427
-E. Nautnes,Madrid,0,1.083
-E. Pajor,Barcelona,1,2.3400000000000003
-E. Pizarro,Deportivo La Coruña,0,0.021
-Elba Vergés,Tenerife,5,1.05
-Elena Julve,Badalona,0,1.7160000000000002
-Elena Vázquez,Deportivo La Coruña,2,0.984
-Elena de Toro,Alhama,1,0.375
-Elene Guridi,Real Sociedad,0,0.116
-Emma Moreno,Eibar,0,0.232
-Emma Ramírez,Real Sociedad,3,1.445
-Encarni,Alhama,8,0.81
-Estefa Lima,Alhama,0,0.048
-Esther Laborde,Madrid,7,2.7359999999999998
-Esther Martín-Pozuelo,Sevilla,7,3.75
-Esther Sullastres,Sevilla,0,0.151
-Eunate Astralaga,Eibar,0,0.678
-Eva Alonso,Levante,1,0.54
-Eva Dios,Deportivo La Coruña,0,0.009000000000000001
-Eva Llamas,Sevilla,0,0.135
-Eva Navarro,Real Madrid,4,4.212
-F. Angeldahl,Real Madrid,1,5.64
-F. Dembele,Tenerife,5,1.512
-F. Mawete,Logroño,0,0.084
-F. Olofsson,Madrid,0,0.9480000000000001
-Fatou Kanteh,Sevilla,0,1.56
-Fiamma Benítez,Atlético Madrid,4,3.1750000000000003
-G. García,Atlético Madrid,11,3.625
-Garazi Fácila,Eibar,1,2.5989999999999998
-Gemma Gili,Sevilla,2,0.162
-Gio Garbelini,Atlético Madrid,0,0.864
-Gonzi,Levante,5,0.901
-Guereñu,Eibar,9,3.2
-H. Antonsdóttir,Madrid,4,2.9
-H. Bennison,Real Madrid,0,0.115
-Henar Muiña,Deportivo La Coruña,8,1.3780000000000001
-Iara,Eibar,0,0.31200000000000006
-Intza Eguiguren,Real Sociedad,0,0.0
-Inés Rizo,Levante,4,1.2780000000000002
-Inês Pereira,Deportivo La Coruña,0,0.224
-Iratxe Pérez,Tenerife,3,0.403
-Irene Oguiza,Athletic Club,0,0.036000000000000004
-Irene Paredes,Barcelona,5,3.344
-Iria Castro,Logroño,4,0.609
-Irina Uribe,Badalona,1,0.06
-Iris Arnaiz,Sevilla,3,0.7809999999999999
-Irune Dorado,Real Madrid,0,0.27
-Isabel Álvarez,Sevilla,9,6.669
-Isina,Logroño,4,0.9239999999999999
-Itziar Pinillos,Badalona,1,1.4040000000000001
-J. Morcillo,Logroño,0,0.08
-J. Toro,Alhama,0,0.148
-Jone Amezaga,Athletic Club,0,0.484
-Jujuba Cardozo,Granada,3,2.0540000000000003
-Julia Arrula,Real Sociedad,0,0.366
-Julia Torres,Sevilla,5,1.043
-Júlia Bartel,Atlético Madrid,2,0.028
-K. Cahynová,Real Sociedad,1,5.256
-K. Melgård,Madrid,0,2.565
+Clara Rodríguez,Granada,3,0.0513
+Clara Serrajordi,Barcelona,1,0.2226
+Claudia Blanco,Tenerife,0,0.0063
+Claudia Florentino,Real Sociedad,2,0.004399999999999999
+Clàudia Pina,Barcelona,0,0.495
+Cristina Baudet,Espanyol,3,0.035199999999999995
+Cristina Cubedo,Badalona,8,0.41550000000000004
+Cristina Postigo,Granada,11,1.9525
+D. Caracas,Espanyol,20,1.215
+D. Falfán,Logroño,13,0.22610000000000002
+Daniela Agote,Athletic Club,9,1.323
+Daniela Luque,Levante,2,0.19090000000000001
+Dolores Silva,Levante,6,0.8262
+Débora García,Sevilla,10,0.3344
+E. Banini,Badalona,8,0.882
+E. Botero,Espanyol,4,0.0531
+E. Brugts,Barcelona,3,1.4508
+E. Gómez,Alhama,8,0.19349999999999998
+E. Imade,Real Sociedad,1,0.0448
+E. Nautnes,Madrid,0,0.2016
+E. Pajor,Barcelona,1,0.33899999999999997
+E. Pizarro,Deportivo La Coruña,0,0.0021000000000000003
+Elba Vergés,Tenerife,8,0.3366
+Elena Julve,Badalona,3,0.8320000000000001
+Elena Vázquez,Deportivo La Coruña,3,0.3828
+Elena de Toro,Alhama,1,0.072
+Elene Guridi,Real Sociedad,0,0.0852
+Emma Moreno,Eibar,6,0.24250000000000002
+Emma Ramírez,Real Sociedad,3,0.14450000000000002
+Encarni,Alhama,11,0.20740000000000003
+Estefa Lima,Alhama,0,0.018
+Esther Laborde,Madrid,8,0.49139999999999995
+Esther Martín-Pozuelo,Sevilla,8,0.5336000000000001
+Esther Sullastres,Sevilla,0,0.06570000000000001
+Eunate Astralaga,Eibar,0,0.22800000000000004
+Eva Alonso,Levante,4,0.426
+Eva Dios,Deportivo La Coruña,0,0.0009000000000000001
+Eva Llamas,Sevilla,1,0.0864
+Eva Navarro,Real Madrid,4,0.6075
+F. Angeldahl,Real Madrid,1,0.564
+F. Dembele,Tenerife,11,0.8051999999999999
+F. Mawete,Logroño,0,0.23400000000000004
+F. Olofsson,Madrid,0,0.09480000000000001
+Fatou Kanteh,Sevilla,0,0.26349999999999996
+Fiamma Benítez,Atlético Madrid,7,0.595
+G. García,Atlético Madrid,16,0.6541
+Garazi Fácila,Eibar,7,0.875
+Gemma Gili,Sevilla,2,0.0162
+Gio Garbelini,Atlético Madrid,0,0.0864
+Gonzi,Levante,6,0.22360000000000002
+Guereñu,Eibar,17,1.2959999999999998
+H. Antonsdóttir,Madrid,7,0.45360000000000006
+H. Bennison,Real Madrid,2,0.184
+Henar Muiña,Deportivo La Coruña,12,0.24840000000000004
+Iara,Eibar,6,0.2604
+Inma Gabarro,Sevilla,0,0.0063
+Intza Eguiguren,Real Sociedad,1,0.016800000000000002
+Inés Rizo,Levante,9,0.425
+Inês Pereira,Deportivo La Coruña,0,0.0382
+Iratxe Pérez,Tenerife,3,0.098
+Irene Oguiza,Athletic Club,3,0.1292
+Irene Paredes,Barcelona,7,0.6292000000000001
+Iria Castro,Logroño,10,0.282
+Irina Uribe,Badalona,2,0.1632
+Iris Arnaiz,Sevilla,4,0.0984
+Iris Santiago,Real Madrid,0,0.001
+Irune Dorado,Real Madrid,0,0.027000000000000003
+Isabel Álvarez,Sevilla,11,1.04
+Isina,Logroño,7,0.28
+Itziar Pinillos,Badalona,5,1.099
+J. Morcillo,Logroño,6,0.0486
+J. Toro,Alhama,0,0.014799999999999999
+Jone Amezaga,Athletic Club,1,0.26880000000000004
+Judit Pablos,Espanyol,1,0.004
+Jujuba Cardozo,Granada,9,0.6754
+Julia Arrula,Real Sociedad,0,0.14279999999999998
+Julia Torres,Sevilla,9,0.2592
+Júlia Bartel,Atlético Madrid,5,0.2091
+K. Cahynová,Real Sociedad,3,1.3496000000000001
+K. Melgård,Madrid,1,0.7525999999999999
 Karolina Sarasua,Eibar,0,0.0
-Kika Nazareth,Barcelona,6,1.919
-L. Ballesté,Espanyol,9,1.792
-L. Caicedo,Real Madrid,2,2.6670000000000003
-L. Chamorro,Badalona,3,3.64
-L. Kullashi,Badalona,3,0.546
-L. Solvoll,Granada,2,0.848
-Laia Aleixandri,Barcelona,2,0.632
-Laura Camino,Eibar,3,7.473
-Laura Coronado,Levante,0,0.075
-Laura Martínez,Espanyol,4,6.579000000000001
-Laura Pérez,Granada,0,4.0600000000000005
-Lauren Leal,Atlético Madrid,3,3.8850000000000002
-Lauri,Granada,4,6.048
-Leire Baños,Athletic Club,2,1.936
-Leles,Granada,0,0.034
-Lola Gallardo,Atlético Madrid,0,0.10400000000000001
-Lorena Navarro,Badalona,0,0.094
-Lorena Valderas,Logroño,7,0.33
-Luany,Atlético Madrid,1,1.52
-Lucía Martínez,Deportivo La Coruña,4,0.836
-Lucía Moral,Sevilla,0,0.22
-Lucía Pardo,Real Sociedad,2,0.994
-Lucía Rodríguez,Real Sociedad,1,0.36
-Lucía Vallejo,Espanyol,6,0.9450000000000001
-M. Asenjo,Logroño,0,4.130000000000001
-M. Baquerizo,Granada,4,5.5360000000000005
-M. Barth,Deportivo La Coruña,5,5.642
-M. Díaz Leal,Alhama,0,0.893
-M. Frohms,Real Madrid,0,0.0
-M. Kojima,Granada,6,2.782
-M. Lakrar,Real Madrid,4,1.59
-M. Marcetto,Madrid,1,0.9620000000000001
-Macarena Portales,Atlético Madrid,3,1.482
-Maddi Torre,Athletic Club,3,0.752
-Maite Valero,Athletic Club,9,1.498
-Maite Zubieta,Athletic Club,3,0.9810000000000001
-Malen Uranga,Eibar,0,0.065
-Mapi León,Barcelona,0,4.4879999999999995
-Mar Torrás,Espanyol,1,0.08700000000000001
-Maria Barquero,Granada,1,0.182
-Maria Gabaldón,Levante,3,4.104
-Marina Artero,Deportivo La Coruña,4,4.488
-Marisa García,Deportivo La Coruña,2,0.99
-Marta Gestera,Alhama,1,0.1
-Marta Masferrer,Logroño,7,0.8640000000000001
-Marta Torrejón,Barcelona,0,0.081
-María Llompart,Badalona,3,2.112
-María Miralles,Logroño,0,0.41600000000000004
-María Molina,Real Sociedad,6,0.54
-María Méndez,Real Madrid,5,4.14
-Mireia Masegur,Eibar,7,1.08
-Mônica,Madrid,3,1.0350000000000001
-N. Andonova,Madrid,2,0.6819999999999999
-N. Sánchez,Madrid,0,0.14400000000000002
-Nahia Aparicio,Real Sociedad,5,3.674
-Naia Landaluze,Athletic Club,7,0.848
-Naima García,Espanyol,1,1.52
-Natalia Cebolla,Logroño,7,0.48600000000000004
-Natalia Ramos,Tenerife,17,4.2
-Nerea Eizagirre,Real Sociedad,3,2.737
-Nerea Nevado,Athletic Club,3,4.8100000000000005
-Noelia Ramos,Tenerife,0,0.582
-Nuria Garrote,Badalona,5,1.17
-Núria Mendoza,Madrid,1,0.8909999999999999
-O. Fergusson,Espanyol,0,0.184
-Oihana Agirregomezkorta,Athletic Club,1,0.165
+Kika Nazareth,Barcelona,6,0.3082
+L. Ballesté,Espanyol,10,0.20859999999999998
+L. Caicedo,Real Madrid,2,0.39520000000000005
+L. Chamorro,Badalona,5,1.1591
+L. Kullashi,Badalona,3,0.8099999999999999
+L. Solvoll,Granada,2,0.26
+Laia Aleixandri,Barcelona,4,0.38939999999999997
+Laura Camino,Eibar,10,2.0088
+Laura Coronado,Levante,0,0.0984
+Laura Martinez,Logroño,1,0.0004
+Laura Martínez,Espanyol,7,1.6065
+Laura Pérez,Granada,2,1.3464
+Lauren Leal,Atlético Madrid,3,0.3885
+Lauri,Granada,5,2.2800000000000002
+Leire Baños,Athletic Club,2,0.4968
+Leles,Granada,0,0.0034000000000000002
+Lola Gallardo,Atlético Madrid,0,0.014000000000000002
+Lorena Navarro,Badalona,1,0.0738
+Lorena Valderas,Logroño,10,0.0516
+Luany,Atlético Madrid,2,0.5365
+Lucía Martínez,Deportivo La Coruña,7,0.2625
+Lucía Moral,Sevilla,7,0.13799999999999998
+Lucía Pardo,Real Sociedad,2,0.45360000000000006
+Lucía Rodríguez,Real Sociedad,7,1.0206000000000002
+Lucía Vallejo,Espanyol,12,0.33599999999999997
+Lydia Rodríguez,Atlético Madrid,1,0.152
+M. Asenjo,Logroño,3,1.1592
+M. Baquerizo,Granada,10,2.4208000000000003
+M. Barth,Deportivo La Coruña,8,0.9702999999999999
+M. Díaz Leal,Alhama,0,0.2324
+M. Frohms,Real Madrid,0,0.026000000000000002
+M. Kojima,Granada,10,1.1327
+M. Lakrar,Real Madrid,5,0.47250000000000003
+M. Marcetto,Madrid,1,0.1786
+Macarena Portales,Atlético Madrid,3,0.4524
+Maddi Torre,Athletic Club,8,0.7209
+Maite Valero,Athletic Club,15,0.924
+Maite Zubieta,Athletic Club,7,0.644
+Malen Uranga,Eibar,0,0.0468
+Mapi León,Barcelona,2,0.7047
+Mar Torrás,Espanyol,6,0.22140000000000004
+Maria Barquero,Granada,2,0.093
+Maria Gabaldón,Levante,20,1.7101
+Marina Artero,Deportivo La Coruña,4,0.44880000000000003
+Marina Rivas,Madrid,0,0.0034000000000000002
+Marisa García,Deportivo La Coruña,2,0.24180000000000001
+Marta Gestera,Alhama,1,0.01
+Marta Masferrer,Logroño,14,0.10890000000000002
+Marta Torrejón,Barcelona,0,0.0081
+María Llompart,Badalona,6,0.35750000000000004
+María Miralles,Logroño,0,0.24100000000000002
+María Molina,Real Sociedad,7,0.2992
+María Méndez,Real Madrid,5,0.784
+Mireia Masegur,Eibar,14,0.5016
+Mônica,Madrid,4,0.2024
+N. Amoh,Logroño,4,0.048299999999999996
+N. Andonova,Madrid,2,0.1232
+N. Cáceres,Tenerife,0,0.007000000000000001
+N. Feller,Real Madrid,3,0.041999999999999996
+N. Sánchez,Madrid,0,0.014400000000000001
+Nahia Aparicio,Real Sociedad,9,0.7506
+Naia Landaluze,Athletic Club,11,0.294
+Naima García,Espanyol,2,0.3276
+Natalia Cebolla,Logroño,17,0.2064
+Natalia Ramos,Tenerife,19,0.8953999999999999
+Nerea Eizagirre,Real Sociedad,8,1.7297999999999998
+Nerea Nevado,Athletic Club,10,2.268
+Noelia Ramos,Tenerife,0,0.058199999999999995
+Nuria Garrote,Badalona,13,0.7875000000000001
+Nuria Martínez,Alhama,0,0.0
+Núria Mendoza,Madrid,5,0.3278
+O. Clement,Eibar,0,0.045
+O. Fergusson,Espanyol,0,0.0408
+Oihana Agirregomezkorta,Athletic Club,1,0.018
 OlatzSantana,Athletic Club,0,0.0
-Olaya Rodríguez,Deportivo La Coruña,3,3.2399999999999998
-Ona Baradad,Espanyol,6,2.4480000000000004
-Ona Batlle,Barcelona,0,4.05
-P. Ali,Levante,3,1.2960000000000003
-P. Browne,Espanyol,0,0.42
-Pachu,Eibar,0,0.112
-Paola Hernández,Tenerife,6,1.7100000000000002
-Patri Gavira,Tenerife,2,0.335
-Patri Guijarro,Barcelona,6,1.0270000000000001
-Patri Miñano,Alhama,0,0.161
-Paula Arana,Espanyol,3,1.7
-Paula Comendador,Real Madrid,0,0.11
-Paula Fernández,Real Sociedad,6,4.248
-Paula Gutiérrez,Deportivo La Coruña,3,1.26
-Paula Monteagudo,Deportivo La Coruña,4,1.6199999999999999
-Paula Partido,Logroño,4,1.32
-Paula Perea,Espanyol,2,0.063
-Paula Rubio,Logroño,2,0.008
-R. Carrasco,Levante,1,0.868
-R. Salvador,Espanyol,0,0.312
-Raquel García,Deportivo La Coruña,4,0.99
-Raquel Pinel,Alhama,0,0.23800000000000002
-Redru,Deportivo La Coruña,2,0.17500000000000002
-Rosa Márquez,Sevilla,6,4.698
-S. Bruun,Real Madrid,2,0.222
-S. Cabezas,Levante,0,0.045
-S. Däbritz,Real Madrid,1,0.132
-S. Holmgaard,Real Madrid,4,2.672
-S. Jensen,Atlético Madrid,0,0.21
-S. Junge Pedersen,Badalona,11,1.344
-S. Keefe,Granada,2,2.0580000000000003
-S. Ortíz,Deportivo La Coruña,3,2.662
-S. Ouzraoui Diki,Tenerife,3,4.725
-S. Schertenleib,Barcelona,0,0.096
-S. Toletti,Real Madrid,3,2.436
-Salma Paralluelo,Barcelona,3,3.255
+Olaya Rodríguez,Deportivo La Coruña,5,0.5425000000000001
+Ona Baradad,Espanyol,10,0.6578
+Ona Batlle,Barcelona,1,1.0836000000000001
+P. Ali,Levante,7,0.23759999999999998
+P. Browne,Espanyol,0,0.058499999999999996
+P. Gramaglia,Tenerife,0,0.0039
+Pachu,Eibar,2,0.1258
+Paola Hernández,Tenerife,8,0.38160000000000005
+Patri Gavira,Tenerife,5,0.24
+Patri Guijarro,Barcelona,7,0.9078000000000002
+Patri Miñano,Alhama,2,0.0644
+Paula Arana,Espanyol,4,0.3562
+Paula Comendador,Real Madrid,0,0.011
+Paula Fernández,Real Sociedad,11,1.2996
+Paula Gutiérrez,Deportivo La Coruña,6,0.18880000000000002
+Paula Monteagudo,Deportivo La Coruña,6,0.2499
+Paula Novo,Deportivo La Coruña,2,0.028800000000000003
+Paula Partido,Logroño,5,0.2484
+Paula Perea,Espanyol,12,0.29259999999999997
+Paula Rubio,Logroño,10,0.0195
+Paula Sánchez,Badalona,2,0.06570000000000001
+R. Carrasco,Levante,4,0.162
+R. Salvador,Espanyol,0,0.2172
+Raquel García,Deportivo La Coruña,8,0.36750000000000005
+Raquel Pinel,Alhama,0,0.0588
+Rebeca Costa,Logroño,6,0.059
+Redru,Deportivo La Coruña,2,0.022
+Rosa Márquez,Sevilla,11,1.28
+S. Bruun,Real Madrid,2,0.0222
+S. Cabezas,Levante,2,0.169
+S. Däbritz,Real Madrid,2,0.0864
+S. Holmgaard,Real Madrid,8,0.806
+S. Jankovska,Badalona,0,0.0004
+S. Jensen,Atlético Madrid,0,0.020999999999999998
+S. Junge Pedersen,Badalona,15,0.31860000000000005
+S. Keefe,Granada,3,0.7518
+S. Ortíz,Deportivo La Coruña,7,0.5292
+S. Ouzraoui Diki,Tenerife,4,0.9663999999999999
+S. Schertenleib,Barcelona,0,0.048600000000000004
+S. Toletti,Real Madrid,4,0.45500000000000007
+Salma Paralluelo,Barcelona,4,0.6132000000000001
 Sanadri,Athletic Club,0,0.0
-Sandra Castelló,Tenerife,1,0.01
-Sandra Villafañe,Madrid,4,2.73
-Sara Martín,Eibar,3,6.144
-Sara Ortega,Athletic Club,3,1.96
-Sheila García,Real Madrid,2,6.24
-Silvi Cristóbal,Real Madrid,2,0.14400000000000002
-Silvia Lloris,Atlético Madrid,5,5.742
-Sonia Majarín,Badalona,2,1.43
-Teresa Merida,Levante,0,0.016
-V. Bøe Risa,Atlético Madrid,3,2.5740000000000003
-Vega Montesinos,Alhama,0,0.009000000000000001
-Vera Molina,Granada,1,0.43
-Vicky López,Barcelona,3,2.033
-Vilariño,Athletic Club,1,0.256
-X. Velazco,Logroño,1,0.051000000000000004
-Xenia Barrios,Sevilla,0,0.016
-Xènia Pérez,Atlético Madrid,1,0.63
+Sandra Castelló,Tenerife,1,0.001
+Sandra Perera,Logroño,1,0.0032
+Sandra Villafañe,Madrid,5,0.6096
+Sara Martín,Eibar,5,1.4328
+Sara Ortega,Athletic Club,5,1.1819
+Sheila García,Real Madrid,2,0.624
+Sheila Guijarro,Atlético Madrid,0,0.020800000000000003
+Silvi Cristóbal,Real Madrid,7,0.19949999999999998
+Silvia Lloris,Atlético Madrid,7,0.7310000000000001
+Sonia Majarín,Badalona,5,0.86
+Teresa Mérida,Levante,3,0.1056
+V. Bøe Risa,Atlético Madrid,5,0.38059999999999994
+Vega Montesinos,Alhama,1,0.0016
+Vera Molina,Granada,1,0.043
+Vicky López,Barcelona,4,1.3481999999999998
+Vilariño,Athletic Club,3,0.2937
+X. Velazco,Logroño,3,0.0504
+Xenia Barrios,Sevilla,0,0.0016
+Xènia Pérez,Atlético Madrid,1,0.2088
 Y. Correa,Alhama,3,0.0
-Y. Relea,Alhama,3,2.464
-Yasmim,Real Madrid,0,0.18900000000000003
-Z. Agama,Levante,1,1.197
-Z. Matthews,Logroño,3,0.6030000000000001
-Ángela Sosa,Madrid,2,4.394
-Ángeles del Álamo,Espanyol,0,0.024
-Érika González,Levante,0,4.588
+Y. Relea,Alhama,7,0.36140000000000005
+Yasmim,Real Madrid,0,0.018900000000000004
+Yolanda Sierra,Granada,0,0.004399999999999999
+Z. Agama,Levante,2,0.2914
+Z. Matthews,Logroño,13,0.31320000000000003
+Ángela Sosa,Madrid,5,0.7684
+Ángeles del Álamo,Espanyol,2,0.05389999999999999
+Érika González,Levante,4,1.8876000000000002
