@@ -6,10 +6,9 @@ import sys
 from datetime import datetime
 import altair as alt
 import matplotlib.pyplot as plt
-from mplsoccer.pitch import Pitch
+from mplsoccer.pitch import Pitch, VerticalPitch
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import matplotlib.image as mpimg
-from mplsoccer.pitch import Pitch, VerticalPitch
 from matplotlib.patches import Circle
 import io
 from scipy.stats import zscore, norm
@@ -24,6 +23,100 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
+
+
+# --- Custom Styling ---
+def inject_custom_css():
+    """Injects custom CSS to style the Streamlit app."""
+    st.markdown("""
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+            /* --- Base & Typography --- */
+            html, body, [class*="st-"] {
+                font-family: 'Poppins', sans-serif;
+            }
+            .stApp {
+                background-color: #0F1116; /* Dark background */
+            }
+            h1, h2, h3 {
+                color: #FFC107; /* Gold accent for headers */
+            }
+            .stMarkdown, p, .st-bk, label {
+                color: #FAFAFA; /* Off-white for text */
+            }
+            
+            /* --- Buttons --- */
+            .stButton > button {
+                border-radius: 20px;
+                border: 2px solid #FFC107;
+                background-color: transparent;
+                color: #FFC107;
+                padding: 10px 25px;
+                font-weight: 600;
+                transition: all 0.3s ease-in-out;
+            }
+            .stButton > button:hover {
+                background-color: #FFC107;
+                color: #0F1116;
+                transform: scale(1.05);
+                box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+            }
+            .stButton > button[kind="primary"] {
+                background-color: #FFC107;
+                color: #0F1116;
+                border-color: #FFC107;
+            }
+
+            /* --- Widgets --- */
+            .stSelectbox div[data-baseweb="select"] > div {
+                background-color: #1A1C24;
+                border-radius: 10px;
+                border: 1px solid #4A4A4A;
+                color: #FAFAFA;
+            }
+            .stSlider [data-baseweb="slider"] {
+                color: #FFC107;
+            }
+            .stTextInput > div > div > input, .stTextArea > div > textarea {
+                background-color: #1A1C24;
+                border-radius: 10px;
+                border: 1px solid #4A4A4A;
+                color: #FAFAFA;
+            }
+
+            /* --- Layout & Containers --- */
+            .block-container {
+                padding-top: 3rem;
+                padding-bottom: 3rem;
+            }
+            div[data-testid="stExpander"] {
+                background-color: #1A1C24;
+                border: none;
+                border-radius: 10px;
+                padding: 10px;
+            }
+            div[data-testid="stExpander"] > details > summary {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #FFC107;
+            }
+
+            /* --- Dataframes --- */
+            .stDataFrame {
+                border: 1px solid #4A4A4A;
+                border-radius: 10px;
+            }
+            .stDataFrame > div > div > .data-grid-container > .data-grid {
+                 background-color: #1A1C24;
+            }
+            .stDataFrame .data-grid-header {
+                background-color: #0F1116;
+                color: #FFC107;
+            }
+
+        </style>
+    """, unsafe_allow_html=True)
 
 
 # --- Caching ---
@@ -74,32 +167,47 @@ def create_detailed_shot_map(df, title_text="Corner Shots"):
     """Creates a detailed shot map for corners using mplsoccer."""
     total_shots = df.shape[0]
     if total_shots == 0: return None, "No shots to plot."
+    
+    # --- Style Colors ---
+    BG_COLOR = "#0F1116"
+    TEXT_COLOR = "#FAFAFA"
+    PRIMARY_ACCENT = "#FFC107" # Gold
+    SECONDARY_ACCENT = "#bc5090" # Retaining original goal color for contrast
+
     total_goals, total_xg = int(df['isGoal'].sum()), df['xG'].sum()
     xg_per_shot = total_xg / total_shots if total_shots > 0 else 0
-    colors = {"missed": "#003f5c", "goal": "#bc5090"}
-    pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=False, line_zorder=2, linewidth=0.5)
+    colors = {"missed": "#0077b6", "goal": SECONDARY_ACCENT} # Blue for miss, pink/purple for goal
+
+    pitch = VerticalPitch(pitch_type='opta', pitch_color=BG_COLOR, line_color='#A9A9A9', half=False, line_zorder=2, linewidth=0.5)
     fig, ax = pitch.draw(figsize=(10, 7))
-    fig.set_facecolor("white")
+    fig.set_facecolor(BG_COLOR)
+    
     ax.set_ylim(49.8, 105)
     for i in range(len(df['x'])):
         row, color = df.iloc[i], colors["goal"] if df.iloc[i]['isGoal'] else colors["missed"]
         size = row['xG'] * 500
-        ax.scatter(row['y'], row['x'], color=color, s=size, alpha=0.7, zorder=3)
-    ax.text(50, 108, title_text, fontsize=24, weight='bold', color='black', ha='center', va='top')
-    ax.text(50, 104, "Shot Map from Corners", fontsize=12, style='italic', color='black', ha='center', va='top')
+        ax.scatter(row['y'], row['x'], color=color, s=size, alpha=0.8, zorder=3, ec=BG_COLOR) # Added edge color
+        
+    ax.text(50, 108, title_text, fontsize=24, weight='bold', color=TEXT_COLOR, ha='center', va='top')
+    ax.text(50, 104, "Shot Map from Corners", fontsize=12, style='italic', color=TEXT_COLOR, ha='center', va='top')
     plt.subplots_adjust(bottom=0.3)
-    circle_positions, circle_texts = [(0.2, -0.10), (0.2, -0.25), (0.35, -0.10), (0.35, -0.25)], ["Shots", "xG/Shot", "Goals", "xG"]
+    
+    circle_positions = [(0.2, -0.10), (0.2, -0.25), (0.35, -0.10), (0.35, -0.25)]
+    circle_texts = ["Shots", "xG/Shot", "Goals", "xG"]
     values = [total_shots, round(xg_per_shot, 2), total_goals, round(total_xg, 2)]
     circle_colors = [colors["missed"], colors["missed"], colors["goal"], colors["goal"]]
+    
     for pos, text, value, color in zip(circle_positions, circle_texts, values, circle_colors):
         circle = Circle(pos, 0.04, transform=ax.transAxes, color=color, zorder=5, clip_on=False)
         ax.add_artist(circle)
-        ax.text(pos[0], pos[1] + 0.06, text, transform=ax.transAxes, color='black', fontsize=12, ha='center', va='center', zorder=6)
+        ax.text(pos[0], pos[1] + 0.06, text, transform=ax.transAxes, color=TEXT_COLOR, fontsize=12, ha='center', va='center', zorder=6)
         ax.text(pos[0], pos[1], value, transform=ax.transAxes, color='white', fontsize=12, weight='bold', ha='center', va='center', zorder=6)
-    ax.text(0.75, -0.05, "xG Size", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
+        
+    ax.text(0.75, -0.05, "xG Size", transform=ax.transAxes, fontsize=12, color=TEXT_COLOR, ha='center', va='center', weight='bold')
     ax.scatter([0.72, 0.75, 0.78], [-0.12, -0.12, -0.12], s=[0.1*500, 0.4*500, 0.7*500], color=colors['missed'], transform=ax.transAxes, clip_on=False)
-    ax.text(0.75, -0.18, "Low → High", transform=ax.transAxes, fontsize=10, color='black', ha='center', va='center')
-    ax.text(0.75, -0.25, "SHE PLOTS FC", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
+    ax.text(0.75, -0.18, "Low → High", transform=ax.transAxes, fontsize=10, color=TEXT_COLOR, ha='center', va='center')
+    ax.text(0.75, -0.25, "SHE PLOTS FC", transform=ax.transAxes, fontsize=12, color=PRIMARY_ACCENT, ha='center', va='center', weight='bold')
+    
     return fig, None
 
 def create_player_profile_fig(df, player_name, position_group):
@@ -142,6 +250,13 @@ def create_player_profile_fig(df, player_name, position_group):
     except IndexError:
         return None, f"Player '{player_name}' not found in the {position_group} dataset."
 
+    # --- Style Colors ---
+    BG_COLOR = "#1A1C24" # A slightly lighter dark for the card
+    TEXT_COLOR = "#FAFAFA"
+    PRIMARY_ACCENT = "#FFC107" # Gold
+    SECONDARY_ACCENT = "#00BFFF" # Deep Sky Blue for rating
+    SIMILAR_BG = "#008080" # Teal for similar players
+    
     age, pos, team = player_row.get("Age", "N/A"), player_row.get("Position", "N/A"), player_row.get("Team", "N/A")
     nation, minutes = player_row.get("Passport country", "N/A"), player_row.get("Minutes played", 0)
     cat_percentiles = {cat: player_row.get(f"{cat}_percentile", 0) for cat in categories}
@@ -160,48 +275,63 @@ def create_player_profile_fig(df, player_name, position_group):
     top_similar = sim_df.sort_values('Similarity', ascending=False).head(4)
 
     fig = plt.figure(figsize=(11, 7), dpi=150)
-    fig.patch.set_facecolor("white")
-    fig.text(0.05, 0.93, player_name, fontsize=24, weight='bold', ha='left')
-    fig.text(0.05, 0.88, "Biography", fontsize=14, weight='bold', ha='left')
+    fig.patch.set_facecolor(BG_COLOR)
+    
+    fig.text(0.05, 0.93, player_name, fontsize=24, weight='bold', ha='left', color=TEXT_COLOR)
+    fig.text(0.05, 0.88, "Biography", fontsize=14, weight='bold', ha='left', color=PRIMARY_ACCENT)
     bio_text = f"Age: {age}\nPosition: {pos}\nTeam: {team}\nPassport country: {nation}\nMinutes: {int(minutes)}"
-    fig.text(0.05, 0.85, bio_text, fontsize=11, ha='left', va='top', linespacing=1.5)
+    fig.text(0.05, 0.85, bio_text, fontsize=11, ha='left', va='top', linespacing=1.5, color=TEXT_COLOR)
+    
     x0, y0, box_size = 0.55, 0.92, 0.012
     sorted_role_scores = sorted(role_scores.items(), key=lambda item: list(roles.keys()).index(item[0]))
     for i, (role, score) in enumerate(sorted_role_scores):
-        fig.text(x0, y0 - i*0.045, role, fontsize=10, ha='left')
+        fig.text(x0, y0 - i*0.045, role, fontsize=10, ha='left', color=TEXT_COLOR)
         for j in range(10):
-            color = "gold" if j < round(score/10) else "lightgrey"
+            color = PRIMARY_ACCENT if j < round(score/10) else "#333333"
             rect = plt.Rectangle((x0+0.22 + j*0.022, y0 - i*0.045 - 0.005), box_size, box_size, transform=fig.transFigure, facecolor=color, edgecolor="black", lw=0.3)
             fig.add_artist(rect)
+            
     if not pd.isna(avg_rating):
-        rect = plt.Rectangle((0.33, 0.80), 0.10, 0.08, transform=fig.transFigure, facecolor="lightblue", edgecolor="black", lw=1)
+        rect = plt.Rectangle((0.33, 0.80), 0.10, 0.08, transform=fig.transFigure, facecolor=SECONDARY_ACCENT, edgecolor=TEXT_COLOR, lw=1)
         fig.add_artist(rect)
-        fig.text(0.335, 0.84, "Rating:", fontsize=10, weight="bold", ha='left')
-        fig.text(0.38, 0.82, f"{avg_rating:.2f}", fontsize=12, weight="bold", ha='center')
+        fig.text(0.335, 0.84, "Rating:", fontsize=10, weight="bold", ha='left', color='#0F1116')
+        fig.text(0.38, 0.82, f"{avg_rating:.2f}", fontsize=12, weight="bold", ha='center', color='#0F1116')
+        
     for i, (role, score) in enumerate(top_roles):
         tile_x = 0.05 + i * (0.18 + 0.02)
-        rect = plt.Rectangle((tile_x, 0.60), 0.18, 0.08, transform=fig.transFigure, facecolor="gold", edgecolor="black", lw=1)
+        rect = plt.Rectangle((tile_x, 0.60), 0.18, 0.08, transform=fig.transFigure, facecolor=PRIMARY_ACCENT, edgecolor=TEXT_COLOR, lw=1)
         fig.add_artist(rect)
-        fig.text(tile_x + 0.02, 0.64, role, fontsize=11, weight="bold", ha='left', va='center')
-        fig.text(tile_x + 0.16, 0.64, f"{score:.0f}", fontsize=13, weight="bold", ha='right', va='center')
+        fig.text(tile_x + 0.02, 0.64, role, fontsize=11, weight="bold", ha='left', va='center', color='#0F1116')
+        fig.text(tile_x + 0.16, 0.64, f"{score:.0f}", fontsize=13, weight="bold", ha='right', va='center', color='#0F1116')
+        
     ax_bar = fig.add_axes([0.05, 0.20, 0.9, 0.35])
+    ax_bar.set_facecolor(BG_COLOR)
     bar_data = dict(sorted(cat_percentiles.items(), key=lambda x: x[1]))
-    bars = ax_bar.barh(list(bar_data.keys()), list(bar_data.values()), color='gold', edgecolor='black')
+    bars = ax_bar.barh(list(bar_data.keys()), list(bar_data.values()), color=PRIMARY_ACCENT, edgecolor=TEXT_COLOR)
     ax_bar.set_xlim(0, 100)
-    ax_bar.set_title("Positional Responsibilities", fontsize=12, weight='bold', loc='left')
-    ax_bar.tick_params(axis='y', labelsize=9)
-    ax_bar.grid(axis='x', linestyle='--', alpha=0.6)
+    ax_bar.set_title("Positional Responsibilities", fontsize=12, weight='bold', loc='left', color=TEXT_COLOR)
+    ax_bar.tick_params(axis='y', colors=TEXT_COLOR, labelsize=9)
+    ax_bar.tick_params(axis='x', colors=TEXT_COLOR)
+    ax_bar.spines['right'].set_visible(False)
+    ax_bar.spines['top'].set_visible(False)
+    ax_bar.spines['left'].set_color(TEXT_COLOR)
+    ax_bar.spines['bottom'].set_color(TEXT_COLOR)
+    ax_bar.grid(axis='x', linestyle='--', alpha=0.3, color=TEXT_COLOR)
+    
     for bar in bars:
         width = bar.get_width()
-        ax_bar.text(width + 1, bar.get_y() + bar.get_height()/2, f"{width:.1f}", va='center', fontsize=9)
-    fig.text(0.05, 0.12, "Similar Player Profiles", fontsize=12, weight='bold', ha='left')
+        ax_bar.text(width + 1, bar.get_y() + bar.get_height()/2, f"{width:.1f}", va='center', fontsize=9, color=TEXT_COLOR)
+        
+    fig.text(0.05, 0.12, "Similar Player Profiles", fontsize=12, weight='bold', ha='left', color=PRIMARY_ACCENT)
+    
     for i, (_, row) in enumerate(top_similar.iterrows()):
         tile_x = 0.05 + i * (0.22 + 0.02)
-        rect = plt.Rectangle((tile_x, 0.02), 0.22, 0.08, transform=fig.transFigure, facecolor="lightgreen", edgecolor="black", lw=1)
+        rect = plt.Rectangle((tile_x, 0.02), 0.22, 0.08, transform=fig.transFigure, facecolor=SIMILAR_BG, edgecolor=TEXT_COLOR, lw=1)
         fig.add_artist(rect)
-        fig.text(tile_x + 0.01, 0.075, f"{row['Player']}", fontsize=10, weight="bold", ha='left', va='top')
-        fig.text(tile_x + 0.01, 0.055, f"{row['Team']}", fontsize=9, ha='left', va='top')
-        fig.text(tile_x + 0.01, 0.035, f"{row['Similarity']*100:.1f}% Similarity", fontsize=9, ha='left', va='top')
+        fig.text(tile_x + 0.01, 0.075, f"{row['Player']}", fontsize=10, weight="bold", ha='left', va='top', color=TEXT_COLOR)
+        fig.text(tile_x + 0.01, 0.055, f"{row['Team']}", fontsize=9, ha='left', va='top', color=TEXT_COLOR)
+        fig.text(tile_x + 0.01, 0.035, f"{row['Similarity']*100:.1f}% Similarity", fontsize=9, ha='left', va='top', color=TEXT_COLOR)
+        
     return fig, "Profile generated successfully."
 
 def create_match_shot_map_fig(df, file_path):
@@ -221,10 +351,10 @@ def create_match_shot_map_fig(df, file_path):
     team1_xg, team2_xg = team1['xG'].sum(), team2['xG'].sum()
 
     pitch = Pitch(pitch_type='opta', pitch_width=68, pitch_length=105, pad_bottom=0.5, pad_top=5,
-                  pitch_color='#001f3f', line_color='white', half=False, goal_type='box', goal_alpha=0.8)
+                  pitch_color='#0F1116', line_color='white', half=False, goal_type='box', goal_alpha=0.8) # Updated BG
     fig, ax = plt.subplots(figsize=(16, 10))
     pitch.draw(ax=ax)
-    fig.set_facecolor('#001f3f')
+    fig.set_facecolor('#0F1116') # Updated BG
     ax.invert_xaxis()
 
     team1_miss, team2_miss, goal_color, own_goal_color = '#7FDBFF', '#FFDC00', '#2ECC40', 'red'
@@ -279,27 +409,33 @@ def create_match_shot_map_fig(df, file_path):
 
 # --- Page Display Functions ---
 def display_landing_page():
-    st.markdown("""<style>.block-container { max-width: 750px; padding-top: 5rem; } div[data-testid="stSidebar"] { display: none; }</style>""", unsafe_allow_html=True)
-    st.title("She Plots FC - Analytics")
-    st.markdown("---")
-    col1, col2, col3 = st.columns([2, 1, 2])
-    with col1: st.image(resource_path("sheplotsfc2.png"), use_container_width=True)
-    with col2: st.markdown("<h1 style='text-align: center; margin-top: 150px;'>X</h1>", unsafe_allow_html=True)
-    with col3: st.image(resource_path("Outswinger FC.png"), use_container_width=True)
-    st.markdown("---")
-    st.subheader("Opening the world of WoSo data")
-    if st.button("Enter Analytics Platform", use_container_width=True, type="primary"):
-        st.session_state.app_mode = "MainApp"; st.rerun()
+    st.markdown("""<style>.block-container { max-width: 850px; padding-top: 5rem; } div[data-testid="stSidebar"] { display: none; }</style>""", unsafe_allow_html=True)
+    
+    with st.container():
+        col1, col2, col3 = st.columns([2, 1, 2])
+        with col1: 
+            st.image(resource_path("sheplotsfc2.png"), use_container_width=True)
+        with col2: 
+            st.markdown("<h1 style='text-align: center; margin-top: 150px; color: #FAFAFA;'>X</h1>", unsafe_allow_html=True)
+        with col3: 
+            st.image(resource_path("Outswinger FC.png"), use_container_width=True)
+        
+        st.markdown("---")
+        st.header("Opening the world of WoSo data")
+        st.markdown("") # Add some space
+        if st.button("Enter Analytics Platform", use_container_width=True):
+            st.session_state.app_mode = "MainApp"
+            st.rerun()
 
 def display_data_scouting_page(data_config, metric_info):
-    st.title("📊 Data Scouting")
+    st.title("Data Scouting")
     leagues_row1, leagues_row2 = ["WSL", "WSL 2", "Frauen-Bundesliga"], ["Liga F", "NWSL", "Premiere Ligue"]
     cols_row1, cols_row2 = st.columns(len(leagues_row1)), st.columns(len(leagues_row2))
     for i, league in enumerate(leagues_row1):
-        if cols_row1[i].button(league, key=f"league_btn_1_{i}", use_container_width=True, disabled=(st.session_state.selected_league == league)):
+        if cols_row1[i].button(league, key=f"league_btn_1_{i}", use_container_width=True, type="primary" if st.session_state.selected_league == league else "secondary"):
             st.session_state.selected_league = league; st.rerun()
     for i, league in enumerate(leagues_row2):
-        if cols_row2[i].button(league, key=f"league_btn_2_{i}", use_container_width=True, disabled=(st.session_state.selected_league == league)):
+        if cols_row2[i].button(league, key=f"league_btn_2_{i}", use_container_width=True, type="primary" if st.session_state.selected_league == league else "secondary"):
             st.session_state.selected_league = league; st.rerun()
     selected_league, selected_metric_key = st.session_state.selected_league, st.session_state.selected_metric
     st.header(f"📈 {selected_league} - {selected_metric_key}")
@@ -328,7 +464,18 @@ def display_data_scouting_page(data_config, metric_info):
                 if display_option == "📊 Visualization":
                     st.subheader("Top Performers Chart")
                     max_val, x_domain = display_df[sort_by_col].max(), [0, display_df[sort_by_col].max()]
-                    chart = alt.Chart(display_df).mark_bar().encode(x=alt.X(f'{sort_by_col}:Q', title=selected_metric_key, scale=alt.Scale(domain=x_domain)), y=alt.Y('Player:N', sort='-x', title="Player")).interactive()
+                    chart = alt.Chart(display_df).mark_bar(
+                        color="#FFC107", 
+                        cornerRadius=5
+                    ).encode(
+                        x=alt.X(f'{sort_by_col}:Q', title=selected_metric_key, scale=alt.Scale(domain=x_domain)), 
+                        y=alt.Y('Player:N', sort='-x', title="Player")
+                    ).interactive().configure_axis(
+                        labelColor='#FAFAFA',
+                        titleColor='#FAFAFA'
+                    ).configure_view(
+                        strokeWidth=0
+                    )
                     st.altair_chart(chart, use_container_width=True)
                 else:
                     st.subheader("Detailed Data Table")
@@ -340,7 +487,7 @@ def display_data_scouting_page(data_config, metric_info):
     else: st.warning("No data configuration found.")
 
 def display_corners_page(data_config):
-    st.title("⛳ Corners")
+    st.title("Corners")
     leagues, selected_league_corners = list(data_config.keys()), st.session_state.get('corner_league_selection', 'Total')
     df_full = pd.DataFrame()
     try:
@@ -374,7 +521,7 @@ def display_corners_page(data_config):
         if fig:
             st.pyplot(fig)
             buf, csv = io.BytesIO(), df_filtered.to_csv(index=False).encode('utf-8')
-            fig.savefig(buf, format="png", bbox_inches='tight', facecolor='white')
+            fig.savefig(buf, format="png", bbox_inches='tight', facecolor=fig.get_facecolor()) # Use fig facecolor
             dl_col1, dl_col2 = st.columns(2)
             with dl_col1: st.download_button("📥 Download Image", data=buf, file_name=f"{plot_title.replace(' ', '_')}_shot_map.png", mime="image/png", use_container_width=True)
             with dl_col2: st.download_button("📥 Download Data", data=csv, file_name=f"{plot_title.replace(' ', '_')}_corner_data.csv", mime="text/csv", use_container_width=True)
@@ -383,7 +530,7 @@ def display_corners_page(data_config):
     else: st.info("No data available for the selected filters.")
 
 def display_match_analysis_page():
-    st.title("🎯 Match Analysis")
+    st.title("Match Analysis")
     MATCH_DIR = resource_path("data/matchxg")
     
     try:
@@ -403,7 +550,6 @@ def display_match_analysis_page():
             st.warning(f"No match files found for {selected_league}.")
             return
 
-        # Extract all unique team names from filenames in the selected league
         all_teams = set()
         for f in match_files:
             try:
@@ -411,12 +557,11 @@ def display_match_analysis_page():
                 all_teams.add(teams[0].strip())
                 all_teams.add(teams[1].strip())
             except IndexError:
-                continue # Skip malformed filenames
+                continue 
         
         with col2:
             team_filter = st.selectbox("Filter by Team (Optional)", ["All Teams"] + sorted(list(all_teams)))
 
-        # Filter match list based on team selection
         if team_filter != "All Teams":
             filtered_matches = [f for f in match_files if team_filter in f]
         else:
@@ -426,11 +571,10 @@ def display_match_analysis_page():
             st.warning(f"No matches found for {team_filter} in {selected_league}.")
             return
 
-        # Clean names for display
         match_display_names = sorted([os.path.splitext(f)[0] for f in filtered_matches])
         selected_match_name = st.selectbox("Select a Match to Analyze", match_display_names)
 
-        if st.button("Generate Analysis", use_container_width=True, type="primary"):
+        if st.button("Generate Analysis", use_container_width=True):
             if selected_match_name:
                 with st.spinner("Generating match analysis..."):
                     file_path = os.path.join(league_path, f"{selected_match_name}.csv")
@@ -447,7 +591,7 @@ def display_match_analysis_page():
         st.error(f"An error occurred: {e}")
 
 def display_player_profiling_page():
-    st.title("👤 Player Profiling")
+    st.title("Player Profiling")
     PROFILES_DIR = resource_path("data/profiles")
     position_map = { 'Centre-back': ['CB', 'RCB', 'LCB'], 'Full-back': ['LB', 'RB', 'LWB', 'RWB'], 'Midfielder': ['LCMF', 'RCMF', 'CFM', 'LDMF', 'RDMF', 'RAMF', 'LAMF', 'AMF', 'DMF'], 'Attacking Midfielder': ['AMF', 'RAMF', 'LAMF', 'LW', 'RW'], 'Attacker': ['CF', 'LW', 'RW'] }
 
@@ -470,7 +614,7 @@ def display_player_profiling_page():
             player_list = sorted(position_df['Player'].unique())
             if not player_list: st.warning(f"No players found for '{position_group}' in {selected_league_name}."); return
             selected_player = st.selectbox("Select Player", player_list)
-            if st.button("Generate Profile", use_container_width=True, type="primary"):
+            if st.button("Generate Profile", use_container_width=True):
                 if selected_player:
                     with st.spinner("Generating profile..."):
                         fig, message = create_player_profile_fig(df, selected_player, position_group)
@@ -482,6 +626,8 @@ def display_player_profiling_page():
 # --- Main App Logic ---
 def main():
     """Main function to run the Streamlit app."""
+    inject_custom_css()
+    
     metric_info = get_metric_info()
     data_config = { "WSL": { "minutes_file": "WSL_minutes.csv", 'xG (Expected Goals)': {"file": "WSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "WSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "WSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "WSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "WSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "WSL_corners.csv"} }, "WSL 2": { "minutes_file": "WSL2_minutes.csv", 'xG (Expected Goals)': {"file": "WSL2.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "WSL2_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "WSL2_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "WSL2_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "WSL2_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "WSL2_corners.csv"} }, "Frauen-Bundesliga": { "minutes_file": "FBL_minutes.csv", 'xG (Expected Goals)': {"file": "FBL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "FBL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "FBL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "FBL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "FBL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "FBL_corners.csv"} }, "Liga F": { "minutes_file": "LigaF_minutes.csv", 'xG (Expected Goals)': {"file": "LigaF.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "LigaF_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "LigaF_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "LigaF_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "LigaF_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "LigaF_corners.csv"} }, "NWSL": { "minutes_file": "NWSL_minutes.csv", 'xG (Expected Goals)': {"file": "NWSL.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "NWSL_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "NWSL_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "NWSL_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "NWSL_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "NWSL_corners.csv"} }, "Premiere Ligue": { "minutes_file": "PremiereLigue_minutes.csv", 'xG (Expected Goals)': {"file": "PremiereLigue.csv", "cols": ['Player', 'Team', 'Minutes', 'Shots', 'xG', 'xG per 90', 'OpenPlay_xG', 'SetPiece_xG'], "sort": 'xG'}, 'xAG (Expected Assisted Goals)': {"file": "PremiereLigue_assists.csv", "cols": ['Player', 'Team', 'Minutes', 'Assists', 'ShotAssists', 'xAG', 'xAG per 90'], "sort": 'xAG'}, 'xT (Expected Threat)': {"file": "PremiereLigue_xT.csv", "cols": ['Player', 'Team', 'Minutes', 'xT', 'xT per 90'], "sort": 'xT'}, 'Expected Disruption (xDisruption)': {"file": "PremiereLigue_xDisruption.csv", "cols": ['Player', 'Team', 'Minutes', 'Actual disruption', 'xDisruption', 'xDisruption per 90'], "sort": 'xDisruption'}, 'Goal Probability Added (GPA/G+)': {"file": "PremiereLigue_gpa.csv", "cols": ['Player', 'Team', 'Minutes', 'GPA', 'GPA per 90', 'Avg GPA', 'GPA Rating'], "sort": 'GPA'}, 'Corners': {"file": "Premiere_Ligue_corners.csv"} } }
     
@@ -495,20 +641,26 @@ def main():
     if st.session_state.app_mode == "Landing":
         display_landing_page()
     else:
-        st.markdown("""<style>div[data-testid="stSidebar"] {display: none;}</style>""", unsafe_allow_html=True)
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            if st.button("📊 Data Scouting", use_container_width=True, type="primary" if st.session_state.page_view == "Data Scouting" else "secondary"):
-                st.session_state.page_view = "Data Scouting"; st.rerun()
-        with col2:
-            if st.button("🎯 Match Analysis", use_container_width=True, type="primary" if st.session_state.page_view == "Match Analysis" else "secondary"):
-                st.session_state.page_view = "Match Analysis"; st.rerun()
-        with col3:
-            if st.button("👤 Player Profiling", use_container_width=True, type="primary" if st.session_state.page_view == "Player Profiling" else "secondary"):
-                st.session_state.page_view = "Player Profiling"; st.rerun()
-        with col4:
-            if st.button("⛳ Corners", use_container_width=True, type="primary" if st.session_state.page_view == "Corners" else "secondary"):
-                st.session_state.page_view = "Corners"; st.rerun()
+        # --- Improved Navigation ---
+        st.image(resource_path("sheplotsfc2.png"), width=200) # Add a logo at the top
+        cols = st.columns(4)
+        nav_buttons = {
+            "Data Scouting": "📊",
+            "Match Analysis": "🎯",
+            "Player Profiling": "👤",
+            "Corners": "⛳"
+        }
+        page_keys = list(nav_buttons.keys())
+        
+        if cols[0].button(f"{nav_buttons[page_keys[0]]} {page_keys[0]}", use_container_width=True, type="primary" if st.session_state.page_view == page_keys[0] else "secondary"):
+            st.session_state.page_view = page_keys[0]; st.rerun()
+        if cols[1].button(f"{nav_buttons[page_keys[1]]} {page_keys[1]}", use_container_width=True, type="primary" if st.session_state.page_view == page_keys[1] else "secondary"):
+            st.session_state.page_view = page_keys[1]; st.rerun()
+        if cols[2].button(f"{nav_buttons[page_keys[2]]} {page_keys[2]}", use_container_width=True, type="primary" if st.session_state.page_view == page_keys[2] else "secondary"):
+            st.session_state.page_view = page_keys[2]; st.rerun()
+        if cols[3].button(f"{nav_buttons[page_keys[3]]} {page_keys[3]}", use_container_width=True, type="primary" if st.session_state.page_view == page_keys[3] else "secondary"):
+            st.session_state.page_view = page_keys[3]; st.rerun()
+
         st.markdown("---")
 
         if st.session_state.page_view == "Data Scouting":
@@ -518,6 +670,7 @@ def main():
             with st.expander("Show Corner Analysis Filters", expanded=True):
                 try:
                     leagues_with_total = ["Total"] + list(data_config.keys())
+                    # Load a sample file just to populate filters initially
                     temp_df_full = load_data(resource_path(os.path.join("data", "WSL_corners.csv")))
                     df_corners = temp_df_full[temp_df_full['Type_of_play'].str.strip().str.lower() == 'fromcorner'].copy()
                     teams, players = ["All"] + sorted(df_corners['TeamId'].unique().tolist()), ["All"] + sorted(df_corners['PlayerId'].unique().tolist())
@@ -535,9 +688,9 @@ def main():
                         st.slider("Filter by Time (minutes):", min_time, max_time, (min_time, max_time), key='corner_time')
                 except Exception: st.warning("Could not load corner filter options.")
         
-        if st.session_state.page_view not in ["Data Scouting", "Corners", "Player Profiling"]:
-            st.markdown("---")
-        
+        if st.session_state.page_view not in ["Data Scouting", "Corners"]:
+            st.markdown("<br>", unsafe_allow_html=True)
+
         if st.session_state.page_view == "Data Scouting": display_data_scouting_page(data_config, metric_info)
         elif st.session_state.page_view == "Match Analysis": display_match_analysis_page()
         elif st.session_state.page_view == "Player Profiling": display_player_profiling_page()
