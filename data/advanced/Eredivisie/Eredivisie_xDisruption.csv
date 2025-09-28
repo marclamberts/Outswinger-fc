@@ -1,209 +1,209 @@
 playerName,Team,ActualDisruptions,ExpectedDisruptions
-A. Altena,Heerenveen,9,0.2755
-A. Andradóttir,Twente,4,0.2697
-A. Chibani,PSV,8,0.11040000000000001
-A. Eloualidi,AZ,0,0.0012000000000000001
-A. Gelevert,Twente,1,0.013000000000000001
-A. Knol,Twente,2,0.169
-A. Nassette,Heerenveen,8,0.1768
-A. Takeshige,Feyenoord,2,0.0123
-A. Tuin,Twente,1,0.40499999999999997
+A. Altena,Heerenveen,9,2.7550000000000003
+A. Andradóttir,Twente,4,2.697
+A. Chibani,PSV,8,1.104
+A. Eloualidi,AZ,0,0.012
+A. Gelevert,Twente,1,0.13
+A. Knol,Twente,2,1.6900000000000002
+A. Nassette,Heerenveen,8,1.7680000000000002
+A. Takeshige,Feyenoord,2,0.123
+A. Tuin,Twente,1,4.05
 A. Verspaget,Feyenoord,0,0.0
-A. Weerelts,Utrecht,9,0.08399999999999999
-A. van Egmond,ADO Den Haag,9,0.38220000000000004
-A. van der Klooster,Excelsior,2,0.0856
-A. van der Vlist,Excelsior,7,0.0869
-B. Franken,NAC Breda,1,0.2112
-B. Lorsheijd,ADO Den Haag,0,0.0852
-B. Udink,Heerenveen,1,0.009600000000000001
-B. Vermeer,Heerenveen,3,0.0322
-B. Vonk,ADO Den Haag,14,0.513
-B. van Egmond,Ajax,1,1.1583999999999999
-C. Homan,Excelsior,14,0.2576
-C. Ishida,PEC Zwolle,12,0.27
-C. Kira,HERA United,8,0.099
-C. Mol,AZ,10,1.0387
-C. Obispo,Feyenoord,3,0.15760000000000002
-C. Pijnacker Hordijk,ADO Den Haag,2,0.0092
-C. Promes,NAC Breda,1,0.0021999999999999997
-C. Ripa,PSV,4,1.2483
+A. Weerelts,Utrecht,9,0.84
+A. van Egmond,ADO Den Haag,9,3.8220000000000005
+A. van der Klooster,Excelsior,2,0.856
+A. van der Vlist,Excelsior,7,0.869
+B. Franken,NAC Breda,1,2.112
+B. Lorsheijd,ADO Den Haag,0,0.852
+B. Udink,Heerenveen,1,0.096
+B. Vermeer,Heerenveen,3,0.322
+B. Vonk,ADO Den Haag,14,5.13
+B. van Egmond,Ajax,1,11.584
+C. Homan,Excelsior,14,2.576
+C. Ishida,PEC Zwolle,12,2.7
+C. Kira,HERA United,8,0.99
+C. Mol,AZ,10,10.387
+C. Obispo,Feyenoord,3,1.576
+C. Pijnacker Hordijk,ADO Den Haag,2,0.092
+C. Promes,NAC Breda,1,0.022
+C. Ripa,PSV,4,12.483
 D. Boussatta,ADO Den Haag,3,0.0
-D. Cherif,Excelsior,12,0.136
-D. Haizoun,Excelsior,2,0.038400000000000004
-D. Lemey,Twente,0,0.0345
-D. Lont,Feyenoord,0,0.001
-D. Noordermeer,Ajax,5,0.8112
-D. Noordman,Ajax,16,0.836
-D. Tolhoek,Ajax,2,0.23920000000000002
-D. de Klonia,Ajax,12,0.588
-D. de Ridder,AZ,2,0.093
-D. den Turk,Ajax,0,0.0112
-D. van Ginkel,Twente,3,0.1001
-D. van Lunteren,AZ,3,0.242
-D. van Straten,Utrecht,2,0.0462
-E. Daalman,HERA United,2,0.1288
-E. Fertoute,NAC Breda,1,0.028200000000000003
-E. Frijns,PSV,4,0.16640000000000002
-E. Henschen,PSV,2,0.5136000000000001
-E. Kerkhof,Heerenveen,6,0.19949999999999998
-E. Maass,Heerenveen,4,0.1035
-E. Maatman,Heerenveen,1,0.060300000000000006
-E. Oude Elberink,Twente,2,0.0198
-E. Pijnenburg,Feyenoord,0,0.0017000000000000001
-E. Smits,Heerenveen,4,0.076
-E. Van Kerkhoven,Feyenoord,0,0.059
-E. Yetim,NAC Breda,0,0.023
-E. de Graaf,Feyenoord,2,0.0792
-E. van Deursen,Feyenoord,8,0.2641
-E. van Vilsteren,Heerenveen,6,0.43200000000000005
-E. van der Vliet,NAC Breda,7,0.2496
-F. Bastiaen,Utrecht,0,0.0852
-F. Bol,ADO Den Haag,4,0.2222
-F. Hermans,Utrecht,2,0.0312
-F. Kroese,AZ,1,0.18480000000000002
-F. Meijer,Heerenveen,7,0.3105
-F. Prins,ADO Den Haag,0,0.2232
-F. Spaan,AZ,1,0.0492
-F. Stoit,Feyenoord,2,0.16640000000000002
+D. Cherif,Excelsior,12,1.36
+D. Haizoun,Excelsior,2,0.384
+D. Lemey,Twente,0,0.34500000000000003
+D. Lont,Feyenoord,0,0.01
+D. Noordermeer,Ajax,5,8.112
+D. Noordman,Ajax,16,8.36
+D. Tolhoek,Ajax,2,2.3920000000000003
+D. de Klonia,Ajax,12,5.88
+D. de Ridder,AZ,2,0.93
+D. den Turk,Ajax,0,0.112
+D. van Ginkel,Twente,3,1.001
+D. van Lunteren,AZ,3,2.42
+D. van Straten,Utrecht,2,0.46199999999999997
+E. Daalman,HERA United,2,1.288
+E. Fertoute,NAC Breda,1,0.28200000000000003
+E. Frijns,PSV,4,1.6640000000000001
+E. Henschen,PSV,2,5.136
+E. Kerkhof,Heerenveen,6,1.9949999999999999
+E. Maass,Heerenveen,4,1.035
+E. Maatman,Heerenveen,1,0.6030000000000001
+E. Oude Elberink,Twente,2,0.198
+E. Pijnenburg,Feyenoord,0,0.017
+E. Smits,Heerenveen,4,0.76
+E. Van Kerkhoven,Feyenoord,0,0.59
+E. Yetim,NAC Breda,0,0.23
+E. de Graaf,Feyenoord,2,0.792
+E. van Deursen,Feyenoord,8,2.641
+E. van Vilsteren,Heerenveen,6,4.32
+E. van der Vliet,NAC Breda,7,2.496
+F. Bastiaen,Utrecht,0,0.852
+F. Bol,ADO Den Haag,4,2.222
+F. Hermans,Utrecht,2,0.312
+F. Kroese,AZ,1,1.848
+F. Meijer,Heerenveen,7,3.105
+F. Prins,ADO Den Haag,0,2.232
+F. Spaan,AZ,1,0.492
+F. Stoit,Feyenoord,2,1.6640000000000001
 F. van der Eijk,Excelsior,2,0.0
-G. Caprino,AZ,9,0.4095000000000001
-G. Viehoff,ADO Den Haag,6,0.0511
-G. op den Kelder,Utrecht,10,0.2884
-H. Balkhir,Excelsior,4,0.024
-H. Huizenga,PEC Zwolle,2,0.3267
-H. Stallmann,Heerenveen,1,0.0076
-H. Tanaka,HERA United,0,0.0021000000000000003
-I. Colin,Ajax,12,0.6039000000000001
-I. Dostmohamed,Ajax,3,0.6273000000000001
-I. Gomez,Excelsior,0,0.0742
-I. Kaagman,Heerenveen,3,0.058199999999999995
+G. Caprino,AZ,9,4.095000000000001
+G. Viehoff,ADO Den Haag,6,0.511
+G. op den Kelder,Utrecht,10,2.884
+H. Balkhir,Excelsior,4,0.24
+H. Huizenga,PEC Zwolle,2,3.267
+H. Stallmann,Heerenveen,1,0.076
+H. Tanaka,HERA United,0,0.021
+I. Colin,Ajax,12,6.039000000000001
+I. Dostmohamed,Ajax,3,6.273000000000001
+I. Gomez,Excelsior,0,0.742
+I. Kaagman,Heerenveen,3,0.582
 I. Kemper,PEC Zwolle,0,0.0
-I. Kopp,HERA United,12,0.19890000000000002
-I. Nottet,HERA United,4,0.08580000000000002
-I. Redouani,Excelsior,1,0.008
-I. Weiman,PEC Zwolle,4,0.2958
-I. Zijp,PEC Zwolle,1,0.15480000000000002
-I. van Dalen,NAC Breda,7,0.1911
-I. van der Vegt,Twente,3,0.0308
-J. Brandau,Feyenoord,6,0.42400000000000004
-J. Burgers,Excelsior,9,0.6764
-J. Dijsselhof,PEC Zwolle,6,0.34199999999999997
-J. Paliama,Utrecht,7,0.24840000000000004
-J. Ravensbergen,Twente,0,0.05389999999999999
-J. Resink,Heerenveen,0,0.0167
-J. Roord,Twente,2,0.3348
-J. Roosjen,PEC Zwolle,9,1.3065000000000002
-J. Schneijderberg,NAC Breda,5,0.0737
-J. Smits,Ajax,0,0.065
-J. Verheijen,Excelsior,16,0.3762
-J. Visser,NAC Breda,0,0.0004
-J. Weimar,Feyenoord,0,0.028000000000000004
-J. van Belen,HERA United,1,0.0806
-J. van Hensbergen,Ajax,1,0.0396
-J. van Mierlo,ADO Den Haag,6,0.2408
-J. van Uden,AZ,3,0.0124
-J. van de Velde,Ajax,4,1.269
-J. van den Ende,ADO Den Haag,5,0.1275
-K. Hendriks,Excelsior,16,0.6930000000000001
-K. Hendriks,NAC Breda,3,0.06760000000000001
-K. Heshof,NAC Breda,9,0.0693
-K. Iwasaki,Feyenoord,6,0.19
-K. Koopman,Utrecht,4,0.0896
-K. Pruim,PEC Zwolle,3,0.0132
-K. Steen,HERA United,0,0.0764
-K. Thomas,AZ,4,0.15120000000000003
-K. Woons,AZ,4,0.162
-K. van de Westeringh,Feyenoord,1,0.0066
-L. Carleer,Twente,2,0.3672000000000001
-L. Forshaw,HERA United,2,0.09690000000000001
-L. Groenewegen,Twente,9,0.156
+I. Kopp,HERA United,12,1.989
+I. Nottet,HERA United,4,0.8580000000000001
+I. Redouani,Excelsior,1,0.08
+I. Weiman,PEC Zwolle,4,2.958
+I. Zijp,PEC Zwolle,1,1.5480000000000003
+I. van Dalen,NAC Breda,7,1.911
+I. van der Vegt,Twente,3,0.308
+J. Brandau,Feyenoord,6,4.24
+J. Burgers,Excelsior,9,6.764
+J. Dijsselhof,PEC Zwolle,6,3.42
+J. Paliama,Utrecht,7,2.4840000000000004
+J. Ravensbergen,Twente,0,0.5389999999999999
+J. Resink,Heerenveen,0,0.167
+J. Roord,Twente,2,3.348
+J. Roosjen,PEC Zwolle,9,13.065000000000001
+J. Schneijderberg,NAC Breda,5,0.737
+J. Smits,Ajax,0,0.65
+J. Verheijen,Excelsior,16,3.762
+J. Visser,NAC Breda,0,0.004
+J. Weimar,Feyenoord,0,0.28
+J. van Belen,HERA United,1,0.806
+J. van Hensbergen,Ajax,1,0.396
+J. van Mierlo,ADO Den Haag,6,2.408
+J. van Uden,AZ,3,0.124
+J. van de Velde,Ajax,4,12.69
+J. van den Ende,ADO Den Haag,5,1.2750000000000001
+K. Hendriks,Excelsior,16,6.930000000000001
+K. Hendriks,NAC Breda,3,0.676
+K. Heshof,NAC Breda,9,0.693
+K. Iwasaki,Feyenoord,6,1.9000000000000001
+K. Koopman,Utrecht,4,0.896
+K. Pruim,PEC Zwolle,3,0.132
+K. Steen,HERA United,0,0.764
+K. Thomas,AZ,4,1.5120000000000002
+K. Woons,AZ,4,1.62
+K. van de Westeringh,Feyenoord,1,0.066
+L. Carleer,Twente,2,3.6720000000000006
+L. Forshaw,HERA United,2,0.9690000000000001
+L. Groenewegen,Twente,9,1.56
 L. Haentjens,PSV,0,0.0
-L. Iedema,PEC Zwolle,0,0.0057
-L. Jacobs,PSV,6,1.6570999999999998
-L. Keukelaar,Ajax,2,0.048
-L. Loonen,Utrecht,0,0.21000000000000002
-L. Mahieu,Utrecht,6,0.10010000000000001
-L. Rijsbergen,PSV,2,0.5123
-L. Strik,PSV,7,0.7296
-L. Venema,Heerenveen,2,0.013500000000000002
-L. Verhoef,NAC Breda,5,0.11200000000000002
-L. Vis,HERA United,0,0.17
-L. Vliek,Twente,2,0.33
-L. Vroegindeweij,ADO Den Haag,6,0.0172
-L. de Keijzer,Utrecht,4,0.5425000000000001
+L. Iedema,PEC Zwolle,0,0.057
+L. Jacobs,PSV,6,16.570999999999998
+L. Keukelaar,Ajax,2,0.48
+L. Loonen,Utrecht,0,2.1
+L. Mahieu,Utrecht,6,1.0010000000000001
+L. Rijsbergen,PSV,2,5.123
+L. Strik,PSV,7,7.296
+L. Venema,Heerenveen,2,0.135
+L. Verhoef,NAC Breda,5,1.12
+L. Vis,HERA United,0,1.7000000000000002
+L. Vliek,Twente,2,3.3000000000000003
+L. Vroegindeweij,ADO Den Haag,6,0.17200000000000001
+L. de Keijzer,Utrecht,4,5.425000000000001
 L. de With,Excelsior,1,0.0
-L. van Oosten,Ajax,1,0.033600000000000005
-M. Bormans,Utrecht,5,0.32320000000000004
-M. Bross,PSV,11,0.5700000000000001
-M. Goutier,NAC Breda,1,0.0007
-M. Itamura,Feyenoord,4,0.25739999999999996
-M. Kemper-Moorrees,PSV,0,0.0024000000000000002
-M. Lagcher,HERA United,2,0.045000000000000005
-M. Lindner,PEC Zwolle,6,0.131
-M. Munsterman,Utrecht,2,0.012
-M. Rutgers,PEC Zwolle,8,0.14279999999999998
-M. Stoop,AZ,1,0.5740000000000001
-M. Westerink,Excelsior,16,1.1638
-M. de Vette,AZ,9,0.21600000000000003
-M. van Bentum,AZ,4,0.21600000000000003
-M. van Houwelingen,NAC Breda,4,0.1488
-M. van Koppen,Ajax,1,0.27880000000000005
-N. Berrevoets,HERA United,11,0.1456
-N. Booms,AZ,0,0.248
-N. Evrard,PSV,0,0.159
-N. Hilhorst,Excelsior,6,0.3144
-N. Mulder,ADO Den Haag,8,0.1224
-N. Nijstad,PSV,6,0.8700000000000001
-N. Stoop,HERA United,7,0.2184
-N. Tromp,Utrecht,5,0.4452
-N. Vrij,Excelsior,5,0.057199999999999994
-N. de Haan,NAC Breda,0,0.0705
-N. van den Burg,NAC Breda,1,0.0036000000000000003
-N. van der Sluijs,Feyenoord,5,0.27840000000000004
-O. Szymczak,PEC Zwolle,0,0.0194
-P. Donker,HERA United,3,0.1638
+L. van Oosten,Ajax,1,0.336
+M. Bormans,Utrecht,5,3.232
+M. Bross,PSV,11,5.7
+M. Goutier,NAC Breda,1,0.007
+M. Itamura,Feyenoord,4,2.574
+M. Kemper-Moorrees,PSV,0,0.024
+M. Lagcher,HERA United,2,0.45000000000000007
+M. Lindner,PEC Zwolle,6,1.31
+M. Munsterman,Utrecht,2,0.12
+M. Rutgers,PEC Zwolle,8,1.428
+M. Stoop,AZ,1,5.74
+M. Westerink,Excelsior,16,11.638
+M. de Vette,AZ,9,2.16
+M. van Bentum,AZ,4,2.16
+M. van Houwelingen,NAC Breda,4,1.488
+M. van Koppen,Ajax,1,2.7880000000000003
+N. Berrevoets,HERA United,11,1.4560000000000002
+N. Booms,AZ,0,2.48
+N. Evrard,PSV,0,1.59
+N. Hilhorst,Excelsior,6,3.144
+N. Mulder,ADO Den Haag,8,1.224
+N. Nijstad,PSV,6,8.700000000000001
+N. Stoop,HERA United,7,2.184
+N. Tromp,Utrecht,5,4.452
+N. Vrij,Excelsior,5,0.572
+N. de Haan,NAC Breda,0,0.705
+N. van den Burg,NAC Breda,1,0.036000000000000004
+N. van der Sluijs,Feyenoord,5,2.7840000000000003
+O. Szymczak,PEC Zwolle,0,0.194
+P. Donker,HERA United,3,1.6380000000000001
 P. Raaijmakers,ADO Den Haag,0,0.0
-Q. Dupon,ADO Den Haag,13,0.2414
-R. Blom,ADO Den Haag,19,0.5050000000000001
-R. Boukakar,Heerenveen,6,0.24250000000000002
-R. Dap,Utrecht,1,0.009
-R. Derks,Ajax,0,0.0018000000000000002
-R. Ivens,Twente,2,0.11340000000000001
-R. Jansen,PSV,11,0.7308000000000001
-R. Lacroix,PSV,14,0.897
-R. Renfurm,Utrecht,7,0.16770000000000002
-R. Xhemaili,PSV,2,0.6786
-R. de Haas,Heerenveen,2,0.0456
-R. van Asten,Ajax,5,0.2044
-R. van Eijk,Ajax,0,0.0608
-R. van de Lavoir,Feyenoord,0,0.0333
-S. Coelho Aurélio,NAC Breda,1,0.028200000000000003
-S. Dessing,AZ,2,0.342
-S. Ellouzi,AZ,0,0.0216
-S. Folkertsma,PSV,17,1.348
-S. Hassani,HERA United,5,0.22080000000000002
-S. Heijblom,NAC Breda,4,0.086
-S. Koeleman,ADO Den Haag,3,0.3173
-S. Koopman,Feyenoord,0,0.0056
-S. Kroezen,Heerenveen,3,0.252
-S. Martina,Excelsior,5,0.174
-S. Proost,Twente,4,0.15960000000000002
-S. Spitse,Ajax,7,1.1856
-S. Thrige,PSV,2,1.2096
-S. Verdaasdonk,Twente,0,0.0018000000000000002
-S. Verhoeve,Utrecht,2,0.004200000000000001
-S. de Blij,NAC Breda,0,0.0064
-S. de Jong,Utrecht,0,0.012
-S. te Brake,Twente,3,0.13499999999999998
-S. van Vugt,PEC Zwolle,6,0.0644
-S. van de Velde,PEC Zwolle,3,0.0078
-T. Groenendijk,Utrecht,0,0.0792
-T. Tiebie,HERA United,7,0.045200000000000004
-T. van Bentem,Feyenoord,10,0.4816
-Y. Helderman,Excelsior,4,0.039
-Y. Khanchouch,HERA United,1,0.0017000000000000001
-Y. Kleef,HERA United,0,0.004
-Y. van Goch,NAC Breda,5,0.21590000000000004
-Z. Henry,ADO Den Haag,3,0.41080000000000005
-Z. Hulswit,Feyenoord,4,0.16499999999999998
-Z. Zuidberg,PEC Zwolle,9,0.7038
+Q. Dupon,ADO Den Haag,13,2.414
+R. Blom,ADO Den Haag,19,5.050000000000001
+R. Boukakar,Heerenveen,6,2.4250000000000003
+R. Dap,Utrecht,1,0.09
+R. Derks,Ajax,0,0.018000000000000002
+R. Ivens,Twente,2,1.1340000000000001
+R. Jansen,PSV,11,7.308000000000001
+R. Lacroix,PSV,14,8.97
+R. Renfurm,Utrecht,7,1.677
+R. Xhemaili,PSV,2,6.786
+R. de Haas,Heerenveen,2,0.456
+R. van Asten,Ajax,5,2.044
+R. van Eijk,Ajax,0,0.608
+R. van de Lavoir,Feyenoord,0,0.333
+S. Coelho Aurélio,NAC Breda,1,0.28200000000000003
+S. Dessing,AZ,2,3.4200000000000004
+S. Ellouzi,AZ,0,0.216
+S. Folkertsma,PSV,17,13.48
+S. Hassani,HERA United,5,2.208
+S. Heijblom,NAC Breda,4,0.86
+S. Koeleman,ADO Den Haag,3,3.173
+S. Koopman,Feyenoord,0,0.056
+S. Kroezen,Heerenveen,3,2.52
+S. Martina,Excelsior,5,1.74
+S. Proost,Twente,4,1.596
+S. Spitse,Ajax,7,11.856
+S. Thrige,PSV,2,12.096
+S. Verdaasdonk,Twente,0,0.018000000000000002
+S. Verhoeve,Utrecht,2,0.042
+S. de Blij,NAC Breda,0,0.064
+S. de Jong,Utrecht,0,0.12
+S. te Brake,Twente,3,1.3499999999999999
+S. van Vugt,PEC Zwolle,6,0.644
+S. van de Velde,PEC Zwolle,3,0.078
+T. Groenendijk,Utrecht,0,0.792
+T. Tiebie,HERA United,7,0.452
+T. van Bentem,Feyenoord,10,4.816
+Y. Helderman,Excelsior,4,0.39
+Y. Khanchouch,HERA United,1,0.017
+Y. Kleef,HERA United,0,0.04
+Y. van Goch,NAC Breda,5,2.1590000000000003
+Z. Henry,ADO Den Haag,3,4.1080000000000005
+Z. Hulswit,Feyenoord,4,1.65
+Z. Zuidberg,PEC Zwolle,9,7.038
