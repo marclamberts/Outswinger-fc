@@ -2,10 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import os
-import glob
 import warnings
-from datetime import datetime
-import matplotlib.pyplot as plt
 from mplsoccer.pitch import VerticalPitch
 
 # --- App Configuration ---
@@ -22,7 +19,7 @@ DATA_DIR = "data"
 
 # --- Metric Mapping ---
 metric_files = {
-    "Expected Goals (xG)": "xG",
+    "Expected Goals (xG)": "xG",           # From WSL.csv
     "Expected Assists (xA)": "assists",
     "Expected Threat (xT)": "xT",
     "Expected Disruption (xDisruption)": "xDisruption",
@@ -70,8 +67,10 @@ def load_csv(file_path):
 
 @st.cache_data(ttl=3600)
 def load_competition_data(league: str, metric: str):
-    file_path = os.path.join(DATA_DIR, f"{league}_{metric}.csv")
-    return load_csv(file_path)
+    if metric == "xG":  # xG comes from master league CSV
+        return load_csv(os.path.join(DATA_DIR, f"{league}.csv"))
+    else:
+        return load_csv(os.path.join(DATA_DIR, f"{league}_{metric}.csv"))
 
 # --- Shot Map ---
 def create_modern_shot_map(df, title="SHOT MAP"):
@@ -80,9 +79,11 @@ def create_modern_shot_map(df, title="SHOT MAP"):
     pitch = VerticalPitch(pitch_type='statsbomb', pitch_color="#101826", line_color="#1C2A48")
     fig, ax = pitch.draw(figsize=(10, 7))
     for _, row in df.iterrows():
-        ax.scatter(row["y"], row["x"], 
-                   c="#FF6B6B" if not row.get("isGoal", False) else "#00FFD5",
-                   s=max(row.get("xG", 0) * 800, 50), alpha=0.8, edgecolors="white")
+        ax.scatter(
+            row["y"], row["x"], 
+            c="#FF6B6B" if not row.get("isGoal", False) else "#00FFD5",
+            s=max(row.get("xG", 0) * 800, 50), alpha=0.8, edgecolors="white"
+        )
     ax.set_title(title, color="#00FFD5", fontsize=16)
     return fig
 
@@ -100,6 +101,7 @@ def display_landing_page():
         st.session_state.app_mode = "MainApp"
         st.rerun()
 
+# --- Scouting Page ---
 def display_data_scouting_page():
     st.subheader("Player Performance Analysis")
     col1, col2 = st.columns(2)
@@ -108,12 +110,21 @@ def display_data_scouting_page():
     with col2:
         metric_display = st.selectbox("Metric", list(metric_files.keys()))
         metric = metric_files[metric_display]
+
     df = load_competition_data(league, metric)
     if df.empty:
         st.warning("No data available for this selection.")
         return
-    st.dataframe(df.head(20), use_container_width=True)
 
+    if metric == "xG":
+        columns_to_show = ["player", "team", "xG", "minutes"]
+        df_display = df[columns_to_show]
+    else:
+        df_display = df
+
+    st.dataframe(df_display.head(20), use_container_width=True)
+
+# --- Match Analysis ---
 def display_match_analysis_page():
     st.subheader("Match Analysis Centre")
     matches = load_csv(os.path.join(DATA_DIR, "WSL.csv"))
@@ -128,25 +139,31 @@ def display_match_analysis_page():
         if fig:
             st.pyplot(fig)
 
+# --- Player Profiles ---
 def display_player_profiling_page():
     st.subheader("Player Profiles")
-    data = {}
-    for metric in metric_files.values():
+
+    # Load xG from master CSV
+    xg_df = load_competition_data("WSL", "xG").set_index("player")
+
+    # Load other metrics
+    data_frames = {"xG": xg_df}
+    for metric in ["assists", "gpa", "minutes", "corners", "xDisruption"]:
         df = load_competition_data("WSL", metric)
         if not df.empty:
-            data[metric] = df.set_index("player")
-    if not data:
-        st.warning("No player data available.")
-        return
-    combined = pd.concat(data.values(), axis=1, join="outer").reset_index().fillna(0)
+            data_frames[metric] = df.set_index("player")
+
+    combined = pd.concat(data_frames.values(), axis=1, join="outer").reset_index().fillna(0)
     player = st.selectbox("Select Player", combined["player"].unique())
     row = combined[combined["player"] == player].iloc[0]
+
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Minutes", row.get("minutes", 0))
     col2.metric("xG", row.get("xG", 0))
     col3.metric("Assists", row.get("assists", 0))
     col4.metric("GPA", row.get("gpa", 0))
 
+# --- Corners Page ---
 def display_corners_page():
     st.subheader("Set Piece Analysis")
     df = load_competition_data("WSL", "corners")
