@@ -24,7 +24,6 @@ metric_files = {
     "Expected Threat (xT)": "xT",
     "Expected Disruption (xDisruption)": "xDisruption",
     "Goal Probability Added (GPA)": "gpa",
-    "Minutes Played": "minutes",
     "Corners": "corners"
 }
 competitions = ["WSL"]
@@ -68,7 +67,10 @@ def load_csv(file_path):
 @st.cache_data(ttl=3600)
 def load_competition_data(league: str, metric: str):
     if metric == "xG":  # xG comes from master league CSV
-        return load_csv(os.path.join(DATA_DIR, f"{league}.csv"))
+        df = load_csv(os.path.join(DATA_DIR, f"{league}.csv"))
+        if not df.empty:
+            df = df.rename(columns={"PlayerId":"player", "TeamID":"team"})
+        return df
     else:
         return load_csv(os.path.join(DATA_DIR, f"{league}_{metric}.csv"))
 
@@ -116,8 +118,9 @@ def display_data_scouting_page():
         st.warning("No data available for this selection.")
         return
 
+    # Remove minutes for all displays
     if metric == "xG":
-        columns_to_show = ["player", "team", "xG", "minutes"]
+        columns_to_show = ["player", "team", "xG"]
         df_display = df[columns_to_show]
     else:
         df_display = df
@@ -148,7 +151,7 @@ def display_player_profiling_page():
 
     # Load other metrics
     data_frames = {"xG": xg_df}
-    for metric in ["assists", "gpa", "minutes", "corners", "xDisruption"]:
+    for metric in ["assists", "gpa", "corners", "xDisruption"]:
         df = load_competition_data("WSL", metric)
         if not df.empty:
             data_frames[metric] = df.set_index("player")
@@ -157,11 +160,10 @@ def display_player_profiling_page():
     player = st.selectbox("Select Player", combined["player"].unique())
     row = combined[combined["player"] == player].iloc[0]
 
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Minutes", row.get("minutes", 0))
-    col2.metric("xG", row.get("xG", 0))
-    col3.metric("Assists", row.get("assists", 0))
-    col4.metric("GPA", row.get("gpa", 0))
+    col1, col2, col3 = st.columns(3)
+    col1.metric("xG", row.get("xG", 0))
+    col2.metric("Assists", row.get("assists", 0))
+    col3.metric("GPA", row.get("gpa", 0))
 
 # --- Corners Page ---
 def display_corners_page():
