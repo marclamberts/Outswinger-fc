@@ -230,6 +230,7 @@ def display_matches_page():
 
     st.pyplot(fig)
 
+
 def display_profiles_page(metrics):
     st.subheader("Player Profiles")
     if 'WSL' not in metrics:
