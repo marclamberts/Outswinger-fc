@@ -20,13 +20,7 @@ def inject_custom_css():
     st.markdown("""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@400;700&display=swap');
-
-            html, body, [class*="st-"] {
-                font-family: 'Inter', sans-serif;
-                background-color: #0f1923;
-                color: #fff;
-            }
-
+            html, body, [class*="st-"] { font-family: 'Inter', sans-serif; background-color: #0f1923; color: #fff; }
             h1, h2, h3, h4 { font-family: 'Roboto Mono', monospace; color: #00FFA3; }
             .stButton>button { background-color:#00FFA3; color:#0f1923; font-weight:600; border-radius:6px; }
             .stButton>button:hover { background-color:#00CC7F; }
@@ -42,10 +36,6 @@ def inject_custom_css():
 def load_csv_data(file_path):
     return pd.read_csv(file_path)
 
-@st.cache_data(ttl=3600)
-def load_excel_data(file_path):
-    return pd.read_excel(file_path)
-
 # --- Load all metric CSVs ---
 def load_all_metrics(base_path="data"):
     metrics = {}
@@ -60,6 +50,8 @@ def load_all_metrics(base_path="data"):
 @st.cache_data(ttl=3600)
 def load_match_xg_data(base_path="data/matchxg"):
     league_data = {}
+    if not os.path.exists(base_path):
+        return league_data
     leagues = [f for f in os.listdir(base_path) if os.path.isdir(os.path.join(base_path, f))]
     for league in leagues:
         league_path = os.path.join(base_path, league)
@@ -76,7 +68,7 @@ def plot_shot_map(df, player_name=None, title_sub="Shot map"):
     if df.empty:
         st.warning("No shot data available.")
         return
-    
+
     if player_name:
         df = df[df['PlayerId'] == player_name]
         if df.empty:
@@ -95,12 +87,11 @@ def plot_shot_map(df, player_name=None, title_sub="Shot map"):
         ax.scatter(row["y"], row["x"], color=color, s=size, alpha=0.7, zorder=3)
 
     # Summary stats
-    df_plot = df
-    total_shots = df_plot.shape[0]
-    total_goals = df_plot['isGoal'].sum()
-    non_penalty_goals = df_plot[(df_plot['Type_of_play'] != 'Penalty') & (df_plot['isGoal'] == True)].shape[0]
-    total_xG = df_plot['xG'].sum()
-    total_xG_minus_penalties = total_xG - df_plot[df_plot['Type_of_play']=="Penalty"]['xG'].sum()
+    total_shots = df.shape[0]
+    total_goals = df['isGoal'].sum()
+    non_penalty_goals = df[(df['Type_of_play'] != 'Penalty') & (df['isGoal'] == True)].shape[0]
+    total_xG = df['xG'].sum()
+    total_xG_minus_penalties = total_xG - df[df['Type_of_play']=="Penalty"]['xG'].sum()
     xG_per_shot = total_xG / total_shots if total_shots>0 else 0
 
     circle_positions = [(0.15,-0.15),(0.35,-0.15),(0.55,-0.15),(0.15,-0.3),(0.35,-0.3),(0.55,-0.3)]
@@ -134,34 +125,37 @@ def display_performance_page(metrics):
 def display_matches_page():
     st.subheader("Match Analysis / xG Shot Maps")
 
-    # Load match xG data
     league_data = load_match_xg_data("data/matchxg")
+    if not league_data:
+        st.warning("No match data found.")
+        return
 
     st.markdown("**Metric:** Expected Goals (xG)")
-    
-    # League filter
     league_selected = st.selectbox("Select League", list(league_data.keys()))
     matches_in_league = league_data[league_selected]
 
-    # Extract team names for each match
     match_teams = {}
     for match_name, df in matches_in_league.items():
-        teams = df['Team'].unique()
-        if len(teams)>=2:
-            match_teams[match_name] = tuple(teams[:2])
+        if 'Team' in df.columns:
+            teams = df['Team'].unique()
+            if len(teams) >= 2:
+                match_teams[match_name] = tuple(teams[:2])
+            else:
+                match_teams[match_name] = ("Team 1","Team 2")
         else:
             match_teams[match_name] = ("Team 1","Team 2")
 
-    # Select match by Team vs Team
     match_display_names = [f"{t1} vs {t2}" for t1,t2 in match_teams.values()]
     match_idx = st.selectbox("Select Match", range(len(match_display_names)), format_func=lambda x: match_display_names[x])
     match_name = list(matches_in_league.keys())[match_idx]
     df_match = matches_in_league[match_name]
 
-    # Player selection
-    player_list = ["All"] + df_match['PlayerId'].unique().tolist()
-    player_selected = st.selectbox("Select Player", player_list)
-    player_name = None if player_selected=="All" else player_selected
+    if 'PlayerId' in df_match.columns:
+        player_list = ["All"] + df_match['PlayerId'].unique().tolist()
+        player_selected = st.selectbox("Select Player", player_list)
+        player_name = None if player_selected=="All" else player_selected
+    else:
+        player_name = None
 
     plot_shot_map(df_match, player_name, title_sub=f"{match_display_names[match_idx]} | {league_selected}")
 
@@ -194,4 +188,11 @@ def main():
         with tabs[0]:
             display_performance_page(metrics)
         with tabs[1]:
-            display_matches
+            display_matches_page()
+        with tabs[2]:
+            display_profiles_page(metrics)
+        with tabs[3]:
+            display_set_pieces_page()
+
+if __name__=="__main__":
+    main()
