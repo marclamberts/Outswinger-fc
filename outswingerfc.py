@@ -139,29 +139,53 @@ def display_matches_page():
     # Parse team names from filenames
     match_display_names = []
     match_files = list(matches_in_league.keys())
+    team_names_map = {}  # store team names for each match
     for match_file in match_files:
         parts = match_file.split("_", 1)
         name_part = parts[1] if len(parts) > 1 else parts[0]
         if " - " in name_part:
             t1, t2 = name_part.split(" - ", 1)
-            match_display_names.append(f"{t1.strip()} vs {t2.strip()}")
+            display_name = f"{t1.strip()} vs {t2.strip()}"
+            team_names_map[display_name] = (t1.strip(), t2.strip())
         else:
-            match_display_names.append(name_part)
+            display_name = name_part
+            team_names_map[display_name] = (None, None)
+        match_display_names.append(display_name)
 
-    match_idx = st.selectbox("Select Match", range(len(match_display_names)), 
-                             format_func=lambda x: match_display_names[x])
-    match_name = match_files[match_idx]
+    match_selected_idx = st.selectbox("Select Match", range(len(match_display_names)), 
+                                      format_func=lambda x: match_display_names[x])
+    match_display_name = match_display_names[match_selected_idx]
+    match_name = match_files[match_selected_idx]
     df_match = matches_in_league[match_name]
 
-    # Optional player filter
-    player_name = None
-    if 'PlayerId' in df_match.columns:
-        player_list = ["All"] + df_match['PlayerId'].unique().tolist()
-        player_selected = st.selectbox("Select Player", player_list)
-        player_name = None if player_selected=="All" else player_selected
+    team1, team2 = team_names_map[match_display_name]
 
-    plot_shot_map(df_match, player_name, 
-                  title_sub=f"{match_display_names[match_idx]} | {league_selected}")
+    # Create two buttons for team selection
+    col1, col2 = st.columns(2)
+    team_filter = None
+    with col1:
+        if st.button(team1):
+            team_filter = team1
+    with col2:
+        if st.button(team2):
+            team_filter = team2
+
+    # Optional player-level filtering within team
+    player_name = None
+    if team_filter and 'Team' in df_match.columns:
+        df_team = df_match[df_match['Team'] == team_filter]
+        if 'PlayerId' in df_team.columns:
+            player_list = ["All"] + df_team['PlayerId'].unique().tolist()
+            player_selected = st.selectbox("Select Player", player_list)
+            player_name = None if player_selected == "All" else player_selected
+        else:
+            player_name = None
+    else:
+        df_team = df_match  # no team filter
+
+    # Display shot map
+    plot_shot_map(df_team, player_name, title_sub=f"{team_filter if team_filter else 'Full Match'} | {match_display_name} | {league_selected}")
+
 
 def display_profiles_page(metrics):
     st.subheader("Player Profiles")
