@@ -2,209 +2,178 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import os
-import warnings
+import glob
+import matplotlib.pyplot as plt
 from mplsoccer.pitch import VerticalPitch
-from functools import reduce
+from matplotlib.patches import Circle
 
 # --- App Configuration ---
 st.set_page_config(
-    page_title="WoSo Analytics | Modern Dashboard",
+    page_title="WoSo Analytics | Modern Scouting",
     page_icon="⚽",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
-warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 
-# --- File Paths ---
-DATA_DIR = "data"
-
-# --- Metric Mapping ---
-metric_files = {
-    "Expected Goals (xG)": "xG",           # From WSL.csv
-    "Expected Assists (xA)": "assists",
-    "Expected Threat (xT)": "xT",
-    "Expected Disruption (xDisruption)": "xDisruption",
-    "Goal Probability Added (GPA)": "gpa",
-    "Corners": "corners"
-}
-competitions = ["WSL"]
-
-# --- Modern CSS ---
-def inject_modern_css():
+# --- Custom Neon/Modern Styling ---
+def inject_custom_css():
     st.markdown("""
-    <style>
-    html, body, [class*="st-"] { font-family: 'Inter', sans-serif; background: #0B111D; color: #E0E0E0; }
-    h1,h2,h3,h4,h5 { font-family: 'Roboto Mono', monospace; color: #00FFD5; }
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@400;700&display=swap');
 
-    [data-testid="stSidebar"] { background: #101826; border-right: 1px solid #1C2A48; }
-    [data-testid="stSidebar"] h1,h2,h3 { color: #00FFD5; }
+            html, body, [class*="st-"] {
+                font-family: 'Inter', sans-serif;
+                background-color: #0f1923;
+                color: #fff;
+            }
 
-    .stButton>button { background: linear-gradient(90deg,#00FFD5,#00A6FF); color:#0B111D; font-weight:600; border:none; border-radius:6px; }
-    .stButton>button:hover { opacity:0.85; transform: translateY(-1px); }
-
-    .stDataFrame { border:1px solid #1C2A48; border-radius:6px; }
-    .stDataFrame th { background:#101826; color:#00FFD5; font-weight:600; }
-    .stDataFrame td { background:#0B111D; color:#E0E0E0; }
-
-    [data-testid="metric-container"] { background:#101826; border-radius:8px; padding:1rem; color:#E0E0E0; }
-    [data-testid="metric-container"] div { color:#00FFD5; font-weight:700; font-size:1.4rem; }
-
-    .stTabs [data-baseweb="tab-list"] { gap:3px; }
-    .stTabs [data-baseweb="tab"] { background:#101826; border-radius:6px 6px 0 0; color:#A0A0A0; font-weight:500; }
-    .stTabs [aria-selected="true"] { background:#00FFD5 !important; color:#0B111D !important; }
-
-    .stSelectbox div[data-baseweb="select"]>div { background:#101826; border:1px solid #1C2A48; color:#E0E0E0; border-radius:6px; }
-    input, select { background:#101826 !important; color:#E0E0E0 !important; border:1px solid #1C2A48; border-radius:6px; padding:0.4rem; }
-    </style>
+            h1, h2, h3, h4 { font-family: 'Roboto Mono', monospace; color: #00FFA3; }
+            .stButton>button { background-color:#00FFA3; color:#0f1923; font-weight:600; border-radius:6px; }
+            .stButton>button:hover { background-color:#00CC7F; }
+            .stSelectbox div[data-baseweb="select"] > div { background-color:#152642; color:#fff; border-radius:6px; }
+            .stDataFrame { background-color:#152642; border-radius:6px; }
+            .stDataFrame .data-grid-header { background-color:#1E3A5C; color:#00FFA3; font-weight:600; }
+            .section-header { border-bottom:2px solid #00FFA3; padding-bottom:0.5rem; margin-bottom:1.5rem; font-family:'Roboto Mono'; }
+        </style>
     """, unsafe_allow_html=True)
 
-# --- Data Loaders ---
+# --- Load CSV Data ---
 @st.cache_data(ttl=3600)
-def load_csv(file_path):
-    if os.path.exists(file_path):
-        return pd.read_csv(file_path)
-    return pd.DataFrame()
+def load_csv_data(file_path):
+    return pd.read_csv(file_path)
 
 @st.cache_data(ttl=3600)
-def load_competition_data(league: str, metric: str):
-    if metric == "xG":  # xG comes from master league CSV
-        df = load_csv(os.path.join(DATA_DIR, f"{league}.csv"))
-        if not df.empty:
-            df = df.rename(columns={"PlayerId":"player","TeamID":"team"})
-        return df
-    else:
-        df = load_csv(os.path.join(DATA_DIR, f"{league}_{metric}.csv"))
-        if not df.empty and "PlayerId" in df.columns:
-            df = df.rename(columns={"PlayerId":"player"})
-        return df
+def load_excel_data(file_path):
+    return pd.read_excel(file_path)
 
-# --- Shot Map ---
-def create_modern_shot_map(df, title="SHOT MAP"):
+# --- Load all metric CSVs ---
+def load_all_metrics(base_path="data"):
+    metrics = {}
+    files = glob.glob(os.path.join(base_path, "*.csv"))
+    for f in files:
+        name = os.path.splitext(os.path.basename(f))[0]
+        df = pd.read_csv(f)
+        metrics[name] = df
+    return metrics
+
+# --- Load Match xG Data ---
+@st.cache_data(ttl=3600)
+def load_match_xg_data(base_path="data/matchxg"):
+    league_data = {}
+    leagues = [f for f in os.listdir(base_path) if os.path.isdir(os.path.join(base_path, f))]
+    for league in leagues:
+        league_path = os.path.join(base_path, league)
+        files = glob.glob(os.path.join(league_path, "*.csv"))
+        league_data[league] = {}
+        for f in files:
+            df = pd.read_csv(f)
+            match_name = os.path.splitext(os.path.basename(f))[0]
+            league_data[league][match_name] = df
+    return league_data
+
+# --- Shot Map Plotting ---
+def plot_shot_map(df, player_name=None, title_sub="Shot map"):
     if df.empty:
-        return None
-    pitch = VerticalPitch(pitch_type='statsbomb', pitch_color="#101826", line_color="#1C2A48")
-    fig, ax = pitch.draw(figsize=(10, 7))
+        st.warning("No shot data available.")
+        return
+    
+    if player_name:
+        df = df[df['PlayerId'] == player_name]
+        if df.empty:
+            st.warning(f"No data for {player_name}.")
+            return
+
+    pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=False)
+    fig, ax = pitch.draw(figsize=(14,10))
+
+    colors = {"missed": "#003f5c", "goal": "#bc5090", "on_target": "#58508d"}
     for _, row in df.iterrows():
-        ax.scatter(
-            row["y"], row["x"], 
-            c="#FF6B6B" if not row.get("isGoal", False) else "#00FFD5",
-            s=max(row.get("xG", 0) * 800, 50), alpha=0.8, edgecolors="white"
-        )
-    ax.set_title(title, color="#00FFD5", fontsize=16)
-    return fig
+        color = colors["goal"] if row.get("isGoal", False) else colors["missed"]
+        size = row.get("xG", 0) * 500
+        ax.scatter(row["y"], row["x"], color=color, s=size, alpha=0.7, zorder=3)
 
-# --- Page Components ---
-def create_navigation_header():
-    st.markdown("""
-    <div style="background:#101826;padding:1rem;border-bottom:2px solid #00FFD5;">
-        <h2 style="margin:0;color:#00FFD5;font-family:monospace;">WOSO ANALYTICS</h2>
-    </div>
-    """, unsafe_allow_html=True)
+    # Summary stats
+    total_shots = df.shape[0]
+    total_goals = df['isGoal'].sum()
+    non_penalty_goals = df[(df['Type_of_play'] != 'Penalty') & (df['isGoal'] == True)].shape[0]
+    total_xG = df['xG'].sum()
+    total_xG_from_penalties = df[df['Type_of_play'] == 'Penalty']['xG'].sum()
+    total_xG_minus_penalties = total_xG - total_xG_from_penalties
+    xG_per_shot = total_xG / total_shots if total_shots > 0 else 0
 
+    circle_positions = [(0.15,-0.15),(0.35,-0.15),(0.55,-0.15),(0.15,-0.3),(0.35,-0.3),(0.55,-0.3)]
+    circle_texts = ["Shots","Goals","NP Goals","xG/Shot","Total xG","Total NpxG"]
+    values = [total_shots,total_goals,non_penalty_goals,round(xG_per_shot,2),round(total_xG,2),round(total_xG_minus_penalties,2)]
+    circle_colors = [colors["missed"],colors["goal"],colors["goal"],colors["on_target"],colors["on_target"],colors["on_target"]]
+
+    for pos, text, value, color in zip(circle_positions, circle_texts, values, circle_colors):
+        circle = Circle(pos,0.04, transform=ax.transAxes,color=color,zorder=5,clip_on=False)
+        ax.add_artist(circle)
+        ax.text(pos[0], pos[1]+0.06, text, transform=ax.transAxes, color='black', fontsize=12, ha='center', va='center', zorder=6)
+        ax.text(pos[0], pos[1], value, transform=ax.transAxes, color='white', fontsize=12, weight='bold', ha='center', va='center', zorder=6)
+
+    title_text = player_name if player_name else "Team/Match"
+    ax.text(100,108,title_text, fontsize=30, weight='bold', color='black', ha='left', va='top')
+    ax.text(100,104,title_sub, fontsize=15, style='italic', color='black', ha='left', va='top')
+
+    st.pyplot(fig)
+
+# --- Page Displays ---
 def display_landing_page():
-    st.markdown("<h1 style='text-align:center;color:#00FFD5;'>WOSO ANALYTICS</h1>", unsafe_allow_html=True)
-    if st.button("ENTER ANALYTICS SUITE", use_container_width=True, type="primary"):
+    st.markdown("<h1 style='text-align:center;'>WOSO ANALYTICS</h1>", unsafe_allow_html=True)
+    if st.button("ENTER DASHBOARD"):
         st.session_state.app_mode = "MainApp"
-        st.rerun()
+        st.experimental_rerun()
 
-# --- Scouting Page ---
-def display_data_scouting_page():
-    st.subheader("Player Performance Analysis")
-    col1, col2 = st.columns(2)
-    with col1:
-        league = st.selectbox("Competition", competitions)
-    with col2:
-        metric_display = st.selectbox("Metric", list(metric_files.keys()))
-        metric = metric_files[metric_display]
+def display_performance_page(metrics):
+    st.subheader("Player Performance Scouting")
+    metric = st.selectbox("Select Metric", list(metrics.keys()))
+    df_metric = metrics[metric]
+    st.dataframe(df_metric)
 
-    df = load_competition_data(league, metric)
-    if df.empty:
-        st.warning("No data available for this selection.")
-        return
+def display_matches_page():
+    st.subheader("Match Analysis / xG Shot Maps")
+    league_data = load_match_xg_data("data/matchxg")
+    league_selected = st.selectbox("Select League", list(league_data.keys()))
+    match_selected = st.selectbox("Select Match", list(league_data[league_selected].keys()))
+    df_match = league_data[league_selected][match_selected]
 
-    # Remove minutes if present
-    if "minutes" in df.columns:
-        df = df.drop(columns=["minutes"])
+    player_list = ["All"] + df_match['PlayerId'].unique().tolist()
+    player_selected = st.selectbox("Select Player", player_list)
+    player_name = None if player_selected=="All" else player_selected
+    plot_shot_map(df_match, player_name, title_sub=f"{match_selected} | {league_selected}")
 
-    st.dataframe(df.head(20), use_container_width=True)
-
-# --- Match Analysis ---
-def display_match_analysis_page():
-    st.subheader("Match Analysis Centre")
-    matches = load_csv(os.path.join(DATA_DIR, "WSL.csv"))
-    if matches.empty:
-        st.warning("No match data found.")
-        return
-    if "match" not in matches.columns:
-        st.warning("No 'match' column in CSV.")
-        return
-    match = st.selectbox("Select Match", matches["match"].unique())
-    events = load_csv(os.path.join(DATA_DIR, "WSL_events.csv"))
-    if not events.empty:
-        shots = events[events["type"] == "Shot"]
-        fig = create_modern_shot_map(shots, f"{match} Shot Map")
-        if fig:
-            st.pyplot(fig)
-
-# --- Player Profiles ---
-def display_player_profiling_page():
+def display_profiles_page(metrics):
     st.subheader("Player Profiles")
+    player_ids = list(metrics['WSL'].PlayerId.unique())
+    player_selected = st.selectbox("Select Player", player_ids)
+    df_player = metrics['WSL'][metrics['WSL'].PlayerId==player_selected]
+    st.dataframe(df_player)
 
-    # Load xG
-    xg_df = load_competition_data("WSL", "xG")[["player","team","xG"]]
-
-    # Load other metrics
-    data_frames = [xg_df]
-    for metric in ["assists", "gpa", "corners", "xDisruption"]:
-        df = load_competition_data("WSL", metric)
-        if not df.empty:
-            df = df.drop(columns=["minutes"], errors='ignore')  # remove minutes if exists
-            data_frames.append(df)
-
-    # Merge all metrics on 'player'
-    combined = reduce(lambda left,right: pd.merge(left,right,on="player",how="outer"), data_frames)
-    combined.fillna(0, inplace=True)
-
-    player = st.selectbox("Select Player", combined["player"].unique())
-    row = combined[combined["player"]==player].iloc[0]
-
-    col1, col2, col3 = st.columns(3)
-    col1.metric("xG", row.get("xG",0))
-    col2.metric("Assists", row.get("assists",0))
-    col3.metric("GPA", row.get("gpa",0))
-
-    st.markdown(f"**Team:** {row.get('team','Unknown')}")
-
-# --- Corners Page ---
-def display_corners_page():
-    st.subheader("Set Piece Analysis")
-    df = load_competition_data("WSL", "corners")
-    if df.empty:
-        st.warning("No corner data available.")
-        return
-    st.dataframe(df.head(20), use_container_width=True)
+def display_set_pieces_page():
+    st.subheader("Set Pieces / Corners Analysis")
+    st.info("Visualizations coming soon.")
 
 # --- Main App ---
 def main():
-    inject_modern_css()
-    if "app_mode" not in st.session_state:
+    inject_custom_css()
+    if 'app_mode' not in st.session_state:
         st.session_state.app_mode = "Landing"
 
-    if st.session_state.app_mode == "Landing":
+    metrics = load_all_metrics("data")
+
+    if st.session_state.app_mode=="Landing":
         display_landing_page()
     else:
-        create_navigation_header()
-        tabs = st.tabs(["📊 Performance", "🎯 Matches", "👤 Profiles", "⛳ Set Pieces"])
+        tabs = st.tabs(["📊 Performance","🎯 Matches","👤 Profiles","⛳ Set Pieces"])
         with tabs[0]:
-            display_data_scouting_page()
+            display_performance_page(metrics)
         with tabs[1]:
-            display_match_analysis_page()
+            display_matches_page()
         with tabs[2]:
-            display_player_profiling_page()
+            display_profiles_page(metrics)
         with tabs[3]:
-            display_corners_page()
-        st.markdown("---")
-        st.markdown("<p style='text-align:center;color:#2D4A76;'>© 2024 Women's Football Analytics</p>", unsafe_allow_html=True)
+            display_set_pieces_page()
 
-if __name__ == "__main__":
+if __name__=="__main__":
     main()
