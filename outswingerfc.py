@@ -141,9 +141,9 @@ def display_landing_page():
     if col4.button("Corners"):
         st.session_state.app_mode = "SetPieces"
 
-def display_performance_page():
+def display_performance_page(metrics=None):
     st.subheader("Advanced Metrics / Player Scouting")
-
+    
     # --- Sidebar Filters ---
     with st.sidebar:
         st.markdown("### Advanced Metrics Filters")
@@ -175,12 +175,16 @@ def display_performance_page():
     pattern = metric_file_patterns.get(metric_choice)
     file_path = os.path.join(advanced_base, league_selected, pattern.format(league=league_selected))
 
-    # Load and display CSV
+    # Load and display CSV safely
     if os.path.exists(file_path):
-        df_metric = pd.read_csv(file_path)
-        st.dataframe(df_metric)
+        try:
+            df_metric = pd.read_csv(file_path)
+            st.dataframe(df_metric)
+        except Exception as e:
+            st.error(f"Error loading CSV: {e}")
     else:
         st.warning(f"File not found: {file_path}")
+
 
 def display_matches_page():
     st.subheader("Match Analysis / xG Shot Maps")
