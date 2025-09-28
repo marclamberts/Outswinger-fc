@@ -164,19 +164,32 @@ def display_performance_page(all_metrics):
     if not all_metrics:
         st.warning("No metric CSVs found.")
         return
+
     league_selected = st.sidebar.selectbox("Select League", list(all_metrics.keys()))
     metric_options = ["xG","xAG","xT","xDisruption","GPA"]
     metric_choice = st.sidebar.selectbox("Select Metric", metric_options)
+
+    # Map metric choice to expected filenames
+    filename_map = {
+        "xG": f"{league_selected}.csv",
+        "xAG": f"{league_selected}_assists.csv",
+        "GPA": f"{league_selected}_gpa.csv",
+        "xT": f"{league_selected}_xt.csv",  # adjust if your filenames differ
+        "xDisruption": f"{league_selected}_disruption.csv"
+    }
+
+    expected_file = filename_map.get(metric_choice, None)
     df_metric = None
-    league_metrics = all_metrics[league_selected]
-    for key in league_metrics.keys():
-        if metric_choice in key:
-            df_metric = league_metrics[key]
-            break
+    league_metrics = all_metrics.get(league_selected, {})
+
+    if expected_file in league_metrics:
+        df_metric = league_metrics[expected_file]
+
     if df_metric is not None:
         st.dataframe(df_metric)
     else:
-        st.warning("Metric not found for selected league.")
+        st.warning(f"{metric_choice} metric not found for {league_selected}.")
+
 
 # --- Matches Page ---
 def display_matches_page():
