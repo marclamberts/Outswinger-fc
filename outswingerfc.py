@@ -136,10 +136,12 @@ def display_matches_page():
             name_part = parts[1] if len(parts) > 1 else parts[0]
             if " - " in name_part:
                 t1, t2 = name_part.split(" - ", 1)
-                display_name = f"{t1.strip()} vs {t2.strip()}"
-                team_names_map[display_name] = (t1.strip(), t2.strip())
+                t1 = t1.strip()
+                t2 = t2.strip()
+                display_name = f"{t1} vs {t2}"
+                team_names_map[display_name] = (t1, t2)
             else:
-                display_name = name_part
+                display_name = name_part.strip()
                 team_names_map[display_name] = (None, None)
             match_display_names.append(display_name)
 
@@ -152,7 +154,7 @@ def display_matches_page():
 
         match_display_name = match_display_names[match_selected_idx]
         match_name = match_files[match_selected_idx]
-        df_match = matches_in_league[match_name]
+        df_match = matches_in_league[match_name].copy()
 
         team1, team2 = team_names_map[match_display_name]
 
@@ -162,11 +164,18 @@ def display_matches_page():
         if team2: team_options.append(team2)
         team_filter = st.selectbox("Select Team", team_options)
 
-    # Filter shots by team
+    # --- FILTER SHOTS BY TEAM ---
     if team_filter != "Full Match" and 'Team' in df_match.columns:
-        df_team = df_match[df_match['Team'] == team_filter].copy()
+        # Normalize both sides
+        df_match['Team'] = df_match['Team'].str.strip()
+        team_filter_clean = team_filter.strip()
+        df_team = df_match[df_match['Team'].str.lower() == team_filter_clean.lower()].copy()
     else:
         df_team = df_match.copy()
+
+    if df_team.empty:
+        st.warning("No shot data for selected team.")
+        return
 
     # Determine opponent team name for title
     if team_filter == team1:
@@ -180,11 +189,7 @@ def display_matches_page():
     title_main = team_filter if team_filter != "Full Match" else "Full Match"
     title_sub = f"{opponent_text} | {league_selected}" if opponent else league_selected
 
-    # --- Plot Shot Map ---
-    if df_team.empty:
-        st.warning("No shot data for selected team.")
-        return
-
+    # --- PLOT SHOT MAP ---
     pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=True)
     fig, ax = pitch.draw(figsize=(12,8))
 
