@@ -1,0 +1,193 @@
+playerName,Team,ActualDisruptions,ExpectedDisruptions
+A. Anderson,Glasgow City,8,2.384
+A. Black,Aberdeen,13,10.656
+A. Bulloch,Motherwell,13,6.370000000000001
+A. Clarke,Aberdeen,2,3.5380000000000003
+A. Denholm,Motherwell,3,0.025
+A. Easdon,Montrose,0,0.0
+A. Gallacher,Celtic,6,20.956
+A. Griffiths,Rangers,12,10.45
+A. Handley,Partick Thistle,20,33.15
+A. Harrison,Glasgow City,1,5.3340000000000005
+A. Muir,Glasgow City,10,14.94
+A. Richardson,Celtic,2,0.61
+A. Robertson,Montrose,16,10.88
+A. Streicek,Celtic,8,22.464000000000002
+A. Tobin,Aberdeen,20,24.633
+B. Collins,Motherwell,27,41.478
+B. Galloway,Aberdeen,1,2.6839999999999997
+B. Greenwood,Hearts,0,0.043000000000000003
+B. Hay,Rangers,8,26.696
+B. Hutchison,Hearts,2,4.224
+C. Boyce,Motherwell,5,21.442000000000004
+C. Cowper,Montrose,11,4.515000000000001
+C. Delworth,Montrose,4,0.324
+C. Docherty,Hamilton Academical,1,0.265
+C. Gibb,Hibernian,5,23.328000000000003
+C. Gover,Montrose,17,8.397
+C. Grant,Hibernian,13,26.151000000000003
+C. Johns,Hearts,10,29.596
+C. Lafaix,Rangers,4,1.82
+C. McCulloch,Partick Thistle,12,14.148000000000001
+C. McGuire,Hamilton Academical,0,0.0
+C. Muir,Hamilton Academical,2,2.277
+C. Nicolson,Hamilton Academical,0,0.0
+C. Walsh,Celtic,12,28.858
+C. Warrington,Glasgow City,2,6.66
+C. Watson,Motherwell,5,11.47
+D. Brown,Motherwell,0,0.0
+D. Dawson,Celtic,0,0.525
+D. Falconer,Partick Thistle,11,22.1
+D. Miller,Aberdeen,0,0.44999999999999996
+D. Taylor,Montrose,4,2.871
+D. Ypema,Hearts,13,41.2
+E. Adams,Hibernian,2,7.9639999999999995
+E. Austin,Rangers,7,26.04
+E. Brown,Hamilton Academical,2,2.6
+E. Brownlie,Glasgow City,0,5.808999999999999
+E. Clachers,Glasgow City,0,0.0
+E. Halliday,Hamilton Academical,0,1.8960000000000001
+E. Husband,Hearts,7,33.728
+E. Ilijoski,Aberdeen,14,6.925000000000001
+E. Lawton,Celtic,25,49.875
+E. McLaughlin,Glasgow City,4,1.8360000000000003
+E. Notley,Hibernian,4,7.47
+E. Rennie,Partick Thistle,13,19.437
+E. Ross,Montrose,7,4.104
+E. Shore,Hearts,17,26.065
+E. Thomson,Aberdeen,23,11.172
+E. Thomson,Motherwell,0,0.059000000000000004
+E. Westin,Celtic,2,2.109
+E. Whelan,Glasgow City,5,24.660999999999998
+F. Brien,Montrose,5,4.6000000000000005
+F. Connolly-Jackson,Rangers,15,19.952
+F. MacDonald,Hamilton Academical,4,2.584
+F. Ogilvie,Aberdeen,12,16.491
+G. Carter,Montrose,3,3.1
+G. Courter,Celtic,1,0.099
+G. Gray,Hamilton Academical,16,18.983
+G. Hunter,Hearts,0,0.6210000000000001
+G. Inglis,Motherwell,9,11.685
+G. Timms,Hearts,7,25.186
+H. Cairns,Motherwell,2,1.424
+H. Coakley,Hamilton Academical,4,4.883
+H. Daniel,Aberdeen,0,0.473
+H. Innes,Montrose,0,0.506
+H. Lauder,Glasgow City,2,6.636
+H. Luke,Celtic,3,1.568
+H. Robinson,Partick Thistle,14,32.160000000000004
+H. Stewart,Aberdeen,13,3.6
+J. Addie,Motherwell,0,0.0
+J. Andrews,Hearts,16,14.352000000000002
+J. Broadrick,Aberdeen,23,11.19
+J. Currie,Partick Thistle,0,4.632
+J. Ferguson,Partick Thistle,4,1.44
+J. Fife,Rangers,0,1.5150000000000001
+J. Fitzgerald,Hibernian,1,0.294
+J. Giard,Hamilton Academical,12,12.42
+J. Husband,Hearts,6,18.966
+J. Love,Partick Thistle,18,11.193
+J. McLaren,Montrose,18,26.560000000000002
+J. McLeary,Rangers,20,56.68
+J. Millen Pegram,Rangers,1,5.112
+J. Penman,Motherwell,0,0.032
+J. Ramsay,Hibernian,1,0.105
+J. Slattery,Hearts,5,4.557
+K. Beattie,Aberdeen,1,14.350000000000001
+K. Clark,Celtic,16,42.265
+K. Cox,Aberdeen,0,9.765
+K. Fraser,Partick Thistle,8,5.697
+K. Halliday,Hearts,4,3.333
+K. Hay,Motherwell,8,8.178
+K. Hill,Rangers,3,11.340000000000002
+K. Howat,Rangers,2,2.904
+K. Jardine,Hearts,4,8.304
+K. Lockwood,Glasgow City,6,10.812000000000001
+K. Love,Hamilton Academical,8,0.114
+K. McDonald-Nguah,Montrose,8,27.412
+K. McGovern,Hibernian,3,15.84
+K. McIntosh,Hamilton Academical,5,8.052
+K. Morrison,Hibernian,5,8.037
+K. Reilly,Hibernian,3,6.36
+K. Rice,Motherwell,10,19.92
+K. Ritchie,Hamilton Academical,1,0.126
+K. Smit,Glasgow City,12,26.979000000000003
+K. Syrjanen,Partick Thistle,0,0.0
+K. Wilkinson,Rangers,5,22.01
+Kim Shin-Ji,Rangers,12,8.715000000000002
+L. Arnot,Rangers,8,22.8
+L. Barclay,Hamilton Academical,19,14.112
+L. Berry,Rangers,2,2.3920000000000003
+L. Boyce,Motherwell,6,0.261
+L. Boyes,Glasgow City,0,0.028
+L. Brown,Montrose,24,44.528
+L. Doran-Barr,Hibernian,1,0.17
+L. Evans,Glasgow City,6,31.902
+L. Fleming,Montrose,2,2.99
+L. Forrest,Glasgow City,6,5.292000000000001
+L. Gibson,Glasgow City,1,1.764
+L. Golob,Glasgow City,7,17.244000000000003
+L. Motlhalo,Glasgow City,7,11.15
+L. Perry,Montrose,1,3.2880000000000003
+L. Robertson,Celtic,19,28.35
+L. Rodgers,Celtic,0,2.303
+L. Ronald,Motherwell,16,20.286
+L. Taylor,Hibernian,11,12.448
+L. Tweedie,Partick Thistle,7,18.265
+L. Wade,Hearts,7,20.398
+L. Waldie,Hearts,15,37.303
+M. Bates,Partick Thistle,1,3.762
+M. Blyth-Clark,Motherwell,6,7.02
+M. Boughton,Hibernian,0,0.08
+M. Christie,Aberdeen,7,2.31
+M. Cross,Celtic,16,37.338
+M. Cruft,Rangers,4,0.128
+M. Duncan,Celtic,1,0.035
+M. English,Partick Thistle,3,0.605
+M. Finnie,Aberdeen,18,16.520000000000003
+M. Forsyth,Hearts,15,34.132
+M. McAlonie,Hibernian,4,0.708
+M. McAneny,Celtic,16,40.09
+M. McAulay,Rangers,10,23.323
+M. Nakao,Celtic,15,37.44
+M. Reid,Hamilton Academical,8,4.125
+M. Tanaka,Glasgow City,1,0.77
+N. Docherty,Rangers,16,38.80800000000001
+N. Guthrie,Montrose,11,4.928
+N. Kozlova,Glasgow City,6,11.651
+N. Ross,Celtic,11,11.200000000000001
+N. Schumacher,Hibernian,1,4.335
+N. Wróbel,Glasgow City,5,15.318000000000001
+O. Burn,Motherwell,13,6.6850000000000005
+O. Chomczuk,Montrose,8,8.213000000000001
+O. King,Partick Thistle,4,2.436
+O. McLoughlin,Rangers,12,6.06
+O. McStay,Hamilton Academical,7,2.119
+P. Murray,Aberdeen,0,0.006
+P. Murray,Montrose,3,1.911
+R. Boyle,Hibernian,5,8.315999999999999
+R. Cameron,Motherwell,0,1.415
+R. Donaldson,Partick Thistle,7,7.303999999999999
+R. Johnstone,Hearts,0,4.424
+R. Livingstone,Hibernian,12,24.276000000000003
+R. McAllister,Partick Thistle,9,2.7
+R. Slater,Partick Thistle,13,4.208
+S. Adamolekun,Hearts,5,15.435
+S. Black,Motherwell,8,10.272
+S. Cowan,Hamilton Academical,34,26.474
+S. Gibb,Hamilton Academical,11,7.548000000000001
+S. Herron,Hibernian,1,0.018000000000000002
+S. Hunter,Hibernian,5,0.668
+S. Leishman,Motherwell,11,3.42
+S. Martin,Montrose,7,4.26
+S. McGoldrick,Celtic,5,0.78
+S. Määttä,Glasgow City,7,21.42
+S. Noonan,Celtic,2,1.17
+S. Papadopoulos,Hibernian,12,21.215999999999998
+S. Townsley,Hamilton Academical,13,15.433
+T. Bowie,Hibernian,3,10.608
+T. Browning,Motherwell,6,3.654
+T. Burchill,Hibernian,5,8.96
+T. Finnegan,Aberdeen,9,13.366000000000001
+T. Robb,Montrose,10,4.824
+T. Steele,Motherwell,0,0.003

@@ -1,0 +1,138 @@
+Player,Team,Assists,ShotAssists,xAG
+A. Anderson,Glasgow City FC,0,1,0.05
+A. Black,Aberdeen FC Women,0,3,0.2
+A. Bulloch,Motherwell FC Women,0,5,0.31
+A. Clarke,Aberdeen FC Women,0,2,0.46
+A. Easdon,Montrose WFC,0,1,0.03
+A. Gallacher,Celtic FC Women,2,10,1.14
+A. Griffiths,Rangers WFC,0,2,0.1
+A. Handley,Partick Thistle WFC,1,3,0.5
+A. Harrison,Glasgow City FC,1,5,0.65
+A. Muir,Glasgow City FC,1,2,0.1
+A. Robertson,Montrose WFC,1,0,0.04
+A. Streicek,Celtic FC Women,1,6,0.52
+A. Tobin,Aberdeen FC Women,1,5,0.45
+B. Collins,Motherwell FC Women,1,6,0.93
+B. Galloway,Aberdeen FC Women,0,1,0.09
+B. Greenwood,Heart of Midlothian WFC,0,1,0.03
+B. Hay,Rangers WFC,2,5,1.27
+B. Hutchison,Heart of Midlothian WFC,0,5,0.34
+C. Boyce,Motherwell FC Women,2,5,0.63
+C. Cowper,Montrose WFC,0,4,0.4
+C. Delworth,Montrose WFC,0,1,0.06
+C. Gibb,Hibernian WFC,2,2,0.64
+C. Gover,Montrose WFC,0,7,0.37
+C. Grant,Hibernian WFC,3,16,1.9
+C. Johns,Heart of Midlothian WFC,1,8,0.87
+C. McCulloch,Partick Thistle WFC,0,2,0.12
+C. Walsh,Celtic FC Women,0,2,0.12
+C. Watson,Motherwell FC Women,0,1,0.03
+D. Dawson,Celtic FC Women,0,1,0.03
+D. Falconer,Partick Thistle WFC,1,1,0.16
+D. Ypema,Heart of Midlothian WFC,1,0,0.04
+E. Adams,Hibernian WFC,0,5,0.37
+E. Austin,Rangers WFC,0,1,0.05
+E. Brown,Hamilton Academical WFC,1,1,0.71
+E. Brownlie,Glasgow City FC,0,2,0.09
+E. Husband,Heart of Midlothian WFC,0,2,0.09
+E. Ilijoski,Aberdeen FC Women,0,2,0.07
+E. Lawton,Celtic FC Women,3,7,1.53
+E. McLaughlin,Glasgow City FC,0,2,0.12
+E. Notley,Hibernian WFC,0,4,0.29
+E. Rennie,Partick Thistle WFC,0,3,0.22
+E. Ross,Montrose WFC,0,1,0.03
+E. Shore,Heart of Midlothian WFC,1,5,0.41
+E. Thomson,Aberdeen FC Women,0,2,0.13
+E. Westin,Celtic FC Women,1,0,0.4
+E. Whelan,Glasgow City FC,0,7,0.71
+F. Brien,Montrose WFC,0,3,0.19
+F. Connolly-Jackson,Rangers WFC,0,2,0.14
+G. Gray,Hamilton Academical WFC,0,1,0.05
+G. Inglis,Motherwell FC Women,0,4,0.17
+G. Timms,Heart of Midlothian WFC,0,6,0.58
+H. Cairns,Motherwell FC Women,0,2,0.18
+H. Innes,Montrose WFC,0,1,0.05
+H. Lauder,Glasgow City FC,0,5,0.3
+H. Luke,Celtic FC Women,0,2,0.16
+H. Robinson,Partick Thistle WFC,1,6,0.47
+H. Stewart,Aberdeen FC Women,0,2,0.16
+J. Andrews,Heart of Midlothian WFC,0,4,0.3
+J. Broadrick,Aberdeen FC Women,0,2,0.14
+J. Fife,Rangers WFC,0,1,0.1
+J. Giard,Hamilton Academical WFC,0,4,0.25
+J. Husband,Heart of Midlothian WFC,0,9,0.55
+J. Love,Partick Thistle WFC,0,4,0.17
+J. McLaren,Montrose WFC,0,4,0.28
+J. McLeary,Rangers WFC,0,7,0.89
+J. Millen Pegram,Rangers WFC,0,1,0.1
+J. Slattery,Heart of Midlothian WFC,1,4,0.41
+K. Beattie,Aberdeen FC Women,1,3,0.52
+K. Halliday,Heart of Midlothian WFC,0,4,0.3
+K. Hay,Motherwell FC Women,2,0,0.35
+K. Howat,Rangers WFC,2,2,0.37
+K. Jardine,Heart of Midlothian WFC,0,3,0.21
+K. Lockwood,Glasgow City FC,2,9,0.79
+K. McDonald-Nguah,Montrose WFC,3,3,1.05
+K. McGovern,Hibernian WFC,2,4,0.8
+K. McIntosh,Hamilton Academical WFC,0,7,0.48
+K. Morrison,Hibernian WFC,0,11,0.71
+K. Reilly,Hibernian WFC,0,2,0.12
+K. Rice,Motherwell FC Women,0,5,0.29
+K. Wilkinson,Rangers WFC,2,9,1.09
+Kim Shin-Ji,Rangers WFC,0,6,0.76
+L. Arnot,Rangers WFC,3,14,2.61
+L. Barclay,Hamilton Academical WFC,0,3,0.18
+L. Berry,Rangers WFC,2,1,0.56
+L. Boyes,Glasgow City FC,0,1,0.06
+L. Brown,Montrose WFC,0,4,0.28
+L. Evans,Glasgow City FC,3,7,0.95
+L. Fleming,Montrose WFC,0,2,0.09
+L. Forrest,Glasgow City FC,0,1,0.08
+L. Gibson,Glasgow City FC,1,0,0.08
+L. Motlhalo,Glasgow City FC,0,3,0.21
+L. Perry,Montrose WFC,0,1,0.03
+L. Robertson,Celtic FC Women,0,2,0.13
+L. Ronald,Motherwell FC Women,0,3,0.16
+L. Taylor,Hibernian WFC,0,2,0.12
+L. Tweedie,Partick Thistle WFC,0,3,0.17
+L. Wade,Heart of Midlothian WFC,1,5,1.08
+L. Waldie,Heart of Midlothian WFC,1,6,0.77
+M. Bates,Partick Thistle WFC,0,2,0.08
+M. Blyth-Clark,Motherwell FC Women,0,1,0.03
+M. Boughton,Hibernian WFC,0,1,0.11
+M. Christie,Aberdeen FC Women,0,2,0.08
+M. Cross,Celtic FC Women,2,2,0.96
+M. Cruft,Rangers WFC,1,2,0.78
+M. Finnie,Aberdeen FC Women,1,3,0.23
+M. Forsyth,Heart of Midlothian WFC,1,10,0.73
+M. McAlonie,Hibernian WFC,0,1,0.03
+M. McAneny,Celtic FC Women,1,11,2.13
+M. McAulay,Rangers WFC,1,10,0.95
+M. Nakao,Celtic FC Women,2,4,1.02
+M. Reid,Hamilton Academical WFC,0,1,0.1
+N. Docherty,Rangers WFC,0,4,0.13
+N. Guthrie,Montrose WFC,0,1,0.07
+N. Kozlova,Glasgow City FC,0,6,0.45
+N. Ross,Celtic FC Women,1,5,0.75
+N. Wróbel,Glasgow City FC,1,7,1.28
+O. Burn,Motherwell FC Women,0,2,0.16
+O. Chomczuk,Montrose WFC,0,1,0.03
+O. King,Partick Thistle WFC,1,0,0.04
+O. McStay,Hamilton Academical WFC,0,1,0.08
+R. Boyle,Hibernian WFC,0,2,0.22
+R. Donaldson,Partick Thistle WFC,0,1,0.32
+R. Livingstone,Hibernian WFC,1,4,0.93
+R. McAllister,Partick Thistle WFC,0,3,0.18
+S. Adamolekun,Heart of Midlothian WFC,0,5,0.31
+S. Black,Motherwell FC Women,1,3,0.25
+S. Gibb,Hamilton Academical WFC,0,3,0.24
+S. Hunter,Hibernian WFC,0,3,0.13
+S. Martin,Montrose WFC,0,2,0.08
+S. McGoldrick,Celtic FC Women,1,1,0.12
+S. Määttä,Glasgow City FC,3,7,1.68
+S. Noonan,Celtic FC Women,2,1,0.54
+S. Papadopoulos,Hibernian WFC,0,2,0.08
+S. Townsley,Hamilton Academical WFC,0,1,0.11
+T. Bowie,Hibernian WFC,4,6,1.23
+T. Burchill,Hibernian WFC,0,4,0.57
+T. Finnegan,Aberdeen FC Women,1,1,0.42
