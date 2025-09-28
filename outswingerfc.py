@@ -1,11 +1,11 @@
 import streamlit as st
 import pandas as pd
-import glob
+import numpy as np
 import os
+import glob
 import matplotlib.pyplot as plt
 from mplsoccer.pitch import VerticalPitch
 from matplotlib.patches import Circle
-from PIL import Image
 
 # --- App Configuration ---
 st.set_page_config(
@@ -31,25 +31,34 @@ def inject_custom_css():
         </style>
     """, unsafe_allow_html=True)
 
-# --- Data Loading ---
+# --- CSV Loaders ---
 @st.cache_data(ttl=3600)
-def load_all_metrics(base_path="data"):
-    metrics = {}
-    files = glob.glob(os.path.join(base_path, "*.csv"))
-    for f in files:
-        name = os.path.splitext(os.path.basename(f))[0]
-        metrics[name] = pd.read_csv(f)
-    return metrics
+def load_csv(file_path):
+    return pd.read_csv(file_path)
+
+def load_all_metrics(base_path="data/advanced"):
+    leagues = [f for f in os.listdir(base_path) if os.path.isdir(os.path.join(base_path,f))]
+    all_metrics = {}
+    for league in leagues:
+        league_path = os.path.join(base_path, league)
+        league_files = glob.glob(os.path.join(league_path,"*.csv"))
+        league_dict = {}
+        for f in league_files:
+            metric_name = os.path.splitext(os.path.basename(f))[0]
+            df = pd.read_csv(f)
+            league_dict[metric_name] = df
+        all_metrics[league] = league_dict
+    return all_metrics
 
 @st.cache_data(ttl=3600)
 def load_match_xg_data(base_path="data/matchxg"):
     league_data = {}
     if not os.path.exists(base_path):
         return league_data
-    leagues = [f for f in os.listdir(base_path) if os.path.isdir(os.path.join(base_path, f))]
+    leagues = [f for f in os.listdir(base_path) if os.path.isdir(os.path.join(base_path,f))]
     for league in leagues:
         league_path = os.path.join(base_path, league)
-        files = glob.glob(os.path.join(league_path, "*.csv"))
+        files = glob.glob(os.path.join(league_path,"*.csv"))
         league_data[league] = {}
         for f in files:
             df = pd.read_csv(f)
@@ -57,13 +66,13 @@ def load_match_xg_data(base_path="data/matchxg"):
             league_data[league][match_name] = df
     return league_data
 
-# --- Shot Map with Stats ---
+# --- Shot Map Plotting with Stats + xG Size Indicators ---
 def plot_shot_map_with_stats(df_team, title_main, title_sub):
     if df_team is None or df_team.empty:
         st.warning("No shot data available for this selection.")
         return
 
-    # Summary statistics
+    # --- Summary stats ---
     total_shots = int(df_team.shape[0])
     total_goals = int(df_team['isGoal'].sum()) if 'isGoal' in df_team.columns else 0
     non_penalty_goals = (
@@ -80,12 +89,14 @@ def plot_shot_map_with_stats(df_team, title_main, title_sub):
     total_npxG = total_xG - total_xG_from_pen
     xG_per_shot = (total_xG / total_shots) if total_shots > 0 else 0.0
 
-    # Pitch
+    # --- Pitch ---
     pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=True)
     fig, ax = pitch.draw(figsize=(12, 8))
+
     colors = {"missed": "#003f5c", "goal": "#bc5090"}
     max_size = 300
 
+    # Plot shots
     for _, row in df_team.iterrows():
         try:
             x, y = row['x'], row['y']
@@ -115,22 +126,28 @@ def plot_shot_map_with_stats(df_team, title_main, title_sub):
         ax.text(cx, cy+0.06, label, transform=ax.transAxes, color='white', fontsize=10, ha='center', va='center')
         ax.text(cx, cy, str(val), transform=ax.transAxes, color='black', fontsize=11, fontweight='bold', ha='center', va='center')
 
+    # --- xG Size Indicator Legend ---
+    indicator_positions = [(0.78, -0.25), (0.82, -0.25), (0.87, -0.25), (0.92, -0.25)]
+    indicator_radii = [0.01, 0.015, 0.02, 0.025]
+    for pos, radius in zip(indicator_positions, indicator_radii):
+        circle = Circle(pos, radius=radius, transform=ax.transAxes, color="#003f5c", alpha=1, zorder=5, clip_on=False)
+        ax.add_artist(circle)
+    ax.text(0.85, -0.28, "xG Size", transform=ax.transAxes, fontsize=12, color='black', ha='center', va='center', weight='bold')
+
     st.pyplot(fig)
 
-# --- Pages ---
+# --- Landing Page ---
 def display_landing_page():
     st.markdown("<h1 style='text-align:center;'>WOSO ANALYTICS</h1>", unsafe_allow_html=True)
+    col1, col2 = st.columns([1,1])
+    try:
+        logo1 = plt.imread("Outswinger FC.png")
+        logo2 = plt.imread("sheplotsfc2.png")
+        col1.image(logo1, use_container_width=True)
+        col2.image(logo2, use_container_width=True)
+    except FileNotFoundError:
+        st.warning("Logo files not found.")
     st.markdown("<h3 style='text-align:center; color:#00FFA3;'>Select a Section</h3>", unsafe_allow_html=True)
-
-    col1, col2 = st.columns(2)
-    with col1:
-        logo1 = Image.open("Outswinger FC.png")
-        st.image(logo1, use_container_width=True)
-    with col2:
-        logo2 = Image.open("sheplotsfc2.png")
-        st.image(logo2, use_container_width=True)
-
-    st.markdown("<br><br>", unsafe_allow_html=True)
     col1, col2, col3, col4 = st.columns(4, gap="medium")
     if col1.button("Advanced Metrics"):
         st.session_state.app_mode = "Performance"
@@ -141,51 +158,27 @@ def display_landing_page():
     if col4.button("Corners"):
         st.session_state.app_mode = "SetPieces"
 
-def display_performance_page(metrics=None):
+# --- Advanced Metrics Page ---
+def display_performance_page(all_metrics):
     st.subheader("Advanced Metrics / Player Scouting")
-    
-    # --- Sidebar Filters ---
-    with st.sidebar:
-        st.markdown("### Advanced Metrics Filters")
-        advanced_base = "data/advanced"
-        # List all league folders dynamically
-        leagues = [f for f in os.listdir(advanced_base) if os.path.isdir(os.path.join(advanced_base, f))]
-        league_selected = st.selectbox("Select League", sorted(leagues))
-
-        # Metric selection
-        metric_choice = st.selectbox(
-            "Select Metric",
-            ["Expected Goals (xG)",
-             "Expected Goals Assisted (xAG)",
-             "Expected Threat (xT)",
-             "Expected Disruption (xDisruption)",
-             "Goal Probability Added (GPA)"]
-        )
-
-    # --- Map metric to expected file pattern ---
-    metric_file_patterns = {
-        "Expected Goals (xG)": "{league}.csv",
-        "Expected Goals Assisted (xAG)": "{league}_assists.csv",
-        "Expected Threat (xT)": "{league}_xT.csv",
-        "Expected Disruption (xDisruption)": "{league}_xDisruption.csv",
-        "Goal Probability Added (GPA)": "{league}_gpa.csv"
-    }
-
-    # Replace {league} with the selected league folder name
-    pattern = metric_file_patterns.get(metric_choice)
-    file_path = os.path.join(advanced_base, league_selected, pattern.format(league=league_selected))
-
-    # Load and display CSV safely
-    if os.path.exists(file_path):
-        try:
-            df_metric = pd.read_csv(file_path)
-            st.dataframe(df_metric)
-        except Exception as e:
-            st.error(f"Error loading CSV: {e}")
+    if not all_metrics:
+        st.warning("No metric CSVs found.")
+        return
+    league_selected = st.sidebar.selectbox("Select League", list(all_metrics.keys()))
+    metric_options = ["xG","xAG","xT","xDisruption","GPA"]
+    metric_choice = st.sidebar.selectbox("Select Metric", metric_options)
+    df_metric = None
+    league_metrics = all_metrics[league_selected]
+    for key in league_metrics.keys():
+        if metric_choice in key:
+            df_metric = league_metrics[key]
+            break
+    if df_metric is not None:
+        st.dataframe(df_metric)
     else:
-        st.warning(f"File not found: {file_path}")
+        st.warning("Metric not found for selected league.")
 
-
+# --- Matches Page ---
 def display_matches_page():
     st.subheader("Match Analysis / xG Shot Maps")
     league_data = load_match_xg_data("data/matchxg")
@@ -197,16 +190,16 @@ def display_matches_page():
         st.markdown("### Match Filters")
         total_option = st.selectbox("Total", ["No", "Yes"])
         league_selected = st.selectbox("League", list(league_data.keys()))
-
         df_team, title_main, title_sub = None, "", ""
 
         if total_option == "Yes":
             matches_in_league = league_data[league_selected]
             all_matches = pd.concat(matches_in_league.values(), ignore_index=True)
-            if 'TeamId' in all_matches.columns:
-                team_choice = st.selectbox("Team", sorted(all_matches['TeamId'].unique()))
-                df_team = all_matches[all_matches['TeamId']==team_choice]
-                title_main = str(team_choice)
+            if 'Team' in all_matches.columns and 'TeamId' in all_matches.columns:
+                team_map = all_matches[['Team','TeamId']].drop_duplicates().set_index('Team')['TeamId'].to_dict()
+                team_choice = st.selectbox("Team", sorted(team_map.keys()))
+                df_team = all_matches[all_matches['TeamId'] == team_map[team_choice]]
+                title_main = team_choice
                 title_sub = f"All Matches | {league_selected}"
         else:
             matches_in_league = league_data[league_selected]
@@ -215,26 +208,29 @@ def display_matches_page():
             match_idx = st.selectbox("Match", range(len(match_names)), format_func=lambda i: match_names[i])
             match_name = match_files[match_idx]
             df_match = matches_in_league[match_name]
-
             if 'Team' in df_match.columns and 'TeamId' in df_match.columns:
                 team_map = df_match[['Team','TeamId']].drop_duplicates().set_index('Team')['TeamId'].to_dict()
                 team_choice = st.selectbox("Team", sorted(team_map.keys()))
-                df_team = df_match[df_match['TeamId']==team_map[team_choice]]
-                opponent = [t for t in team_map.keys() if t!=team_choice]
+                df_team = df_match[df_match['TeamId'] == team_map[team_choice]]
+                opponent = [t for t in team_map.keys() if t != team_choice]
                 title_main = team_choice
                 title_sub = f"vs {opponent[0] if opponent else ''} | {league_selected}"
 
     plot_shot_map_with_stats(df_team, title_main, title_sub)
 
-def display_profiles_page(metrics):
+# --- Profiles Page ---
+def display_profiles_page(all_metrics):
     st.subheader("Player Profiles")
-    if 'WSL' not in metrics:
+    if 'WSL' not in all_metrics or 'WSL.csv' not in all_metrics['WSL']:
         st.warning("WSL metrics not loaded.")
         return
-    player_ids = list(metrics['WSL'].PlayerId.unique())
+    df_wsl = all_metrics['WSL']['WSL.csv']
+    player_ids = list(df_wsl.PlayerId.unique())
     player_selected = st.selectbox("Select Player", player_ids)
-    st.dataframe(metrics['WSL'][metrics['WSL'].PlayerId==player_selected])
+    df_player = df_wsl[df_wsl.PlayerId==player_selected]
+    st.dataframe(df_player)
 
+# --- Set Pieces Page ---
 def display_set_pieces_page():
     st.subheader("Set Pieces / Corners Analysis")
     st.info("Visualizations coming soon.")
@@ -245,17 +241,17 @@ def main():
     if 'app_mode' not in st.session_state:
         st.session_state.app_mode = "Landing"
 
-    metrics = load_all_metrics("data")
+    all_metrics = load_all_metrics("data/advanced")
 
-    if st.session_state.app_mode=="Landing":
+    if st.session_state.app_mode == "Landing":
         display_landing_page()
-    elif st.session_state.app_mode=="Performance":
-        display_performance_page(metrics)
-    elif st.session_state.app_mode=="Matches":
+    elif st.session_state.app_mode == "Performance":
+        display_performance_page(all_metrics)
+    elif st.session_state.app_mode == "Matches":
         display_matches_page()
-    elif st.session_state.app_mode=="Profiles":
-        display_profiles_page(metrics)
-    elif st.session_state.app_mode=="SetPieces":
+    elif st.session_state.app_mode == "Profiles":
+        display_profiles_page(all_metrics)
+    elif st.session_state.app_mode == "SetPieces":
         display_set_pieces_page()
 
 if __name__=="__main__":
