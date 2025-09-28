@@ -39,9 +39,10 @@ def load_all_metrics(base_path="data/advanced"):
         league_files = glob.glob(os.path.join(league_path,"*.csv"))
         league_dict = {}
         for f in league_files:
-            filename = os.path.splitext(os.path.basename(f))[0]
+            # Store key without .csv extension to match filename_map
+            metric_name = os.path.splitext(os.path.basename(f))[0]
             df = pd.read_csv(f)
-            league_dict[filename] = df
+            league_dict[metric_name] = df
         all_metrics[league] = league_dict
     return all_metrics
 
@@ -54,24 +55,25 @@ def display_advanced_metrics(all_metrics):
         st.warning("No metrics found.")
         return
 
-    # Sidebar - league and metric selection
-    league_selected = st.sidebar.selectbox("Select League", list(all_metrics.keys()))
+    # --- Sidebar - league selection ---
+    league_selected = st.sidebar.selectbox("Select League", sorted(list(all_metrics.keys())))
     league_metrics = all_metrics.get(league_selected, {})
 
     if not league_metrics:
         st.warning(f"No metrics available for {league_selected}.")
         return
 
+    # --- Sidebar - metric selection ---
     metric_options = ["xG","xAG","xT","xDisruption","GPA"]
     metric_choice = st.sidebar.selectbox("Select Metric", metric_options)
 
-    # Map metric choice to filenames
+    # --- Map metric choice to filename (without .csv) ---
     filename_map = {
-        "xG": f"{league_selected}.csv",
-        "xAG": f"{league_selected}_assists.csv",
-        "GPA": f"{league_selected}_gpa.csv",
-        "xT": f"{league_selected}_xt.csv",
-        "xDisruption": f"{league_selected}_disruption.csv"
+        "xG": f"{league_selected}",
+        "xAG": f"{league_selected}_assists",
+        "GPA": f"{league_selected}_gpa",
+        "xT": f"{league_selected}_xt",
+        "xDisruption": f"{league_selected}_disruption"
     }
 
     expected_file = filename_map.get(metric_choice)
