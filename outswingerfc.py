@@ -141,17 +141,18 @@ def display_landing_page():
     if col4.button("Corners"):
         st.session_state.app_mode = "SetPieces"
 
-def display_performance_page(metrics):
+def display_performance_page():
     st.subheader("Advanced Metrics / Player Scouting")
 
-    if not metrics:
-        st.warning("No metric CSVs loaded.")
-        return
-
+    # --- Sidebar Filters ---
     with st.sidebar:
         st.markdown("### Advanced Metrics Filters")
-        league_selected = st.selectbox("Select League", ["All"] + sorted(metrics.keys()))
+        advanced_base = "data/advanced"
+        # List all league folders dynamically
+        leagues = [f for f in os.listdir(advanced_base) if os.path.isdir(os.path.join(advanced_base, f))]
+        league_selected = st.selectbox("Select League", sorted(leagues))
 
+        # Metric selection
         metric_choice = st.selectbox(
             "Select Metric",
             ["Expected Goals (xG)",
@@ -161,29 +162,25 @@ def display_performance_page(metrics):
              "Goal Probability Added (GPA)"]
         )
 
-    # Filter DataFrame by league if not 'All'
-    if league_selected != "All":
-        df_filtered = metrics[league_selected]
-    else:
-        # Combine all leagues
-        df_filtered = pd.concat(metrics.values(), ignore_index=True)
-
-    # Show the selected metric
-    # If your CSVs have columns named differently, you might map metric_choice to column names
-    metric_column_map = {
-        "Expected Goals (xG)": "xG",
-        "Expected Goals Assisted (xAG)": "xAG",
-        "Expected Threat (xT)": "xT",
-        "Expected Disruption (xDisruption)": "xDisruption",
-        "Goal Probability Added (GPA)": "GPA"
+    # --- Map metric to expected file pattern ---
+    metric_file_patterns = {
+        "Expected Goals (xG)": "{league}.csv",
+        "Expected Goals Assisted (xAG)": "{league}_assists.csv",
+        "Expected Threat (xT)": "{league}_xT.csv",
+        "Expected Disruption (xDisruption)": "{league}_xDisruption.csv",
+        "Goal Probability Added (GPA)": "{league}_gpa.csv"
     }
-    metric_column = metric_column_map.get(metric_choice, None)
 
-    if metric_column and metric_column in df_filtered.columns:
-        st.dataframe(df_filtered[['PlayerId', metric_column]])
+    # Replace {league} with the selected league folder name
+    pattern = metric_file_patterns.get(metric_choice)
+    file_path = os.path.join(advanced_base, league_selected, pattern.format(league=league_selected))
+
+    # Load and display CSV
+    if os.path.exists(file_path):
+        df_metric = pd.read_csv(file_path)
+        st.dataframe(df_metric)
     else:
-        st.warning(f"Column '{metric_column}' not found in selected league data.")
-
+        st.warning(f"File not found: {file_path}")
 
 def display_matches_page():
     st.subheader("Match Analysis / xG Shot Maps")
