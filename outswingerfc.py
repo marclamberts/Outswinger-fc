@@ -127,16 +127,14 @@ def display_performance_page(metrics):
 def display_matches_page():
     st.subheader("Match Analysis / xG Shot Maps")
 
-    # Initialize session state for selected team
-    if "selected_team" not in st.session_state:
-        st.session_state.selected_team = None
-
+    # Load league/match data
     league_data = load_match_xg_data("data/matchxg")
     if not league_data:
         st.warning("No match data found.")
         return
 
-    st.sidebar.markdown("### Filters")
+    # --- Sidebar filters only in Matches tab ---
+    st.sidebar.markdown("### Match Filters")
 
     # League selection
     league_selected = st.sidebar.selectbox("Select League", list(league_data.keys()))
@@ -159,28 +157,30 @@ def display_matches_page():
         match_display_names.append(display_name)
 
     # Match selection
-    match_selected_idx = st.sidebar.selectbox("Select Match", range(len(match_display_names)),
-                                              format_func=lambda x: match_display_names[x])
+    match_selected_idx = st.sidebar.selectbox(
+        "Select Match",
+        range(len(match_display_names)),
+        format_func=lambda x: match_display_names[x]
+    )
     match_display_name = match_display_names[match_selected_idx]
     match_name = match_files[match_selected_idx]
     df_match = matches_in_league[match_name]
 
     team1, team2 = team_names_map[match_display_name]
 
-    # Team buttons
-    st.sidebar.markdown("### Select Team")
-    if st.sidebar.button(team1):
-        st.session_state.selected_team = team1
-    if st.sidebar.button(team2):
-        st.session_state.selected_team = team2
+    # Team selection (choose team1, team2, or Full Match)
+    team_options = ["Full Match"]
+    if team1: team_options.append(team1)
+    if team2: team_options.append(team2)
+    team_filter = st.sidebar.selectbox("Select Team", team_options)
 
     # Filter DataFrame by selected team
-    if st.session_state.selected_team and 'Team' in df_match.columns:
-        df_team = df_match[df_match['Team'] == st.session_state.selected_team]
+    if team_filter != "Full Match" and 'Team' in df_match.columns:
+        df_team = df_match[df_match['Team'] == team_filter]
     else:
         df_team = df_match.copy()
 
-    # Player selection (optional)
+    # Optional: player filter within team
     player_name = None
     if 'PlayerId' in df_team.columns:
         player_list = ["All"] + df_team['PlayerId'].unique().tolist()
@@ -188,8 +188,11 @@ def display_matches_page():
         player_name = None if player_selected == "All" else player_selected
 
     # Plot the shot map
-    plot_shot_map(df_team, player_name,
-                  title_sub=f"{st.session_state.selected_team if st.session_state.selected_team else 'Full Match'} | {match_display_name} | {league_selected}")
+    plot_shot_map(
+        df_team,
+        player_name,
+        title_sub=f"{team_filter} | {match_display_name} | {league_selected}"
+    )
 
 
 def display_profiles_page(metrics):
