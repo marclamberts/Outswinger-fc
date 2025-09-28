@@ -123,70 +123,92 @@ def display_matches_page():
     with st.sidebar:
         st.markdown("### Match Filters")
 
-        # League selection
-        league_selected = st.selectbox("Select League", list(league_data.keys()))
-        matches_in_league = league_data[league_selected]
+        # Total toggle
+        total_option = st.radio("Total?", ["No", "Yes"], index=0)
 
-        # Parse team names from filenames
-        match_display_names = []
-        team_names_map = {}
-        match_files = list(matches_in_league.keys())
-        for match_file in match_files:
-            parts = match_file.split("_", 1)
-            name_part = parts[1] if len(parts) > 1 else parts[0]
-            if " - " in name_part:
-                t1, t2 = name_part.split(" - ", 1)
-                t1, t2 = t1.strip(), t2.strip()
-                display_name = f"{t1} vs {t2}"
-                team_names_map[display_name] = (t1, t2)
+        # Team selection (always required)
+        # Gather all unique team names from all leagues
+        all_teams = set()
+        for league, matches in league_data.items():
+            for match_file, df_match in matches.items():
+                if 'TeamId' in df_match.columns:
+                    all_teams.update(df_match['TeamId'].unique())
+        team_filter = st.selectbox("Team", sorted(list(all_teams)))
+
+        df_team = pd.DataFrame()  # initialize
+
+        if total_option == "No":
+            # --- Show league/match filters ---
+            league_selected = st.selectbox("Select League", list(league_data.keys()))
+            matches_in_league = league_data[league_selected]
+
+            # Parse team names from filenames
+            match_display_names = []
+            team_names_map = {}
+            match_files = list(matches_in_league.keys())
+            for match_file in match_files:
+                parts = match_file.split("_", 1)
+                name_part = parts[1] if len(parts) > 1 else parts[0]
+                if " - " in name_part:
+                    t1, t2 = name_part.split(" - ", 1)
+                    t1, t2 = t1.strip(), t2.strip()
+                    display_name = f"{t1} vs {t2}"
+                    team_names_map[display_name] = (t1, t2)
+                else:
+                    display_name = name_part.strip()
+                    team_names_map[display_name] = (None, None)
+                match_display_names.append(display_name)
+
+            # Match selection
+            match_selected_idx = st.selectbox(
+                "Select Match",
+                range(len(match_display_names)),
+                format_func=lambda x: match_display_names[x]
+            )
+            match_display_name = match_display_names[match_selected_idx]
+            match_name = match_files[match_selected_idx]
+            df_match = matches_in_league[match_name].copy()
+
+            # Filter by selected team
+            if team_filter != "Full Match" and 'TeamId' in df_match.columns:
+                df_team = df_match[df_match['TeamId'] == team_filter].copy()
             else:
-                display_name = name_part.strip()
-                team_names_map[display_name] = (None, None)
-            match_display_names.append(display_name)
+                df_team = df_match.copy()
 
-        # Match selection
-        match_selected_idx = st.selectbox(
-            "Select Match",
-            range(len(match_display_names)),
-            format_func=lambda x: match_display_names[x]
-        )
-        match_display_name = match_display_names[match_selected_idx]
-        match_name = match_files[match_selected_idx]
-        df_match = matches_in_league[match_name].copy()
+            # Determine opponent team name for title
+            team1_name, team2_name = team_names_map[match_display_name]
+            opponent = None
+            if team_filter == team1_name:
+                opponent = team2_name
+            elif team_filter == team2_name:
+                opponent = team1_name
 
-        team1_name, team2_name = team_names_map[match_display_name]
+            opponent_text = f"vs {opponent}" if opponent else ""
+            title_main = team_filter
+            title_sub = f"{opponent_text} | {league_selected}" if opponent else league_selected
 
-        # Team selection (label "Team", filter internally by TeamId)
-        team_options = ["Full Match"]
-        if team1_name: team_options.append(team1_name)
-        if team2_name: team_options.append(team2_name)
-        team_filter = st.selectbox("Team", team_options)
+        else:
+            # Total = Yes → combine all matches for selected team
+            all_team_matches = []
+            for league, matches in league_data.items():
+                for df_match in matches.values():
+                    if 'TeamId' in df_match.columns:
+                        df_team_only = df_match[df_match['TeamId'] == team_filter]
+                        if not df_team_only.empty:
+                            all_team_matches.append(df_team_only)
+            if all_team_matches:
+                df_team = pd.concat(all_team_matches, ignore_index=True)
+            else:
+                st.warning(f"No shots found for team {team_filter} across all matches.")
+                return
 
-    # --- Filter shots by TeamId ---
-    if team_filter != "Full Match" and 'TeamId' in df_match.columns:
-        # Map the selected team name to the TeamId in the CSV
-        team_map = df_match[['TeamId']].drop_duplicates()
-        # Assumes TeamId corresponds to team names in the sidebar
-        # If your CSV has numeric IDs, you might need a separate mapping
-        selected_team_id = team_filter  # if names match IDs
-        df_team = df_match[df_match['TeamId'] == selected_team_id].copy()
-    else:
-        df_team = df_match.copy()
+            title_main = team_filter
+            title_sub = "Total Across All Matches"
 
+    # --- Plot the shots ---
     if df_team.empty:
-        st.warning("No shot data for selected team.")
+        st.warning("No shot data for selected team/match.")
         return
-
-    # Determine opponent team name for title
-    opponent = None
-    if team_filter == team1_name:
-        opponent = team2_name
-    elif team_filter == team2_name:
-        opponent = team1_name
-
-    opponent_text = f"vs {opponent}" if opponent else ""
-    title_main = team_filter if team_filter != "Full Match" else "Full Match"
-    title_sub = f"{opponent_text} | {league_selected}" if opponent else league_selected
 
     # --- Plot ---
     pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=True)
@@ -223,6 +245,7 @@ def display_matches_page():
     ax.text(52, 101, title_sub, fontsize=14, style='italic', color='black', ha='center', va='top')
 
     st.pyplot(fig)
+
 
 
 def display_profiles_page(metrics):
