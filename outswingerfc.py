@@ -162,20 +162,11 @@ def display_matches_page():
         if team2: team_options.append(team2)
         team_filter = st.selectbox("Select Team", team_options)
 
-        # Filter by team
-        if team_filter != "Full Match" and 'Team' in df_match.columns:
-            df_team = df_match[df_match['Team'] == team_filter].copy()
-        else:
-            df_team = df_match.copy()
-
-        # Optional: player filter within team
-        player_name = None
-        if 'PlayerId' in df_team.columns:
-            player_list = ["All"] + df_team['PlayerId'].unique().tolist()
-            player_selected = st.selectbox("Select Player", player_list)
-            player_name = None if player_selected == "All" else player_selected
-            if player_name:
-                df_team = df_team[df_team['PlayerId'] == player_name]
+    # Filter shots by team
+    if team_filter != "Full Match" and 'Team' in df_match.columns:
+        df_team = df_match[df_match['Team'] == team_filter].copy()
+    else:
+        df_team = df_match.copy()
 
     # Determine opponent team name for title
     if team_filter == team1:
@@ -191,7 +182,7 @@ def display_matches_page():
 
     # --- Plot Shot Map ---
     if df_team.empty:
-        st.warning("No shot data for selected team/player.")
+        st.warning("No shot data for selected team.")
         return
 
     pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=True)
@@ -224,11 +215,12 @@ def display_matches_page():
         ax.text(pos[0], pos[1]+0.06, text, transform=ax.transAxes, color='black', fontsize=12, ha='center', va='center', zorder=6)
         ax.text(pos[0], pos[1], value, transform=ax.transAxes, color='white', fontsize=12, weight='bold', ha='center', va='center', zorder=6)
 
-    # Add multi-line title
+    # Multi-line title
     ax.text(52, 105, title_main, fontsize=22, weight='bold', color='black', ha='center', va='top')
     ax.text(52, 101, title_sub, fontsize=14, style='italic', color='black', ha='center', va='top')
 
     st.pyplot(fig)
+
 
 
 def display_profiles_page(metrics):
