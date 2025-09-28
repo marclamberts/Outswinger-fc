@@ -7,4 +7,3 @@ matplotlib
 mplsoccer 
 Joblib
 scikit-learn
-experimental_rerun

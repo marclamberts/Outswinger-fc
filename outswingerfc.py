@@ -114,10 +114,12 @@ def display_landing_page():
     st.markdown("<h1 style='text-align:center;'>WOSO ANALYTICS</h1>", unsafe_allow_html=True)
     if st.button("ENTER DASHBOARD"):
         st.session_state.app_mode = "MainApp"
-        st.experimental_rerun()
 
 def display_performance_page(metrics):
     st.subheader("Player Performance Scouting")
+    if not metrics:
+        st.warning("No metric CSVs loaded.")
+        return
     metric = st.selectbox("Select Metric", list(metrics.keys()))
     df_metric = metrics[metric]
     st.dataframe(df_metric)
@@ -134,6 +136,7 @@ def display_matches_page():
     league_selected = st.selectbox("Select League", list(league_data.keys()))
     matches_in_league = league_data[league_selected]
 
+    # Team vs Team display
     match_teams = {}
     for match_name, df in matches_in_league.items():
         if 'Team' in df.columns:
@@ -150,12 +153,11 @@ def display_matches_page():
     match_name = list(matches_in_league.keys())[match_idx]
     df_match = matches_in_league[match_name]
 
+    player_name = None
     if 'PlayerId' in df_match.columns:
         player_list = ["All"] + df_match['PlayerId'].unique().tolist()
         player_selected = st.selectbox("Select Player", player_list)
         player_name = None if player_selected=="All" else player_selected
-    else:
-        player_name = None
 
     plot_shot_map(df_match, player_name, title_sub=f"{match_display_names[match_idx]} | {league_selected}")
 
