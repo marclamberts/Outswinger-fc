@@ -1,115 +1,140 @@
 Player,Team,Assists,ShotAssists,xAG
-A. Beever-Jones,Chelsea FC Women,0,1,0.04
-A. Fujino,Manchester City WFC,1,1,0.37
+A. Ale,Leicester City FC,0,2,0.18
+A. Beever-Jones,Chelsea FC Women,0,5,0.33
+A. Csiki,West Ham United WFC,0,1,0.05
+A. Fujino,Manchester City WFC,1,2,0.46
 A. Greenwood,Manchester City WFC,1,3,0.5
-A. Nildén,Tottenham Hotspur FCW,0,4,0.53
-A. Russo,Arsenal WFC,2,3,0.88
+A. Nildén,Tottenham Hotspur FCW,0,6,0.67
+A. Russo,Arsenal WFC,2,7,1.31
 A. Sandberg,Manchester United WFC,1,3,0.76
-A. Thompson,Chelsea FC Women,0,2,0.44
-B. England,Tottenham Hotspur FCW,1,1,0.12
-B. Mead,Arsenal WFC,3,1,1.29
-C. Foord,Arsenal WFC,0,2,0.71
-C. Grant,Aston Villa WFC,1,6,1.24
+A. Thompson,Chelsea FC Women,0,6,0.96
+B. England,Tottenham Hotspur FCW,1,3,0.24
+B. Mead,Arsenal WFC,3,3,1.87
+C. Foord,Arsenal WFC,0,3,0.78
+C. Grant,Aston Villa WFC,1,7,1.29
+C. Holland,Liverpool FCW,0,3,0.53
 C. Hunt,Tottenham Hotspur FCW,0,1,0.39
+C. Kapocs,Liverpool FCW,0,1,0.07
+C. Kelly,Arsenal WFC,0,1,0.05
+C. Macário,Chelsea FC Women,1,2,0.71
 C. Tandberg,Tottenham Hotspur FCW,1,2,0.6
 C. Wheeler,Everton FC,0,2,0.15
-C. Wheeler,Everton WFC,0,2,0.15
 Carla Camacho,Brighton & Hove Albion WFC,0,1,0.05
 D. Janssen,Manchester United WFC,1,0,0.38
 E. Carpenter,Chelsea FC Women,1,1,0.53
 E. Cuthbert,Chelsea FC Women,0,1,0.14
 E. Fox,Arsenal WFC,0,2,0.11
-E. Salmon,Aston Villa WFC,0,1,0.05
+E. Salmon,Aston Villa WFC,0,2,0.11
 E. Stenevik,Everton FC,0,2,0.14
-E. Summanen,Tottenham Hotspur FCW,0,2,0.07
-E. Terland,Manchester United WFC,1,3,0.67
-E. Toone,Manchester United WFC,1,1,0.39
-F. Kirby,Brighton & Hove Albion WFC,0,3,0.18
+E. Summanen,Tottenham Hotspur FCW,1,3,0.47
+E. Terland,Manchester United WFC,2,3,1.04
+E. Toone,Manchester United WFC,1,4,0.61
+E. van Egmond,Leicester City FC,0,1,0.03
+F. Kirby,Brighton & Hove Albion WFC,1,5,0.46
 F. Maanum,Arsenal WFC,0,1,0.07
 F. Rolfö,Manchester United WFC,1,0,0.06
+G. Bonner,Liverpool FCW,0,1,0.32
 G. Clinton,Manchester City WFC,0,1,0.1
 G. Evans,Liverpool FCW,0,1,0.05
 G. Fisk,Liverpool FCW,0,1,0.09
 G. Geyoro,London City Lionesses LFC,0,2,0.14
 G. Prior,Manchester City WFC,0,1,0.11
 G. Reiten,Chelsea FC Women,0,1,0.41
-H. Hayashi,Everton FC,0,1,0.09
+H. Cain,Leicester City FC,0,1,0.05
+H. Eiríksdóttir,Leicester City FC,0,2,0.11
+H. Hayashi,Everton FC,0,2,0.13
 H. Ladd,Everton FC,1,1,0.1
-H. Ladd,Everton WFC,1,1,0.09
+H. Payne,Leicester City FC,0,1,0.03
 I. Beney,Manchester City WFC,0,1,0.09
-I. Goodwin,London City Lionesses LFC,0,1,0.14
-J. Baijings,Aston Villa WFC,0,1,0.09
-J. Cayman,Leicester City FC,1,0,0.1
+I. Goodwin,London City Lionesses LFC,0,2,0.19
+J. Baijings,Aston Villa WFC,0,2,0.16
+J. Cayman,Leicester City FC,1,2,0.23
 J. Naz,Tottenham Hotspur FCW,0,1,0.03
-J. Park,Manchester United WFC,1,2,0.54
+J. Park,Manchester United WFC,1,5,0.97
 J. Riviere,Manchester United WFC,1,1,0.36
-J. Zigiotti Olme,Manchester United WFC,0,3,0.15
+J. Rytting Kaneryd,Chelsea FC Women,0,2,0.1
+J. Thibaud,Leicester City FC,0,3,0.12
+J. Zigiotti Olme,Manchester United WFC,0,5,0.29
 J. Čanković,Brighton & Hove Albion WFC,0,3,0.23
 Jana Fernández,London City Lionesses LFC,0,3,0.23
-K. Asllani,London City Lionesses LFC,1,9,1.11
-K. Casparij,Manchester City WFC,0,3,0.54
+K. Asllani,London City Lionesses LFC,1,12,1.37
+K. Casparij,Manchester City WFC,1,4,1.2
 K. Gago,Everton FC,0,2,0.14
-K. Gago,Everton WFC,0,1,0.25
-K. Gorry,West Ham United WFC,0,2,0.14
+K. Gorry,West Ham United WFC,0,4,0.87
 K. Graham,Tottenham Hotspur FCW,0,2,0.1
+K. Hanson,Aston Villa WFC,0,1,0.07
 K. Holmgaard,Everton FC,1,1,0.15
-K. Holmgaard,Everton WFC,1,0,0.06
-K. Little,Arsenal WFC,0,2,0.08
-K. McCabe,Arsenal WFC,0,3,0.19
-K. Robinson,Everton FC,0,1,0.04
-K. Seike,Brighton & Hove Albion WFC,0,2,0.15
+K. Little,Arsenal WFC,0,5,0.24
+K. MacLean,Liverpool FCW,0,1,0.08
+K. McCabe,Arsenal WFC,0,4,0.57
+K. Robinson,Everton FC,0,2,0.39
+K. Seike,Brighton & Hove Albion WFC,0,5,0.72
 K. Shaw,Manchester City WFC,1,3,0.32
 K. Snoeijs,Everton FC,0,3,0.18
 Kerolin,Manchester City WFC,1,4,0.45
+L. Blindkilde Brown,Manchester City WFC,0,1,0.1
 L. Gunning-Williams,Tottenham Hotspur FCW,0,1,0.05
 L. Hemp,Manchester City WFC,0,8,1.17
-L. Lindström,London City Lionesses LFC,0,1,0.07
-L. Wilms,Aston Villa WFC,0,1,0.1
-L. Woodham,Liverpool FCW,0,2,0.15
-Leila Ouahabi,Manchester City WFC,1,0,0.27
+L. Kendall,Aston Villa WFC,0,1,0.03
+L. Lindström,London City Lionesses LFC,0,2,0.12
+L. Wilms,Aston Villa WFC,0,2,0.17
+L. Woodham,Liverpool FCW,0,1,0.07
+Leila Ouahabi,Manchester City WFC,1,2,0.37
 Lucía Corrales,London City Lionesses LFC,0,2,0.47
-M. Agyemang,Brighton & Hove Albion WFC,0,2,0.13
+M. Agyemang,Brighton & Hove Albion WFC,1,3,0.23
 M. Auée,Brighton & Hove Albion WFC,0,1,0.1
 M. Bright,Chelsea FC Women,0,1,0.08
 M. Enderby,Liverpool FCW,0,1,0.04
-M. Höbinger,Liverpool FCW,2,5,1.03
-M. Le Tissier,Manchester United WFC,1,0,0.04
-M. Malard,Manchester United WFC,0,4,0.62
-M. Minami,Brighton & Hove Albion WFC,0,1,0.05
-M. Olislagers,Brighton & Hove Albion WFC,0,4,0.22
+M. Hamano,Chelsea FC Women,0,1,0.06
+M. Höbinger,Liverpool FCW,1,3,0.58
+M. Le Tissier,Manchester United WFC,1,1,0.32
+M. Malard,Manchester United WFC,0,6,1.34
+M. Minami,Brighton & Hove Albion WFC,0,2,0.08
+M. Olislagers,Brighton & Hove Albion WFC,0,7,0.73
 M. Pacheco,Everton FC,2,2,0.24
-M. Pacheco,Everton WFC,2,1,0.22
-M. Symonds,Brighton & Hove Albion WFC,0,1,0.4
-Mariona Caldentey,Arsenal WFC,1,6,0.9
+M. Symonds,Brighton & Hove Albion WFC,0,2,0.78
+Mariona Caldentey,Arsenal WFC,2,10,1.58
 Martina Fernández,Everton FC,0,3,0.25
-N. Björn,Chelsea FC Women,0,1,0.1
+María Pérez,London City Lionesses LFC,1,1,0.13
+N. Björn,Chelsea FC Women,0,3,0.24
+N. Layzell,Manchester City WFC,0,1,0.05
 N. Maritz,Aston Villa WFC,0,4,0.52
+N. Noordam,Brighton & Hove Albion WFC,1,0,0.06
 N. Parris,London City Lionesses LFC,1,1,0.51
 O. Ahtinen,Tottenham Hotspur FCW,0,1,0.05
-O. Deslandes,Aston Villa WFC,0,1,0.03
-O. McLoughlin,Leicester City FC,0,1,0.04
+O. Deslandes,Aston Villa WFC,0,2,0.13
+O. Holdt,Tottenham Hotspur FCW,0,1,0.06
+O. McLoughlin,Leicester City FC,0,2,0.08
 O. Smith,Arsenal WFC,1,1,0.18
+Ornella Vignola,Everton FC,0,2,0.1
+Paula Tomás,Aston Villa WFC,0,1,0.25
 R. Daly,Aston Villa WFC,0,1,0.05
 R. Ishikawa,Everton FC,0,1,0.1
+R. Kafaji,Brighton & Hove Albion WFC,2,1,1.37
+R. Maltby,Aston Villa WFC,0,1,0.05
 R. McLauchlan,Brighton & Hove Albion WFC,1,1,0.13
-R. Ueki,West Ham United WFC,0,1,0.03
+R. Ueki,West Ham United WFC,0,5,0.33
 R. van Gool,Everton FC,0,1,0.1
-S. Baltimore,Chelsea FC Women,0,2,0.63
-S. Blackstenius,Arsenal WFC,0,1,0.08
-S. Catley,Arsenal WFC,1,0,0.04
+S. Baltimore,Chelsea FC Women,0,4,0.78
+S. Blackstenius,Arsenal WFC,0,2,0.18
+S. Catley,Arsenal WFC,1,2,0.18
 S. Franssi,London City Lionesses LFC,0,1,0.37
+S. Haug,Liverpool FCW,0,1,0.09
 S. Jakobsson,London City Lionesses LFC,0,1,0.08
-S. Kerr,Chelsea FC Women,0,2,0.17
-S. Kerr,Liverpool FCW,0,2,0.11
+S. Kerr,Chelsea FC Women,0,3,0.57
+S. Kerr,Liverpool FCW,0,1,0.05
 S. Martinez,West Ham United WFC,0,1,0.05
 S. Mayling,Aston Villa WFC,0,1,0.1
-S. Tierney,Leicester City FC,0,1,0.05
-S. Zadorsky,West Ham United WFC,0,1,0.03
+S. Tierney,Leicester City FC,0,3,0.18
+S. Zadorsky,West Ham United WFC,0,2,0.13
 T. Hinds,Arsenal WFC,0,1,0.3
 T. Koga,Tottenham Hotspur FCW,0,1,0.05
-V. Asseyi,West Ham United WFC,0,2,0.31
-V. Hanshaw,West Ham United WFC,0,1,0.09
-V. Miedema,Manchester City WFC,0,4,0.78
-V. Pelova,Arsenal WFC,0,2,0.15
-W. Kaptein,Chelsea FC Women,1,0,0.41
-Y. Hasegawa,Manchester City WFC,0,5,1.21
+V. Asseyi,West Ham United WFC,0,7,0.67
+V. Buurman,Chelsea FC Women,0,3,0.16
+V. Hanshaw,West Ham United WFC,0,2,0.12
+V. Miedema,Manchester City WFC,0,5,0.88
+V. Pelova,Arsenal WFC,0,3,0.25
+W. Kaptein,Chelsea FC Women,2,3,1.05
+Y. Endo,West Ham United WFC,0,1,0.04
+Y. Hasegawa,Manchester City WFC,0,6,1.3
+Y. Momiki,Everton FC,0,3,0.19

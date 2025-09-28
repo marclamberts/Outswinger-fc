@@ -1,212 +1,230 @@
 Player,Team,GPA,Avg,GPA Rating
-A. Ale,Leicester City,1.0370000000000001,0.5185000000000001,50.24
-C. Boureille,Leicester City,1.155,0.5775,51.84
-E. van Egmond,Leicester City,0.741,0.3705,46.23
-H. Cain,Leicester City,0.6679999999999999,0.33399999999999996,45.24
-H. Eiríksdóttir,Leicester City,0.264,0.132,39.76
-H. Payne,Leicester City,0.23500000000000001,0.11750000000000001,39.37
-J. Cayman,Leicester City,0.79,0.395,46.89
-J. Leitzig,Leicester City,1.125,0.5625,51.44
-J. Rantala,Leicester City,0.087,0.0435,37.36
-J. Thibaud,Leicester City,1.199,0.5995,52.44
-N. Las,Leicester City,0.082,0.082,37.29
-O. McLoughlin,Leicester City,0.6970000000000001,0.34850000000000003,45.63
-S. Kees,Leicester City,1.333,0.6665,54.26
-S. O’Brien,Leicester City,0.265,0.1325,39.78
-S. Sherwood,Leicester City,0.025,0.025,36.52
-S. Tierney,Leicester City,1.0210000000000001,0.5105000000000001,50.03
-A. Fujino,Manchester City,0.6289999999999999,0.31449999999999995,44.71
-A. Greenwood,Manchester City,3.252,1.0839999999999999,80.28
-A. Yamashita,Manchester City,0.525,0.525,43.3
-G. Clinton,Manchester City,0.36,0.36,41.06
-G. Prior,Manchester City,2.929,0.9763333333333334,75.9
-I. Beney,Manchester City,0.588,0.196,44.16
-J. Rose,Manchester City,1.222,0.611,52.75
-K. Casparij,Manchester City,2.518,0.8393333333333333,70.32
-K. Keating,Manchester City,1.6169999999999998,0.8084999999999999,58.11
-K. Shaw,Manchester City,1.288,0.4293333333333334,53.65
-Kerolin,Manchester City,0.8039999999999999,0.40199999999999997,47.08
-L. Blindkilde Brown,Manchester City,1.6469999999999998,0.5489999999999999,58.51
-L. Coombs,Manchester City,0.11699999999999999,0.11699999999999999,37.77
-L. Hemp,Manchester City,1.254,0.418,53.19
-L. Murphy,Manchester City,0.43100000000000005,0.43100000000000005,42.03
-Leila Ouahabi,Manchester City,1.9700000000000002,0.6566666666666667,62.89
-N. Layzell,Manchester City,0.083,0.083,37.31
-S. Lohmann,Manchester City,0.647,0.647,44.96
-V. Miedema,Manchester City,1.349,0.4496666666666667,54.47
-Y. Hasegawa,Manchester City,2.726,0.9086666666666666,73.15
-A. Russo,Arsenal,0.89,0.445,48.25
-B. Mead,Arsenal,0.8009999999999999,0.40049999999999997,47.04
-C. Foord,Arsenal,0.716,0.358,45.89
-C. Kelly,Arsenal,0.45099999999999996,0.45099999999999996,42.3
-D. van Domselaar,Arsenal,1.391,0.6955,55.04
-E. Fox,Arsenal,1.861,0.9305,61.42
-F. Maanum,Arsenal,0.678,0.339,45.38
-K. Little,Arsenal,1.525,0.7625,56.86
-K. McCabe,Arsenal,1.672,0.836,58.85
-K. Reid,Arsenal,1.7399999999999998,0.8699999999999999,59.78
-L. Wubben-Moy,Arsenal,0.055999999999999994,0.055999999999999994,36.94
-Mariona Caldentey,Arsenal,2.2049999999999996,1.1024999999999998,66.08
-O. Smith,Arsenal,0.516,0.258,43.18
-S. Blackstenius,Arsenal,0.395,0.1975,41.54
-S. Catley,Arsenal,1.512,0.756,56.68
-T. Hinds,Arsenal,0.242,0.121,39.46
-V. Pelova,Arsenal,0.429,0.2145,42.0
-C. Brosnan,Everton,1.791,0.597,60.47
-C. Wheeler,Everton,1.3980000000000001,0.466,55.14
-E. Stenevik,Everton,0.336,0.168,40.74
-H. Hayashi,Everton,0.465,0.155,42.49
-H. Ladd,Everton,0.199,0.199,38.88
-K. Gago,Everton,0.449,0.14966666666666667,42.27
-K. Holmgaard,Everton,1.4140000000000001,0.4713333333333334,55.36
-K. Robinson,Everton,0.9039999999999999,0.30133333333333334,48.44
-K. Snoeijs,Everton,1.056,0.352,50.5
-M. Pacheco,Everton,2.08,0.6933333333333334,64.39
-Martina Fernández,Everton,3.011,1.0036666666666667,77.01
-Ornella Vignola,Everton,0.967,0.3223333333333333,49.29
-R. Ishikawa,Everton,2.95,0.9833333333333334,76.18
-R. Mace,Everton,1.9829999999999999,0.6609999999999999,63.07
-R. van Gool,Everton,1.402,0.46733333333333327,55.19
-T. Payne,Everton,0.425,0.14166666666666666,41.95
-Y. Momiki,Everton,1.128,0.376,51.48
-A. Patten,Aston Villa,1.5390000000000001,0.7695000000000001,57.05
-C. Grant,Aston Villa,1.008,0.504,49.85
-E. Roebuck,Aston Villa,1.0699999999999998,0.5349999999999999,50.69
-E. Salmon,Aston Villa,0.701,0.3505,45.69
-G. Mullett,Aston Villa,0.065,0.0325,37.06
-J. Baijings,Aston Villa,0.7939999999999999,0.39699999999999996,46.95
-K. Hanson,Aston Villa,0.776,0.388,46.7
-L. Kendall,Aston Villa,0.16999999999999998,0.16999999999999998,38.49
-L. Wilms,Aston Villa,1.8170000000000002,0.9085000000000001,60.82
-M. Kearns,Aston Villa,0.95,0.475,49.06
-M. Taylor,Aston Villa,0.354,0.177,40.98
-N. Maritz,Aston Villa,1.536,0.768,57.01
-O. Deslandes,Aston Villa,1.35,0.675,54.49
-R. Daly,Aston Villa,0.931,0.4655,48.81
-R. Maltby,Aston Villa,0.35100000000000003,0.35100000000000003,40.94
-S. D'Angelo,Aston Villa,0.506,0.506,43.04
-S. Mayling,Aston Villa,0.197,0.197,38.85
-A. Dennis,Tottenham Hotspur,0.123,0.123,37.85
-A. Nildén,Tottenham Hotspur,3.109,1.0363333333333333,78.34
-B. England,Tottenham Hotspur,1.3880000000000001,0.46266666666666667,55.0
-C. Grant,Tottenham Hotspur,0.657,0.219,45.09
-C. Hunt,Tottenham Hotspur,3.6149999999999998,1.2049999999999998,85.2
-C. Tandberg,Tottenham Hotspur,0.9490000000000001,0.31633333333333336,49.05
-D. Spence,Tottenham Hotspur,1.846,0.6153333333333333,61.21
-E. Summanen,Tottenham Hotspur,2.0149999999999997,0.6716666666666666,63.5
-J. Naz,Tottenham Hotspur,1.4140000000000001,0.4713333333333334,55.36
-J. Rybrink,Tottenham Hotspur,2.092,0.6973333333333334,64.55
-K. Graham,Tottenham Hotspur,0.28700000000000003,0.14350000000000002,40.07
-L. Gunning-Williams,Tottenham Hotspur,0.21000000000000002,0.10500000000000001,39.03
-L. Kop,Tottenham Hotspur,2.37,0.7899999999999999,68.32
-M. Thomas,Tottenham Hotspur,0.173,0.173,38.53
-M. Vinberg,Tottenham Hotspur,0.308,0.308,40.36
-Maite Oroz,Tottenham Hotspur,0.25,0.25,39.57
-O. Ahtinen,Tottenham Hotspur,0.991,0.3303333333333333,49.62
-O. Holdt,Tottenham Hotspur,0.387,0.1935,41.43
-T. Koga,Tottenham Hotspur,3.196,1.0653333333333335,79.52
-A. Sandberg,Manchester United,1.418,0.709,55.41
-C. Bizet,Manchester United,0.883,0.4415,48.16
-D. Janssen,Manchester United,1.543,0.7715,57.1
-E. Terland,Manchester United,0.40700000000000003,0.20350000000000001,41.7
-E. Toone,Manchester United,1.547,0.7735,57.16
-F. Rolfö,Manchester United,0.155,0.155,38.28
-G. George,Manchester United,0.21200000000000002,0.21200000000000002,39.06
-H. Miyazawa,Manchester United,1.4740000000000002,0.7370000000000001,56.17
-J. Park,Manchester United,0.9600000000000002,0.4800000000000001,49.2
-J. Riviere,Manchester United,1.24,0.62,53.0
-J. Zigiotti Olme,Manchester United,1.2730000000000001,0.6365000000000001,53.44
-L. Naalsund,Manchester United,0.35300000000000004,0.17650000000000002,40.97
-M. Le Tissier,Manchester United,2.246,1.123,66.64
-M. Malard,Manchester United,1.232,0.616,52.89
-M. Turner,Manchester United,0.6890000000000001,0.34450000000000003,45.52
-P. Tullis-Joyce,Manchester United,0.865,0.4325,47.91
-A. Kennedy,London City Lionesses,1.457,0.48566666666666664,55.94
-E. Linari,London City Lionesses,1.1640000000000001,0.5820000000000001,51.97
-Elene Lete,London City Lionesses,2.0,0.6666666666666667,63.3
-G. Geyoro,London City Lionesses,0.522,0.261,43.26
-I. Goodwin,London City Lionesses,0.991,0.3303333333333333,49.62
-J. Roddar,London City Lionesses,0.796,0.26533333333333337,46.98
-Jana Fernández,London City Lionesses,2.386,0.7953333333333333,68.53
-K. Asllani,London City Lionesses,1.456,0.4853333333333333,55.92
-K. Zelem,London City Lionesses,0.626,0.313,44.67
-L. Lindström,London City Lionesses,0.437,0.2185,42.11
-Lucía Corrales,London City Lionesses,0.623,0.20766666666666667,44.63
-María Pérez,London City Lionesses,0.8550000000000001,0.28500000000000003,47.78
-N. Parris,London City Lionesses,0.992,0.33066666666666666,49.63
-R. Imuran,London City Lionesses,1.734,0.5780000000000001,59.69
-S. Franssi,London City Lionesses,0.251,0.08366666666666668,39.59
-S. Jakobsson,London City Lionesses,0.121,0.121,37.82
-S. Kumagai,London City Lionesses,1.922,0.6406666666666666,62.24
-T. Goldie,London City Lionesses,0.176,0.176,38.57
-W. Sangaré,London City Lionesses,0.9650000000000001,0.32166666666666666,49.27
-A. Denton,West Ham United,1.455,0.7275,55.91
-A. Tysiak,West Ham United,0.857,0.857,47.8
-E. Nyström,West Ham United,1.886,0.943,61.76
-F. Morgan,West Ham United,0.164,0.164,38.41
-I. Belloumou,West Ham United,0.10500000000000001,0.10500000000000001,37.61
-K. Gorry,West Ham United,1.3030000000000002,0.6515000000000001,53.85
-K. Szemik,West Ham United,0.303,0.303,40.29
-L. Wandeler,West Ham United,0.063,0.063,37.04
-M. Paví,West Ham United,0.097,0.0485,37.5
-M. Walsh,West Ham United,1.0710000000000002,0.5355000000000001,50.7
-O. Siren,West Ham United,1.139,0.5695,51.63
-R. Ueki,West Ham United,0.8030000000000002,0.4015000000000001,47.07
-S. Martinez,West Ham United,0.556,0.278,43.72
-S. Piubel,West Ham United,0.462,0.231,42.45
-S. Zadorsky,West Ham United,1.9579999999999997,0.9789999999999999,62.73
-V. Asseyi,West Ham United,1.014,0.507,49.93
-V. Hanshaw,West Ham United,0.9620000000000001,0.48100000000000004,49.23
-B. Rayner,Brighton & Hove Albion,0.53,0.265,43.37
-C. Nnadozie,Brighton & Hove Albion,1.2559999999999998,0.6279999999999999,53.21
-C. Rule,Brighton & Hove Albion,1.433,0.7165,55.61
-Carla Camacho,Brighton & Hove Albion,0.136,0.068,38.03
-F. Kirby,Brighton & Hove Albion,0.93,0.465,48.79
-J. Čanković,Brighton & Hove Albion,1.957,0.9785,62.72
-K. Seike,Brighton & Hove Albion,0.558,0.279,43.75
-M. Agyemang,Brighton & Hove Albion,1.018,0.509,49.99
-M. Auée,Brighton & Hove Albion,0.33999999999999997,0.33999999999999997,40.79
-M. Haley,Brighton & Hove Albion,0.9810000000000001,0.49050000000000005,49.48
-M. Minami,Brighton & Hove Albion,1.5379999999999998,0.7689999999999999,57.04
-M. Olislagers,Brighton & Hove Albion,1.9700000000000002,0.9850000000000001,62.89
-M. Symonds,Brighton & Hove Albion,1.1789999999999998,0.5894999999999999,52.17
-N. Noordam,Brighton & Hove Albion,0.557,0.2785,43.73
-R. Kafaji,Brighton & Hove Albion,0.135,0.135,38.01
-R. McLauchlan,Brighton & Hove Albion,1.544,0.772,57.12
-B. Olsson,Liverpool,0.23900000000000002,0.11950000000000001,39.42
-C. Holland,Liverpool,0.7150000000000001,0.35750000000000004,45.88
-C. Kapocs,Liverpool,0.7140000000000001,0.35700000000000004,45.86
-F. Kirby,Liverpool,1.302,0.651,53.84
-F. Nagano,Liverpool,1.262,0.631,53.29
-G. Bonner,Liverpool,2.221,1.1105,66.3
-G. Evans,Liverpool,2.185,1.0925,65.81
-G. Fisk,Liverpool,1.9620000000000002,0.9810000000000001,62.79
-J. Clark,Liverpool,1.416,1.416,55.38
-K. MacLean,Liverpool,0.477,0.2385,42.65
-L. Kiernan,Liverpool,0.023,0.023,36.49
-L. Woodham,Liverpool,1.053,1.053,50.46
-M. Enderby,Liverpool,0.5970000000000001,0.29850000000000004,44.28
-M. Höbinger,Liverpool,1.353,0.6765,54.53
-R. Shimizu,Liverpool,0.437,0.2185,42.11
-S. Haug,Liverpool,0.229,0.1145,39.29
-S. Kerr,Liverpool,0.6960000000000001,0.34800000000000003,45.62
-S. Lundgaard,Liverpool,0.005,0.005,36.25
-A. Beever-Jones,Chelsea,0.735,0.3675,46.15
-A. Thompson,Chelsea,0.309,0.309,40.37
-C. Macário,Chelsea,0.805,0.4025,47.1
-E. Carpenter,Chelsea,1.8579999999999999,0.9289999999999999,61.38
-E. Cuthbert,Chelsea,1.125,0.5625,51.44
-G. Reiten,Chelsea,0.21800000000000003,0.21800000000000003,39.14
-H. Hampton,Chelsea,1.31,0.655,53.95
-J. Rytting Kaneryd,Chelsea,0.505,0.2525,43.03
-K. Walsh,Chelsea,1.582,0.791,57.63
-M. Bright,Chelsea,1.639,0.8195,58.41
-M. Hamano,Chelsea,0.8150000000000001,0.8150000000000001,47.23
-N. Björn,Chelsea,1.9899999999999998,0.9949999999999999,63.17
-N. Charles,Chelsea,1.441,0.7205,55.72
-O. Jean-François,Chelsea,0.19,0.095,38.76
-S. Baltimore,Chelsea,1.1,0.55,51.1
-S. Kerr,Chelsea,0.10899999999999999,0.10899999999999999,37.66
-S. Nüsken,Chelsea,0.061,0.061,37.01
-V. Buurman,Chelsea,0.005,0.005,36.25
-W. Kaptein,Chelsea,0.893,0.4465,48.29
+A. Ale,Leicester City,2.719,0.67975,60.25
+C. Boureille,Leicester City,1.816,0.6053333333333334,52.27
+C. Swaby,Leicester City,0.23500000000000001,0.23500000000000001,38.29
+E. van Egmond,Leicester City,1.8940000000000001,0.47350000000000003,52.96
+H. Cain,Leicester City,1.5020000000000002,0.37550000000000006,49.49
+H. Eiríksdóttir,Leicester City,0.9530000000000001,0.23825000000000002,44.64
+H. Payne,Leicester City,1.494,0.3735,49.42
+J. Cayman,Leicester City,2.028,0.507,54.14
+J. Leitzig,Leicester City,2.2969999999999997,0.5742499999999999,56.52
+J. Rantala,Leicester City,0.372,0.093,39.5
+J. Thibaud,Leicester City,3.186,0.7965,64.38
+N. Las,Leicester City,0.082,0.082,36.94
+N. Mouchon,Leicester City,0.072,0.072,36.85
+O. McLoughlin,Leicester City,1.8880000000000003,0.4720000000000001,52.9
+R. Ayane,Leicester City,0.071,0.071,36.84
+S. Kees,Leicester City,2.142,0.714,55.15
+S. O’Brien,Leicester City,0.34700000000000003,0.11566666666666667,39.28
+S. Sherwood,Leicester City,0.025,0.025,36.43
+S. Tierney,Leicester City,2.436,0.609,57.75
+A. Fujino,Manchester City,1.2189999999999999,0.4063333333333333,46.99
+A. Greenwood,Manchester City,3.9200000000000004,0.9800000000000001,70.87
+A. Yamashita,Manchester City,1.611,0.8055,50.45
+G. Clinton,Manchester City,0.7630000000000001,0.38150000000000006,42.96
+G. Prior,Manchester City,3.7920000000000003,0.9480000000000001,69.74
+I. Beney,Manchester City,0.588,0.196,41.41
+J. Rose,Manchester City,1.222,0.611,47.01
+K. Casparij,Manchester City,3.1710000000000003,0.7927500000000001,64.25
+K. Keating,Manchester City,1.6169999999999998,0.8084999999999999,50.51
+K. Shaw,Manchester City,1.8719999999999999,0.46799999999999997,52.76
+Kerolin,Manchester City,0.8039999999999999,0.40199999999999997,43.32
+L. Blindkilde Brown,Manchester City,2.3400000000000003,0.5850000000000001,56.9
+L. Coombs,Manchester City,0.244,0.122,38.37
+L. Hemp,Manchester City,1.254,0.418,47.3
+L. Murphy,Manchester City,0.43100000000000005,0.43100000000000005,40.02
+Leila Ouahabi,Manchester City,2.725,0.68125,60.3
+N. Layzell,Manchester City,0.24500000000000002,0.12250000000000001,38.38
+S. Lohmann,Manchester City,0.728,0.364,42.65
+V. Miedema,Manchester City,1.8060000000000003,0.45150000000000007,52.18
+Y. Hasegawa,Manchester City,3.505,0.87625,67.2
+A. Russo,Arsenal,1.834,0.4585,52.42
+B. Mead,Arsenal,1.508,0.377,49.54
+C. Foord,Arsenal,1.409,0.35225,48.67
+C. Kelly,Arsenal,0.849,0.28300000000000003,43.72
+D. van Domselaar,Arsenal,2.795,0.69875,60.92
+E. Fox,Arsenal,4.2700000000000005,1.0675000000000001,73.96
+F. Maanum,Arsenal,1.29,0.3225,47.62
+K. Little,Arsenal,3.3160000000000003,0.8290000000000001,65.53
+K. McCabe,Arsenal,3.15,0.7875,64.06
+K. Reid,Arsenal,3.8980000000000006,0.9745000000000001,70.67
+L. Wubben-Moy,Arsenal,0.20800000000000002,0.10400000000000001,38.05
+Mariona Caldentey,Arsenal,4.608,1.152,76.95
+O. Smith,Arsenal,1.155,0.28875,46.42
+S. Blackstenius,Arsenal,0.6100000000000001,0.20333333333333337,41.6
+S. Catley,Arsenal,3.84,0.96,70.16
+T. Hinds,Arsenal,0.682,0.1705,42.24
+V. Pelova,Arsenal,0.616,0.2053333333333333,41.66
+C. Brosnan,Everton,1.791,0.597,52.04
+C. Wheeler,Everton,2.148,0.537,55.2
+E. Ramsey,Everton,0.633,0.633,41.81
+E. Stenevik,Everton,1.421,0.47366666666666674,48.77
+H. Hayashi,Everton,0.945,0.23625,44.57
+H. Kitagawa,Everton,0.54,0.54,40.98
+H. Ladd,Everton,0.487,0.2435,40.52
+K. Gago,Everton,0.449,0.14966666666666667,40.18
+K. Holmgaard,Everton,1.549,0.38725,49.91
+K. Robinson,Everton,0.9630000000000001,0.24075000000000002,44.72
+K. Snoeijs,Everton,1.226,0.3065,47.05
+M. Pacheco,Everton,2.4880000000000004,0.6220000000000001,58.21
+Martina Fernández,Everton,3.7960000000000003,0.9490000000000001,69.77
+Ornella Vignola,Everton,1.312,0.328,47.81
+R. Ishikawa,Everton,2.95,0.9833333333333334,62.29
+R. Mace,Everton,2.518,0.6295,58.47
+R. van Gool,Everton,1.7289999999999999,0.43224999999999997,51.5
+T. Payne,Everton,0.49399999999999994,0.12349999999999998,40.58
+Y. Momiki,Everton,1.904,0.476,53.04
+A. Patten,Aston Villa,2.121,0.7070000000000001,54.96
+C. Grant,Aston Villa,1.6179999999999999,0.5393333333333333,50.52
+E. Roebuck,Aston Villa,1.0699999999999998,0.5349999999999999,45.67
+E. Salmon,Aston Villa,0.9560000000000001,0.3186666666666667,44.66
+G. Mullett,Aston Villa,0.186,0.062,37.86
+J. Baijings,Aston Villa,1.174,0.39133333333333337,46.59
+K. Hanson,Aston Villa,0.9099999999999999,0.30333333333333334,44.26
+L. Kendall,Aston Villa,0.7180000000000001,0.35900000000000004,42.56
+L. Parker,Aston Villa,0.17099999999999999,0.17099999999999999,37.72
+L. Wilms,Aston Villa,2.726,0.9086666666666666,60.31
+M. Kearns,Aston Villa,1.605,0.535,50.4
+M. Taylor,Aston Villa,0.533,0.17766666666666667,40.92
+N. Maritz,Aston Villa,1.536,0.768,49.79
+O. Deslandes,Aston Villa,1.795,0.5983333333333334,52.08
+Paula Tomás,Aston Villa,0.262,0.262,38.53
+R. Daly,Aston Villa,1.1540000000000001,0.3846666666666667,46.41
+R. Maltby,Aston Villa,0.625,0.3125,41.74
+S. D'Angelo,Aston Villa,1.05,0.525,45.49
+S. Mayling,Aston Villa,0.197,0.197,37.95
+A. Dennis,Tottenham Hotspur,0.261,0.1305,38.52
+A. Neville,Tottenham Hotspur,0.205,0.205,38.02
+A. Nildén,Tottenham Hotspur,4.129,1.03225,72.71
+B. England,Tottenham Hotspur,1.723,0.43075,51.44
+C. Grant,Tottenham Hotspur,0.657,0.219,42.02
+C. Hunt,Tottenham Hotspur,4.702,1.1755,77.78
+C. Tandberg,Tottenham Hotspur,1.432,0.358,48.87
+D. Spence,Tottenham Hotspur,2.3,0.575,56.54
+E. Summanen,Tottenham Hotspur,2.7880000000000003,0.6970000000000001,60.86
+J. Naz,Tottenham Hotspur,1.841,0.46025,52.49
+J. Rybrink,Tottenham Hotspur,2.862,0.7155,61.51
+K. Graham,Tottenham Hotspur,0.43200000000000005,0.14400000000000002,40.03
+L. Gunning-Williams,Tottenham Hotspur,0.21000000000000002,0.10500000000000001,38.07
+L. Kop,Tottenham Hotspur,3.415,0.85375,66.4
+M. Thomas,Tottenham Hotspur,0.32199999999999995,0.16099999999999998,39.06
+M. Vinberg,Tottenham Hotspur,0.308,0.308,38.93
+Maite Oroz,Tottenham Hotspur,0.25,0.25,38.42
+O. Ahtinen,Tottenham Hotspur,1.365,0.34125,48.28
+O. Holdt,Tottenham Hotspur,0.8089999999999999,0.26966666666666667,43.36
+T. Koga,Tottenham Hotspur,4.154999999999999,1.0387499999999998,72.94
+A. Sandberg,Manchester United,2.439,0.8130000000000001,57.77
+C. Bizet,Manchester United,1.677,0.41925,51.04
+D. Janssen,Manchester United,3.53,0.8825,67.42
+E. Terland,Manchester United,0.8700000000000001,0.21750000000000003,43.9
+E. Toone,Manchester United,3.116,0.779,63.76
+F. Rolfö,Manchester United,1.8439999999999999,0.6146666666666666,52.51
+G. George,Manchester United,0.64,0.21333333333333332,41.87
+H. Miyazawa,Manchester United,2.7560000000000002,0.6890000000000001,60.58
+J. Park,Manchester United,1.9170000000000003,0.47925000000000006,53.16
+J. Riviere,Manchester United,2.089,0.6963333333333334,54.68
+J. Zigiotti Olme,Manchester United,2.9810000000000003,0.7452500000000001,62.57
+L. Naalsund,Manchester United,0.5800000000000001,0.14500000000000002,41.34
+M. Le Tissier,Manchester United,4.881,1.22025,79.36
+M. Malard,Manchester United,2.133,0.53325,55.07
+M. Turner,Manchester United,0.6890000000000001,0.34450000000000003,42.3
+P. Tullis-Joyce,Manchester United,2.05,0.5125,54.33
+R. Williams,Manchester United,0.13399999999999998,0.06699999999999999,37.4
+A. Kennedy,London City Lionesses,1.457,0.48566666666666664,49.09
+C. Brown,London City Lionesses,0.465,0.465,40.32
+E. Linari,London City Lionesses,2.2600000000000002,0.7533333333333334,56.19
+Elene Lete,London City Lionesses,2.722,0.6805,60.28
+G. Geyoro,London City Lionesses,0.724,0.24133333333333334,42.61
+I. Goodwin,London City Lionesses,1.278,0.3195,47.51
+J. Roddar,London City Lionesses,0.976,0.244,44.84
+Jana Fernández,London City Lionesses,2.518,0.6295,58.47
+K. Asllani,London City Lionesses,1.864,0.466,52.69
+K. Zelem,London City Lionesses,0.7190000000000001,0.2396666666666667,42.57
+L. Lindström,London City Lionesses,0.623,0.20766666666666667,41.72
+Lucía Corrales,London City Lionesses,1.242,0.3105,47.19
+María Pérez,London City Lionesses,1.215,0.30375,46.95
+N. Parris,London City Lionesses,1.492,0.373,49.4
+R. Imuran,London City Lionesses,1.734,0.5780000000000001,51.54
+S. Franssi,London City Lionesses,0.31900000000000006,0.07975000000000002,39.03
+S. Jakobsson,London City Lionesses,0.121,0.121,37.28
+S. Kumagai,London City Lionesses,2.5140000000000002,0.6285000000000001,58.44
+T. Goldie,London City Lionesses,0.176,0.176,37.77
+W. Sangaré,London City Lionesses,1.6369999999999998,0.40924999999999995,50.68
+A. Csiki,West Ham United,0.194,0.194,37.93
+A. Denton,West Ham United,2.576,0.644,58.98
+A. Tysiak,West Ham United,1.312,0.656,47.81
+E. Nyström,West Ham United,3.4159999999999995,0.8539999999999999,66.41
+F. Morgan,West Ham United,0.7470000000000001,0.24900000000000003,42.81
+I. Belloumou,West Ham United,0.7670000000000001,0.2556666666666667,42.99
+K. Gorry,West Ham United,2.609,0.65225,59.28
+K. Szemik,West Ham United,1.8199999999999998,0.6066666666666667,52.3
+L. Wandeler,West Ham United,0.068,0.034,36.81
+M. Paví,West Ham United,0.248,0.08266666666666667,38.4
+M. Walsh,West Ham United,1.0710000000000002,0.5355000000000001,45.68
+O. Siren,West Ham United,2.136,0.534,55.09
+R. Ueki,West Ham United,1.686,0.4215,51.12
+S. Brasero-Carreira,West Ham United,0.05600000000000001,0.05600000000000001,36.71
+S. Martinez,West Ham United,0.8620000000000001,0.21550000000000002,43.83
+S. Piubel,West Ham United,0.5040000000000001,0.16800000000000004,40.67
+S. Zadorsky,West Ham United,3.9549999999999996,0.9887499999999999,71.18
+V. Asseyi,West Ham United,2.1350000000000002,0.5337500000000001,55.09
+V. Hanshaw,West Ham United,1.4180000000000001,0.47266666666666673,48.75
+Y. Endo,West Ham United,0.269,0.1345,38.59
+B. Rayner,Brighton & Hove Albion,0.53,0.265,40.9
+C. Hayes,Brighton & Hove Albion,1.908,0.954,53.08
+C. Nnadozie,Brighton & Hove Albion,2.3449999999999998,0.5862499999999999,56.94
+C. Rule,Brighton & Hove Albion,3.0829999999999997,0.7707499999999999,63.47
+Carla Camacho,Brighton & Hove Albion,0.457,0.11425,40.25
+F. Kirby,Brighton & Hove Albion,2.027,0.50675,54.13
+F. Tsunoda,Brighton & Hove Albion,0.07100000000000001,0.07100000000000001,36.84
+J. Čanković,Brighton & Hove Albion,3.4130000000000003,0.8532500000000001,66.38
+K. Seike,Brighton & Hove Albion,1.6,0.4,50.36
+M. Agyemang,Brighton & Hove Albion,1.8559999999999999,0.46399999999999997,52.62
+M. Auée,Brighton & Hove Albion,0.745,0.24833333333333335,42.8
+M. Haley,Brighton & Hove Albion,0.9810000000000001,0.49050000000000005,44.88
+M. Minami,Brighton & Hove Albion,3.191,0.79775,64.42
+M. Mpome,Brighton & Hove Albion,0.005,0.005,36.26
+M. Olislagers,Brighton & Hove Albion,3.414,0.8535,66.39
+M. Symonds,Brighton & Hove Albion,2.3739999999999997,0.5934999999999999,57.2
+N. Noordam,Brighton & Hove Albion,0.986,0.2465,44.93
+R. Kafaji,Brighton & Hove Albion,0.8089999999999999,0.26966666666666667,43.36
+R. McLauchlan,Brighton & Hove Albion,1.8199999999999998,0.6066666666666667,52.3
+T. Heron,Brighton & Hove Albion,0.045,0.045,36.61
+B. Olsson,Liverpool,0.23900000000000002,0.11950000000000001,38.32
+C. Holland,Liverpool,1.145,0.38166666666666665,46.33
+C. Kapocs,Liverpool,1.117,0.3723333333333333,46.09
+F. Kirby,Liverpool,1.302,0.651,47.72
+F. Nagano,Liverpool,1.971,0.657,53.64
+G. Bonner,Liverpool,2.935,0.9783333333333333,62.16
+G. Evans,Liverpool,2.765,0.9216666666666666,60.66
+G. Fisk,Liverpool,2.779,0.9263333333333333,60.78
+J. Clark,Liverpool,1.861,0.9305,52.66
+K. MacLean,Liverpool,0.9470000000000001,0.31566666666666665,44.58
+L. Kiernan,Liverpool,0.023,0.023,36.41
+L. Woodham,Liverpool,1.228,0.614,47.07
+M. Enderby,Liverpool,0.797,0.26566666666666666,43.26
+M. Höbinger,Liverpool,1.353,0.6765,48.17
+R. Borggräfe,Liverpool,0.8300000000000001,0.8300000000000001,43.55
+R. Shimizu,Liverpool,1.09,0.36333333333333334,45.85
+S. Haug,Liverpool,0.458,0.15266666666666667,40.26
+S. Kerr,Liverpool,1.034,0.3446666666666667,45.35
+S. Lundgaard,Liverpool,0.005,0.005,36.26
+A. Beever-Jones,Chelsea,1.431,0.35775,48.86
+A. Thompson,Chelsea,1.247,0.41566666666666674,47.24
+C. Macário,Chelsea,1.383,0.34575,48.44
+E. Carpenter,Chelsea,2.822,0.9406666666666667,61.16
+E. Cuthbert,Chelsea,2.321,0.58025,56.73
+G. Reiten,Chelsea,0.514,0.17133333333333337,40.76
+H. Hampton,Chelsea,2.503,0.62575,58.34
+J. Rytting Kaneryd,Chelsea,1.11,0.2775,46.02
+K. Walsh,Chelsea,3.2980000000000005,0.8245000000000001,65.37
+M. Bright,Chelsea,4.364,1.091,74.79
+M. Hamano,Chelsea,1.3050000000000002,0.43500000000000005,47.75
+N. Björn,Chelsea,3.9539999999999997,0.9884999999999999,71.17
+N. Charles,Chelsea,1.441,0.7205,48.95
+O. Jean-François,Chelsea,0.595,0.1983333333333333,41.47
+S. Baltimore,Chelsea,1.7329999999999999,0.43324999999999997,51.53
+S. Kerr,Chelsea,0.267,0.089,38.57
+S. Nüsken,Chelsea,0.061,0.061,36.75
+V. Buurman,Chelsea,2.063,0.6876666666666668,54.45
+W. Kaptein,Chelsea,1.6219999999999999,0.40549999999999997,50.55
