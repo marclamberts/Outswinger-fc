@@ -159,36 +159,43 @@ def display_landing_page():
         st.session_state.app_mode = "SetPieces"
 
 # --- Advanced Metrics Page ---
-def display_performance_page(all_metrics):
+ddef display_performance_page(all_metrics):
     st.subheader("Advanced Metrics / Player Scouting")
+
     if not all_metrics:
         st.warning("No metric CSVs found.")
         return
 
+    # --- League Selection ---
     league_selected = st.sidebar.selectbox("Select League", list(all_metrics.keys()))
+    league_metrics = all_metrics.get(league_selected, {})
+
+    if not league_metrics:
+        st.warning(f"No metrics found for {league_selected}.")
+        return
+
+    # --- Metric Selection ---
     metric_options = ["xG","xAG","xT","xDisruption","GPA"]
     metric_choice = st.sidebar.selectbox("Select Metric", metric_options)
 
-    # Map metric choice to expected filenames
+    # --- Map metric to expected CSV filename ---
     filename_map = {
         "xG": f"{league_selected}.csv",
         "xAG": f"{league_selected}_assists.csv",
         "GPA": f"{league_selected}_gpa.csv",
-        "xT": f"{league_selected}_xt.csv",  # adjust if your filenames differ
+        "xT": f"{league_selected}_xt.csv",          # adjust if filenames differ
         "xDisruption": f"{league_selected}_disruption.csv"
     }
 
-    expected_file = filename_map.get(metric_choice, None)
-    df_metric = None
-    league_metrics = all_metrics.get(league_selected, {})
+    expected_file = filename_map.get(metric_choice)
 
-    if expected_file in league_metrics:
-        df_metric = league_metrics[expected_file]
+    # --- Load metric dataframe ---
+    df_metric = league_metrics.get(expected_file)
 
     if df_metric is not None:
         st.dataframe(df_metric)
     else:
-        st.warning(f"{metric_choice} metric not found for {league_selected}.")
+        st.warning(f"{metric_choice} metric CSV not found for {league_selected}.")
 
 
 # --- Matches Page ---
