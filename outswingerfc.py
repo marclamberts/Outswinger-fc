@@ -143,11 +143,47 @@ def display_landing_page():
 
 def display_performance_page(metrics):
     st.subheader("Advanced Metrics / Player Scouting")
+
     if not metrics:
         st.warning("No metric CSVs loaded.")
         return
-    metric = st.selectbox("Select Metric", list(metrics.keys()))
-    st.dataframe(metrics[metric])
+
+    with st.sidebar:
+        st.markdown("### Advanced Metrics Filters")
+        league_selected = st.selectbox("Select League", ["All"] + sorted(metrics.keys()))
+
+        metric_choice = st.selectbox(
+            "Select Metric",
+            ["Expected Goals (xG)",
+             "Expected Goals Assisted (xAG)",
+             "Expected Threat (xT)",
+             "Expected Disruption (xDisruption)",
+             "Goal Probability Added (GPA)"]
+        )
+
+    # Filter DataFrame by league if not 'All'
+    if league_selected != "All":
+        df_filtered = metrics[league_selected]
+    else:
+        # Combine all leagues
+        df_filtered = pd.concat(metrics.values(), ignore_index=True)
+
+    # Show the selected metric
+    # If your CSVs have columns named differently, you might map metric_choice to column names
+    metric_column_map = {
+        "Expected Goals (xG)": "xG",
+        "Expected Goals Assisted (xAG)": "xAG",
+        "Expected Threat (xT)": "xT",
+        "Expected Disruption (xDisruption)": "xDisruption",
+        "Goal Probability Added (GPA)": "GPA"
+    }
+    metric_column = metric_column_map.get(metric_choice, None)
+
+    if metric_column and metric_column in df_filtered.columns:
+        st.dataframe(df_filtered[['PlayerId', metric_column]])
+    else:
+        st.warning(f"Column '{metric_column}' not found in selected league data.")
+
 
 def display_matches_page():
     st.subheader("Match Analysis / xG Shot Maps")
