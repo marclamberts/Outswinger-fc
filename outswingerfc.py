@@ -4,6 +4,7 @@ import numpy as np
 import os
 import warnings
 from mplsoccer.pitch import VerticalPitch
+from functools import reduce
 
 # --- App Configuration ---
 st.set_page_config(
@@ -69,10 +70,13 @@ def load_competition_data(league: str, metric: str):
     if metric == "xG":  # xG comes from master league CSV
         df = load_csv(os.path.join(DATA_DIR, f"{league}.csv"))
         if not df.empty:
-            df = df.rename(columns={"PlayerId":"player", "TeamID":"team"})
+            df = df.rename(columns={"PlayerId":"player","TeamID":"team"})
         return df
     else:
-        return load_csv(os.path.join(DATA_DIR, f"{league}_{metric}.csv"))
+        df = load_csv(os.path.join(DATA_DIR, f"{league}_{metric}.csv"))
+        if not df.empty and "PlayerId" in df.columns:
+            df = df.rename(columns={"PlayerId":"player"})
+        return df
 
 # --- Shot Map ---
 def create_modern_shot_map(df, title="SHOT MAP"):
@@ -118,14 +122,11 @@ def display_data_scouting_page():
         st.warning("No data available for this selection.")
         return
 
-    # Remove minutes for all displays
-    if metric == "xG":
-        columns_to_show = ["player", "team", "xG"]
-        df_display = df[columns_to_show]
-    else:
-        df_display = df
+    # Remove minutes if present
+    if "minutes" in df.columns:
+        df = df.drop(columns=["minutes"])
 
-    st.dataframe(df_display.head(20), use_container_width=True)
+    st.dataframe(df.head(20), use_container_width=True)
 
 # --- Match Analysis ---
 def display_match_analysis_page():
@@ -133,6 +134,9 @@ def display_match_analysis_page():
     matches = load_csv(os.path.join(DATA_DIR, "WSL.csv"))
     if matches.empty:
         st.warning("No match data found.")
+        return
+    if "match" not in matches.columns:
+        st.warning("No 'match' column in CSV.")
         return
     match = st.selectbox("Select Match", matches["match"].unique())
     events = load_csv(os.path.join(DATA_DIR, "WSL_events.csv"))
@@ -146,24 +150,30 @@ def display_match_analysis_page():
 def display_player_profiling_page():
     st.subheader("Player Profiles")
 
-    # Load xG from master CSV
-    xg_df = load_competition_data("WSL", "xG").set_index("player")
+    # Load xG
+    xg_df = load_competition_data("WSL", "xG")[["player","team","xG"]]
 
     # Load other metrics
-    data_frames = {"xG": xg_df}
+    data_frames = [xg_df]
     for metric in ["assists", "gpa", "corners", "xDisruption"]:
         df = load_competition_data("WSL", metric)
         if not df.empty:
-            data_frames[metric] = df.set_index("player")
+            df = df.drop(columns=["minutes"], errors='ignore')  # remove minutes if exists
+            data_frames.append(df)
 
-    combined = pd.concat(data_frames.values(), axis=1, join="outer").reset_index().fillna(0)
+    # Merge all metrics on 'player'
+    combined = reduce(lambda left,right: pd.merge(left,right,on="player",how="outer"), data_frames)
+    combined.fillna(0, inplace=True)
+
     player = st.selectbox("Select Player", combined["player"].unique())
-    row = combined[combined["player"] == player].iloc[0]
+    row = combined[combined["player"]==player].iloc[0]
 
     col1, col2, col3 = st.columns(3)
-    col1.metric("xG", row.get("xG", 0))
-    col2.metric("Assists", row.get("assists", 0))
-    col3.metric("GPA", row.get("gpa", 0))
+    col1.metric("xG", row.get("xG",0))
+    col2.metric("Assists", row.get("assists",0))
+    col3.metric("GPA", row.get("gpa",0))
+
+    st.markdown(f"**Team:** {row.get('team','Unknown')}")
 
 # --- Corners Page ---
 def display_corners_page():
