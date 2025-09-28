@@ -241,8 +241,8 @@ def display_matches_page():
         ax.text(pos[0], pos[1]+0.06, text, transform=ax.transAxes, color='black', fontsize=12, ha='center', va='center', zorder=6)
         ax.text(pos[0], pos[1], value, transform=ax.transAxes, color='white', fontsize=12, weight='bold', ha='center', va='center', zorder=6)
 
-    ax.text(52, 105, title_main, fontsize=22, weight='bold', color='black', ha='center', va='top')
-    ax.text(52, 101, title_sub, fontsize=14, style='italic', color='black', ha='center', va='top')
+    ax.text(52, 106, title_main, fontsize=22, weight='bold', color='black', ha='center', va='top')
+    ax.text(52, 103, title_sub, fontsize=14, style='italic', color='black', ha='center', va='top')
 
     st.pyplot(fig)
 
