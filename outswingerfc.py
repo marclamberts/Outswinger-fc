@@ -1,4 +1,4 @@
-
+```python
 import streamlit as st
 import pandas as pd
 import os
@@ -92,9 +92,11 @@ def plot_shot_map_with_stats(df_team, title_main, title_sub):
         size = min(row.get("xG", 0) * 500, max_size)
         ax.scatter(row["y"], row["x"], color=color, s=size, alpha=0.7, zorder=3)
 
+    # Title and subtitle
     ax.text(52, 109, title_main, fontsize=20, weight='bold', color='black', ha='center', va='top')
     ax.text(52, 105, title_sub, fontsize=12, color='black', ha='center', va='top')
 
+    # Summary stats circles
     circle_positions = [
         (0.15, -0.15), (0.35, -0.15), (0.55, -0.15),
         (0.15, -0.3), (0.35, -0.3), (0.55, -0.3)
@@ -169,7 +171,9 @@ def display_performance_page(metrics):
     if not metrics:
         st.warning("No metric CSVs loaded.")
         return
-    metric = st.selectbox("Select Metric Dataset", list(metrics.keys()))
+    with st.sidebar:
+        st.markdown("### Metrics Filters")
+        metric = st.selectbox("Select Metric Dataset", list(metrics.keys()))
     df_metric = metrics[metric]
     st.dataframe(df_metric)
 
@@ -181,17 +185,16 @@ def main():
 
     metrics = load_all_metrics("data")
 
-    if st.session_state.app_mode == "Landing":
-        st.markdown("<h1 style='text-align:center;'>WOSO ANALYTICS</h1>", unsafe_allow_html=True)
-        if st.button("ENTER DASHBOARD"):
-            st.session_state.app_mode = "MainApp"
-    else:
-        tabs = st.tabs(["📊 Advanced Metrics", "🎯 Matches"])
-        with tabs[0]:
-            display_performance_page(metrics)
-        with tabs[1]:
-            display_matches_page()
+    # Tab navigation
+    tabs = st.tabs(["🏠 Home", "📊 Matches", "📈 Advanced Metrics"])
+    with tabs[0]:
+        st.title("⚽ WoSo Analytics")
+        st.markdown("Welcome to the modern scouting & recruitment dashboard.")
+    with tabs[1]:
+        display_matches_page()
+    with tabs[2]:
+        display_performance_page(metrics)
 
 if __name__ == "__main__":
     main()
-
+```
