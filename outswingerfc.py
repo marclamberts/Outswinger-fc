@@ -126,63 +126,63 @@ def display_matches_page():
         st.warning("No match data found.")
         return
 
-    # --- Sidebar filters only in Matches tab ---
-    st.sidebar.markdown("### Match Filters")
+    # --- Sidebar filters only when Matches tab is active ---
+    with st.sidebar:
+        st.markdown("### Match Filters")
 
-    # League selection
-    league_selected = st.sidebar.selectbox("Select League", list(league_data.keys()))
-    matches_in_league = league_data[league_selected]
+        # League selection
+        league_selected = st.selectbox("Select League", list(league_data.keys()))
+        matches_in_league = league_data[league_selected]
 
-    # Parse team names from filenames
-    match_display_names = []
-    team_names_map = {}
-    match_files = list(matches_in_league.keys())
-    for match_file in match_files:
-        parts = match_file.split("_", 1)
-        name_part = parts[1] if len(parts) > 1 else parts[0]
-        if " - " in name_part:
-            t1, t2 = name_part.split(" - ", 1)
-            display_name = f"{t1.strip()} vs {t2.strip()}"
-            team_names_map[display_name] = (t1.strip(), t2.strip())
-        else:
-            display_name = name_part
-            team_names_map[display_name] = (None, None)
-        match_display_names.append(display_name)
+        # Parse team names from filenames
+        match_display_names = []
+        team_names_map = {}
+        match_files = list(matches_in_league.keys())
+        for match_file in match_files:
+            parts = match_file.split("_", 1)
+            name_part = parts[1] if len(parts) > 1 else parts[0]
+            if " - " in name_part:
+                t1, t2 = name_part.split(" - ", 1)
+                display_name = f"{t1.strip()} vs {t2.strip()}"
+                team_names_map[display_name] = (t1.strip(), t2.strip())
+            else:
+                display_name = name_part
+                team_names_map[display_name] = (None, None)
+            match_display_names.append(display_name)
 
-    # Match selection
-    match_selected_idx = st.sidebar.selectbox(
-        "Select Match",
-        range(len(match_display_names)),
-        format_func=lambda x: match_display_names[x]
-    )
-    match_display_name = match_display_names[match_selected_idx]
-    match_name = match_files[match_selected_idx]
-    df_match = matches_in_league[match_name]
+        # Match selection
+        match_selected_idx = st.selectbox(
+            "Select Match",
+            range(len(match_display_names)),
+            format_func=lambda x: match_display_names[x]
+        )
 
-    team1, team2 = team_names_map[match_display_name]
+        match_display_name = match_display_names[match_selected_idx]
+        match_name = match_files[match_selected_idx]
+        df_match = matches_in_league[match_name]
 
-    # Team selection (choose team1, team2, or Full Match)
-    team_options = ["Full Match"]
-    if team1: team_options.append(team1)
-    if team2: team_options.append(team2)
-    team_filter = st.sidebar.selectbox("Select Team", team_options)
+        team1, team2 = team_names_map[match_display_name]
 
-    # Filter DataFrame by selected team
-    if team_filter != "Full Match" and 'Team' in df_match.columns:
-        df_team = df_match[df_match['Team'] == team_filter]
-    else:
+        # Team selection (choose team1, team2, or Full Match)
+        team_options = ["Full Match"]
+        if team1: team_options.append(team1)
+        if team2: team_options.append(team2)
+        team_filter = st.selectbox("Select Team", team_options)
+
+        # Optional: player filter within team
+        player_name = None
         df_team = df_match.copy()
+        if team_filter != "Full Match" and 'Team' in df_team.columns:
+            df_team = df_team[df_team['Team'] == team_filter]
 
-    # Optional: player filter within team
-    player_name = None
-    if 'PlayerId' in df_team.columns:
-        player_list = ["All"] + df_team['PlayerId'].unique().tolist()
-        player_selected = st.sidebar.selectbox("Select Player", player_list)
-        player_name = None if player_selected == "All" else player_selected
-        if player_name:
-            df_team = df_team[df_team['PlayerId'] == player_name]
+        if 'PlayerId' in df_team.columns:
+            player_list = ["All"] + df_team['PlayerId'].unique().tolist()
+            player_selected = st.selectbox("Select Player", player_list)
+            player_name = None if player_selected == "All" else player_selected
+            if player_name:
+                df_team = df_team[df_team['PlayerId'] == player_name]
 
-    # Plot the shot map (filtered by team/player)
+    # Plot the shot map
     plot_shot_map(
         df_team,
         title_sub=f"{team_filter} | {match_display_name} | {league_selected}"
