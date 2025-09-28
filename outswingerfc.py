@@ -110,6 +110,7 @@ def display_performance_page(metrics):
     df_metric = metrics[metric]
     st.dataframe(df_metric)
 
+```python
 def display_matches_page():
     st.subheader("Match Analysis / xG Shot Maps")
 
@@ -123,23 +124,25 @@ def display_matches_page():
     with st.sidebar:
         st.markdown("### Match Filters")
 
-        # Total toggle
-        total_option = st.radio("Total?", ["No", "Yes"], index=0)
+        # Total filter
+        total_option = st.selectbox("Total", ["No", "Yes"])
 
-        # Team selection (always required)
-        # Gather all unique team names from all leagues
-        all_teams = set()
-        for league, matches in league_data.items():
-            for match_file, df_match in matches.items():
-                if 'TeamId' in df_match.columns:
-                    all_teams.update(df_match['TeamId'].unique())
-        team_filter = st.selectbox("Team", sorted(list(all_teams)))
+        # League selection
+        league_selected = st.selectbox("Select League", list(league_data.keys()))
 
-        df_team = pd.DataFrame()  # initialize
+        if total_option == "Yes":
+            # Aggregate view: only League + Team
+            all_matches = pd.concat(league_data[league_selected].values(), ignore_index=True)
 
-        if total_option == "No":
-            # --- Show league/match filters ---
-            league_selected = st.selectbox("Select League", list(league_data.keys()))
+            teams_available = sorted(all_matches['TeamId'].dropna().unique().tolist())
+            team_filter = st.selectbox("Select Team", teams_available)
+
+            df_team = all_matches[all_matches['TeamId'] == team_filter].copy()
+            match_display_name = "All Matches"
+            opponent = "All Opponents"
+
+        else:
+            # Match selection
             matches_in_league = league_data[league_selected]
 
             # Parse team names from filenames
@@ -151,100 +154,59 @@ def display_matches_page():
                 name_part = parts[1] if len(parts) > 1 else parts[0]
                 if " - " in name_part:
                     t1, t2 = name_part.split(" - ", 1)
-                    t1, t2 = t1.strip(), t2.strip()
-                    display_name = f"{t1} vs {t2}"
-                    team_names_map[display_name] = (t1, t2)
+                    display_name = f"{t1.strip()} vs {t2.strip()}"
+                    team_names_map[display_name] = (t1.strip(), t2.strip())
                 else:
-                    display_name = name_part.strip()
+                    display_name = name_part
                     team_names_map[display_name] = (None, None)
                 match_display_names.append(display_name)
 
-            # Match selection
             match_selected_idx = st.selectbox(
                 "Select Match",
                 range(len(match_display_names)),
                 format_func=lambda x: match_display_names[x]
             )
+
             match_display_name = match_display_names[match_selected_idx]
             match_name = match_files[match_selected_idx]
-            df_match = matches_in_league[match_name].copy()
+            df_match = matches_in_league[match_name]
 
-            # Filter by selected team
-            if team_filter != "Full Match" and 'TeamId' in df_match.columns:
-                df_team = df_match[df_match['TeamId'] == team_filter].copy()
-            else:
-                df_team = df_match.copy()
+            team1, team2 = team_names_map[match_display_name]
 
-            # Determine opponent team name for title
-            team1_name, team2_name = team_names_map[match_display_name]
-            opponent = None
-            if team_filter == team1_name:
-                opponent = team2_name
-            elif team_filter == team2_name:
-                opponent = team1_name
+            # Team selection
+            team_options = []
+            if team1: team_options.append(team1)
+            if team2: team_options.append(team2)
+            team_filter = st.selectbox("Select Team", team_options)
 
-            opponent_text = f"vs {opponent}" if opponent else ""
-            title_main = team_filter
-            title_sub = f"{opponent_text} | {league_selected}" if opponent else league_selected
+            df_team = df_match[df_match['TeamId'] == team_filter].copy()
+            opponent = team2 if team_filter == team1 else team1
 
-        else:
-            # Total = Yes → combine all matches for selected team
-            all_team_matches = []
-            for league, matches in league_data.items():
-                for df_match in matches.values():
-                    if 'TeamId' in df_match.columns:
-                        df_team_only = df_match[df_match['TeamId'] == team_filter]
-                        if not df_team_only.empty:
-                            all_team_matches.append(df_team_only)
-            if all_team_matches:
-                df_team = pd.concat(all_team_matches, ignore_index=True)
-            else:
-                st.warning(f"No shots found for team {team_filter} across all matches.")
-                return
+    # Plot the shot map
+    if total_option == "Yes":
+        title_main = team_filter
+        title_sub = f"{match_display_name} | {league_selected}"
+    else:
+        title_main = team_filter
+        title_sub = f"vs {opponent} | {league_selected}"
 
-            title_main = team_filter
-            title_sub = "Total Across All Matches"
-
-    # --- Plot the shots ---
-    if df_team.empty:
-        st.warning("No shot data for selected team/match.")
-        return
-
-    # --- Plot ---
     pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=True)
     fig, ax = pitch.draw(figsize=(12,8))
 
+    # Plot shots
     colors = {"missed": "#003f5c", "goal": "#bc5090", "on_target": "#58508d"}
     max_size = 300
-
     for _, row in df_team.iterrows():
         color = colors["goal"] if row.get("isGoal", False) else colors["missed"]
         size = min(row.get("xG",0)*500, max_size)
         ax.scatter(row["y"], row["x"], color=color, s=size, alpha=0.7, zorder=3)
 
-    # Summary stats
-    total_shots = df_team.shape[0]
-    total_goals = df_team['isGoal'].sum()
-    non_penalty_goals = df_team[(df_team['Type_of_play'] != 'Penalty') & (df_team['isGoal'] == True)].shape[0]
-    total_xG = df_team['xG'].sum()
-    total_xG_minus_penalties = total_xG - df_team[df_team['Type_of_play']=="Penalty"]['xG'].sum()
-    xG_per_shot = total_xG / total_shots if total_shots > 0 else 0
-
-    circle_positions = [(0.15,-0.15),(0.35,-0.15),(0.55,-0.15),(0.15,-0.3),(0.35,-0.3),(0.55,-0.3)]
-    circle_texts = ["Shots","Goals","NP Goals","xG/Shot","Total xG","Total NpxG"]
-    values = [total_shots,total_goals,non_penalty_goals,round(xG_per_shot,2),round(total_xG,2),round(total_xG_minus_penalties,2)]
-    circle_colors = [colors["missed"],colors["goal"],colors["goal"],colors["on_target"],colors["on_target"],colors["on_target"]]
-
-    for pos, text, value, color in zip(circle_positions, circle_texts, values, circle_colors):
-        circle = Circle(pos,0.04, transform=ax.transAxes,color=color,zorder=5,clip_on=False)
-        ax.add_artist(circle)
-        ax.text(pos[0], pos[1]+0.06, text, transform=ax.transAxes, color='black', fontsize=12, ha='center', va='center', zorder=6)
-        ax.text(pos[0], pos[1], value, transform=ax.transAxes, color='white', fontsize=12, weight='bold', ha='center', va='center', zorder=6)
-
-    ax.text(52, 106, title_main, fontsize=22, weight='bold', color='black', ha='center', va='top')
-    ax.text(52, 103, title_sub, fontsize=14, style='italic', color='black', ha='center', va='top')
+    # Add titles (subtitle higher so it doesn’t overlap)
+    ax.text(52, 105, title_main, fontsize=22, weight='bold', color='black', ha='center', va='top')
+    ax.text(52, 110, title_sub, fontsize=14, style='italic', color='black', ha='center', va='top')
 
     st.pyplot(fig)
+```
 
 
 
