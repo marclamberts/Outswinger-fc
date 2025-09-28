@@ -110,7 +110,6 @@ def display_performance_page(metrics):
     df_metric = metrics[metric]
     st.dataframe(df_metric)
 
-```python
 def display_matches_page():
     st.subheader("Match Analysis / xG Shot Maps")
 
@@ -206,7 +205,7 @@ def display_matches_page():
     ax.text(52, 110, title_sub, fontsize=14, style='italic', color='black', ha='center', va='top')
 
     st.pyplot(fig)
-```
+
 
 
 
