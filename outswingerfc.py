@@ -112,48 +112,123 @@ def display_performance_page(metrics):
 
 def display_matches_page():
     st.subheader("Match Analysis / xG Shot Maps")
+
+    # Load league/match data
     league_data = load_match_xg_data("data/matchxg")
     if not league_data:
         st.warning("No match data found.")
         return
 
+    # --- Sidebar filters only when Matches tab is active ---
     with st.sidebar:
         st.markdown("### Match Filters")
+
+        # League selection
         league_selected = st.selectbox("Select League", list(league_data.keys()))
         matches_in_league = league_data[league_selected]
 
-        # Parse teams from filename
-        match_display_names, team_names_map = [], {}
+        # Parse team names from filenames
+        match_display_names = []
+        team_names_map = {}
         match_files = list(matches_in_league.keys())
         for match_file in match_files:
             parts = match_file.split("_", 1)
-            name_part = parts[1] if len(parts)>1 else parts[0]
+            name_part = parts[1] if len(parts) > 1 else parts[0]
             if " - " in name_part:
-                t1, t2 = name_part.split(" - ",1)
+                t1, t2 = name_part.split(" - ", 1)
                 display_name = f"{t1.strip()} vs {t2.strip()}"
                 team_names_map[display_name] = (t1.strip(), t2.strip())
             else:
                 display_name = name_part
-                team_names_map[display_name] = (None,None)
+                team_names_map[display_name] = (None, None)
             match_display_names.append(display_name)
 
-        match_selected_idx = st.selectbox("Select Match", range(len(match_display_names)),
-                                         format_func=lambda x: match_display_names[x])
+        # Match selection
+        match_selected_idx = st.selectbox(
+            "Select Match",
+            range(len(match_display_names)),
+            format_func=lambda x: match_display_names[x]
+        )
+
         match_display_name = match_display_names[match_selected_idx]
         match_name = match_files[match_selected_idx]
         df_match = matches_in_league[match_name]
 
         team1, team2 = team_names_map[match_display_name]
+
+        # Team selection (choose team1, team2, or Full Match)
         team_options = ["Full Match"]
         if team1: team_options.append(team1)
         if team2: team_options.append(team2)
         team_filter = st.selectbox("Select Team", team_options)
 
-        df_team = df_match.copy()
-        if team_filter != "Full Match" and 'Team' in df_team.columns:
-            df_team = df_team[df_team['Team']==team_filter]
+        # Filter by team
+        if team_filter != "Full Match" and 'Team' in df_match.columns:
+            df_team = df_match[df_match['Team'] == team_filter].copy()
+        else:
+            df_team = df_match.copy()
 
-    plot_shot_map(df_team, title_sub=f"{team_filter} | {match_display_name} | {league_selected}")
+        # Optional: player filter within team
+        player_name = None
+        if 'PlayerId' in df_team.columns:
+            player_list = ["All"] + df_team['PlayerId'].unique().tolist()
+            player_selected = st.selectbox("Select Player", player_list)
+            player_name = None if player_selected == "All" else player_selected
+            if player_name:
+                df_team = df_team[df_team['PlayerId'] == player_name]
+
+    # Determine opponent team name for title
+    if team_filter == team1:
+        opponent = team2
+    elif team_filter == team2:
+        opponent = team1
+    else:
+        opponent = None
+
+    opponent_text = f"vs {opponent}" if opponent else ""
+    title_main = team_filter if team_filter != "Full Match" else "Full Match"
+    title_sub = f"{opponent_text} | {league_selected}" if opponent else league_selected
+
+    # --- Plot Shot Map ---
+    if df_team.empty:
+        st.warning("No shot data for selected team/player.")
+        return
+
+    pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=True)
+    fig, ax = pitch.draw(figsize=(12,8))
+
+    colors = {"missed": "#003f5c", "goal": "#bc5090", "on_target": "#58508d"}
+    max_size = 300
+
+    for _, row in df_team.iterrows():
+        color = colors["goal"] if row.get("isGoal", False) else colors["missed"]
+        size = min(row.get("xG",0)*500, max_size)
+        ax.scatter(row["y"], row["x"], color=color, s=size, alpha=0.7, zorder=3)
+
+    # Summary stats
+    total_shots = df_team.shape[0]
+    total_goals = df_team['isGoal'].sum()
+    non_penalty_goals = df_team[(df_team['Type_of_play'] != 'Penalty') & (df_team['isGoal'] == True)].shape[0]
+    total_xG = df_team['xG'].sum()
+    total_xG_minus_penalties = total_xG - df_team[df_team['Type_of_play']=="Penalty"]['xG'].sum()
+    xG_per_shot = total_xG / total_shots if total_shots > 0 else 0
+
+    circle_positions = [(0.15,-0.15),(0.35,-0.15),(0.55,-0.15),(0.15,-0.3),(0.35,-0.3),(0.55,-0.3)]
+    circle_texts = ["Shots","Goals","NP Goals","xG/Shot","Total xG","Total NpxG"]
+    values = [total_shots,total_goals,non_penalty_goals,round(xG_per_shot,2),round(total_xG,2),round(total_xG_minus_penalties,2)]
+    circle_colors = [colors["missed"],colors["goal"],colors["goal"],colors["on_target"],colors["on_target"],colors["on_target"]]
+
+    for pos, text, value, color in zip(circle_positions, circle_texts, values, circle_colors):
+        circle = Circle(pos,0.04, transform=ax.transAxes,color=color,zorder=5,clip_on=False)
+        ax.add_artist(circle)
+        ax.text(pos[0], pos[1]+0.06, text, transform=ax.transAxes, color='black', fontsize=12, ha='center', va='center', zorder=6)
+        ax.text(pos[0], pos[1], value, transform=ax.transAxes, color='white', fontsize=12, weight='bold', ha='center', va='center', zorder=6)
+
+    # Add multi-line title
+    ax.text(52, 105, title_main, fontsize=22, weight='bold', color='black', ha='center', va='top')
+    ax.text(52, 101, title_sub, fontsize=14, style='italic', color='black', ha='center', va='top')
+
+    st.pyplot(fig)
 
 def display_profiles_page(metrics):
     st.subheader("Player Profiles")
