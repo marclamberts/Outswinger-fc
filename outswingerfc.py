@@ -136,30 +136,32 @@ def display_matches_page():
     league_selected = st.selectbox("Select League", list(league_data.keys()))
     matches_in_league = league_data[league_selected]
 
-    # Team vs Team display
-    match_teams = {}
-    for match_name, df in matches_in_league.items():
-        if 'Team' in df.columns:
-            teams = df['Team'].unique()
-            if len(teams) >= 2:
-                match_teams[match_name] = tuple(teams[:2])
-            else:
-                match_teams[match_name] = ("Team 1","Team 2")
+    # Parse team names from filenames
+    match_display_names = []
+    match_files = list(matches_in_league.keys())
+    for match_file in match_files:
+        parts = match_file.split("_", 1)
+        name_part = parts[1] if len(parts) > 1 else parts[0]
+        if " - " in name_part:
+            t1, t2 = name_part.split(" - ", 1)
+            match_display_names.append(f"{t1.strip()} vs {t2.strip()}")
         else:
-            match_teams[match_name] = ("Team 1","Team 2")
+            match_display_names.append(name_part)
 
-    match_display_names = [f"{t1} vs {t2}" for t1,t2 in match_teams.values()]
-    match_idx = st.selectbox("Select Match", range(len(match_display_names)), format_func=lambda x: match_display_names[x])
-    match_name = list(matches_in_league.keys())[match_idx]
+    match_idx = st.selectbox("Select Match", range(len(match_display_names)), 
+                             format_func=lambda x: match_display_names[x])
+    match_name = match_files[match_idx]
     df_match = matches_in_league[match_name]
 
+    # Optional player filter
     player_name = None
     if 'PlayerId' in df_match.columns:
         player_list = ["All"] + df_match['PlayerId'].unique().tolist()
         player_selected = st.selectbox("Select Player", player_list)
         player_name = None if player_selected=="All" else player_selected
 
-    plot_shot_map(df_match, player_name, title_sub=f"{match_display_names[match_idx]} | {league_selected}")
+    plot_shot_map(df_match, player_name, 
+                  title_sub=f"{match_display_names[match_idx]} | {league_selected}")
 
 def display_profiles_page(metrics):
     st.subheader("Player Profiles")
