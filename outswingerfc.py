@@ -76,8 +76,8 @@ def display_advanced_metrics(all_metrics):
         "xG": f"{league_selected}",
         "xAG": f"{league_selected}_assists",
         "GPA": f"{league_selected}_gpa",
-        "xT": f"{league_selected}_xt",
-        "xDisruption": f"{league_selected}_disruption"
+        "xT": f"{league_selected}_xT",
+        "xDisruption": f"{league_selected}_xDisruption"
     }
 
     expected_file = filename_map.get(metric_choice)
