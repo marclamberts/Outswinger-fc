@@ -159,7 +159,7 @@ def display_landing_page():
         st.session_state.app_mode = "SetPieces"
 
 # --- Advanced Metrics Page ---
-ddef display_performance_page(all_metrics):
+def display_performance_page(all_metrics):
     st.subheader("Advanced Metrics / Player Scouting")
 
     if not all_metrics:
