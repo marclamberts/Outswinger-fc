@@ -119,7 +119,7 @@ def display_matches_page():
         st.warning("No match data found.")
         return
 
-    # --- Sidebar filters only when Matches tab is active ---
+    # --- Sidebar filters ---
     with st.sidebar:
         st.markdown("### Match Filters")
 
@@ -127,22 +127,21 @@ def display_matches_page():
         league_selected = st.selectbox("Select League", list(league_data.keys()))
         matches_in_league = league_data[league_selected]
 
-        # Parse team names and IDs from filenames
+        # Parse team names from filenames
         match_display_names = []
-        team_info_map = {}
+        team_names_map = {}
         match_files = list(matches_in_league.keys())
         for match_file in match_files:
             parts = match_file.split("_", 1)
             name_part = parts[1] if len(parts) > 1 else parts[0]
             if " - " in name_part:
                 t1, t2 = name_part.split(" - ", 1)
-                t1 = t1.strip()
-                t2 = t2.strip()
+                t1, t2 = t1.strip(), t2.strip()
                 display_name = f"{t1} vs {t2}"
-                team_info_map[display_name] = (t1, t2)  # Names
+                team_names_map[display_name] = (t1, t2)
             else:
                 display_name = name_part.strip()
-                team_info_map[display_name] = (None, None)
+                team_names_map[display_name] = (None, None)
             match_display_names.append(display_name)
 
         # Match selection
@@ -151,30 +150,26 @@ def display_matches_page():
             range(len(match_display_names)),
             format_func=lambda x: match_display_names[x]
         )
-
         match_display_name = match_display_names[match_selected_idx]
         match_name = match_files[match_selected_idx]
         df_match = matches_in_league[match_name].copy()
 
-        team1_name, team2_name = team_info_map[match_display_name]
+        team1_name, team2_name = team_names_map[match_display_name]
 
-        # Team selection (choose team1, team2, or Full Match)
+        # Team selection (label "Team", filter internally by TeamId)
         team_options = ["Full Match"]
         if team1_name: team_options.append(team1_name)
         if team2_name: team_options.append(team2_name)
-        team_filter = st.selectbox("Select Team", team_options)
+        team_filter = st.selectbox("Team", team_options)
 
-    # --- FILTER SHOTS BY TEAMID ---
+    # --- Filter shots by TeamId ---
     if team_filter != "Full Match" and 'TeamId' in df_match.columns:
-        # Map team name to TeamId
-        # Assumes team names in filename match df['Team'] column exactly
-        df_match['Team'] = df_match['Team'].str.strip()
-        team_map = df_match[['Team', 'TeamId']].drop_duplicates().set_index('Team')['TeamId'].to_dict()
-        selected_team_id = team_map.get(team_filter)
-        if selected_team_id:
-            df_team = df_match[df_match['TeamId'] == selected_team_id].copy()
-        else:
-            df_team = df_match.copy()
+        # Map the selected team name to the TeamId in the CSV
+        team_map = df_match[['TeamId']].drop_duplicates()
+        # Assumes TeamId corresponds to team names in the sidebar
+        # If your CSV has numeric IDs, you might need a separate mapping
+        selected_team_id = team_filter  # if names match IDs
+        df_team = df_match[df_match['TeamId'] == selected_team_id].copy()
     else:
         df_team = df_match.copy()
 
@@ -193,7 +188,7 @@ def display_matches_page():
     title_main = team_filter if team_filter != "Full Match" else "Full Match"
     title_sub = f"{opponent_text} | {league_selected}" if opponent else league_selected
 
-    # --- PLOT SHOT MAP ---
+    # --- Plot ---
     pitch = VerticalPitch(pitch_type='opta', pitch_color='white', line_color='black', half=True)
     fig, ax = pitch.draw(figsize=(12,8))
 
@@ -224,7 +219,6 @@ def display_matches_page():
         ax.text(pos[0], pos[1]+0.06, text, transform=ax.transAxes, color='black', fontsize=12, ha='center', va='center', zorder=6)
         ax.text(pos[0], pos[1], value, transform=ax.transAxes, color='white', fontsize=12, weight='bold', ha='center', va='center', zorder=6)
 
-    # Multi-line title
     ax.text(52, 105, title_main, fontsize=22, weight='bold', color='black', ha='center', va='top')
     ax.text(52, 101, title_sub, fontsize=14, style='italic', color='black', ha='center', va='top')
 
