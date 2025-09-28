@@ -46,7 +46,7 @@ def load_all_metrics(base_path="data/advanced"):
         all_metrics[league] = league_dict
     return all_metrics
 
-# --- Advanced Metrics Page ---
+# --- Advanced Metrics Page with Custom Warning ---
 def display_advanced_metrics(all_metrics):
     st.title("⚽ WoSo Advanced Metrics")
     st.markdown("<div class='section-header'>Player & Team Analytics</div>", unsafe_allow_html=True)
@@ -63,6 +63,10 @@ def display_advanced_metrics(all_metrics):
         st.warning(f"No metrics available for {league_selected}.")
         return
 
+    # --- Custom warning for missing match in WSL2 ---
+    if league_selected == "WSL2":
+        st.warning("⚠ Bristol City vs Portsmouth is missing")
+
     # --- Sidebar - metric selection ---
     metric_options = ["xG","xAG","xT","xDisruption","GPA"]
     metric_choice = st.sidebar.selectbox("Select Metric", metric_options)
@@ -72,8 +76,8 @@ def display_advanced_metrics(all_metrics):
         "xG": f"{league_selected}",
         "xAG": f"{league_selected}_assists",
         "GPA": f"{league_selected}_gpa",
-        "xT": f"{league_selected}_xT",
-        "xDisruption": f"{league_selected}_xDisruption"
+        "xT": f"{league_selected}_xt",
+        "xDisruption": f"{league_selected}_disruption"
     }
 
     expected_file = filename_map.get(metric_choice)
@@ -84,6 +88,7 @@ def display_advanced_metrics(all_metrics):
         st.dataframe(df_metric)
     else:
         st.warning(f"{metric_choice} data not found for {league_selected}.")
+
 
 # --- Main ---
 def main():

@@ -1,99 +1,141 @@
 Player,Team,Assists,ShotAssists,xAG
-A. Andrews,Sheffield United WFC,0,1,0.05
-A. Blanchard,Crystal Palace Women FC,2,1,0.64
+A. Akpan,Southampton FC Women,0,1,0.03
+A. Andrews,Sheffield United WFC,0,3,0.18
+A. Blanchard,Crystal Palace Women FC,2,3,1.04
+A. Claypole,Nottingham Forest WFC,1,0,0.09
 A. Everett,Crystal Palace Women FC,0,1,0.1
-A. Lafayette,Sheffield United WFC,0,1,0.07
+A. Ferguson,Southampton FC Women,0,2,0.07
+A. Lafayette,Sheffield United WFC,0,3,0.2
 A. Larkin,Crystal Palace Women FC,0,1,0.05
-A. Nixon,Portsmouth FC Women,0,1,0.08
-A. Primus,Southampton FC Women,0,2,0.12
-A. Rodgers,Nottingham Forest WFC,0,1,0.1
+A. Mannion,Newcastle United WFC,0,2,0.38
+A. Nixon,Portsmouth FC Women,1,3,0.25
+A. Primus,Southampton FC Women,0,5,0.28
+A. Rodgers,Nottingham Forest WFC,0,4,0.19
 A. Stobbs,Durham WFC,0,1,0.35
-A. Thestrup,Charlton Athletic WFC,0,2,0.14
-A. Weerden,Crystal Palace Women FC,1,5,1.03
+A. Thestrup,Charlton Athletic WFC,0,6,0.43
+A. Weerden,Crystal Palace Women FC,1,9,1.29
 B. Hepple,Durham WFC,1,2,0.75
-B. Louis,Birmingham City WFC,0,2,0.1
-B. Lumsden,Newcastle United WFC,1,1,0.54
-B. Roe,Ipswich Town FC Women,0,1,0.03
-C. Cornet,Birmingham City WFC,0,3,0.52
-C. Devlin,Sheffield United WFC,0,1,0.05
-C. Harrison-Murray,Birmingham City WFC,0,7,0.35
+B. Louis,Birmingham City WFC,0,3,0.13
+B. Lumsden,Newcastle United WFC,1,3,0.66
+B. Roe,Ipswich Town FC Women,0,3,0.15
+C. Boye-Hlorkah,Nottingham Forest WFC,0,3,0.16
+C. Cornet,Birmingham City WFC,0,6,0.63
+C. Devlin,Sheffield United WFC,0,5,0.33
+C. Harrison-Murray,Birmingham City WFC,1,9,0.59
 C. Mustaki,Nottingham Forest WFC,1,1,0.69
-C. Newsham,Charlton Athletic WFC,1,1,0.6
+C. Newsham,Charlton Athletic WFC,1,3,1.04
 C. Peplow,Southampton FC Women,0,1,0.03
+C. Sáez,Bristol City WFC,0,2,0.89
+C. Wardlaw,Newcastle United WFC,0,2,0.16
 C. Wellings,Nottingham Forest WFC,0,2,0.1
-D. Rose,Nottingham Forest WFC,0,5,0.39
-D. Stokes,Newcastle United WFC,1,0,0.4
-E. Bissell,Charlton Athletic WFC,0,1,0.03
-E. Brazil,Southampton FC Women,2,2,0.61
+D. Cooper,Newcastle United WFC,0,1,0.03
+D. Rose,Nottingham Forest WFC,0,6,0.43
+D. Stokes,Newcastle United WFC,1,1,0.44
+E. Bissell,Charlton Athletic WFC,0,3,0.41
+E. Brazil,Southampton FC Women,2,3,0.66
 E. Butler,Sheffield United WFC,0,1,0.07
+E. Hack,Southampton FC Women,0,1,0.09
 E. Hed,Nottingham Forest WFC,0,1,0.05
-E. Hughes,Crystal Palace Women FC,0,3,0.52
+E. Hughes,Crystal Palace Women FC,0,7,0.96
 E. Kelly,Newcastle United WFC,0,2,0.1
 E. Mason,Charlton Athletic WFC,0,1,0.43
-E. Murphy,Newcastle United WFC,0,1,0.1
-E. Scarr,Sunderland WFC,1,1,0.14
-E. Syme,Bristol City WFC,0,3,0.56
+E. Morgan,Bristol City WFC,0,1,0.09
+E. Murphy,Newcastle United WFC,0,2,0.13
+E. Scarr,Sunderland WFC,2,1,0.43
+E. Syme,Bristol City WFC,0,9,1.55
 E. Taylor,Sheffield United WFC,0,1,0.06
-F. Gregory,Newcastle United WFC,0,3,0.9
-G. Ayre,Durham WFC,0,1,0.03
+F. Gregory,Newcastle United WFC,0,4,0.95
+F. Thomas,Nottingham Forest WFC,0,1,0.09
+G. Ayre,Durham WFC,0,2,0.12
 G. Brougham,Nottingham Forest WFC,0,2,0.3
+G. Freeland,Portsmouth FC Women,0,1,0.09
 G. Humphries,Portsmouth FC Women,0,1,0.07
 G. Kenney,Charlton Athletic WFC,0,2,0.13
+G. Lawley,Bristol City WFC,0,1,0.07
+G. Neville,Ipswich Town FC Women,0,1,0.1
+H. Bennett,Bristol City WFC,1,0,0.47
 H. Blake,Durham WFC,1,2,0.98
-I. Atkinson,Sunderland WFC,1,0,0.49
-J. Brown,Sunderland WFC,1,1,0.38
+H. Coan,Portsmouth FC Women,0,1,0.04
+I. Atkinson,Sunderland WFC,1,2,0.7
+I. Collins,Portsmouth FC Women,0,1,0.15
+I. Watts,Southampton FC Women,0,1,0.03
+J. Brown,Sunderland WFC,1,2,0.48
 J. Bull,Portsmouth FC Women,0,1,0.05
+J. Dahou,Portsmouth FC Women,0,1,0.04
+J. Gale,Portsmouth FC Women,1,0,0.05
 J. Gray,Portsmouth FC Women,0,1,0.06
 J. Green,Crystal Palace Women FC,0,1,0.12
 J. Hutton,Charlton Athletic WFC,0,2,0.11
-J. McQuade,Newcastle United WFC,0,1,0.03
-J. Reavill,Sheffield United WFC,0,1,0.05
-J. Simpson,Southampton FC Women,2,0,1.02
+J. McQuade,Newcastle United WFC,0,3,0.11
+J. Nobbs,Newcastle United WFC,0,2,0.1
+J. Ralph,Sheffield United WFC,0,1,0.03
+J. Reavill,Sheffield United WFC,1,1,0.09
+J. Simpson,Southampton FC Women,2,3,1.5
 J. Stapleton,Nottingham Forest WFC,0,1,0.08
-J. Vanhaevermaet,Crystal Palace Women FC,0,1,0.03
-Ji So-Yun,Birmingham City WFC,0,2,0.09
+J. Vanhaevermaet,Crystal Palace Women FC,1,2,0.58
+Ji So-Yun,Birmingham City WFC,1,6,0.32
 K. Bradley,Charlton Athletic WFC,1,0,0.49
-K. Flannery,Charlton Athletic WFC,0,1,0.03
-K. Howat,Crystal Palace Women FC,0,2,0.18
-K. Kitching,Sunderland WFC,0,2,0.11
+K. Flannery,Charlton Athletic WFC,0,2,0.06
+K. Howat,Crystal Palace Women FC,0,4,0.29
+K. Kitching,Sunderland WFC,0,4,0.27
 K. Muya,Charlton Athletic WFC,0,1,0.07
 K. Robertson,Ipswich Town FC Women,0,1,0.05
-K. Skeels,Charlton Athletic WFC,0,1,0.04
+K. Skeels,Charlton Athletic WFC,0,2,0.1
+K. Smith,Nottingham Forest WFC,0,3,0.18
 K. Watson,Sunderland WFC,1,1,0.16
 L. Briggs,Durham WFC,0,3,0.18
 L. Cataldo,Newcastle United WFC,0,1,0.05
-L. Crosthwaite,Birmingham City WFC,1,3,0.26
+L. Cowan,Sheffield United WFC,0,2,0.11
+L. Crosthwaite,Birmingham City WFC,1,6,0.45
 L. Fitzgerald,Charlton Athletic WFC,0,1,0.08
+L. Griffiths,Sunderland WFC,0,1,0.1
 L. Lloyd-Smith,Bristol City WFC,0,1,0.05
 L. Mitchell,Ipswich Town FC Women,0,2,0.13
 Lee Geum-Min,Birmingham City WFC,1,1,0.85
 M. Bashford,Southampton FC Women,0,1,0.07
-M. Boswell,Ipswich Town FC Women,0,1,0.04
-M. Farrugia,Bristol City WFC,0,1,0.08
-M. Foster,Durham WFC,0,2,0.16
+M. Boswell,Ipswich Town FC Women,0,2,0.09
+M. Collett,Southampton FC Women,0,1,0.04
+M. Corbyn,Sunderland WFC,0,1,0.1
+M. Dafeur,Bristol City WFC,0,1,0.07
+M. Farrugia,Bristol City WFC,0,2,0.18
+M. Foster,Durham WFC,0,3,0.21
+M. Gautrat,Newcastle United WFC,0,3,0.14
+M. Green,Nottingham Forest WFC,0,1,0.05
+M. Hornby,Portsmouth FC Women,0,2,0.14
 M. Lambert,Durham WFC,0,1,0.04
+M. McAlonie,Southampton FC Women,0,2,0.4
 M. McAteer,Charlton Athletic WFC,0,1,0.1
 M. Meena,Bristol City WFC,0,1,0.03
-M. Pike,Newcastle United WFC,0,4,0.21
+M. Mott,Southampton FC Women,0,1,0.03
+M. Pike,Newcastle United WFC,0,5,0.3
+M. Rouse,Sheffield United WFC,0,3,0.25
+M. Sharpe,Crystal Palace Women FC,0,3,0.36
 M. Speckmaier,Durham WFC,0,1,0.07
-N. Fenton,Sunderland WFC,1,2,0.5
+N. Fenton,Sunderland WFC,1,4,0.61
 Nahikari García,Nottingham Forest WFC,0,4,0.2
 O. Hurtré,Birmingham City WFC,0,2,0.1
-P. Peake,Ipswich Town FC Women,0,1,0.05
-P. Pritchard,Durham WFC,0,1,0.09
+O. Johnson,Bristol City WFC,0,1,0.07
+O. Sevenius,Newcastle United WFC,1,2,0.5
+P. Peake,Ipswich Town FC Women,0,2,0.45
+P. Pritchard,Durham WFC,0,2,0.15
 R. Dean,Ipswich Town FC Women,0,1,0.03
 R. Hardy,Bristol City WFC,0,2,0.2
 R. Holloway,Birmingham City WFC,2,3,1.34
-R. McKenna,Birmingham City WFC,0,1,0.04
+R. McKenna,Birmingham City WFC,0,3,0.12
 R. Tucker,Southampton FC Women,0,1,0.1
-S. Barker,Portsmouth FC Women,0,1,0.13
-S. Cooke,Birmingham City WFC,0,2,0.12
+S. Barker,Portsmouth FC Women,0,2,0.18
+S. Cooke,Birmingham City WFC,0,4,0.18
 S. Hayles,Newcastle United WFC,1,0,0.52
+S. Hughes,Ipswich Town FC Women,0,1,0.04
+S. Ingle,Bristol City WFC,0,1,0.09
 S. Magill,Birmingham City WFC,1,3,0.23
 S. O'Rourke,Sheffield United WFC,0,2,0.08
+S. Peskett,Ipswich Town FC Women,2,3,0.54
+T. Almqvist,Nottingham Forest WFC,0,1,0.07
 T. Bourne,Southampton FC Women,1,4,0.72
 T. Bristow,Sheffield United WFC,0,1,0.04
 T. George,Sheffield United WFC,1,0,0.05
-V. Lia,Nottingham Forest WFC,0,1,0.11
-V. Sarri,Birmingham City WFC,0,6,0.58
-Vicky Losada,Bristol City WFC,0,5,0.58
+T. Toland,Durham WFC,0,1,0.03
+V. Lia,Nottingham Forest WFC,0,2,0.15
+V. Sarri,Birmingham City WFC,0,9,0.73
+Vicky Losada,Bristol City WFC,0,6,0.63
