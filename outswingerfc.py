@@ -127,19 +127,22 @@ def display_performance_page(metrics):
 def display_matches_page():
     st.subheader("Match Analysis / xG Shot Maps")
 
+    # Load league/match data
     league_data = load_match_xg_data("data/matchxg")
     if not league_data:
         st.warning("No match data found.")
         return
 
-    st.markdown("**Metric:** Expected Goals (xG)")
-    league_selected = st.selectbox("Select League", list(league_data.keys()))
+    st.sidebar.markdown("### Filters")
+
+    # --- League selection ---
+    league_selected = st.sidebar.selectbox("Select League", list(league_data.keys()))
     matches_in_league = league_data[league_selected]
 
     # Parse team names from filenames
     match_display_names = []
+    team_names_map = {}
     match_files = list(matches_in_league.keys())
-    team_names_map = {}  # store team names for each match
     for match_file in match_files:
         parts = match_file.split("_", 1)
         name_part = parts[1] if len(parts) > 1 else parts[0]
@@ -152,39 +155,38 @@ def display_matches_page():
             team_names_map[display_name] = (None, None)
         match_display_names.append(display_name)
 
-    match_selected_idx = st.selectbox("Select Match", range(len(match_display_names)), 
-                                      format_func=lambda x: match_display_names[x])
+    # --- Match selection ---
+    match_selected_idx = st.sidebar.selectbox("Select Match", range(len(match_display_names)),
+                                              format_func=lambda x: match_display_names[x])
     match_display_name = match_display_names[match_selected_idx]
     match_name = match_files[match_selected_idx]
     df_match = matches_in_league[match_name]
 
     team1, team2 = team_names_map[match_display_name]
 
-    # Create two buttons for team selection
-    col1, col2 = st.columns(2)
+    # --- Team selection buttons ---
+    st.sidebar.markdown("### Select Team")
     team_filter = None
-    with col1:
-        if st.button(team1):
-            team_filter = team1
-    with col2:
-        if st.button(team2):
-            team_filter = team2
+    if st.sidebar.button(team1):
+        team_filter = team1
+    if st.sidebar.button(team2):
+        team_filter = team2
 
-    # Optional player-level filtering within team
-    player_name = None
     if team_filter and 'Team' in df_match.columns:
         df_team = df_match[df_match['Team'] == team_filter]
-        if 'PlayerId' in df_team.columns:
-            player_list = ["All"] + df_team['PlayerId'].unique().tolist()
-            player_selected = st.selectbox("Select Player", player_list)
-            player_name = None if player_selected == "All" else player_selected
-        else:
-            player_name = None
     else:
-        df_team = df_match  # no team filter
+        df_team = df_match.copy()
 
-    # Display shot map
-    plot_shot_map(df_team, player_name, title_sub=f"{team_filter if team_filter else 'Full Match'} | {match_display_name} | {league_selected}")
+    # --- Player selection (optional) ---
+    player_name = None
+    if 'PlayerId' in df_team.columns:
+        player_list = ["All"] + df_team['PlayerId'].unique().tolist()
+        player_selected = st.sidebar.selectbox("Select Player", player_list)
+        player_name = None if player_selected == "All" else player_selected
+
+    # --- Plot the shot map ---
+    plot_shot_map(df_team, player_name,
+                  title_sub=f"{team_filter if team_filter else 'Full Match'} | {match_display_name} | {league_selected}")
 
 
 def display_profiles_page(metrics):
