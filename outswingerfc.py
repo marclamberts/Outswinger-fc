@@ -19,7 +19,7 @@ OUTSWINGER = {
 # =========================
 # CONFIG
 # =========================
-APP_TITLE = "WoSo Analytics | Advanced Metrics"
+APP_TITLE = "Outswinger FC | Advanced Metrics"
 LEAGUES = {
     "WSL": "WSL.csv",
     "Liga F": "Liga F.csv",
@@ -382,7 +382,7 @@ def app():
 
     df = load_league_csv(csv_path)
 
-    st.title(f"⚽ WoSo Analytics — {league}")
+    st.title(f"⚽ Outswinger FC — {league}")
     st.markdown("<div class='section-header'>Advanced Player Output</div>", unsafe_allow_html=True)
 
     # Data status card (trust builder)
