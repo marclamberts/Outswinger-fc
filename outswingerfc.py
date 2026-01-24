@@ -18,7 +18,7 @@ OUTSWINGER = {
 # =========================
 # CONFIG
 # =========================
-DATA_PATH = Path("WSL.csv")   # put WSL.csv next to this app.py (or change to absolute path)
+DATA_PATH = Path("WSL.csv")  # Put WSL.csv next to app.py (or change to absolute path)
 APP_TITLE = "WoSo Analytics | WSL"
 
 # =========================
@@ -32,7 +32,7 @@ st.set_page_config(
 )
 
 # =========================
-# STYLING: Hybrid ASA (clean cards) + Understat (dark) + FBref (table/typography)
+# STYLING: Understat (dark) + ASA (cards) + FBref (tables/typography)
 # =========================
 def inject_custom_css():
     st.markdown(f"""
@@ -47,9 +47,6 @@ def inject_custom_css():
         --text: {OUTSWINGER["white"]};
         --muted: {OUTSWINGER["grey"]};
         --accent: {OUTSWINGER["emerald"]};
-        --warn: {OUTSWINGER["yellow"]};
-        --bad: {OUTSWINGER["crimson"]};
-        --good: {OUTSWINGER["emerald"]};
       }}
 
       html, body, [class*="st-"] {{
@@ -58,13 +55,11 @@ def inject_custom_css():
         color: var(--text);
       }}
 
-      /* Tighten app padding a bit */
       .block-container {{
-        padding-top: 1.25rem;
+        padding-top: 1.1rem;
         padding-bottom: 2rem;
       }}
 
-      /* Headers: a touch of FBref vibe */
       h1, h2, h3 {{
         font-family: "Source Serif 4", Georgia, serif !important;
         color: var(--text);
@@ -75,16 +70,11 @@ def inject_custom_css():
         color: var(--accent);
       }}
 
-      /* Sidebar polish */
       section[data-testid="stSidebar"] {{
         background: #0E1013;
         border-right: 1px solid var(--border);
       }}
-      section[data-testid="stSidebar"] * {{
-        color: var(--text);
-      }}
 
-      /* Inputs */
       .stTextInput input, .stNumberInput input {{
         background: #0F1115 !important;
         border: 1px solid var(--border) !important;
@@ -98,20 +88,6 @@ def inject_custom_css():
         border-radius: 12px !important;
       }}
 
-      /* Buttons (ASA-ish clean) */
-      .stButton>button {{
-        background: var(--accent);
-        color: #0B0B0B;
-        font-weight: 800;
-        border-radius: 14px;
-        border: 0;
-        padding: 0.7rem 1.1rem;
-      }}
-      .stButton>button:hover {{
-        filter: brightness(0.95);
-      }}
-
-      /* Section divider */
       .section-header {{
         border-bottom: 2px solid var(--accent);
         padding-bottom: 0.45rem;
@@ -123,7 +99,7 @@ def inject_custom_css():
         font-size: 0.95rem;
       }}
 
-      /* KPI cards (ASA vibe) */
+      /* KPI cards */
       .kpi-grid {{
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -156,6 +132,17 @@ def inject_custom_css():
         margin-top: 6px;
       }}
 
+      /* FBref-ish table container */
+      div[data-testid="stDataFrame"] {{
+        background: #0F1115 !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 16px !important;
+        overflow: hidden;
+      }}
+      div[data-testid="stDataFrame"] * {{
+        color: var(--text) !important;
+      }}
+
       /* Understat-ish chips */
       .chip {{
         display: inline-flex;
@@ -177,16 +164,59 @@ def inject_custom_css():
         display: inline-block;
       }}
 
-      /* FBref-ish table feel */
-      .stDataFrame, div[data-testid="stDataFrame"] {{
-        background: #0F1115 !important;
-        border: 1px solid var(--border) !important;
-        border-radius: 16px !important;
-        overflow: hidden;
+      /* === TOP NAV (big outlined rectangles) === */
+      div[data-testid="stRadio"] > label {{
+        display: none; /* hide label */
       }}
-      /* Remove some excessive white from grid */
-      div[data-testid="stDataFrame"] * {{
-        color: var(--text) !important;
+
+      /* radiogroup wrapper */
+      div[data-testid="stRadio"] div[role="radiogroup"] {{
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin: 10px 0 18px 0;
+      }}
+
+      /* each option container */
+      div[data-testid="stRadio"] div[role="radiogroup"] > label {{
+        border: 2px solid var(--accent) !important;
+        border-radius: 18px !important;
+        padding: 16px 12px !important;
+        background: transparent !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        font-weight: 900;
+        justify-content: center;
+        align-items: center;
+        display: flex !important;
+      }}
+
+      /* the text */
+      div[data-testid="stRadio"] div[role="radiogroup"] > label span {{
+        color: var(--accent) !important;
+        font-size: 1.05rem !important;
+      }}
+
+      /* hover */
+      div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {{
+        background: rgba(46, 204, 113, 0.12) !important;
+      }}
+
+      /* selected option:
+         Streamlit marks checked inputs; we style the parent label via :has */
+      div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) {{
+        background: var(--accent) !important;
+        box-shadow: 0 10px 30px rgba(46, 204, 113, 0.35);
+      }}
+      div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) span {{
+        color: #0B0B0B !important;
+      }}
+
+      /* hide the actual radio dot */
+      div[data-testid="stRadio"] input[type="radio"] {{
+        display: none !important;
       }}
 
       /* Percentile bars */
@@ -225,19 +255,17 @@ def inject_custom_css():
         color: var(--text);
         font-weight: 700;
       }}
-
     </style>
     """, unsafe_allow_html=True)
 
 # =========================
-# LOAD DATA
+# DATA HELPERS
 # =========================
 @st.cache_data(ttl=3600)
 def load_wsl(path: Path) -> pd.DataFrame:
     if not path.exists():
         return pd.DataFrame()
-    df = pd.read_csv(path)
-    return df
+    return pd.read_csv(path)
 
 def coerce_numeric(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
     out = df.copy()
@@ -252,14 +280,6 @@ def round_cols(df: pd.DataFrame, cols: list[str], nd: int = 2) -> pd.DataFrame:
         if c in out.columns:
             out[c] = pd.to_numeric(out[c], errors="coerce").round(nd)
     return out
-
-def fmt_float(x, nd=2):
-    try:
-        if pd.isna(x):
-            return "—"
-        return f"{float(x):.{nd}f}"
-    except Exception:
-        return "—"
 
 def percentile(series: pd.Series, value) -> float:
     s = pd.to_numeric(series, errors="coerce").dropna()
@@ -289,7 +309,7 @@ def pct_block(df: pd.DataFrame, player_row: pd.Series, metrics: list[tuple[str, 
     st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================
-# APP UI
+# APP
 # =========================
 def app():
     inject_custom_css()
@@ -301,35 +321,46 @@ def app():
 
     if df.empty:
         st.error(
-            f"Could not find **{DATA_PATH.name}**. Put `WSL.csv` next to `app.py` or change `DATA_PATH` at the top."
+            f"Could not find **{DATA_PATH.name}**.\n\n"
+            "Put `WSL.csv` next to `app.py` (recommended) or change `DATA_PATH` at the top."
         )
         return
 
-    # If your CSV is the aggregated output, these are common columns:
+    # Common aggregated columns
     numeric_candidates = ["Shots", "Goals", "Assists", "xG", "xG_Diff", "xA", "ShotConversion"]
     df = coerce_numeric(df, [c for c in numeric_candidates if c in df.columns])
 
-    # Sidebar controls (FBref-ish: lots of filters)
+    if "PlayerId" in df.columns:
+        df["PlayerId"] = df["PlayerId"].astype(str)
+
+    # =========================
+    # SIDEBAR FILTERS (FBref-like)
+    # =========================
     st.sidebar.markdown("### Controls")
+
     search = st.sidebar.text_input("Search PlayerId", value="").strip().lower()
 
     min_shots = 0
     if "Shots" in df.columns:
         max_shots = int(np.nanmax(df["Shots"].values)) if len(df) else 0
-        min_shots = st.sidebar.slider("Minimum shots", 0, max_shots if max_shots > 0 else 1, 0)
+        min_shots = st.sidebar.slider(
+            "Minimum shots",
+            0,
+            max_shots if max_shots > 0 else 1,
+            0
+        )
 
-    # Sort controls
     sortable = [c for c in ["xG_Diff", "xG", "xA", "Goals", "Assists", "Shots", "ShotConversion"] if c in df.columns]
     if not sortable:
         sortable = list(df.columns)
 
-    sort_col = st.sidebar.selectbox("Sort by", sortable, index=0 if "xG_Diff" in sortable else 0)
+    sort_col = st.sidebar.selectbox("Sort by", sortable, index=(0 if "xG_Diff" in sortable else 0))
     ascending = st.sidebar.checkbox("Ascending", value=False)
 
-    # Prepare view
+    # =========================
+    # BUILD VIEW
+    # =========================
     view = df.copy()
-    if "PlayerId" in view.columns:
-        view["PlayerId"] = view["PlayerId"].astype(str)
 
     if search and "PlayerId" in view.columns:
         view = view[view["PlayerId"].str.lower().str.contains(search, na=False)]
@@ -340,25 +371,41 @@ def app():
     if sort_col in view.columns:
         view = view.sort_values(sort_col, ascending=ascending)
 
-    # Round to max 2 decimals (as requested)
     view = round_cols(view, ["xG", "xG_Diff", "xA", "ShotConversion"], nd=2)
 
-    # Top chips (Understat-ish quick legend)
+    # =========================
+    # TOP NAV (BIG BUTTONS)
+    # =========================
+    if "page" not in st.session_state:
+        st.session_state.page = "Overview"
+
+    page = st.radio(
+        "Navigation",
+        options=["Overview", "Table", "Profile"],
+        horizontal=True,
+        key="page"
+    )
+
+    # =========================
+    # CHIPS LEGEND
+    # =========================
     chips = []
     if "xG_Diff" in view.columns:
-        chips.append(("xG_Diff", "Goals − xG (over/under)"))
+        chips.append("Goals − xG (over/under)")
     if "xA" in view.columns:
-        chips.append(("xA", "Assisted xG created"))
+        chips.append("xA = assisted xG created")
     if "ShotConversion" in view.columns:
-        chips.append(("ShotConversion", "Goals / Shots"))
+        chips.append("Goals / Shots")
 
     if chips:
-        chip_html = ""
-        for _, label in chips:
-            chip_html += f"<span class='chip'><span class='dot'></span>{label}</span>"
-        st.markdown(chip_html, unsafe_allow_html=True)
+        st.markdown(
+            "".join([f"<span class='chip'><span class='dot'></span>{c}</span>" for c in chips]),
+            unsafe_allow_html=True
+        )
 
-    # KPIs (ASA clean cards)
+    # =========================
+    # KPI CARDS
+    # =========================
     total_players = len(view)
     total_goals = int(np.nansum(view["Goals"])) if "Goals" in view.columns else 0
     total_xg = float(np.nansum(view["xG"])) if "xG" in view.columns else 0.0
@@ -392,14 +439,14 @@ def app():
         unsafe_allow_html=True
     )
 
-    tab_overview, tab_table, tab_profile = st.tabs(["Overview", "Table (FBref-style)", "Player Profile"])
-
-    with tab_overview:
+    # =========================
+    # PAGE CONTENT
+    # =========================
+    if page == "Overview":
         st.markdown("<div class='section-header'>Highlights</div>", unsafe_allow_html=True)
-
         col1, col2 = st.columns(2)
 
-        if "xG_Diff" in view.columns and "PlayerId" in view.columns:
+        if all(c in view.columns for c in ["PlayerId", "xG_Diff", "Goals", "xG"]):
             top_over = view.nlargest(10, "xG_Diff")[["PlayerId", "xG_Diff", "Goals", "xG"]].copy()
             top_under = view.nsmallest(10, "xG_Diff")[["PlayerId", "xG_Diff", "Goals", "xG"]].copy()
 
@@ -413,126 +460,117 @@ def app():
                 st.caption("Lower Goals − xG")
                 st.dataframe(top_under, use_container_width=True, hide_index=True)
 
-        # Simple distribution table cut (no forced colors)
         st.markdown("<div class='section-header'>Benchmarks</div>", unsafe_allow_html=True)
         bench_cols = [c for c in ["Shots", "Goals", "Assists", "xG", "xA", "xG_Diff", "ShotConversion"] if c in view.columns]
         if bench_cols:
             desc = view[bench_cols].describe(percentiles=[0.1, 0.25, 0.5, 0.75, 0.9]).T
             desc = desc.rename(columns={"50%": "median"})
-            desc = round_cols(desc, desc.columns.tolist(), nd=2)
+            desc = round_cols(desc, list(desc.columns), nd=2)
             st.dataframe(desc, use_container_width=True)
 
-    with tab_table:
+    elif page == "Table":
         st.markdown("<div class='section-header'>Full Player Table</div>", unsafe_allow_html=True)
 
-        # Choose columns to show (FBref: lots of columns, but tidy)
         preferred = ["PlayerId", "Shots", "Goals", "Assists", "xG", "xG_Diff", "xA", "ShotConversion"]
         show_cols = [c for c in preferred if c in view.columns]
         if not show_cols:
             show_cols = list(view.columns)
 
         st.dataframe(view[show_cols], use_container_width=True, hide_index=True)
+        st.caption("Tip: set a minimum shots threshold before judging xG_Diff.")
 
-        st.caption("Tip: use the sidebar filters to set a minimum shots threshold before judging xG_Diff.")
-
-    with tab_profile:
+    else:  # Profile
         st.markdown("<div class='section-header'>Player Profile</div>", unsafe_allow_html=True)
 
         if "PlayerId" not in df.columns:
             st.warning("No PlayerId column found, so player profile is unavailable.")
-        else:
-            # Use unrounded df for percentiles, display rounded values in KPIs
-            df_all = df.copy()
-            df_all["PlayerId"] = df_all["PlayerId"].astype(str)
+            return
 
-            # Player picker based on current filtered view
-            player_list = view["PlayerId"].astype(str).tolist() if "PlayerId" in view.columns else df_all["PlayerId"].tolist()
-            player_list = sorted(list(dict.fromkeys(player_list)))  # unique, stable
-            picked = st.selectbox("Select Player", player_list, index=0 if player_list else 0)
+        # Player picker based on filtered view (so it feels consistent)
+        player_list = view["PlayerId"].astype(str).tolist() if "PlayerId" in view.columns else df["PlayerId"].astype(str).tolist()
+        player_list = sorted(list(dict.fromkeys(player_list)))  # unique, stable order
 
-            prow = df_all.loc[df_all["PlayerId"] == picked]
-            if prow.empty:
-                st.info("No rows found for that player.")
-            else:
-                prow = prow.iloc[0]
+        picked = st.selectbox("Select Player", player_list, index=0 if player_list else 0)
 
-                # KPI row for player (ASA cards)
-                shots = prow.get("Shots", np.nan)
-                goals = prow.get("Goals", np.nan)
-                assists = prow.get("Assists", np.nan)
-                xg = prow.get("xG", np.nan)
-                xg_diff = prow.get("xG_Diff", np.nan)
-                xa = prow.get("xA", np.nan)
-                conv = prow.get("ShotConversion", np.nan)
+        prow_df = df.loc[df["PlayerId"].astype(str) == str(picked)]
+        if prow_df.empty:
+            st.info("No rows found for that player.")
+            return
 
-                # round displays to 2 decimals
-                xg = float(xg) if pd.notna(xg) else np.nan
-                xa = float(xa) if pd.notna(xa) else np.nan
-                xg_diff = float(xg_diff) if pd.notna(xg_diff) else np.nan
-                conv = float(conv) if pd.notna(conv) else np.nan
+        prow = prow_df.iloc[0]
 
-                st.markdown(
-                    f"""
-                    <div class="kpi-grid">
-                      <div class="kpi">
-                        <div class="label">Shots</div>
-                        <div class="value">{int(shots) if pd.notna(shots) else 0}</div>
-                        <div class="hint">Total shots</div>
-                      </div>
-                      <div class="kpi">
-                        <div class="label">Goals</div>
-                        <div class="value">{int(goals) if pd.notna(goals) else 0}</div>
-                        <div class="hint">Goals scored</div>
-                      </div>
-                      <div class="kpi">
-                        <div class="label">xG (sum)</div>
-                        <div class="value">{fmt_float(xg, 2)}</div>
-                        <div class="hint">Shot quality</div>
-                      </div>
-                      <div class="kpi">
-                        <div class="label">xG Diff</div>
-                        <div class="value">{fmt_float(xg_diff, 2)}</div>
-                        <div class="hint">Goals − xG</div>
-                      </div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+        # KPI row (rounded to 2 decimals where relevant)
+        shots = int(prow["Shots"]) if "Shots" in prow and pd.notna(prow["Shots"]) else 0
+        goals = int(prow["Goals"]) if "Goals" in prow and pd.notna(prow["Goals"]) else 0
+        assists = int(prow["Assists"]) if "Assists" in prow and pd.notna(prow["Assists"]) else 0
+        xg = round(float(prow["xG"]), 2) if "xG" in prow and pd.notna(prow["xG"]) else 0.0
+        xg_diff = round(float(prow["xG_Diff"]), 2) if "xG_Diff" in prow and pd.notna(prow["xG_Diff"]) else 0.0
+        xa = round(float(prow["xA"]), 2) if "xA" in prow and pd.notna(prow["xA"]) else 0.0
+        conv = round(float(prow["ShotConversion"]), 2) if "ShotConversion" in prow and pd.notna(prow["ShotConversion"]) else 0.0
 
-                # Secondary KPIs
-                cA, cB, cC = st.columns(3)
-                with cA:
-                    st.metric("Assists", int(assists) if pd.notna(assists) else 0)
-                with cB:
-                    st.metric("xA (assisted xG)", float(f"{xa:.2f}") if pd.notna(xa) else 0.0)
-                with cC:
-                    st.metric("Shot Conversion", float(f"{conv:.2f}") if pd.notna(conv) else 0.0)
+        st.markdown(
+            f"""
+            <div class="kpi-grid">
+              <div class="kpi">
+                <div class="label">Shots</div>
+                <div class="value">{shots}</div>
+                <div class="hint">Total shots</div>
+              </div>
+              <div class="kpi">
+                <div class="label">Goals</div>
+                <div class="value">{goals}</div>
+                <div class="hint">Goals scored</div>
+              </div>
+              <div class="kpi">
+                <div class="label">xG (sum)</div>
+                <div class="value">{xg:.2f}</div>
+                <div class="hint">Shot quality</div>
+              </div>
+              <div class="kpi">
+                <div class="label">xG Diff</div>
+                <div class="value">{xg_diff:.2f}</div>
+                <div class="hint">Goals − xG</div>
+              </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-                # Percentile bars (FBref vibe)
-                st.subheader("Percentile ranks (vs dataset)")
-                metrics = []
-                if "xG" in df_all.columns: metrics.append(("xG", "xG"))
-                if "xA" in df_all.columns: metrics.append(("xA", "xA"))
-                if "Shots" in df_all.columns: metrics.append(("Shots", "Shots"))
-                if "Goals" in df_all.columns: metrics.append(("Goals", "Goals"))
-                if "Assists" in df_all.columns: metrics.append(("Assists", "Assists"))
-                if "xG_Diff" in df_all.columns: metrics.append(("xG_Diff", "Goals − xG"))
-                if "ShotConversion" in df_all.columns: metrics.append(("ShotConversion", "Shot Conversion"))
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            st.metric("Assists", assists)
+        with c2:
+            st.metric("xA (assisted xG)", xa)
+        with c3:
+            st.metric("Shot Conversion", conv)
 
-                pct_block(df_all, prow, metrics)
+        st.subheader("Percentile ranks (vs dataset)")
+        metrics = []
+        for col, label in [
+            ("xG", "xG"),
+            ("xA", "xA"),
+            ("Shots", "Shots"),
+            ("Goals", "Goals"),
+            ("Assists", "Assists"),
+            ("xG_Diff", "Goals − xG"),
+            ("ShotConversion", "Shot Conversion"),
+        ]:
+            if col in df.columns:
+                metrics.append((col, label))
 
-                # Raw row (debug / transparency)
-                with st.expander("Show raw player row"):
-                    show = prow.to_frame("value")
-                    # Round numeric values to 2 decimals for readability
-                    for idx in show.index:
-                        try:
-                            show.loc[idx, "value"] = round(float(show.loc[idx, "value"]), 2)
-                        except Exception:
-                            pass
-                    st.dataframe(show, use_container_width=True)
+        pct_block(df, prow, metrics)
 
-    st.caption("Style blend: Understat (dark), ASA (clean KPI cards), FBref (dense tables + percentiles).")
+        with st.expander("Show raw player row"):
+            raw = prow.to_frame("value")
+            # make it readable
+            for idx in raw.index:
+                try:
+                    raw.loc[idx, "value"] = round(float(raw.loc[idx, "value"]), 2)
+                except Exception:
+                    pass
+            st.dataframe(raw, use_container_width=True)
+
+    st.caption("Top navigation uses large outlined buttons (radio styled) for fast switching.")
 
 if __name__ == "__main__":
     app()
