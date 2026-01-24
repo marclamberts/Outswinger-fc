@@ -19,18 +19,16 @@ OUTSWINGER = {
 # =========================
 # CONFIG
 # =========================
-APP_TITLE = "Outswinger FC | Advanced Metrics"
+APP_TITLE = "WoSo Analytics | Advanced Metrics"
 LEAGUES = {
     "WSL": "WSL.csv",
     "Liga F": "Liga F.csv",
     "Frauen-Bundesliga": "FBL.csv",
 }
 
-# Expected columns (app works even if some are missing)
 COL_PLAYER = "PlayerId"
 NUMERIC_CANDIDATES = ["Shots", "Goals", "Assists", "xG", "xG_Diff", "xA", "ShotConversion"]
 
-# Groupings (FBref-ish)
 COLUMN_GROUPS = {
     "Core": ["Shots", "Goals", "Assists"],
     "Finishing": ["xG", "xG_Diff", "ShotConversion"],
@@ -83,17 +81,6 @@ def inject_custom_css():
         color: var(--text);
       }}
 
-      .section-header {{
-        border-bottom: 2px solid var(--accent);
-        padding-bottom: 0.45rem;
-        margin: 0.3rem 0 1.1rem 0;
-        font-family: "Roboto Mono", ui-monospace, monospace;
-        color: var(--accent);
-        letter-spacing: 0.3px;
-        text-transform: uppercase;
-        font-size: 0.95rem;
-      }}
-
       section[data-testid="stSidebar"] {{
         background: #0E1013;
         border-right: 1px solid var(--border);
@@ -110,6 +97,17 @@ def inject_custom_css():
         border: 1px solid var(--border) !important;
         color: var(--text) !important;
         border-radius: 12px !important;
+      }}
+
+      .section-header {{
+        border-bottom: 2px solid var(--accent);
+        padding-bottom: 0.45rem;
+        margin: 0.3rem 0 1.1rem 0;
+        font-family: "Roboto Mono", ui-monospace, monospace;
+        color: var(--accent);
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        font-size: 0.95rem;
       }}
 
       /* Understat-ish chips */
@@ -178,8 +176,7 @@ def inject_custom_css():
         color: var(--text) !important;
       }}
 
-      /* === TOP NAV (big outlined rectangles) === */
-      /* We'll render this inside a sticky container */
+      /* Sticky top nav (big outlined rectangles) */
       .sticky-nav {{
         position: sticky;
         top: 0;
@@ -192,9 +189,7 @@ def inject_custom_css():
         margin-bottom: 10px;
       }}
 
-      div[data-testid="stRadio"] > label {{
-        display: none;
-      }}
+      div[data-testid="stRadio"] > label {{ display:none; }}
       div[data-testid="stRadio"] div[role="radiogroup"] {{
         display: grid !important;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -229,9 +224,7 @@ def inject_custom_css():
       div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) span {{
         color: #0B0B0B !important;
       }}
-      div[data-testid="stRadio"] input[type="radio"] {{
-        display: none !important;
-      }}
+      div[data-testid="stRadio"] input[type="radio"] {{ display: none !important; }}
 
       /* Badges */
       .badge {{
@@ -248,10 +241,7 @@ def inject_custom_css():
       .badge.good {{ border-color: rgba(46,204,113,0.55); }}
       .badge.bad {{ border-color: rgba(230,57,70,0.55); }}
       .badge .b-dot {{
-        width: 8px;
-        height: 8px;
-        border-radius: 999px;
-        display: inline-block;
+        width: 8px; height: 8px; border-radius: 999px; display: inline-block;
       }}
       .badge.good .b-dot {{ background: var(--accent); }}
       .badge.bad .b-dot {{ background: var(--bad); }}
@@ -270,10 +260,7 @@ def inject_custom_css():
         align-items: center;
         margin: 8px 0;
       }}
-      .pct-name {{
-        color: var(--muted);
-        font-size: 0.92rem;
-      }}
+      .pct-name {{ color: var(--muted); font-size: 0.92rem; }}
       .pct-bar {{
         height: 10px;
         background: #141821;
@@ -281,16 +268,82 @@ def inject_custom_css():
         border-radius: 999px;
         overflow: hidden;
       }}
-      .pct-fill {{
-        height: 100%;
-        background: var(--accent);
-        width: 50%;
-      }}
+      .pct-fill {{ height: 100%; background: var(--accent); width: 50%; }}
       .pct-val {{
         text-align: right;
         font-variant-numeric: tabular-nums;
         color: var(--text);
         font-weight: 800;
+      }}
+
+      /* Landing hero */
+      .hero {{
+        background: radial-gradient(900px 380px at 30% 10%, rgba(46,204,113,0.18), transparent 60%),
+                    linear-gradient(180deg, rgba(17,19,22,1), rgba(10,10,10,1));
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 22px 22px;
+        box-shadow: 0 10px 34px rgba(0,0,0,0.28);
+        margin: 10px 0 18px 0;
+      }}
+      .hero-kicker {{
+        font-family: "Roboto Mono", ui-monospace, monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--accent);
+        font-size: 0.92rem;
+        margin-bottom: 8px;
+      }}
+      .hero-title {{
+        font-family: "Source Serif 4", Georgia, serif;
+        font-weight: 800;
+        font-size: 2.2rem;
+        line-height: 1.1;
+        margin: 0 0 8px 0;
+      }}
+      .hero-sub {{
+        color: var(--muted);
+        font-size: 1.02rem;
+        margin-top: 4px;
+        max-width: 70ch;
+      }}
+      .hero-row {{
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 16px;
+        margin-top: 14px;
+      }}
+      @media (max-width: 1000px) {{
+        .hero-row {{ grid-template-columns: 1fr; }}
+      }}
+      .hero-card {{
+        background: #0F1115;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 14px 16px;
+      }}
+      .hero-card h4 {{
+        margin: 0 0 6px 0;
+        font-family: "Roboto Mono", ui-monospace, monospace;
+        color: var(--accent);
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+      }}
+      .hero-card p {{
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }}
+
+      /* Make primary button feel more "product" */
+      .stButton > button {{
+        background: var(--accent) !important;
+        color: #0B0B0B !important;
+        font-weight: 900 !important;
+        border-radius: 14px !important;
+        padding: 0.8rem 1.1rem !important;
+        border: 0 !important;
       }}
     </style>
     """, unsafe_allow_html=True)
@@ -365,27 +418,116 @@ def file_meta(path: Path):
         return None
     try:
         mtime = datetime.fromtimestamp(path.stat().st_mtime)
-        return {"rows": None, "mtime": mtime}
+        return {"mtime": mtime}
     except Exception:
         return None
 
 # =========================
-# APP
+# LANDING PAGE
 # =========================
-def app():
-    inject_custom_css()
+def landing_page():
+    st.markdown(
+        """
+        <div class="hero">
+          <div class="hero-kicker">WoSo Analytics</div>
+          <div class="hero-title">Advanced Metrics Dashboard</div>
+          <div class="hero-sub">
+            A fast, analyst-friendly view of finishing and chance-creation across WSL, Liga F, and Frauen-Bundesliga.
+            Built with an ASA × Understat × FBref vibe: clean cards, dark UI, and dense tables that still read well.
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
+    c1, c2 = st.columns([1.2, 0.8], vertical_alignment="top")
+    with c1:
+        st.markdown("<div class='section-header'>How to use</div>", unsafe_allow_html=True)
+        st.markdown(
+            """
+- Pick a **league** in the sidebar.
+- Use **Minimum shots** (default 10) before judging finishing.
+- Jump between **Overview / Table / Profile** with the top navigation.
+- In **Profile**, check **percentiles** and optionally compare two players.
+            """.strip()
+        )
+
+        st.markdown("<div class='section-header'>Click to learn what the metrics mean</div>", unsafe_allow_html=True)
+
+        with st.expander("What is xG_Diff (Goals − xG)?", expanded=False):
+            st.write(
+                "xG_Diff is the simplest indicator of over/under-performance vs expected goals. "
+                "Positive means scoring more than expected, negative means scoring less. "
+                "Small samples can be noisy — use Min shots."
+            )
+
+        with st.expander("What is xA here?", expanded=False):
+            st.write(
+                "In your dataset, xA is calculated as the sum of the shot xG for shots where the player is the assister "
+                "(relatedPlayerId). It represents the quality of chances created for teammates."
+            )
+
+        with st.expander("What is ShotConversion?", expanded=False):
+            st.write(
+                "ShotConversion = Goals / Shots. It’s a simple finishing rate. "
+                "Use it with xG_Diff to separate shot volume from shot quality."
+            )
+
+        with st.expander("Why use Minimum shots?", expanded=False):
+            st.write(
+                "Finishing metrics fluctuate a lot in small samples. "
+                "A minimum shots threshold helps avoid false conclusions from randomness."
+            )
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("Enter Dashboard →", use_container_width=True):
+            st.session_state.show_dashboard = True
+            st.rerun()
+
+    with c2:
+        st.markdown("<div class='section-header'>What’s inside</div>", unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div class="hero-card">
+              <h4>Overview</h4>
+              <p>Leaders and laggards for xG_Diff plus distribution benchmarks.</p>
+            </div>
+            <div style="height:10px"></div>
+            <div class="hero-card">
+              <h4>Table</h4>
+              <p>FBref-style browsing with column groups + custom selections.</p>
+            </div>
+            <div style="height:10px"></div>
+            <div class="hero-card">
+              <h4>Profile</h4>
+              <p>Player KPIs + percentiles + optional head-to-head comparison.</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    st.caption("Tip: To show this landing page again, use the sidebar toggle once you’re inside the dashboard.")
+
+# =========================
+# DASHBOARD
+# =========================
+def dashboard():
     # --- Sidebar: league + filters ---
     st.sidebar.title("League")
     league = st.sidebar.selectbox("Select League", list(LEAGUES.keys()), index=0)
     csv_path = Path(LEAGUES[league])
 
+    # Option to return to landing
+    st.sidebar.markdown("---")
+    if st.sidebar.button("← Back to Landing", use_container_width=True):
+        st.session_state.show_dashboard = False
+        st.rerun()
+
     df = load_league_csv(csv_path)
 
-    st.title(f"⚽ Outswinger FC — {league}")
+    st.title(f"⚽ WoSo Analytics — {league}")
     st.markdown("<div class='section-header'>Advanced Player Output</div>", unsafe_allow_html=True)
 
-    # Data status card (trust builder)
     meta = file_meta(csv_path)
     if meta is None:
         st.error(
@@ -393,7 +535,6 @@ def app():
             "Put the CSV next to `app.py` (recommended) or update the filename in `LEAGUES`."
         )
         return
-
     if df.empty:
         st.warning(f"Loaded **{csv_path.name}** but it looks empty.")
         return
@@ -403,7 +544,7 @@ def app():
     if COL_PLAYER in df.columns:
         df[COL_PLAYER] = df[COL_PLAYER].astype(str)
 
-    # Show file status
+    # File status
     c_meta1, c_meta2, c_meta3 = st.columns(3)
     with c_meta1:
         st.caption("Data file")
@@ -419,14 +560,12 @@ def app():
     st.sidebar.markdown("### Filters")
     search = st.sidebar.text_input("Search PlayerId", value="").strip().lower()
 
-    # Default min shots to 10 (better analysis)
     min_shots = 0
     if "Shots" in df.columns:
         max_shots = int(np.nanmax(df["Shots"].values)) if len(df) else 0
         default_min = 10 if max_shots >= 10 else 0
         min_shots = st.sidebar.slider("Minimum shots", 0, max_shots if max_shots > 0 else 1, default_min)
 
-    # Sort controls
     sortable = [c for c in ["xG_Diff", "xG", "xA", "Goals", "Assists", "Shots", "ShotConversion"] if c in df.columns]
     if not sortable:
         sortable = [COL_PLAYER] if COL_PLAYER in df.columns else list(df.columns)
@@ -434,7 +573,7 @@ def app():
     sort_col = st.sidebar.selectbox("Sort by", sortable, index=(0 if "xG_Diff" in sortable else 0))
     ascending = st.sidebar.checkbox("Ascending", value=False)
 
-    # Column groups + picker (FBref feel)
+    # Column groups + picker
     st.sidebar.markdown("### Columns")
     group_choice = st.sidebar.multiselect(
         "Column groups",
@@ -442,46 +581,40 @@ def app():
         default=["Core", "Finishing", "Creativity"],
     )
 
-    # Build set of columns from groups, plus PlayerId
     grouped_cols = []
     for g in group_choice:
         grouped_cols.extend(COLUMN_GROUPS.get(g, []))
     grouped_cols = [c for c in grouped_cols if c in df.columns]
-    # Add any remaining numeric columns (optional toggle)
+
     extras = [c for c in NUMERIC_CANDIDATES if c in df.columns and c not in grouped_cols]
     include_extras = st.sidebar.checkbox("Include other numeric columns", value=False)
+
     show_cols_base = grouped_cols + (extras if include_extras else [])
-    show_cols_base = list(dict.fromkeys(show_cols_base))  # unique order-preserving
+    show_cols_base = list(dict.fromkeys(show_cols_base))
 
     if COL_PLAYER in df.columns and COL_PLAYER not in show_cols_base:
         show_cols_base = [COL_PLAYER] + show_cols_base
     elif COL_PLAYER in df.columns:
-        # ensure PlayerId first
         show_cols_base = [COL_PLAYER] + [c for c in show_cols_base if c != COL_PLAYER]
 
-    # Fine-grained column picker
     final_cols = st.sidebar.multiselect(
         "Select columns",
         options=([COL_PLAYER] if COL_PLAYER in df.columns else []) + [c for c in df.columns if c != COL_PLAYER],
         default=show_cols_base if show_cols_base else list(df.columns),
     )
 
-    # --- Build filtered/sorted view ---
+    # Build view
     view = df.copy()
-
     if search and COL_PLAYER in view.columns:
         view = view[view[COL_PLAYER].str.lower().str.contains(search, na=False)]
-
     if "Shots" in view.columns:
         view = view[view["Shots"].fillna(0) >= min_shots]
-
     if sort_col in view.columns:
         view = view.sort_values(sort_col, ascending=ascending, na_position="last")
 
-    # Round display values
     view_display = round_cols(view, ["xG", "xG_Diff", "xA", "ShotConversion"], nd=2)
 
-    # Chips legend
+    # Chips
     chips = []
     if "xG_Diff" in df.columns:
         chips.append("Goals − xG (over/under)")
@@ -495,7 +628,7 @@ def app():
             unsafe_allow_html=True
         )
 
-    # KPIs (filtered view)
+    # KPIs
     total_players = len(view_display)
     total_goals = int(np.nansum(view_display["Goals"])) if "Goals" in view_display.columns else 0
     total_xg = float(np.nansum(view_display["xG"])) if "xG" in view_display.columns else 0.0
@@ -529,7 +662,7 @@ def app():
         unsafe_allow_html=True
     )
 
-    # --- Sticky top nav (big buttons) ---
+    # Sticky nav
     if "page" not in st.session_state:
         st.session_state.page = "Overview"
 
@@ -537,22 +670,18 @@ def app():
     page = st.radio("Navigation", ["Overview", "Table", "Profile"], horizontal=True, key="page")
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # =========================
-    # OVERVIEW
-    # =========================
+    # Pages
     if page == "Overview":
         st.markdown("<div class='section-header'>Overview</div>", unsafe_allow_html=True)
 
-        # Sample warning (helps interpret xG_Diff)
         if "Shots" in df.columns and min_shots < 10:
             st.warning("You are viewing players with fewer than 10 shots. xG_Diff can be very noisy in small samples.")
 
-        # Highlights
         col1, col2 = st.columns(2)
         if all(c in view_display.columns for c in [COL_PLAYER, "xG_Diff", "Goals", "xG"]):
             with col1:
                 st.subheader("Top overperformers")
-                st.caption("Highest Goals − xG (finishing hot / variance / elite finishing)")
+                st.caption("Highest Goals − xG")
                 st.dataframe(
                     view_display.nlargest(10, "xG_Diff")[[COL_PLAYER, "xG_Diff", "Goals", "xG"]],
                     use_container_width=True,
@@ -560,7 +689,7 @@ def app():
                 )
             with col2:
                 st.subheader("Top underperformers")
-                st.caption("Lowest Goals − xG (cold finishing / variance / bad luck)")
+                st.caption("Lowest Goals − xG")
                 st.dataframe(
                     view_display.nsmallest(10, "xG_Diff")[[COL_PLAYER, "xG_Diff", "Goals", "xG"]],
                     use_container_width=True,
@@ -569,7 +698,6 @@ def app():
         else:
             st.info("Overview highlights need columns: PlayerId, xG_Diff, Goals, xG")
 
-        # Benchmarks (FBref-ish)
         st.markdown("<div class='section-header'>Benchmarks</div>", unsafe_allow_html=True)
         bench_cols = [c for c in ["Shots", "Goals", "Assists", "xG", "xA", "xG_Diff", "ShotConversion"] if c in view_display.columns]
         if bench_cols:
@@ -578,9 +706,6 @@ def app():
             desc = round_cols(desc, list(desc.columns), nd=2)
             st.dataframe(desc, use_container_width=True)
 
-    # =========================
-    # TABLE
-    # =========================
     elif page == "Table":
         st.markdown("<div class='section-header'>Table</div>", unsafe_allow_html=True)
 
@@ -588,18 +713,13 @@ def app():
             st.warning("No columns selected.")
             return
 
-        # Ensure PlayerId first if present
         if COL_PLAYER in view_display.columns and COL_PLAYER in final_cols:
             final_cols = [COL_PLAYER] + [c for c in final_cols if c != COL_PLAYER]
 
         show = [c for c in final_cols if c in view_display.columns]
         st.dataframe(view_display[show], use_container_width=True, hide_index=True)
-
         st.caption("Tip: use Min shots = 10+ before judging xG_Diff.")
 
-    # =========================
-    # PROFILE
-    # =========================
     else:
         st.markdown("<div class='section-header'>Profile</div>", unsafe_allow_html=True)
 
@@ -607,14 +727,12 @@ def app():
             st.warning("No PlayerId column found, so profile is unavailable.")
             return
 
-        # Player picker based on filtered view (consistent UX)
         player_list = (
             view_display[COL_PLAYER].astype(str).tolist()
             if COL_PLAYER in view_display.columns
             else df[COL_PLAYER].astype(str).tolist()
         )
         player_list = sorted(list(dict.fromkeys(player_list)))
-
         if not player_list:
             st.info("No players in the current filtered view.")
             return
@@ -622,7 +740,6 @@ def app():
         st.markdown("#### Player selection")
         picked = st.selectbox("Select Player", player_list, index=0)
 
-        # Compare mode (Understat-ish head-to-head)
         compare_mode = st.checkbox("Compare vs another player", value=False)
         picked_2 = None
         if compare_mode:
@@ -639,7 +756,6 @@ def app():
             return
         prow = prow_df.iloc[0]
 
-        # Badge: over/under
         badge_html = ""
         if "xG_Diff" in df_all.columns:
             xgd = prow.get("xG_Diff", np.nan)
@@ -647,11 +763,9 @@ def app():
                 badge_html = "<span class='badge good'><span class='b-dot'></span>OVERPERFORMING xG</span>"
             elif pd.notna(xgd):
                 badge_html = "<span class='badge bad'><span class='b-dot'></span>UNDERPERFORMING xG</span>"
-
         if badge_html:
             st.markdown(badge_html, unsafe_allow_html=True)
 
-        # Main KPI row
         shots = safe_int(prow.get("Shots", 0))
         goals = safe_int(prow.get("Goals", 0))
         assists = safe_int(prow.get("Assists", 0))
@@ -663,26 +777,10 @@ def app():
         st.markdown(
             f"""
             <div class="kpi-grid">
-              <div class="kpi">
-                <div class="label">Shots</div>
-                <div class="value">{shots}</div>
-                <div class="hint">Volume</div>
-              </div>
-              <div class="kpi">
-                <div class="label">Goals</div>
-                <div class="value">{goals}</div>
-                <div class="hint">Output</div>
-              </div>
-              <div class="kpi">
-                <div class="label">xG (sum)</div>
-                <div class="value">{xg:.2f}</div>
-                <div class="hint">Chance quality</div>
-              </div>
-              <div class="kpi">
-                <div class="label">xG Diff</div>
-                <div class="value">{xg_diff:.2f}</div>
-                <div class="hint">Goals − xG</div>
-              </div>
+              <div class="kpi"><div class="label">Shots</div><div class="value">{shots}</div><div class="hint">Volume</div></div>
+              <div class="kpi"><div class="label">Goals</div><div class="value">{goals}</div><div class="hint">Output</div></div>
+              <div class="kpi"><div class="label">xG (sum)</div><div class="value">{xg:.2f}</div><div class="hint">Chance quality</div></div>
+              <div class="kpi"><div class="label">xG Diff</div><div class="value">{xg_diff:.2f}</div><div class="hint">Goals − xG</div></div>
             </div>
             """,
             unsafe_allow_html=True
@@ -696,11 +794,9 @@ def app():
         with c3:
             st.metric("Shot Conversion", f"{conv:.2f}" if "ShotConversion" in df_all.columns else "—")
 
-        # Sample size nudge
         if "Shots" in df_all.columns and shots < 10:
             st.warning("This player has fewer than 10 shots. Treat xG_Diff as high-variance.")
 
-        # Percentiles (FBref vibe)
         st.markdown("#### Percentile ranks (within this league dataset)")
         metrics = []
         for col, label in [
@@ -716,7 +812,6 @@ def app():
                 metrics.append((col, label))
         pct_block(df_all, prow, metrics)
 
-        # Compare section
         if compare_mode and picked_2:
             prow2_df = df_all.loc[df_all[COL_PLAYER] == str(picked_2)]
             if not prow2_df.empty:
@@ -724,29 +819,23 @@ def app():
 
                 st.markdown("<div class='section-header'>Compare</div>", unsafe_allow_html=True)
 
-                # Side-by-side table (simple + effective)
                 compare_cols = [COL_PLAYER] + [c for c in ["Shots", "Goals", "Assists", "xG", "xG_Diff", "xA", "ShotConversion"] if c in df_all.columns]
-                comp = pd.DataFrame([prow[compare_cols], prow2[compare_cols]])
+                comp = pd.DataFrame([prow[compare_cols], prow2[compare_cols]]).copy()
                 comp = comp.rename(columns={COL_PLAYER: "Player"})
                 comp["Player"] = [picked, picked_2]
-
-                # Round numeric in compare table
                 for c in comp.columns:
                     if c != "Player":
                         comp[c] = pd.to_numeric(comp[c], errors="coerce")
-                comp = comp.copy()
                 for c in ["xG", "xG_Diff", "xA", "ShotConversion"]:
                     if c in comp.columns:
                         comp[c] = comp[c].round(2)
 
                 st.dataframe(comp, use_container_width=True, hide_index=True)
-
                 st.markdown("#### Percentiles (comparison player)")
                 pct_block(df_all, prow2, metrics)
 
         with st.expander("Show raw player row"):
             raw = prow.to_frame("value")
-            # Round numeric values for readability
             for idx in raw.index:
                 try:
                     raw.loc[idx, "value"] = round(float(raw.loc[idx, "value"]), 2)
@@ -754,10 +843,21 @@ def app():
                     pass
             st.dataframe(raw, use_container_width=True)
 
-    st.caption("WSL • Liga F • Frauen-Bundesliga | Outswinger FC")
+    st.caption("WSL • Liga F • Frauen-Bundesliga | ASA × Understat × FBref inspired")
 
 # =========================
 # RUN
 # =========================
+def main():
+    inject_custom_css()
+
+    if "show_dashboard" not in st.session_state:
+        st.session_state.show_dashboard = False
+
+    if not st.session_state.show_dashboard:
+        landing_page()
+    else:
+        dashboard()
+
 if __name__ == "__main__":
-    app()
+    main()
